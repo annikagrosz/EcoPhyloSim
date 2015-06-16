@@ -1,0 +1,57 @@
+/*
+ * species.h
+ *
+ *  Created on: 26.06.2014
+ *      Author: Paul
+ *              Betim Musa <musab@informatik.uni-freiburg.de>
+ */
+
+#ifndef SPECIES_H_
+#define SPECIES_H_
+
+#define _USE_MATH_DEFINES
+
+#include <utility>
+#include  <vector>
+#include <Tests/ConcreteTests/SpeciesTestSuite.h>
+
+
+class Species {
+   // Define corresponding TestSuite as friend class
+   friend class PhyloTest::SpeciesTestSuite;
+ private:
+	double m_MeanSum;
+	double m_NeutralSum;
+	double m_CompetitionSum;
+	double m_Variance;
+
+ public:
+	unsigned long long m_Count;
+	unsigned long long  m_Ancestor;
+	std::pair<int, int> m_Origin;
+	void howFitAmI (double airTemp);
+	unsigned long long m_ID;
+	unsigned long long m_Date_of_Emergence;
+	unsigned int m_Date_of_Extinction;
+	double m_Mean;
+	double m_FirstMean, m_FirstNeutral, m_FirstComp;
+	double m_NeutralMean;
+	double m_CompetitionMean;
+	std::vector<unsigned long long> m_Children;
+
+	Species(unsigned long long id, unsigned long long  father,
+	      unsigned long long date, std::pair<int, int> birthplace, unsigned int runs);
+	Species();
+	Species(const Species & spec);
+	void operator=(const Species & spec);
+	~Species();
+	void sumMean(double env, double comp, double neutral);
+	void decMean(double env, double comp, double neutral);
+	void updateMean();
+	unsigned long long get_species_count();
+	unsigned long long get_species_ID();
+};
+
+
+
+#endif /* SPECIES_H_ */
