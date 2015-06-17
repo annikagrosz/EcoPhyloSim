@@ -13,7 +13,7 @@ getParametersXML(file)
 A dataframe with the model parameters
 }
 \description{
-Displays the model parameters from an .xml file as set by \code{\link{setParametersXML}}
+Displays the model parameters from an .xml file as set by \code{\link{setModelParametersXML}} or \code{\link{setLeipzigParametersXML}}
 }
 \examples{
 # Set the model parameters

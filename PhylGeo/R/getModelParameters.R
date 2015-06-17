@@ -1,5 +1,5 @@
 #' @title Get model parameters
-#' @description Displays the model parameters from an .xml file as set by \code{\link{setParametersXML}}
+#' @description Displays the model parameters from an .xml file as set by \code{\link{setModelParametersXML}} or \code{\link{setLeipzigParametersXML}}
 #' @param file The .xml file to be inspected
 #' @return A dataframe with the model parameters
 #' @examples

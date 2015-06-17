@@ -6,27 +6,55 @@
 \usage{
 fullMod(x = NULL, y = NULL, dispersal = NULL, runs = NULL,
   specRate = NULL, density = NULL, environment = NULL, neutral = NULL,
-  dispersalCut = NULL, densityCut = NULL, seed = NULL)
+  dispersalCut = 2, densityCut = 1, seed = NULL)
 }
 \arguments{
-\item{x}{Dimension of the model landscape in x-direction}
+\item{x}{Integer, Dimension of the model landscape in x-direction}
 
-\item{y}{Dimension of the model landscape in y-direction}
+\item{y}{Integer, Dimension of the model landscape in y-direction}
 
-\item{dispersal}{1 = Gloabl dispersal, 2 = Nearest neighbor dispersal}
+\item{dispersal}{Integer, 1 = Gloabl dispersal, 2 = Nearest neighbor dispersal}
 
-\item{runs}{Number of generations the model runs over}
+\item{runs}{Integer, Number of generations the model runs over}
 
-\item{density}{Logical determining whether or not density dependence influences the model}
+\item{specRate}{Integer, Number of Individuals introduced to the community in each generation}
 
-\item{environment}{Logical determining whether or not the environment influences the model}
+\item{density}{Logical, determining whether or not density dependence influences the model}
 
-\item{neutral}{Logical determining whether or not the model is run under neutral conditions (overrides density and environment)}
+\item{environment}{Logical, determining whether or not the environment influences the model}
+
+\item{neutral}{Logical, determining whether or not the model is run under neutral conditions (overrides density and environment)}
+
+\item{dispersalCut}{Integer, defines the dispersal distance for local dispersal (ignored if dispersal = 1 (Global))}
+
+\item{densityCut}{Integer, defines the effective range of the competition (ignored if density = FALSE)}
+
+\item{seed}{numerical, sets the random seed}
 }
 \value{
-a numerical matrix (each cell represents an individual of a species)
+A List containing sveral numerical matrices with species (each cell represents an individual of a species), environment and different traits as well as the phylogeny as an object of class 'phylo'.
 }
 \description{
 A model of species community assembly under different assembly mechanisms
+}
+\examples{
+# Run the model
+myModel <- fullMod(x = 50, y = 50, dispersal = 1, runs = 100, specRate = 1, density = FALSE, environment = FALSE, neutral = TRUE, seed = 1500)
+
+ # Look at the phylogeny (requires package 'ape')
+ require(ape)
+
+ # Get the phylogeny
+ phylogeny <- myModel$phylogeny
+
+ # Only extant taxa
+ extantPhylogeny <- drop.fossil(phylogeny)
+
+ plot(extantPhylogeny)
+
+ #Look at the species area relation
+
+ species <- myModel$specMat
+ sac(area = c(1,10,100,1000), matrix = species, rep = 100, plot= T)
 }
 
