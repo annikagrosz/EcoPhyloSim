@@ -5,11 +5,13 @@
 #' @param matrix A square matrix containing the metacommunity (one individual per grid cell) 
 #' @param community Logical, determining whther to generate a community matrix or not default is FALSE
 #' @return A list of subplots and (if coomunity = T) a community matrix with plots in rows and species in collumns
-localPlots <- function(size, n, matrix, community=F){
+localPlots <- function(size, n, matrix, community=F)
+{
   edge <- round(sqrt(size))
   subPlots <- list()
   communityTable <- data.frame("species"= numeric())
-  for(i in 1:n){                                                                          
+  for(i in 1:n)
+  {                                                                          
     x = sample(x=1:length(matrix[1,]),size=1)
     y = sample(x=1:length(matrix[,1]),size=1)
     
@@ -39,16 +41,21 @@ localPlots <- function(size, n, matrix, community=F){
     # Transponate the community matrix
     
   }
+  
   speciesNames <- character()
-  for(b in 1:length(communityTable$species)){
-    speciesNames[b] <-  paste("s" ,communityTable$species[b], collapse="", sep="")
+  for(b in 1:length(communityTable$species))
+  {
+      speciesNames[b] <-  paste("s" ,communityTable$species[b], collapse="", sep="")
   }
-  if(community == T){
+  
+  if(community == T)
+  {
     communityTable$species <- speciesNames
     communityTable <- as.data.frame(t(communityTable), stringsAsFactors=F)
     communityTable <- communityTable[-1,]
     names(communityTable) <- speciesNames
     communityTable <- as.data.frame(sapply(communityTable, as.numeric), row.names=row.names(communityTable))
   }
+  
   return(list(subPlots=subPlots, communityTable=communityTable))
 }

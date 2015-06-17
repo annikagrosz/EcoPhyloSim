@@ -10,7 +10,7 @@ clades <- function(phylo, community, n){
     y <- phylo$tip.label[!is.element(phylo$tip.label,names(community[a,which(community[i,] >0)]))]
     xy <- list(x,y)
     
-    group <- which.edge(phylo, x)
+    group <- ape::which.edge(phylo, x)
     
     cladecolor<-rep("darkgrey", dim(phylo$edge)[1])
     cladecolor[group]<-"black"

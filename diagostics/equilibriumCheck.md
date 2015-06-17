@@ -25,6 +25,8 @@ require(PhylGeo)
 ## Loading required package: lattice
 ## This is vegan 2.3-0
 ## Loading required package: nlme
+## Loading required package: XML
+## Loading required package: XML2R
 ```
 
 ```r
@@ -61,6 +63,7 @@ require(fields)
 ```r
 require(vegan)
 
+
 #loading the data
 files = character()
 for (i in 1:100){
@@ -82,12 +85,12 @@ rm(file, files, i, OUT)
 pvals <- list()
 for(i in 1:length(localList)){
   print(i)
-  s <- matrix(localList[[i]]$specOut, nrow = 50, ncol = 50)
-  phyl <- read.tree(text = localList[[i]]$phyloOut)
+  s <- matrix(localList[[1]]$specOut, nrow = 50, ncol = 50)
+  phyl <- read.tree(text = localList[[1]]$phyloOut)
   extantPhylo <- drop.fossil(phy = phyl)
   phy.exta <- cophenetic(extantPhylo)
   set.seed(1500)
-  comMat <- localPlots(size = 100, n = 10,matrix = s, community = T)$communityTable
+  comMat <- localPlots(size = 25, n = 100,matrix = s, community = T)$communityTable
   set.seed(Sys.time())
   SES.mntd.phylogeny.pool <- ses.mpd(comMat, phy.exta, "phylogeny.pool",runs=999)  #4
   # SES.mntd.phylogeny.pool <- ses.pd(comMat, extantPhylo, "richness",runs=999, iterations=1000, include.root = TRUE)  #4
@@ -233,6 +236,7 @@ for(i in 1:length(localList)){
 par(mfrow=c(2,1))
 # par(mar=c(5.1, 4.1, 4.1, 9.1), xpd=TRUE)
 barplot(a, col = rainbow(length(localList)), ylab = "Species Richness", main = "SR", xlab="Scenarios")
+abline(h = es(specRate = 2, dimensions = 50), lwd = 4)
 abline(h = mean(a), lwd = 2)
 abline(h = mean(a) + sd(a), lty=2, lwd = 2)
 abline(h = mean(a) - sd(a), lty=2, lwd = 2)
@@ -242,6 +246,7 @@ par(mar=rep(3,4), xpd=F)
 
 # par(mar=c(5.1, 4.1, 4.1, 9.1), xpd=TRUE)
 barplot(l, col = rainbow(length(localList)), ylab = "Species Richness", main = "SR", xlab="Scenarios")
+abline(h = es(specRate = 2, dimensions = 50), lwd = 4)
 abline(h = mean(l), lwd = 2)
 abline(h = mean(l) + sd(l), lty=2, lwd = 2)
 abline(h = mean(l) - sd(l), lty=2, lwd = 2)

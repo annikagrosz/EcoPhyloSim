@@ -14,8 +14,9 @@
 #' @param densityCut Integer defining the range for the density dependence
 #' @param seed Integer setting the random seed for the model
 #' @return Creates a .xml file at the specified location
-setModelParametersXML <- function(scenarios, x, y, runs, dispersal, specRate, density, environment, neutral, location, dispersalCut, densityCut, seed){
+setModelParametersXML <- function(scenarios, x, y, runs, dispersal, specRate, density, environment, neutral, location, dispersalCut, densityCut, seed)
+{
   parameters <- data.frame(scenarios = scenarios, x = x, y = y, runs = runs, dispersal = dispersal, specRate = specRate, density = as.integer(density), environment = as.integer(environment), neutral = as.integer(neutral), dispersalCut = dispersalCut, densityCut = densityCut, seed = seed)
   file <- location
-  write.xml(parameters, file)
+  kulife::write.xml(parameters, file)
 }

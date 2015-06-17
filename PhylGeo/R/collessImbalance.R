@@ -3,7 +3,7 @@
 #' @param phylo An object of class 'phylo'
 #' @return A numeric value for the Colless' Imbalance 
 collessImbalance <- function(phylo){ #colless imbalace function
-  balance <- balance(phylo)
+  balance <- ape::balance(phylo)
   sum.diff <- 0
   for(i in 1:length(balance[,1])){
     diff <- abs(balance[i,1] - balance[i,2])

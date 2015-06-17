@@ -11,8 +11,9 @@
 #' @param densityStrength Numerical (0.0 - 1.0) determining the strength of the density dependence
 #' @param location A character vector specifing the folder to save the .xml file in (the filename is always parameters.xml and does not need to be set.)
 #' @return Creates a .xml file at the specified location
-setLeipzigParametersXML <- function(scenarios, x, y, runs, dispersal, nSpec, specRate, density, densityStrength, location){
+setLeipzigParametersXML <- function(scenarios, x, y, runs, dispersal, nSpec, specRate, density, densityStrength, location)
+{
   parameters <- data.frame(scenarios = scenarios, x = x, y = y, runs = runs, dispersal = dispersal, nSpec = nSpec, specRate = specRate, density = as.integer(density), densityStrength = densityStrength)#
   file <- location
-  write.xml(parameters, file)
+  kulife::write.xml(parameters, file)
 }

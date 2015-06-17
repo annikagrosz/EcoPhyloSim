@@ -11,6 +11,6 @@
 #' modelParameters <- getParametersXML(path)
 #' modelParameters
 getParametersXML <- function(file){
-  parameters <- xmlToDataFrame(file)
+  parameters <- XML::xmlToDataFrame(file)
   return (parameters)
 }
