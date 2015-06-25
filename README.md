@@ -6,7 +6,7 @@ Installation using the 'devtools' package:
 ```{r}
 install.packages("devtools")
 library(devtools)
-install_github("biometry/phylosim")
+install_github("biometry/phylosim/PhyloGeo")
 ```
 
 
