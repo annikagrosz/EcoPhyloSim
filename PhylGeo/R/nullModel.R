@@ -11,7 +11,7 @@ nullModel <- function(speciesMatrix, phylogeny, localPlotSize, numberOfPlots, re
   extantPhyloCophen <- stats::cophenetic(phylogeny) # create distance matrix from phylogeny (requires picante)
   comMat <- localPlots(size = localPlotSize, n = numberOfPlots, matrix = speciesMatrix, community = T)$communityTable # create community matrix from local communities (requires PhylGeo)
   
-  metaabundance <- table(mat) # calculate abundances of species in metacommunity
+  metaabundance <- table(speciesMatrix) # calculate abundances of species in metacommunity
   names(metaabundance) <- paste("s", names(metaabundance), sep="") # set names equal to those in the local communities and the distance matrix
   
   
