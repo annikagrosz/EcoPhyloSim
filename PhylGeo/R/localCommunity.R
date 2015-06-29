@@ -7,7 +7,7 @@
 #' @return A list of subplots and (if coomunity = T) a community matrix with plots in rows and species in collumns
 localPlots <- function(size, n, matrix, community=F)
 {
-  edge <- round(sqrt(size))
+  edge <- round(sqrt(size))-1
   subPlots <- list()
   communityTable <- data.frame("species"= numeric())
   for(i in 1:n)
