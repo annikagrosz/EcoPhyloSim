@@ -13,20 +13,7 @@ require(PhylGeo)
 
 ```
 ## Loading required package: PhylGeo
-## Loading required package: ape
-## Loading required package: kulife
 ## Loading required package: foreach
-## Loading required package: doParallel
-## Loading required package: iterators
-## Loading required package: parallel
-## Loading required package: picante
-## Loading required package: vegan
-## Loading required package: permute
-## Loading required package: lattice
-## This is vegan 2.3-0
-## Loading required package: nlme
-## Loading required package: XML
-## Loading required package: XML2R
 ```
 
 ```r
@@ -62,8 +49,33 @@ require(fields)
 
 ```r
 require(vegan)
+```
 
+```
+## Loading required package: vegan
+## Loading required package: permute
+## Loading required package: lattice
+## This is vegan 2.3-0
+```
 
+```r
+require(ape)
+```
+
+```
+## Loading required package: ape
+```
+
+```r
+require(picante)
+```
+
+```
+## Loading required package: picante
+## Loading required package: nlme
+```
+
+```r
 #loading the data
 files = character()
 for (i in 1:100){

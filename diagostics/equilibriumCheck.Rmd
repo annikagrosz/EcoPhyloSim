@@ -16,6 +16,8 @@ require(PhylGeo)
 require(shape)
 require(fields)
 require(vegan)
+require(ape)
+require(picante)
 
 
 #loading the data
