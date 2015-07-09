@@ -55,7 +55,7 @@
 						</toolChain>
 					</folderInfo>
 					<sourceEntries>
-						<entry excluding="multinomtest.cpp|grid.c++|PhyloTest.cpp|environment.cpp|gridtest.cpp|individualtest.cpp|neighbour.c++" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
+						<entry excluding="Main.cpp|multinomtest.cpp|grid.c++|PhyloTest.cpp|environment.cpp|gridtest.cpp|individualtest.cpp|neighbour.c++" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
 					</sourceEntries>
 				</configuration>
 			</storageModule>
@@ -82,7 +82,7 @@
 					<folderInfo id="cdt.managedbuild.config.gnu.mingw.exe.release.1931050455." name="/" resourcePath="">
 						<toolChain id="cdt.managedbuild.toolchain.gnu.mingw.exe.release.105347943" name="MinGW GCC" superClass="cdt.managedbuild.toolchain.gnu.mingw.exe.release">
 							<targetPlatform id="cdt.managedbuild.target.gnu.platform.mingw.exe.release.1514871535" name="Debug Platform" superClass="cdt.managedbuild.target.gnu.platform.mingw.exe.release"/>
-							<builder buildPath="${workspace_loc:/thesis}/Release" id="cdt.managedbuild.tool.gnu.builder.mingw.base.1027210549" keepEnvironmentInBuildfile="false" managedBuildOn="true" name="CDT Internal Builder" superClass="cdt.managedbuild.tool.gnu.builder.mingw.base"/>
+							<builder buildPath="${workspace_loc:/Paper}/Release" id="org.eclipse.cdt.build.core.internal.builder.25883201" superClass="org.eclipse.cdt.build.core.internal.builder"/>
 							<tool id="cdt.managedbuild.tool.gnu.assembler.mingw.exe.release.2062508822" name="GCC Assembler" superClass="cdt.managedbuild.tool.gnu.assembler.mingw.exe.release">
 								<inputType id="cdt.managedbuild.tool.gnu.assembler.input.940818888" superClass="cdt.managedbuild.tool.gnu.assembler.input"/>
 							</tool>
@@ -119,7 +119,7 @@
 						</toolChain>
 					</folderInfo>
 					<sourceEntries>
-						<entry excluding="multinomtest.cpp|grid.c++|PhyloTest.cpp|environment.cpp|gridtest.cpp|individualtest.cpp|neighbour.c++" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
+						<entry excluding="Main.cpp|multinomtest.cpp|grid.c++|PhyloTest.cpp|environment.cpp|gridtest.cpp|individualtest.cpp|neighbour.c++" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
 					</sourceEntries>
 				</configuration>
 			</storageModule>

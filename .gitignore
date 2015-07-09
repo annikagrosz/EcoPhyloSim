@@ -1,3 +1,5 @@
 *.gz
 *.png
 *.html
+workspace/.metadata/
+workspace/

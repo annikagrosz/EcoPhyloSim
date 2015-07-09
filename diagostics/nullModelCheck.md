@@ -54,27 +54,14 @@ pvalsRecon <- list()
 for(i in 1:length(outList)){
   s <- matrix(outList[[i]]$specOut, nrow = 256, ncol = 256)
   t <- matrix(outList[[i]]$neutralOut, nrow = 256, ncol = 256)
-  extantPhylo <- phyloReconstruct(speciesMatrix = s, traitMatrix = t, "ward.D")
+  extantPhylo <- phyloReconstruct(speciesMatrix = s, traitMatrix = t, "ward.D2")
   pvalsRecon[[i]] <- nullModel(speciesMatrix = s, localPlotSize = 100, phylogeny = extantPhylo, numberOfPlots = 650,repetitions = 1000)
 }
 names(pvalsRecon) <- names(outList)
 ```
 
 ### Plots Recorded Phylogeny
-
-```r
-par(oma = c(0, 0, 2, 0))
-for(i in 1:length(outList)){
-  s <- matrix(outList[[i]]$specOut, nrow = 256, ncol = 256)
-  phyl <- read.tree(text = outList[[i]]$phyloOut)
-  extantPhylo <- drop.fossil(phy = phyl)
-  plotSpatialPhylo(landscape = s, phylogeny = extantPhylo, plot = "both")
-  mtext(names(outList)[i], outer = TRUE, cex = 1.5)
-  
-}
-```
-
-![](nullModelCheck_files/figure-html/unnamed-chunk-3-1.png) ![](nullModelCheck_files/figure-html/unnamed-chunk-3-2.png) ![](nullModelCheck_files/figure-html/unnamed-chunk-3-3.png) ![](nullModelCheck_files/figure-html/unnamed-chunk-3-4.png) ![](nullModelCheck_files/figure-html/unnamed-chunk-3-5.png) ![](nullModelCheck_files/figure-html/unnamed-chunk-3-6.png) ![](nullModelCheck_files/figure-html/unnamed-chunk-3-7.png) ![](nullModelCheck_files/figure-html/unnamed-chunk-3-8.png) ![](nullModelCheck_files/figure-html/unnamed-chunk-3-9.png) ![](nullModelCheck_files/figure-html/unnamed-chunk-3-10.png) ![](nullModelCheck_files/figure-html/unnamed-chunk-3-11.png) ![](nullModelCheck_files/figure-html/unnamed-chunk-3-12.png) ![](nullModelCheck_files/figure-html/unnamed-chunk-3-13.png) ![](nullModelCheck_files/figure-html/unnamed-chunk-3-14.png) ![](nullModelCheck_files/figure-html/unnamed-chunk-3-15.png) ![](nullModelCheck_files/figure-html/unnamed-chunk-3-16.png) 
+![](nullModelCheck_files/figure-html/plotting_recorded_phylogeny_and_landscape-1.png) ![](nullModelCheck_files/figure-html/plotting_recorded_phylogeny_and_landscape-2.png) ![](nullModelCheck_files/figure-html/plotting_recorded_phylogeny_and_landscape-3.png) ![](nullModelCheck_files/figure-html/plotting_recorded_phylogeny_and_landscape-4.png) ![](nullModelCheck_files/figure-html/plotting_recorded_phylogeny_and_landscape-5.png) ![](nullModelCheck_files/figure-html/plotting_recorded_phylogeny_and_landscape-6.png) ![](nullModelCheck_files/figure-html/plotting_recorded_phylogeny_and_landscape-7.png) ![](nullModelCheck_files/figure-html/plotting_recorded_phylogeny_and_landscape-8.png) ![](nullModelCheck_files/figure-html/plotting_recorded_phylogeny_and_landscape-9.png) ![](nullModelCheck_files/figure-html/plotting_recorded_phylogeny_and_landscape-10.png) ![](nullModelCheck_files/figure-html/plotting_recorded_phylogeny_and_landscape-11.png) ![](nullModelCheck_files/figure-html/plotting_recorded_phylogeny_and_landscape-12.png) ![](nullModelCheck_files/figure-html/plotting_recorded_phylogeny_and_landscape-13.png) ![](nullModelCheck_files/figure-html/plotting_recorded_phylogeny_and_landscape-14.png) ![](nullModelCheck_files/figure-html/plotting_recorded_phylogeny_and_landscape-15.png) ![](nullModelCheck_files/figure-html/plotting_recorded_phylogeny_and_landscape-16.png) 
 
 ### Plots Reconstructed Phylogeny
 
@@ -90,23 +77,11 @@ for(i in 1:length(outList)){
 }
 ```
 
-![](nullModelCheck_files/figure-html/unnamed-chunk-4-1.png) ![](nullModelCheck_files/figure-html/unnamed-chunk-4-2.png) ![](nullModelCheck_files/figure-html/unnamed-chunk-4-3.png) ![](nullModelCheck_files/figure-html/unnamed-chunk-4-4.png) ![](nullModelCheck_files/figure-html/unnamed-chunk-4-5.png) ![](nullModelCheck_files/figure-html/unnamed-chunk-4-6.png) ![](nullModelCheck_files/figure-html/unnamed-chunk-4-7.png) ![](nullModelCheck_files/figure-html/unnamed-chunk-4-8.png) ![](nullModelCheck_files/figure-html/unnamed-chunk-4-9.png) ![](nullModelCheck_files/figure-html/unnamed-chunk-4-10.png) ![](nullModelCheck_files/figure-html/unnamed-chunk-4-11.png) ![](nullModelCheck_files/figure-html/unnamed-chunk-4-12.png) ![](nullModelCheck_files/figure-html/unnamed-chunk-4-13.png) ![](nullModelCheck_files/figure-html/unnamed-chunk-4-14.png) ![](nullModelCheck_files/figure-html/unnamed-chunk-4-15.png) ![](nullModelCheck_files/figure-html/unnamed-chunk-4-16.png) 
+![](nullModelCheck_files/figure-html/plotting_reconstructed_phylogeny_and_landscape-1.png) ![](nullModelCheck_files/figure-html/plotting_reconstructed_phylogeny_and_landscape-2.png) ![](nullModelCheck_files/figure-html/plotting_reconstructed_phylogeny_and_landscape-3.png) ![](nullModelCheck_files/figure-html/plotting_reconstructed_phylogeny_and_landscape-4.png) ![](nullModelCheck_files/figure-html/plotting_reconstructed_phylogeny_and_landscape-5.png) ![](nullModelCheck_files/figure-html/plotting_reconstructed_phylogeny_and_landscape-6.png) ![](nullModelCheck_files/figure-html/plotting_reconstructed_phylogeny_and_landscape-7.png) ![](nullModelCheck_files/figure-html/plotting_reconstructed_phylogeny_and_landscape-8.png) ![](nullModelCheck_files/figure-html/plotting_reconstructed_phylogeny_and_landscape-9.png) ![](nullModelCheck_files/figure-html/plotting_reconstructed_phylogeny_and_landscape-10.png) ![](nullModelCheck_files/figure-html/plotting_reconstructed_phylogeny_and_landscape-11.png) ![](nullModelCheck_files/figure-html/plotting_reconstructed_phylogeny_and_landscape-12.png) ![](nullModelCheck_files/figure-html/plotting_reconstructed_phylogeny_and_landscape-13.png) ![](nullModelCheck_files/figure-html/plotting_reconstructed_phylogeny_and_landscape-14.png) ![](nullModelCheck_files/figure-html/plotting_reconstructed_phylogeny_and_landscape-15.png) ![](nullModelCheck_files/figure-html/plotting_reconstructed_phylogeny_and_landscape-16.png) 
 
 ### P-Value Boxplots
+![](nullModelCheck_files/figure-html/plotting_pValues_in_boxplots-1.png) ![](nullModelCheck_files/figure-html/plotting_pValues_in_boxplots-2.png) 
 
-```r
-par(oma = c(4.5, 0, 0, 0))
-a <- boxplot(pvals, las=2, ylim=c(0,1.1), main="p-Values MPD, recorded")
-text(x = seq(1,16,1), labels = round(sapply(pvals, mean),2), y = 1.1)
-```
-
-![](nullModelCheck_files/figure-html/unnamed-chunk-5-1.png) 
-
-```r
-a <- boxplot(pvalsRecon, las=2, ylim=c(0,1.1), main="p-Values MPD, reconstructed")
-text(x = seq(1,16,1), labels = round(sapply(pvalsRecon, mean),2), y = 1.1)
-```
-
-![](nullModelCheck_files/figure-html/unnamed-chunk-5-2.png) 
-
+### Spatial Patterns
+![](nullModelCheck_files/figure-html/plotting_spatial_patterns-1.png) ![](nullModelCheck_files/figure-html/plotting_spatial_patterns-2.png) ![](nullModelCheck_files/figure-html/plotting_spatial_patterns-3.png) 
 

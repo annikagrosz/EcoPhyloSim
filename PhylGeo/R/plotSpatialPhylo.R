@@ -4,7 +4,7 @@
 #' @description Plots the phylogeny and species landscape, colored by taxon 
 #' @param landscape the species landscape
 #' @param phylogeny the corresponding (extant) phylogeny
-#' @param plot defines what to plot "both" plots the landscape and phylogeny side-by-side
+#' @param plot defines what to plot. "both" plots the landscape and phylogeny side-by-side
 plotSpatialPhylo <- function (landscape, phylogeny, plot = "both"){
   
   distances <- cophenetic(phylogeny)[1,]

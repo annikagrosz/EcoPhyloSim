@@ -71,16 +71,16 @@ class Parameters {
    /**
     * Specifies the filename of the XML document.
     */
-   static string m_XMLFileName;
+   static string s_XMLFileName;
    /**
     * Specifies the path to the XML document file.
     */
-   static string m_PathToXmlFile;
+   static string s_PathToXmlFile;
 
-   static bool m_WriteCurrentParameterToXMlFile;
-   static bool m_CreateParameters;
-   static bool m_ReadParametersFromXMLFile;
-   static bool m_LogInfos;
+   static bool s_WriteCurrentParameterToXMlFile;
+   static bool s_CreateParameters;
+   static bool s_ReadParametersFromXMLFile;
+   static bool s_LogInfos;
 
    static map<string, int> m_IntParameters;
    static map<string, double> m_DoubleParameters;
