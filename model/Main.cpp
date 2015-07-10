@@ -33,7 +33,6 @@ int main(){
 	// Just to test
 	Parameters* pa = new Parameters();
 	std::cout << "Value of numberOfRuns: " << pa->getParameterValue<int>(std::string("numberOfRuns")) << std::endl;
-//	return 0;
 
 	// avoid inconsistent input
 	if(neutral && dd) throw std::runtime_error("A neutral model can't be density dependent!");
