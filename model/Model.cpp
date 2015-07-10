@@ -23,7 +23,7 @@ model::model(int X, int Y, int type, bool neutral, bool dd, bool env, unsigned i
    if (type == 1) {
       m_Global = new GlobalEnvironment(X,Y, type, neutral, dd, env, runs, specRate, dispersalCutoff, densityCutoff);
       m_Local = NULL;
-   } else if (type == 2) {
+   } else if (type == 2 || type == 3) {
       m_Global = NULL;
       m_Local = new LocalEnvironment(X,Y, type, neutral, dd, env, runs, specRate, dispersalCutoff, densityCutoff);
    }
