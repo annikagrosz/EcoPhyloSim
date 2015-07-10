@@ -181,12 +181,12 @@ void Parameters::createParameters() {
 
    // Parameters for Landscape
    intParameters.push_back(pair<string, int>(string("LandscapeSizeX"), 100));
-   intParameters.push_back(pair<string, int>(string("LandscapeSizeY"), 200));
+   intParameters.push_back(pair<string, int>(string("LandscapeSizeY"), 100));
    intParameters.push_back(pair<string, int>(string("numberOfRuns"), 1000));
 
 
    // Parameters for Dispersion
-   intParameters.push_back(pair<string, int>(string("DispersalMode"), 2));
+   intParameters.push_back(pair<string, int>(string("DispersalMode"), 1));
    intParameters.push_back(pair<string, int>(string("DispersalCutOff"), 2));
    intParameters.push_back(pair<string, int>(string("DensityCutOff"), 2));
 

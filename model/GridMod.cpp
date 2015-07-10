@@ -278,10 +278,19 @@ void GlobalEnvironment::reproduce(unsigned int generation)
       }
       //			std::cout << seedSum << " : " << cumWeights[kernelsize-1] << " : " << weights[kernelsize-1]<< " : " << kernelsize-1 <<  '\n';
 
-      for(unsigned int event = 0; event < m_LandscapeSize; event++)
+      for(unsigned int event = 0; event < m_LandscapeSize*2; event++)
       {
+
          int x_coordinate = m_RandomGenerator.randomInt(0,m_Xdimensions-1);
          int y_coordinate = m_RandomGenerator.randomInt(0,m_Ydimensions-1);
+
+         if(event % 2 != 0){
+        	 	 double survival = m_RandomGenerator.randomDouble(0.0,1.0);
+           		  if(weights[x_coordinate * m_Ydimensions + y_coordinate] < survival){
+           			  continue;
+           		  }
+           	  }
+
 
          if(m_Individuals[x_coordinate][y_coordinate].m_Species->m_Count-1 < 1)
          {
