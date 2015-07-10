@@ -120,9 +120,9 @@ Landscape::~Landscape()
 }
 
 void Landscape::reproduce(unsigned int generation) {
-   // (Betim): This method is needed in order to use polymorphism method calls
+   // (Betim): This method is needed in order to use polymorphism method calls.
    // (e.g. Model->updateEnvironment, the argument Landscape needs the method "reproduce"
-   // to be defined.) although it is void.
+   // to be defined, although it is void.)
 }
 
 std::pair<int, int> Landscape::get_dimensions()
@@ -154,11 +154,12 @@ void Landscape::initialize(int xsize, int ysize,unsigned int runs)
 
 void Landscape::increaseAge()
 {
-   for (int rows =0; rows <m_Xdimensions; rows++)
+
+   for (int rows = 0; rows < this->m_Xdimensions; rows++)
    {
-      for (int cols =0; cols < m_Ydimensions; cols++)
+      for (int cols =0; cols < this->m_Ydimensions; cols++)
       {
-         m_Individuals[rows][cols].m_Age += 1;
+         this->m_Individuals[rows][cols].m_Age += 1;
       }
    }
 }
@@ -190,6 +191,10 @@ GlobalEnvironment::GlobalEnvironment(int xsize, int ysize, int type, bool neutra
 	                              Landscape(xsize,  ysize,  type,  neutral,  dd,  env,  runs, specRate, dispersalCutoff, densityCutoff)
 {
 
+}
+
+GlobalEnvironment::~GlobalEnvironment() {
+   // TODO: Implement destructor!
 }
 
 void GlobalEnvironment::reproduce(unsigned int generation)
@@ -435,6 +440,10 @@ LocalEnvironment::LocalEnvironment(int xsize, int ysize, int type, bool neutral,
 	                              Landscape(xsize,  ysize,  type,  neutral,  dd,  env,  runs, specRate, dispersalCutoff, densityCutoff)
 {
 
+}
+
+LocalEnvironment::~LocalEnvironment() {
+   // TODO: Implement destructor!
 }
 
 void LocalEnvironment::reproduce(unsigned int generation)
