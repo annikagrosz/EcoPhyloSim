@@ -11,7 +11,7 @@ plotSpatialPhylo(landscape, phylogeny, plot = "both")
 
 \item{phylogeny}{the corresponding (extant) phylogeny}
 
-\item{plot}{defines what to plot "both" plots the landscape and phylogeny side-by-side}
+\item{plot}{defines what to plot. "both" plots the landscape and phylogeny side-by-side}
 }
 \description{
 Plots the phylogeny and species landscape, colored by taxon
