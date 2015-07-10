@@ -56,7 +56,7 @@ class Landscape {
 	Landscape(int xsize, int ysize, int type, bool neutral,
 	      bool dd, bool env, unsigned int runs, double specRate,
 	      int dispersalCutoff, int densityCutoff);
-	~Landscape();
+	virtual ~Landscape();
 
 	// TODO(Betim): Should it really be public?
 	Phylogeny m_Phylogeny;
@@ -69,7 +69,7 @@ class Landscape {
 	unsigned int m_Runs;
 
 	// Start the reproduction of the species.
-	void reproduce(unsigned int generation);
+	virtual void reproduce(unsigned int generation);
 	// Increase the age of each individual by 1.
 	void increaseAge();
 
@@ -85,6 +85,8 @@ class GlobalEnvironment : public Landscape
 		GlobalEnvironment(int xsize, int ysize, int type, bool neutral, bool dd, bool env,
 		      unsigned int runs, double specRate, int dispersalCutoff, int densityCutoff);
 
+		virtual ~GlobalEnvironment();
+
 		void reproduce(unsigned int generation);
 	};
 
@@ -94,6 +96,8 @@ class LocalEnvironment : public Landscape
 	LocalEnvironment();
 	LocalEnvironment(int xsize, int ysize, int type, bool neutral, bool dd, bool env,
 	      unsigned int runs, double specRate, int dispersalCutoff, int densityCutoff);
+	virtual ~LocalEnvironment();
+
 	void reproduce(unsigned int generation);
 };
 
