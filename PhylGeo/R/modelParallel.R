@@ -91,6 +91,9 @@ fullModParallel <- function(parameters = NULL, cores = NULL,x = NULL, y = NULL, 
   outVec <- rep.int(0,x*y)
   
   out <- .C(callModel, as.integer(x),as.integer(y), as.integer(dispersal), as.integer(runs), as.numeric(specRate), as.logical(density),as.logical(environment), as.logical(neutral), as.integer(dispersalCut), as.integer(densityCut), as.integer(seed), specOut = as.integer(outVec), traitOut = as.numeric(outVec), neutralOut = as.numeric(outVec), competitionOut = as.numeric(outVec),  envOut = as.numeric(outVec), phyloOut = character(length=1))[12:17]
+    if(backup == TRUE){
+     save(out, file = "Backup.RData")
+   }
   specMat = matrix(out[[1]],ncol=x, nrow=y)
   traitMat = matrix(out[[2]],ncol=x, nrow=y)
   neutralMat = matrix(out[[3]],ncol=x, nrow=y)

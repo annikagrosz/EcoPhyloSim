@@ -62,6 +62,7 @@ void Phylogeny::prunePhylogeny(std::multimap<unsigned long long, Species*> *full
 					 if(child->m_Children.empty() && child->m_Count==0)
 					 {
 						 father->m_Children.erase(father->m_Children.begin()+j);
+
 					 }
 	//				 else if(!(child->children.empty()) && child->count==0)
 	//				 {
@@ -220,14 +221,12 @@ std::string Phylogeny::writePhylogenyR(unsigned long long start, unsigned int ru
 
 	std::string tree = ";" ;
 
-	std::vector <size_t> position  (phylogenyMap->size(),0);
-	std::vector <size_t> paranthesis  (phylogenyMap->size(),0);
+	std::vector <unsigned long long> position  (phylogenyMap->size(),0);
+	std::vector <unsigned long long> paranthesis  (phylogenyMap->size(),0);
 
     bool go = true;
 	while(go )
 	{
-
-
 			// todo rename paerent to focusSpecies
 		    // todo long term: think about changing children from integer vector + map to pointer
 

@@ -11,6 +11,7 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+#include <cstring>
 #include <Utils/RandomGen.h>
 #include "Individual.h"
 #include <Grid.h>
@@ -173,21 +174,21 @@ void model::update(unsigned int runs)
 //
 //}
 
-void model::getclimate(){
-   int x = m_Local->get_dimensions().first;
-   int y = m_Local->get_dimensions().second;
-   std::ofstream temperature_matrix("..\\temperature_out.txt");
-   for(int ba=0; ba < x ; ba++){
-      temperature_matrix << '\n';
+//void model::getclimate(){
+//   int x = m_Local->get_dimensions().first;
+//   int y = m_Local->get_dimensions().second;
+//   std::ofstream temperature_matrix("..\\temperature_out.txt");
+//   for(int ba=0; ba < x ; ba++){
+//      temperature_matrix << '\n';
+//
+//      for(int bu=0;bu < y ;bu++){
+//         temperature_matrix << m_Local->m_Environment[ba * y + bu].first <<',';
+//      }}
+//
+//}
 
-      for(int bu=0;bu < y ;bu++){
-         temperature_matrix << m_Local->m_Environment[ba * y + bu].first <<',';
-      }}
 
-}
-
-
-void callModel(int* x, int* y, int* dispersal, int* runs, double* specRate, bool* dens, bool* env, bool* neutral,int* dispersalCutoff, int* densityCutoff,int* seed, int* specOut, double* traitOut, double* neutralOut, double* compOut, double* envOut,  std::string* phyloOut){
+void callModel(int* x, int* y, int* dispersal, int* runs, double* specRate, bool* dens, bool* env, bool* neutral,int* dispersalCutoff, int* densityCutoff,int* seed, int* specOut, double* traitOut, double* neutralOut, double* compOut, double* envOut,  char** phyloOut){
    RandomGen ran;
    ran.seedrand(seed[0]);
    model Model(x[0],y[0],dispersal[0], neutral[0], dens[0], env[0], runs[0], specRate[0], dispersalCutoff[0], densityCutoff[0]);
@@ -195,6 +196,7 @@ void callModel(int* x, int* y, int* dispersal, int* runs, double* specRate, bool
    Model.update(runs[0]);
 
    if(dispersal[0] == 1){
+	  std::cout << "Writing : Species Matrix" << '\n';
       int i = 0;
       for(int ba=0;ba<x[0];ba++){
          for(int bu=0;bu<y[0];bu++){
@@ -202,7 +204,9 @@ void callModel(int* x, int* y, int* dispersal, int* runs, double* specRate, bool
             i=i+1;
          }
       }
+      std::cout << "done" << '\n';
 
+      std::cout << "Writing : Environmental trait" << '\n';
       i = 0;
       for(int ba=0;ba<x[0];ba++){
          for(int bu=0;bu<y[0];bu++){
@@ -210,7 +214,9 @@ void callModel(int* x, int* y, int* dispersal, int* runs, double* specRate, bool
             i=i+1;
          }
       }
+      std::cout << "done" << '\n';
 
+      std::cout << "Writing : Environment" << '\n';
       i = 0;
       for(int ba=0;ba<x[0];ba++){
          for(int bu=0;bu<y[0];bu++){
@@ -218,7 +224,9 @@ void callModel(int* x, int* y, int* dispersal, int* runs, double* specRate, bool
             i=i+1;
          }
       }
+      std::cout << "done" << '\n';
 
+      std::cout << "Writing : Neutral trait" << '\n';
       i = 0;
       for(int ba=0;ba<x[0];ba++){
          for(int bu=0;bu<y[0];bu++){
@@ -226,7 +234,9 @@ void callModel(int* x, int* y, int* dispersal, int* runs, double* specRate, bool
             i=i+1;
          }
       }
+      std::cout << "done" << '\n';
 
+      std::cout << "Writing : Competition trait" << '\n';
       i = 0;
       for(int ba=0;ba<x[0];ba++){
          for(int bu=0;bu<y[0];bu++){
@@ -234,9 +244,24 @@ void callModel(int* x, int* y, int* dispersal, int* runs, double* specRate, bool
             i=i+1;
          }
       }
+      std::cout << "done" << '\n';
 
+      std::cout << "Pruning : Phylogeny" << '\n';
       Model.m_Global->m_Phylogeny.prunePhylogeny(Model.m_Global->m_Phylogeny.m_FullPhylogeny);
-      phyloOut[0] = Model.m_Global->m_Phylogeny.writePhylogenyR(1, runs[0], Model.m_Global->m_Phylogeny.m_PrunedPhylo);
+      std::cout << "done" << '\n';
+
+      std::cout << "Writing : Phylogeny" << '\n';
+     std::string phyloPass("\0");
+     phyloPass = Model.m_Global->m_Phylogeny.writePhylogenyR(1, runs[0], Model.m_Global->m_Phylogeny.m_PrunedPhylo);
+      std::cout << "done" << '\n';
+
+      std::cout << "Passing : Phylogeny" << '\n';
+
+      char * cstr = new char [phyloPass.length()+1];
+      std::strcpy (cstr, phyloPass.c_str());
+
+      phyloOut[0] = cstr;
+      std::cout << "done" << '\n';
    }
 
    else if(dispersal[0] == 2 ||dispersal[0] == 3){
@@ -281,7 +306,11 @@ void callModel(int* x, int* y, int* dispersal, int* runs, double* specRate, bool
       }
 
       Model.m_Local->m_Phylogeny.prunePhylogeny(Model.m_Local->m_Phylogeny.m_FullPhylogeny);
-      phyloOut[0] = Model.m_Local->m_Phylogeny.writePhylogenyR(1, runs[0], Model.m_Local->m_Phylogeny.m_PrunedPhylo);
+      std::string phyloPass = Model.m_Local->m_Phylogeny.writePhylogenyR(1, runs[0], Model.m_Local->m_Phylogeny.m_PrunedPhylo);
+      char * cstr = new char [phyloPass.length()+1];
+       std::strcpy (cstr, phyloPass.c_str());
+
+           phyloOut[0] = cstr;
    }
 }
 

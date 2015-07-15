@@ -22,8 +22,8 @@ int main(){
 	bool dd = false; // Density dependent or independent model
 	bool env = true; // environmentally dependent or independent model
 	int dispersal = 1; // 1 = global dispersal, 2 = nearest neighbor dispersal, 3= kernel dispersal
-	int xDim = 1000; // Number of grid cells in x-direction
-	int yDim = 1000; // number of grid cells in y-direction
+	int xDim = 50; // Number of grid cells in x-direction
+	int yDim = 50; // number of grid cells in y-direction
 //	srand(1500);
 	double specrate = 2.0;
 	int densityCut = 1;
@@ -42,7 +42,7 @@ int main(){
 	model Model(xDim,yDim,dispersal, neutral, dd, env, runs, specrate, dispersalCut, densityCut);
 	Model.update(runs);
 //	Model.get_data();
-	Model.getclimate();
+//	Model.getclimate();
 //	Model.gettraits();
 	if(dispersal ==1)
 	{

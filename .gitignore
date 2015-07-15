@@ -4,3 +4,6 @@
 workspace/.metadata/
 workspace/
 .metadata/
+*.txt
+*.out
+*.RData

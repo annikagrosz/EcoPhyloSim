@@ -8,7 +8,7 @@
 #' @return A numeric vector with pValues for each plot in the observed metacommunity
 nullModelSample <- function(speciesMatrix, phylogeny, localPlotSize, numberOfPlots, repetitions){
   
-  extantPhyloCophen <- stats::cophenetic(extantPhylo) # create distance matrix from phylogeny (requires picante)
+  extantPhyloCophen <- stats::cophenetic(phylogeny) # create distance matrix from phylogeny (requires picante)
   comMat <- localPlots(size = localPlotSize, n = numberOfPlots, matrix = speciesMatrix, community = T)$communityTable # create community matrix from local communities (requires PhylGeo)
   
   metaabundance <- colSums(comMat) # calculate abundances of species in metacommunity

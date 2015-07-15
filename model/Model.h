@@ -36,7 +36,7 @@ private:
 extern "C" {
 void callModel(int* x, int* y, int* dispersal, int* runs, double* specRate, bool* dens,
       bool* env, bool* neutral,int* dispersalCutoff, int* densityCutoff, int* seed, int* specOut,
-      double* traitOut,double* neutralOut, double* compOut, double* envOut, std::string* phyloOut);
+      double* traitOut,double* neutralOut, double* compOut, double* envOut, char** phyloOut);
 // void runModel(model* Model, int* runs);
 // void getModelData(model* Model, int* dispersal, int* specOut, double* traitOut, double* envOut, std::string* phyloOut);
 }

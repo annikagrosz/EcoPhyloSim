@@ -40,13 +40,24 @@ fullMod <- function(x = NULL, y = NULL, dispersal = NULL, runs = NULL, specRate 
     density = FALSE
     environment  = FALSE
   }
-  out <- .C(callModel, as.integer(x),as.integer(y), as.integer(dispersal), as.integer(runs), as.numeric(specRate), as.logical(density),as.logical(environment), as.logical(neutral), as.integer(dispersalCut), as.integer(densityCut), as.integer(seed), specOut = as.integer(outVec), traitOut = as.numeric(outVec),neutralOut = as.numeric(outVec),compOut = as.numeric(outVec), envOut = as.numeric(outVec), phyloOut = character(length=1))[12:17]
+  
+  out <- .C(callModel, as.integer(x),as.integer(y), as.integer(dispersal), as.integer(runs), as.numeric(specRate), as.logical(density),as.logical(environment), as.logical(neutral), as.integer(dispersalCut), as.integer(densityCut), as.integer(seed), specOut = as.integer(outVec), traitOut = as.numeric(outVec),neutralOut = as.numeric(outVec),compOut = as.numeric(outVec), envOut = as.numeric(outVec), phyloOut = character(length = 1))[12:17]
+  print("simulation is done")
+  
+  print("writing specMat")
   specMat = matrix(out[[1]],ncol=x, nrow=y)
+  print("writing traitMat")
   traitMat = matrix(out[[2]],ncol=x, nrow=y)
+  print("writing neutMat")
   neutMat = matrix(out[[3]],ncol=x, nrow=y)
+  print("writing compMat")
   compMat = matrix(out[[4]],ncol=x, nrow=y)
+  print("writing envMat")
   envMat = matrix(out[[5]],ncol=x, nrow=y)
+  print("writing phylogeny")
+  
   phylogeny = ape::read.tree(text = out[[6]])
+  
   print (paste("Finished after",floor(((proc.time() - ptm)[3])/60), "minute(s) and", ((proc.time() - ptm)[3])%%60, "second(s)."))
-  return(list(specMat = specMat, traitMat=traitMat, envMat = envMat, neutMat = neutMat, phylogeny = phylogeny, spec = out[[1]]))
+  return(list(specMat = specMat, traitMat=traitMat, envMat = envMat, compMat = compMat, neutMat = neutMat, phylogeny = phylogeny, phyloTXT = out[[6]]))
 }

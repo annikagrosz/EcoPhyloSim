@@ -257,7 +257,7 @@ void GlobalEnvironment::reproduce(unsigned int generation)
          {
             if(m_Env)
             {
-               double envFitnessParent = (1.0 / (m_Individuals[kernel_x][kernel_y].m_Variance * sqrt(2.0 * 3.147))) * exp(-0.5 * pow((m_Environment[kernel_x * m_Ydimensions + kernel_y].first - m_Individuals[kernel_x][kernel_y].m_Mean) / m_Individuals[kernel_x][kernel_y].m_Variance, 2.0));
+               double envFitnessParent = 1.1 * exp(-0.5 * pow((m_Environment[kernel_x * m_Ydimensions + kernel_y].first - m_Individuals[kernel_x][kernel_y].m_Mean) / m_Individuals[kernel_x][kernel_y].m_Variance, 2.0));
                if(m_DD) weights[array_length] = envFitnessParent  * m_Individuals[kernel_x][kernel_y].m_LocalDensity + (DBL_MIN*100.0); //weights plus base value
                else if (!m_DD) weights[array_length] = envFitnessParent  + (DBL_MIN*100.0) ; //weights plus base value
                //								std::cout <<  weights[array_length] << '\n';
@@ -290,8 +290,8 @@ void GlobalEnvironment::reproduce(unsigned int generation)
          int y_coordinate = m_RandomGenerator.randomInt(0,m_Ydimensions-1);
 
          if(event % 2 != 0){
-        	 	 double survival = m_RandomGenerator.randomDouble(0.0,1.0);
-           		  if(weights[x_coordinate * m_Ydimensions + y_coordinate] < survival){
+        	 	 double chanceOfDeath = m_RandomGenerator.randomDouble(0.0,1.0);
+           		  if(weights[x_coordinate * m_Ydimensions + y_coordinate] > chanceOfDeath){
            			  continue;
            		  }
            	  }
@@ -328,7 +328,7 @@ void GlobalEnvironment::reproduce(unsigned int generation)
             double newWeight = 0.0;
             if(m_Env)
             {
-               double envFitnessParent = (1.0 / (m_Individuals[x_coordinate][y_coordinate].m_Variance * sqrt(2.0 * 3.147))) * exp(-0.5 * pow((m_Environment[x_coordinate * m_Ydimensions + y_coordinate].first - m_Individuals[x_coordinate][y_coordinate].m_Mean) / m_Individuals[x_coordinate][y_coordinate].m_Variance, 2.0));
+               double envFitnessParent = 1.1 * exp(-0.5 * pow((m_Environment[x_coordinate * m_Ydimensions + y_coordinate].first - m_Individuals[x_coordinate][y_coordinate].m_Mean) / m_Individuals[x_coordinate][y_coordinate].m_Variance, 2.0));
                //						double envFitnessPropagule = (1.0 / (individuals[kernel_x][kernel_y].variance * sqrt(2.0 * 3.147))) * exp(-0.5 * pow((environment[x_coordinate][y_coordinate].first - individuals[kernel_x][kernel_y].mean) / individuals[kernel_x][kernel_y].variance, 2.0)); // environmental influence !
                newWeight = envFitnessParent  + (DBL_MIN*100.0) ; //weights plus base value
             }
@@ -399,7 +399,7 @@ void GlobalEnvironment::reproduce(unsigned int generation)
 
                   if(m_Env)
                   {
-                     double envFitnessParent = (1.0 / (m_Individuals[focus_x][focus_y].m_Variance * sqrt(2.0 * 3.147))) * exp((-0.5 * (m_Environment[focus_x * m_Ydimensions + focus_y].first - m_Individuals[focus_x][focus_y].m_Mean) / m_Individuals[focus_x][focus_y].m_Variance * (m_Environment[focus_x * m_Ydimensions + focus_y].first - m_Individuals[focus_x][focus_y].m_Mean) / m_Individuals[focus_x][focus_y].m_Variance)); // environmental influence !
+                     double envFitnessParent = 1.1 * exp((-0.5 * (m_Environment[focus_x * m_Ydimensions + focus_y].first - m_Individuals[focus_x][focus_y].m_Mean) / m_Individuals[focus_x][focus_y].m_Variance * (m_Environment[focus_x * m_Ydimensions + focus_y].first - m_Individuals[focus_x][focus_y].m_Mean) / m_Individuals[focus_x][focus_y].m_Variance)); // environmental influence !
                      //								double envFitnessPropagule = (1.0 / (individuals[focus_x][focus_y].variance * sqrt(2.0 * 3.147))) * exp((-0.5 * (environment[x_coordinate][y_coordinate].first - individuals[focus_x][focus_y].mean) / individuals[focus_x][focus_y].variance * (environment[x_coordinate][y_coordinate].first - individuals[focus_x][focus_y].mean) / individuals[focus_x][focus_y].variance)); // environmental influence !
 
                      seedSum -= weights[focus_x*m_Ydimensions + focus_y ];

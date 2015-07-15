@@ -1,5 +1,3 @@
-# could maybe make nicer plots with http://cran.r-project.org/web/packages/phytools/index.html in the future, but increases dependencies
-
 #' @title Plot of Phylogeny and species Landscape
 #' @description Plots the phylogeny and species landscape, colored by taxon 
 #' @param landscape the species landscape
@@ -9,7 +7,6 @@ plotSpatialPhylo <- function (landscape, phylogeny, plot = "both"){
   
   distances <- cophenetic(phylogeny)[1,]
   
-  cols<-heat.colors(length(distances))
   cols<-rainbow(length(distances), start = 0.2)
 
   
