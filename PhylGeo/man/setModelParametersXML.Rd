@@ -5,7 +5,8 @@
 \title{Set Model parameters}
 \usage{
 setModelParametersXML(scenarios, x, y, runs, dispersal, specRate, density,
-  environment, neutral, location, dispersalCut, densityCut, seed)
+  environment, mortalityFitness, reproductiveFitness, neutral, location,
+  dispersalCut, densityCut, seed)
 }
 \arguments{
 \item{scenarios}{Character vector containing the names of the scenarios to be run}
@@ -23,6 +24,10 @@ setModelParametersXML(scenarios, x, y, runs, dispersal, specRate, density,
 \item{density}{Logical determining whether or not density dependence influences the model}
 
 \item{environment}{Logical determining whether or not the environment influences the model}
+
+\item{mortalityFitness}{Logical, determining whether or not the individual fitness influences mortality}
+
+\item{reproductiveFitness}{Logical, determining whether or not the individual fitness influences reproducti}
 
 \item{neutral}{Logical determining whether or not the model is run under neutral conditions (overrides density and environment)}
 

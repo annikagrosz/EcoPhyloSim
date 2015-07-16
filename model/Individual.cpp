@@ -95,11 +95,11 @@ void Individual::operator=(const Individual &ind)
 	double Individual::getSeedsTo(int rel_x, int rel_y, int dispersal_type, double temp, bool env, bool dd)
 	{
 		double sum_of_weights = 0.0;
-		double dispersal_weight = 0.0;
+		double dispersal_weight = 1.0;
 
-		dispersal_weight = dispersal(dispersal_type, euclidian_distance(rel_x, rel_y)); // Kernel or NN
+//		dispersal_weight = dispersal(dispersal_type, euclidian_distance(rel_x, rel_y)); // Kernel or NN
 		if(env)
-		{	double envFitness = (1.0 / (m_Variance * sqrt(2.0 * 3.147))) * exp(-0.5 * pow((temp - m_Mean) / m_Variance, 2.0)); // environmental niche
+		{	double envFitness = 1.1 * exp(-0.5 * pow((temp - m_Mean) / m_Variance, 2.0)); // environmental niche
 			if(dd)	sum_of_weights = dispersal_weight * envFitness * m_LocalDensity + (DBL_MIN*100.0); //weights plus base value
 			else if(!dd)	sum_of_weights = dispersal_weight * envFitness + (DBL_MIN*100.0); //weights plus base value
 		}

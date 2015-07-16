@@ -65,13 +65,15 @@
 //}
 
 
-Landscape::Landscape(int xsize, int ysize, int type, bool neutral, bool dd, bool env, unsigned int runs, double specRate, int dispersalCutoff, int DensityCutoff)
+Landscape::Landscape(int xsize, int ysize, int type, bool neutral, bool dd, bool env, bool mort, bool repro, unsigned int runs, double specRate, int dispersalCutoff, int DensityCutoff)
 {
 
    m_Cutoff= dispersalCutoff;
    m_Neutral = neutral;
    m_DD = dd;
    m_Env = env;
+   m_mortality = mort;
+   m_reproduction = repro;
    m_Runs = runs;
    m_DensityCutoff = DensityCutoff;
    m_Dispersal_type = type;
@@ -187,8 +189,8 @@ void Landscape::moistChange(int sign, double magnitude)
 }
 
 
-GlobalEnvironment::GlobalEnvironment(int xsize, int ysize, int type, bool neutral, bool dd, bool env, unsigned int runs, double specRate, int dispersalCutoff, int densityCutoff) :
-	                              Landscape(xsize,  ysize,  type,  neutral,  dd,  env,  runs, specRate, dispersalCutoff, densityCutoff)
+GlobalEnvironment::GlobalEnvironment(int xsize, int ysize, int type, bool neutral, bool dd, bool env, bool mort, bool repro, unsigned int runs, double specRate, int dispersalCutoff, int densityCutoff) :
+	                              Landscape(xsize,  ysize,  type,  neutral,  dd,  env, mort, repro,  runs, specRate, dispersalCutoff, densityCutoff)
 {
 
 }
@@ -241,6 +243,7 @@ void GlobalEnvironment::reproduce(unsigned int generation)
       int x_parent = 0;
       int y_parent = 0;
       unsigned int array_length = 0;
+      unsigned int numberOfRuns = 0;
       double seedSum = 0.0;
       int new_parent;
 
@@ -283,13 +286,16 @@ void GlobalEnvironment::reproduce(unsigned int generation)
       }
       //			std::cout << seedSum << " : " << cumWeights[kernelsize-1] << " : " << weights[kernelsize-1]<< " : " << kernelsize-1 <<  '\n';
 
-      for(unsigned int event = 0; event < m_LandscapeSize*2; event++)
+      if(m_mortality) numberOfRuns = m_LandscapeSize*2;
+      else numberOfRuns = m_LandscapeSize;
+
+      for(unsigned int event = 0; event <numberOfRuns; event++)
       {
 
          int x_coordinate = m_RandomGenerator.randomInt(0,m_Xdimensions-1);
          int y_coordinate = m_RandomGenerator.randomInt(0,m_Ydimensions-1);
 
-         if(event % 2 != 0){
+         if(event % 2 != 0 && m_mortality){
         	 	 double chanceOfDeath = m_RandomGenerator.randomDouble(0.0,1.0);
            		  if(weights[x_coordinate * m_Ydimensions + y_coordinate] > chanceOfDeath){
            			  continue;
@@ -309,7 +315,8 @@ void GlobalEnvironment::reproduce(unsigned int generation)
             m_Individuals[x_coordinate][y_coordinate].m_Species->updateMean();
          }
 
-         new_parent = m_RandomGenerator.multinomialDraw(cumWeights, array_length-1, seedSum);
+         if(!m_mortality) new_parent = m_RandomGenerator.multinomialDraw(cumWeights, array_length-1, seedSum);
+         else if (m_mortality) new_parent = m_RandomGenerator.randomInt(0, array_length-1);
          x_parent = parents[new_parent].first;
          y_parent = parents[new_parent].second;
 
@@ -436,8 +443,8 @@ void GlobalEnvironment::reproduce(unsigned int generation)
 }
 
 
-LocalEnvironment::LocalEnvironment(int xsize, int ysize, int type, bool neutral, bool dd, bool env, unsigned int runs, double specRate, int dispersalCutoff, int densityCutoff) :
-	                              Landscape(xsize,  ysize,  type,  neutral,  dd,  env,  runs, specRate, dispersalCutoff, densityCutoff)
+LocalEnvironment::LocalEnvironment(int xsize, int ysize, int type, bool neutral, bool dd, bool env,bool mort, bool repro, unsigned int runs, double specRate, int dispersalCutoff, int densityCutoff) :
+	                              Landscape(xsize,  ysize,  type,  neutral,  dd,  env, mort, repro,  runs, specRate, dispersalCutoff, densityCutoff)
 {
 
 }
@@ -455,13 +462,25 @@ void LocalEnvironment::reproduce(unsigned int generation)
    unsigned int array_length;
    double seedSum = 0.0;
    int new_parent;
-
+   unsigned int numberOfRuns = 0;
    m_KernelSize = ((2*m_Cutoff+1)*(2*m_Cutoff+1)-1);
 
-   for(unsigned int event = 0; event < m_LandscapeSize; event++)
+   if(m_mortality) numberOfRuns =  m_LandscapeSize*2;
+   else numberOfRuns =  m_LandscapeSize;
+
+   for(unsigned int event = 0; event < numberOfRuns; event++)
    {
+
       x_coordinate = m_RandomGenerator.randomInt(0,m_Xdimensions-1);
       y_coordinate = m_RandomGenerator.randomInt(0,m_Ydimensions-1);
+
+      if(event % 2 != 0 && m_mortality){
+    	  double weight = m_Individuals[kernel_x][kernel_y].getSeedsTo(x_coordinate,y_coordinate, m_Dispersal_type, m_Environment[x_coordinate * m_Ydimensions + y_coordinate].first, m_Env, m_DD);
+    	  double chanceOfDeath = m_RandomGenerator.randomDouble(0.0,1.0);
+		  if(weight > chanceOfDeath){
+			  continue;
+		  }
+	  }
 
       if(m_Individuals[x_coordinate][y_coordinate].m_Species->m_Count-1 < 1)
       {
@@ -490,8 +509,8 @@ void LocalEnvironment::reproduce(unsigned int generation)
             {
                parents[array_length].first = kernel_x;
                parents[array_length].second =  kernel_y;
-               weights[array_length] = m_Individuals[kernel_x][kernel_y].getSeedsTo(relativeX,relativeY, m_Dispersal_type, m_Environment[kernel_x * m_Ydimensions + kernel_y].first, m_Env, m_DD);
-
+               if(!m_mortality) weights[array_length] = m_Individuals[kernel_x][kernel_y].getSeedsTo(relativeX,relativeY, m_Dispersal_type, m_Environment[kernel_x * m_Ydimensions + kernel_y].first, m_Env, m_DD);
+               else if(m_mortality)  weights[array_length] = m_Individuals[kernel_x][kernel_y].dispersal(m_Dispersal_type, m_Individuals[kernel_x][kernel_y].euclidian_distance(relativeX, relativeY));
                seedSum += weights[array_length];
                array_length +=1;
             }

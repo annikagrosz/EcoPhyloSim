@@ -21,7 +21,7 @@ class model {
    GlobalEnvironment* m_Global;
    LocalEnvironment* m_Local;
 
-   model(int x, int y, int type, bool neutral, bool dd,bool env,
+   model(int x, int y, int type, bool neutral, bool dd,bool env, bool mort, bool repro,
             unsigned int runs, double specRate, int dispersalCutoff, int densityCutoff);
    ~model();
    void get_data();
@@ -35,7 +35,7 @@ private:
 
 extern "C" {
 void callModel(int* x, int* y, int* dispersal, int* runs, double* specRate, bool* dens,
-      bool* env, bool* neutral,int* dispersalCutoff, int* densityCutoff, int* seed, int* specOut,
+      bool* env, bool* neutral, bool* mort, bool* repro, int* dispersalCutoff, int* densityCutoff, int* seed, int* specOut,
       double* traitOut,double* neutralOut, double* compOut, double* envOut, char** phyloOut);
 // void runModel(model* Model, int* runs);
 // void getModelData(model* Model, int* dispersal, int* specOut, double* traitOut, double* envOut, std::string* phyloOut);

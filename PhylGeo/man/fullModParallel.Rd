@@ -6,8 +6,9 @@
 \usage{
 fullModParallel(parameters = NULL, cores = NULL, x = NULL, y = NULL,
   dispersal = NULL, runs = NULL, specRate = NULL, density = NULL,
-  environment = NULL, neutral = NULL, dispersalCut = NULL,
-  densityCut = NULL, seed = NULL, backup = FALSE)
+  environment = NULL, mortalityFitness = NULL, reproductiveFitness = NULL,
+  neutral = NULL, dispersalCut = NULL, densityCut = NULL, seed = NULL,
+  backup = FALSE)
 }
 \arguments{
 \item{parameters}{.xml file containing all parameters for the model scenarios (default is NULL)}
@@ -25,6 +26,10 @@ fullModParallel(parameters = NULL, cores = NULL, x = NULL, y = NULL,
 \item{density}{Logical determining whether or not density dependence influences the model}
 
 \item{environment}{Logical determining whether or not the environment influences the model}
+
+\item{mortalityFitness}{Logical, determining whether or not the individual fitness influences mortality}
+
+\item{reproductiveFitness}{Logical, determining whether or not the individual fitness influences reproduction}
 
 \item{neutral}{Logical determining whether or not the model is run under neutral conditions (overrides density and environment)}
 

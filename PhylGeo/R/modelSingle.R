@@ -7,6 +7,8 @@
 #' @param specRate Integer, Number of Individuals introduced to the community in each generation
 #' @param density Logical, determining whether or not density dependence influences the model
 #' @param environment Logical, determining whether or not the environment influences the model
+#' @param mortalityFitness Logical, determining whether or not the individual fitness influences mortality
+#' @param reproductiveFitness Logical, determining whether or not the individual fitness influences reproduction
 #' @param neutral Logical, determining whether or not the model is run under neutral conditions (overrides density and environment)
 #' @param dispersalCut Integer, defines the dispersal distance for local dispersal (ignored if dispersal = 1 (Global))
 #' @param densityCut Integer, defines the effective range of the competition (ignored if density = FALSE)
@@ -31,7 +33,7 @@
 #'  
 #'  species <- myModel$specMat
 #'  sac(area = c(1,10,100,1000), matrix = species, rep = 100, plot= T)
-fullMod <- function(x = NULL, y = NULL, dispersal = NULL, runs = NULL, specRate = NULL, density = NULL, environment = NULL, neutral = NULL, dispersalCut = 2, densityCut = 1, seed=NULL)
+fullMod <- function(x = NULL, y = NULL, dispersal = NULL, runs = NULL, specRate = NULL, density = NULL, environment = NULL, mortalityFitness = NULL, reproductiveFitness = NULL, neutral = NULL, dispersalCut = 2, densityCut = 1, seed=NULL)
 {
   ptm <- proc.time()
   outVec <- rep.int(0,x*y)
@@ -41,7 +43,7 @@ fullMod <- function(x = NULL, y = NULL, dispersal = NULL, runs = NULL, specRate 
     environment  = FALSE
   }
   
-  out <- .C(callModel, as.integer(x),as.integer(y), as.integer(dispersal), as.integer(runs), as.numeric(specRate), as.logical(density),as.logical(environment), as.logical(neutral), as.integer(dispersalCut), as.integer(densityCut), as.integer(seed), specOut = as.integer(outVec), traitOut = as.numeric(outVec),neutralOut = as.numeric(outVec),compOut = as.numeric(outVec), envOut = as.numeric(outVec), phyloOut = character(length = 1))[12:17]
+  out <- .C(callModel, as.integer(x),as.integer(y), as.integer(dispersal), as.integer(runs), as.numeric(specRate), as.logical(density),as.logical(environment) ,as.logical(mortalityFitness) ,as.logical(reproductiveFitness),  as.logical(neutral), as.integer(dispersalCut), as.integer(densityCut), as.integer(seed), specOut = as.integer(outVec), traitOut = as.numeric(outVec),neutralOut = as.numeric(outVec),compOut = as.numeric(outVec), envOut = as.numeric(outVec), phyloOut = character(length = 1))[14:19]
   print("simulation is done")
   
   print("writing specMat")

@@ -21,6 +21,8 @@ int main(){
 	bool neutral = false; // neutral model or not
 	bool dd = false; // Density dependent or independent model
 	bool env = true; // environmentally dependent or independent model
+	bool mort = true; // mortality fitness
+	bool repro = true; // reproductive fitness
 	int dispersal = 1; // 1 = global dispersal, 2 = nearest neighbor dispersal, 3= kernel dispersal
 	int xDim = 50; // Number of grid cells in x-direction
 	int yDim = 50; // number of grid cells in y-direction
@@ -39,7 +41,7 @@ int main(){
 	if(neutral && env) throw std::runtime_error("A neutral model can't be depending on the environment!");
 
 	//Running the model
-	model Model(xDim,yDim,dispersal, neutral, dd, env, runs, specrate, dispersalCut, densityCut);
+	model Model(xDim,yDim,dispersal, neutral, dd, env, mort, repro, runs, specrate, dispersalCut, densityCut);
 	Model.update(runs);
 //	Model.get_data();
 //	Model.getclimate();

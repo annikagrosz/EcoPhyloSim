@@ -38,6 +38,10 @@ class Landscape {
 		bool m_Neutral;
 		bool m_DD;
 		bool m_Env;
+		// switches to determine wheather fitness should affect mortality or reproduction
+		bool m_mortality;
+		bool m_reproduction;
+
 		// The size of the landscape is defined as m_Xdimensions * m_Ydimensions
 		unsigned int m_LandscapeSize;
 		int m_KernelSize;
@@ -54,7 +58,7 @@ class Landscape {
 
 	Landscape();
 	Landscape(int xsize, int ysize, int type, bool neutral,
-	      bool dd, bool env, unsigned int runs, double specRate,
+	      bool dd, bool env, bool mort, bool repro, unsigned int runs, double specRate,
 	      int dispersalCutoff, int densityCutoff);
 	virtual ~Landscape();
 
@@ -82,7 +86,7 @@ class GlobalEnvironment : public Landscape
 {
  public:
 		GlobalEnvironment();
-		GlobalEnvironment(int xsize, int ysize, int type, bool neutral, bool dd, bool env,
+		GlobalEnvironment(int xsize, int ysize, int type, bool neutral, bool dd, bool env,bool mort, bool repro,
 		      unsigned int runs, double specRate, int dispersalCutoff, int densityCutoff);
 
 		virtual ~GlobalEnvironment();
@@ -94,7 +98,7 @@ class LocalEnvironment : public Landscape
 {
 	public:
 	LocalEnvironment();
-	LocalEnvironment(int xsize, int ysize, int type, bool neutral, bool dd, bool env,
+	LocalEnvironment(int xsize, int ysize, int type, bool neutral, bool dd, bool env,bool mort, bool repro,
 	      unsigned int runs, double specRate, int dispersalCutoff, int densityCutoff);
 	virtual ~LocalEnvironment();
 

@@ -19,14 +19,14 @@
 #include "Species.h"
 
 
-model::model(int X, int Y, int type, bool neutral, bool dd, bool env, unsigned int runs, double specRate, int dispersalCutoff, int densityCutoff)
+model::model(int X, int Y, int type, bool neutral, bool dd, bool env, bool mort, bool repro, unsigned int runs, double specRate, int dispersalCutoff, int densityCutoff)
 {
    if (type == 1) {
-      m_Global = new GlobalEnvironment(X,Y, type, neutral, dd, env, runs, specRate, dispersalCutoff, densityCutoff);
+      m_Global = new GlobalEnvironment(X,Y, type, neutral, dd, env, mort, repro, runs, specRate, dispersalCutoff, densityCutoff);
       m_Local = NULL;
    } else if (type == 2 || type == 3) {
       m_Global = NULL;
-      m_Local = new LocalEnvironment(X,Y, type, neutral, dd, env, runs, specRate, dispersalCutoff, densityCutoff);
+      m_Local = new LocalEnvironment(X,Y, type, neutral, dd, env, mort, repro, runs, specRate, dispersalCutoff, densityCutoff);
    }
    m_Dispersal = type;
    m_X_coordinate = X;
@@ -188,10 +188,10 @@ void model::update(unsigned int runs)
 //}
 
 
-void callModel(int* x, int* y, int* dispersal, int* runs, double* specRate, bool* dens, bool* env, bool* neutral,int* dispersalCutoff, int* densityCutoff,int* seed, int* specOut, double* traitOut, double* neutralOut, double* compOut, double* envOut,  char** phyloOut){
+void callModel(int* x, int* y, int* dispersal, int* runs, double* specRate, bool* dens, bool* env, bool* mort, bool* repro, bool* neutral,int* dispersalCutoff, int* densityCutoff,int* seed, int* specOut, double* traitOut, double* neutralOut, double* compOut, double* envOut,  char** phyloOut){
    RandomGen ran;
    ran.seedrand(seed[0]);
-   model Model(x[0],y[0],dispersal[0], neutral[0], dens[0], env[0], runs[0], specRate[0], dispersalCutoff[0], densityCutoff[0]);
+   model Model(x[0],y[0],dispersal[0], neutral[0], dens[0], env[0], mort[0], repro[0], runs[0], specRate[0], dispersalCutoff[0], densityCutoff[0]);
 
    Model.update(runs[0]);
 
