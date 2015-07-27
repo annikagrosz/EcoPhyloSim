@@ -15,7 +15,7 @@
 #include <utility>
 
 Phylogeny::Phylogeny() {
-   m_PrunedPhylo = new std::multimap<unsigned long long, Species*>();
+
    m_FullPhylogeny = new std::multimap<unsigned long long, Species*>();
 }
 
@@ -44,6 +44,7 @@ void Phylogeny::writeSpeciesData()
 
 void Phylogeny::prunePhylogeny(std::multimap<unsigned long long, Species*> *fullPhylogenyMap)
 {
+	m_PrunedPhylo = new std::multimap<unsigned long long, Species*>();
 
 		//todo prune phylogeny
 	for(unsigned long long i=1; i <= fullPhylogenyMap->size(); i++)

@@ -15,18 +15,19 @@
 #include <Utils/RandomGen.h>
 #include "Individual.h"
 #include <Grid.h>
+#include <sstream>
 
 #include "Species.h"
 
 
-model::model(int X, int Y, int type, bool neutral, bool dd, bool env, bool mort, bool repro, unsigned int runs, double specRate, int dispersalCutoff, int densityCutoff)
+model::model(int X, int Y, int type, bool neutral, bool dd, bool env, bool mort, bool repro, unsigned int runs, double specRate, int dispersalCutoff, int densityCutoff, unsigned int mortalityStrength, std::string location)
 {
    if (type == 1) {
-      m_Global = new GlobalEnvironment(X,Y, type, neutral, dd, env, mort, repro, runs, specRate, dispersalCutoff, densityCutoff);
+      m_Global = new GlobalEnvironment(X,Y, type, neutral, dd, env, mort, repro, runs, specRate, dispersalCutoff, densityCutoff, mortalityStrength);
       m_Local = NULL;
    } else if (type == 2 || type == 3) {
       m_Global = NULL;
-      m_Local = new LocalEnvironment(X,Y, type, neutral, dd, env, mort, repro, runs, specRate, dispersalCutoff, densityCutoff);
+      m_Local = new LocalEnvironment(X,Y, type, neutral, dd, env, mort, repro, runs, specRate, dispersalCutoff, densityCutoff, mortalityStrength);
    }
    m_Dispersal = type;
    m_X_coordinate = X;
@@ -43,7 +44,7 @@ void model::updateEnvironment(Landscape* environment, unsigned int generation, u
    environment->speciation(generation, runs);
 }
 
-void model::update(unsigned int runs)
+void model::update(unsigned int runs, std::string location)
 {
    for(unsigned int generation = 1; generation < runs+1; generation++)
    {
@@ -52,108 +53,65 @@ void model::update(unsigned int runs)
          std::cout << "generation :" <<  generation << '/' << runs << '\n';
       }
 
-      if(m_Dispersal==1){
-         //			std::stringstream filename1;
-         //			std::stringstream filename2;
+      if(m_Dispersal==1)
+      {
+
          updateEnvironment(m_Global, generation, runs);
-         //			if(generation % 1000 == 0 ){
-         //				filename1 << "..\\test_out_" << generation << ".txt";
-         //				std::ofstream test_matrix(filename1.str().c_str());
-         //				for(int ba=0;ba<50;ba++)
-         //				{
-         //					test_matrix << '\n';
-         //
-         //					for(int bu=0;bu<50;bu++)
-         //					{
-         //						test_matrix << Global.individuals[ba][bu].Species->ID <<',';
-         //					}
-         //				}
-         //			}
-         //
-         //				if (false) {
-         //					filename2 << "..\\trait_out_" << generation << ".txt";
-         //
-         //					std::ofstream trait_matrix(filename2.str().c_str());
-         //					for(int ba=0;ba<Global.get_dimensions().first;ba++)
-         //					{
-         //						trait_matrix << '\n';
-         //						for(int bu=0;bu<Global.get_dimensions().second;bu++)
-         //						{
-         //							trait_matrix << Global.individuals[ba][bu].mean <<',';
-         //						}
-         //					}
-         //				}
-         //			}
-      }
+
+			if(generation >= runs/2 && generation % 1000 == 0 )
+			{
+				std::stringstream filename1;
+
+				filename1 << location << "/specOut" << generation << ".txt";
+				std::ofstream species(filename1.str().c_str());
+				for(int ba=0;ba<m_Global->m_Xdimensions ;ba++)
+				{
+					species << '\n';
+
+					for(int bu=0;bu<m_Global->m_Ydimensions;bu++)
+					{
+						species << m_Global->m_Individuals[ba][bu].m_Species->m_ID <<',';
+					}
+				}
+
+			std::stringstream filename2;
+			filename2 << location << "/phyloOut" << generation << ".txt";
+
+			std::ofstream phylogeny(filename2.str().c_str());
+			m_Global->m_Phylogeny.prunePhylogeny(m_Global->m_Phylogeny.m_FullPhylogeny);
+			phylogeny << m_Global->m_Phylogeny.writePhylogenyR(1, generation, m_Global->m_Phylogeny.m_PrunedPhylo);
+		}
+	}
+
 
       else if(m_Dispersal == 3) {
          updateEnvironment(m_Local, generation, runs);
 
-         //			std::stringstream filename1;
-         ////			std::stringstream filename2;
-         //			if (generation % 1000 == 0)
-         //			{
-         //
-         ////				std::cout << '\n' << "Printing matrix to file" << '\n';
-         //
-         //				filename1 << "..\\test_out_" << generation << ".txt";
-         ////				filename2 << "..\\trait_out_" << generation << ".txt";
-         ////
-         //				std::ofstream test_matrix(filename1.str().c_str());
-         //				for(int ba=0;ba<Local.get_dimensions().first;ba++)
-         //				{
-         //					test_matrix << '\n';
-         //					for(int bu=0;bu<Local.get_dimensions().second;bu++)
-         //					{
-         //						test_matrix << Local.individuals[ba][bu].Species->ID <<',';
-         //					}
-         //				}
-         //			}
-         //				std::ofstream trait_matrix(filename2.str().c_str());
-         //				for(int ba=0;ba<Local.get_dimensions().first;ba++)
-         //				{
-         //					trait_matrix << '\n';
-         //					for(int bu=0;bu<Local.get_dimensions().second;bu++)
-         //					{
-         //						trait_matrix << Local.individuals[ba][bu].mean <<',';
-         //					}
-         //				}
-         //			}
+         if(generation >= runs/2 && generation % 1000 == 0 )
+         			{
+         				std::stringstream filename1;
+
+         				filename1 << location << "/specOut" << generation << ".txt";
+         				std::ofstream species(filename1.str().c_str());
+         				for(int ba=0;ba<m_Local->m_Xdimensions ;ba++)
+         				{
+         					species << '\n';
+
+         					for(int bu=0;bu<m_Local->m_Ydimensions;bu++)
+         					{
+         						species << m_Local->m_Individuals[ba][bu].m_Species->m_ID <<',';
+         					}
+         				}
+
+         			std::stringstream filename2;
+         			filename2 << location << "/phyloOut" << generation << ".txt";
+
+         			std::ofstream phylogeny(filename2.str().c_str());
+         			m_Local->m_Phylogeny.prunePhylogeny(m_Local->m_Phylogeny.m_FullPhylogeny);
+         			phylogeny << m_Local->m_Phylogeny.writePhylogenyR(1, generation, m_Local->m_Phylogeny.m_PrunedPhylo);
+         		}
       }
-      //		Landscape.reproduce(generation);
-
-
-      //		std::stringstream filename1;
-      //		std::stringstream filename2;
-      //		if (generation % 1000 == 0)
-      //		{
-      //
-      //			std::cout << '\n' << "Printing matrix to file" << '\n';
-      //
-      //			filename1 << "..\\test_out_" << generation << ".txt";
-      //			filename2 << "..\\trait_out_" << generation << ".txt";
-      //
-      //			std::ofstream test_matrix(filename1.str().c_str());
-      //			for(int ba=0;ba<Landscape.get_dimensions().first;ba++)
-      //			{
-      //				test_matrix << '\n';
-      //				for(int bu=0;bu<Landscape.get_dimensions().second;bu++)
-      //				{
-      //					test_matrix << Landscape.individuals[ba][bu].Species->ID <<',';
-      //				}
-      //			}
-      //
-      //			std::ofstream trait_matrix(filename2.str().c_str());
-      //			for(int ba=0;ba<Landscape.get_dimensions().first;ba++)
-      //			{
-      //				trait_matrix << '\n';
-      //				for(int bu=0;bu<Landscape.get_dimensions().second;bu++)
-      //				{
-      //					trait_matrix << Landscape.individuals[ba][bu].mean <<',';
-      //				}
-      //			}
-      //		}
-   }
+    }
 }
 
 //! Public class method to increase age of all individuals by one
@@ -188,12 +146,16 @@ void model::update(unsigned int runs)
 //}
 
 
-void callModel(int* x, int* y, int* dispersal, int* runs, double* specRate, bool* dens, bool* env, bool* mort, bool* repro, bool* neutral,int* dispersalCutoff, int* densityCutoff,int* seed, int* specOut, double* traitOut, double* neutralOut, double* compOut, double* envOut,  char** phyloOut){
-   RandomGen ran;
+void callModel(int* x, int* y, int* dispersal, int* runs, double* specRate,
+		   bool* dens, bool* env, bool* neutral, bool* mort,unsigned int* mortStrength, bool* repro,
+		   int* dispersalCutoff, int* densityCutoff, int* seed, char** saveLocation,
+		   int* specOut, double* traitOut, double* neutralOut, double* compOut, double* envOut, char** phyloOut){
+//   int mortStr = 50;
+	RandomGen ran;
    ran.seedrand(seed[0]);
-   model Model(x[0],y[0],dispersal[0], neutral[0], dens[0], env[0], mort[0], repro[0], runs[0], specRate[0], dispersalCutoff[0], densityCutoff[0]);
+   model Model(x[0],y[0],dispersal[0], neutral[0], dens[0], env[0], mort[0], repro[0], runs[0], specRate[0], dispersalCutoff[0], densityCutoff[0], mortStrength[0], saveLocation[0]);
 
-   Model.update(runs[0]);
+   Model.update(runs[0], saveLocation[0]);
 
    if(dispersal[0] == 1){
 	  std::cout << "Writing : Species Matrix" << '\n';
@@ -258,7 +220,7 @@ void callModel(int* x, int* y, int* dispersal, int* runs, double* specRate, bool
       std::cout << "Passing : Phylogeny" << '\n';
 
       char * cstr = new char [phyloPass.length()+1];
-      std::strcpy (cstr, phyloPass.c_str());
+      std::strcpy (cstr, phyloPass.c_str()); //cstring is necissary for passing the phylogeny to R without errors
 
       phyloOut[0] = cstr;
       std::cout << "done" << '\n';
@@ -308,7 +270,7 @@ void callModel(int* x, int* y, int* dispersal, int* runs, double* specRate, bool
       Model.m_Local->m_Phylogeny.prunePhylogeny(Model.m_Local->m_Phylogeny.m_FullPhylogeny);
       std::string phyloPass = Model.m_Local->m_Phylogeny.writePhylogenyR(1, runs[0], Model.m_Local->m_Phylogeny.m_PrunedPhylo);
       char * cstr = new char [phyloPass.length()+1];
-       std::strcpy (cstr, phyloPass.c_str());
+       std::strcpy (cstr, phyloPass.c_str()); //cstring is necissary for passing the phylogeny to R without errors
 
            phyloOut[0] = cstr;
    }

@@ -22,11 +22,11 @@ class model {
    LocalEnvironment* m_Local;
 
    model(int x, int y, int type, bool neutral, bool dd,bool env, bool mort, bool repro,
-            unsigned int runs, double specRate, int dispersalCutoff, int densityCutoff);
+            unsigned int runs, double specRate, int dispersalCutoff, int densityCutoff, unsigned int mortalityStrength, std::string location);
    ~model();
    void get_data();
    void getclimate();
-   void update(unsigned int runs);
+   void update(unsigned int runs, std::string location);
    void gettraits();
 
 private:
@@ -34,9 +34,10 @@ private:
 };
 
 extern "C" {
-void callModel(int* x, int* y, int* dispersal, int* runs, double* specRate, bool* dens,
-      bool* env, bool* neutral, bool* mort, bool* repro, int* dispersalCutoff, int* densityCutoff, int* seed, int* specOut,
-      double* traitOut,double* neutralOut, double* compOut, double* envOut, char** phyloOut);
+void callModel(int* x, int* y, int* dispersal, int* runs, double* specRate,
+			   bool* dens, bool* env, bool* neutral, bool* mort, unsigned int* mortStrength, bool* repro,
+			   int* dispersalCutoff, int* densityCutoff, int* seed, char** saveLocation,
+			   int* specOut, double* traitOut, double* neutralOut, double* compOut, double* envOut, char** phyloOut);
 // void runModel(model* Model, int* runs);
 // void getModelData(model* Model, int* dispersal, int* specOut, double* traitOut, double* envOut, std::string* phyloOut);
 }

@@ -5,8 +5,8 @@
 \title{Set Model parameters}
 \usage{
 setModelParametersXML(scenarios, x, y, runs, dispersal, specRate, density,
-  environment, mortalityFitness, reproductiveFitness, neutral, location,
-  dispersalCut, densityCut, seed)
+  environment, mortalityFitness, mortalityStrength, reproductiveFitness,
+  neutral, location, dispersalCut, densityCut, seed)
 }
 \arguments{
 \item{scenarios}{Character vector containing the names of the scenarios to be run}
@@ -27,6 +27,8 @@ setModelParametersXML(scenarios, x, y, runs, dispersal, specRate, density,
 
 \item{mortalityFitness}{Logical, determining whether or not the individual fitness influences mortality}
 
+\item{mortalityStrength}{Integer determining the influence of fitness on mortality}
+
 \item{reproductiveFitness}{Logical, determining whether or not the individual fitness influences reproducti}
 
 \item{neutral}{Logical determining whether or not the model is run under neutral conditions (overrides density and environment)}
@@ -38,6 +40,8 @@ setModelParametersXML(scenarios, x, y, runs, dispersal, specRate, density,
 \item{densityCut}{Integer defining the range for the density dependence}
 
 \item{seed}{Integer setting the random seed for the model}
+
+\item{saveLocation}{Path of the folder to save the extracted files to}
 }
 \value{
 Creates a .xml file at the specified location

@@ -8,15 +8,18 @@
 #' @param density Logical, determining whether or not density dependence influences the model
 #' @param environment Logical, determining whether or not the environment influences the model
 #' @param mortalityFitness Logical, determining whether or not the individual fitness influences mortality
+#' @param mortalityStrength Integer determining the influence of fitness on mortality (see Details)
 #' @param reproductiveFitness Logical, determining whether or not the individual fitness influences reproduction
 #' @param neutral Logical, determining whether or not the model is run under neutral conditions (overrides density and environment)
 #' @param dispersalCut Integer, defines the dispersal distance for local dispersal (ignored if dispersal = 1 (Global))
 #' @param densityCut Integer, defines the effective range of the competition (ignored if density = FALSE)
 #' @param seed numerical, sets the random seed
+#' @param saveLocation Path of the folder to save the backup files to
+#' @details If mortalityFitness = TRUE, the number of reproduction events per generation is doubled. The mortality strength is an Integer value which determines the number of events per generation in which the mortality depends on fitness. \cr E.g. if mortalityStrengt = 100 for every 100 events with fitness dependent mortality there is 1 run with random mortality. \cr This way the random base mortality can be increased or decreased. The higher the frequency of the random base mortality the more neutral the conditions get. 
 #' @return A List containing sveral numerical matrices with species (each cell represents an individual of a species), environment and different traits as well as the phylogeny as an object of class 'phylo'.
 #' @examples 
 #' # Run the model
-#' myModel <- fullMod(x = 50, y = 50, dispersal = 1, runs = 100, specRate = 1, density = FALSE, environment = FALSE, neutral = TRUE, seed = 1500)
+#' myModel <- fullMod(x = 50, y = 50, dispersal = 1, runs = 100, specRate = 1.0, density = FALSE, environment = FALSE, neutral = TRUE, seed = 1500)
 #' 
 #'  # Look at the phylogeny (requires package 'ape')
 #'  require(ape)
@@ -33,7 +36,7 @@
 #'  
 #'  species <- myModel$specMat
 #'  sac(area = c(1,10,100,1000), matrix = species, rep = 100, plot= T)
-fullMod <- function(x = NULL, y = NULL, dispersal = NULL, runs = NULL, specRate = NULL, density = NULL, environment = NULL, mortalityFitness = NULL, reproductiveFitness = NULL, neutral = NULL, dispersalCut = 2, densityCut = 1, seed=NULL)
+fullMod <- function(x = NULL, y = NULL, dispersal = NULL, runs = NULL, specRate = NULL, density = NULL, environment = NULL, mortalityFitness = NULL,mortalityStrength = NULL, reproductiveFitness = NULL, neutral = NULL, dispersalCut = 2, densityCut = 1, seed=NULL, saveLocation = NULL)
 {
   ptm <- proc.time()
   outVec <- rep.int(0,x*y)
@@ -43,7 +46,13 @@ fullMod <- function(x = NULL, y = NULL, dispersal = NULL, runs = NULL, specRate 
     environment  = FALSE
   }
   
-  out <- .C(callModel, as.integer(x),as.integer(y), as.integer(dispersal), as.integer(runs), as.numeric(specRate), as.logical(density),as.logical(environment) ,as.logical(mortalityFitness) ,as.logical(reproductiveFitness),  as.logical(neutral), as.integer(dispersalCut), as.integer(densityCut), as.integer(seed), specOut = as.integer(outVec), traitOut = as.numeric(outVec),neutralOut = as.numeric(outVec),compOut = as.numeric(outVec), envOut = as.numeric(outVec), phyloOut = character(length = 1))[14:19]
+  out <- .C(callModel, 
+            as.integer(x),as.integer(y), as.integer(dispersal), as.integer(runs), as.numeric(specRate), #1-5
+            as.logical(density),as.logical(environment) ,as.logical(neutral), #6-8
+            as.logical(mortalityFitness), as.integer(mortalityStrength), as.logical(reproductiveFitness),   #9-11
+            as.integer(dispersalCut), as.integer(densityCut), as.integer(seed), as.character(saveLocation), #12-15
+            specOut = as.integer(outVec), traitOut = as.numeric(outVec),neutralOut = as.numeric(outVec), #16-18 Output starts here
+            compOut = as.numeric(outVec), envOut = as.numeric(outVec), phyloOut = character(length = 1))[16:21] #19-21
   print("simulation is done")
   
   print("writing specMat")

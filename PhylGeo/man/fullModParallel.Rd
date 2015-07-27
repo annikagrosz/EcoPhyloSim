@@ -6,9 +6,9 @@
 \usage{
 fullModParallel(parameters = NULL, cores = NULL, x = NULL, y = NULL,
   dispersal = NULL, runs = NULL, specRate = NULL, density = NULL,
-  environment = NULL, mortalityFitness = NULL, reproductiveFitness = NULL,
-  neutral = NULL, dispersalCut = NULL, densityCut = NULL, seed = NULL,
-  backup = FALSE)
+  environment = NULL, mortalityFitness = NULL, mortalityStrength = NULL,
+  reproductiveFitness = NULL, neutral = NULL, dispersalCut = NULL,
+  densityCut = NULL, seed = NULL, saveLocation = FALSE, backup = FALSE)
 }
 \arguments{
 \item{parameters}{.xml file containing all parameters for the model scenarios (default is NULL)}
@@ -29,6 +29,8 @@ fullModParallel(parameters = NULL, cores = NULL, x = NULL, y = NULL,
 
 \item{mortalityFitness}{Logical, determining whether or not the individual fitness influences mortality}
 
+\item{mortalityStrength}{Integer determining the influence of fitness on mortality}
+
 \item{reproductiveFitness}{Logical, determining whether or not the individual fitness influences reproduction}
 
 \item{neutral}{Logical determining whether or not the model is run under neutral conditions (overrides density and environment)}
@@ -39,6 +41,8 @@ fullModParallel(parameters = NULL, cores = NULL, x = NULL, y = NULL,
 
 \item{seed}{Integer setting the random seed for the model}
 
+\item{saveLocation}{Path of the folder to save the extracted files to}
+
 \item{backup}{Logical determining whether the results of the individual scenario runs should be saved as a workspace image (advised if the simulation takes a long time, or if the individual scenarios vary greatly in runtime. Default is FALSE)}
 }
 \value{
@@ -48,6 +52,6 @@ A list containing numerical matrices of species distribution, local trait values
 A model of species community assembly under different assembly mechanisms, using parallel computing to make use of multi core cpus and clusters in order to reduce computation time.
 }
 \details{
-This function uses the \code{\link{foreach}} and \code{\link{doParallel}} package to compute the model scenarios parallel on several cores. if you want to keep working on your computer make sure to reserve at least one core for your other endevors (by assigning n-1 cores to the function). By default all cores are employed to ensure maximum speed.\cr \cr The phylogeny is passed to R in the newick format and parsed to an object of class "phylo" with the function \code{\link[ape]{read.tree}} from the \code{\link{ape}} package. \cr \cr If no .xml parameter file is supplied, a single scenario can be computed by manually setting the parameters.
+This function uses the \code{\link{foreach}} and \code{\link{doParallel}} package to compute the model scenarios parallel on several cores. if you want to keep working on your computer make sure to reserve at least one core for your other endevors (by assigning n-1 cores to the function). By default all cores are employed to ensure maximum speed.\cr \cr The phylogeny is passed to R in the newick format and parsed to an object of class "phylo" with the function \code{\link[ape]{read.tree}} from the \code{\link{ape}} package. \cr \cr If no .xml parameter file is supplied, a single scenario can be computed by manually setting the parameters. \cr \cr If mortalityFitness = TRUE, the number of reproduction events per generation is doubled. The mortality strength is an Integer value which determines the number of events per generation in which the mortality depends on fitness. \cr E.g. if mortalityStrengt = 100 for every 100 events with fitness dependent mortality there is 1 run w
 }
 

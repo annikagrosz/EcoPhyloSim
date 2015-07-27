@@ -33,6 +33,7 @@ class Landscape {
 		int m_Xdimensions, m_Ydimensions;
 		// Counter for all the species that are born.
 		unsigned long long m_Global_Species_Counter;
+		unsigned int m_mortalityStrength;
 
 		// Indicates whether the species dispersion depends on local conditions or not.
 		bool m_Neutral;
@@ -59,7 +60,7 @@ class Landscape {
 	Landscape();
 	Landscape(int xsize, int ysize, int type, bool neutral,
 	      bool dd, bool env, bool mort, bool repro, unsigned int runs, double specRate,
-	      int dispersalCutoff, int densityCutoff);
+	      int dispersalCutoff, int densityCutoff, unsigned int mortalityStrength);
 	virtual ~Landscape();
 
 	// TODO(Betim): Should it really be public?
@@ -87,7 +88,7 @@ class GlobalEnvironment : public Landscape
  public:
 		GlobalEnvironment();
 		GlobalEnvironment(int xsize, int ysize, int type, bool neutral, bool dd, bool env,bool mort, bool repro,
-		      unsigned int runs, double specRate, int dispersalCutoff, int densityCutoff);
+		      unsigned int runs, double specRate, int dispersalCutoff, int densityCutoff, unsigned int mortalityStrength);
 
 		virtual ~GlobalEnvironment();
 
@@ -99,7 +100,7 @@ class LocalEnvironment : public Landscape
 	public:
 	LocalEnvironment();
 	LocalEnvironment(int xsize, int ysize, int type, bool neutral, bool dd, bool env,bool mort, bool repro,
-	      unsigned int runs, double specRate, int dispersalCutoff, int densityCutoff);
+	      unsigned int runs, double specRate, int dispersalCutoff, int densityCutoff, unsigned int mortalityStrength);
 	virtual ~LocalEnvironment();
 
 	void reproduce(unsigned int generation);
