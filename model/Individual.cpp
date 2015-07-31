@@ -95,7 +95,7 @@ void Individual::operator=(const Individual &ind)
 	double Individual::getSeedsTo(int rel_x, int rel_y, int dispersal_type, double temp, bool env, bool dd)
 	{
 		double sum_of_weights = 0.0;
-		double dispersal_weight = 1.0;
+		double dispersal_weight = 0.0;
 
 		dispersal_weight = dispersal(dispersal_type, euclidian_distance(rel_x, rel_y)); // Kernel or NN
 		if(env)

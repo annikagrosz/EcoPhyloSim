@@ -17,22 +17,23 @@
 
 
 int main(){
-	unsigned int runs = 3000; // number of Generations
+	unsigned int runs = 10000; // number of Generations
 	bool neutral = false; // neutral model or not
-	bool dd = false; // Density dependent or independent model
-	bool env = true; // environmentally dependent or independent model
+	bool dd = true; // Density dependent or independent model
+	bool env = false; // environmentally dependent or independent model
 	bool mort = true; // mortality fitness
 	bool repro = false; // reproductive fitness
-	int dispersal = 1; // 1 = global dispersal, 2 = nearest neighbor dispersal, 3= kernel dispersal
-	int xDim = 50; // Number of grid cells in x-direction
-	int yDim = 50; // number of grid cells in y-direction
+	int dispersal = 3; // 1 = global dispersal, 2 = nearest neighbor dispersal, 3= kernel dispersal
+	int xDim = 100; // Number of grid cells in x-direction
+	int yDim = 100; // number of grid cells in y-direction
 //	srand(1500);
-	double specrate = 2.0;
-	int densityCut = 1;
+	double specrate = 1.0;
+	int densityCut = 2;
 	int dispersalCut = 2;
-	int mortalityStrength = 50;
+	int mortalityStrength = 10;
+	std:: string saveLoc = "C:/Users/Paul/Documents/GitHub/phylogeography/results/saveLocation";
 	RandomGen ran;
-	ran.seedrand(1500);
+	ran.seedrand(1000);
 	// Just to test
 	Parameters* pa = new Parameters();
 	std::cout << "Value of numberOfRuns: " << pa->getParameterValue<int>(std::string("numberOfRuns")) << std::endl;
@@ -42,8 +43,8 @@ int main(){
 	if(neutral && env) throw std::runtime_error("A neutral model can't be depending on the environment!");
 
 	//Running the model
-	model Model(xDim,yDim,dispersal, neutral, dd, env, mort, repro, runs, specrate, dispersalCut, densityCut, mortalityStrength);
-	Model.update(runs);
+	model Model(xDim,yDim,dispersal, neutral, dd, env, mort, repro, runs, specrate, dispersalCut, densityCut, mortalityStrength, saveLoc);
+	Model.update(runs, saveLoc);
 //	Model.get_data();
 //	Model.getclimate();
 //	Model.gettraits();

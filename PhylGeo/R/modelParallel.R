@@ -29,7 +29,7 @@ fullModParallel <- function(parameters = NULL, cores = NULL,x = NULL, y = NULL, 
   ptm <- proc.time() 
   # check if .xml file was passed to function
   if (is.null(parameters) == F){
-  pars<- XML::xmlToDataFrame(doc = parameters, colClasses = c("character",rep("numeric", 11)))
+  pars<- XML::xmlToDataFrame(doc = parameters, colClasses = c("character",rep("numeric", 13), "character", "numeric"))
   
 
  pars$density <- as.logical(pars$density)
@@ -45,17 +45,17 @@ fullModParallel <- function(parameters = NULL, cores = NULL,x = NULL, y = NULL, 
    }
  }
 
-  if (is.null(cores)) cores <- detectCores()
+  if (is.null(cores)) cores <- parallel::detectCores()
   cl <- parallel::makeCluster(cores)
-  doParalell::registerDoParallel(cl)
-  out <- foreach::foreach(i=1:nrow(pars), .packages = c("PhylGeo")) %dopar%{
+  doParallel::registerDoParallel(cl)
+  out <- foreach(i=1:nrow(pars), .packages = c("PhylGeo")) %dopar%{
     
     outVec <- rep.int(0,pars$x[i]*pars$y[i])
    OUT <- try(.C(callModel, 
                  as.integer(pars$x[i]),as.integer(pars$y[i]), as.integer(pars$dispersal[i]), 
                  as.integer(pars$runs[i]), as.numeric(pars$specRate[i]),
-                 as.logical(pars$density[i]),as.logical(pars$environment[i]),as.logical(pars$mortalityFitness[i]),
-                 as.integer(pars$mortalityStrength[i]), as.logical(pars$reproductiveFitness[i]), as.logical(pars$neutral[i]), 
+                 as.logical(pars$density[i]),as.logical(pars$environment[i]), as.logical(pars$neutral[i]), 
+				 as.logical(pars$mortalityFitness[i]), as.integer(pars$mortalityStrength[i]), as.logical(pars$reproductiveFitness[i]), 
                  as.integer(pars$dispersalCut[i]), as.integer(pars$densityCut[i]),
                  as.integer(pars$seed[i]), as.character(pars$saveLocation[i]),
                  specOut = as.integer(outVec), traitOut = as.numeric(outVec),neutralOut = as.numeric(outVec),
