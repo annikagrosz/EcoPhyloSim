@@ -13,7 +13,7 @@ require(PhylGeo)
 ###Dispersal Limitation + Environment
 ####Mortality
 ```{r mortality, echo=FALSE, fig.width=20, fig.height=10}
-tr <- fullMod(x = 50, y = 50, dispersal = 3, runs = 10000, specRate = 2.0, density = F, environment = T, mortalityFitness = T, mortalityStrength = 50, reproductiveFitness = F, neutral = F, dispersalCut =1, densityCut = 2, seed = 100)
+tr <- fullMod(x = 50, y = 50, dispersal = 3, runs = 10000, specRate = 2.0, density = F, environment = F, mortalityFitness = T, mortalityStrength = 20, reproductiveFitness = F, neutral = F, dispersalCut = 2, densityCut = 1, seed = 1000, saveLocation = "C:/Users/Paul/Desktop/Data/backupLocal")
 
 phylogenyEx <- drop.fossil(tr$phylogeny)
 
