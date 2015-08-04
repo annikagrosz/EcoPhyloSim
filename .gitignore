@@ -9,4 +9,8 @@ workspace/
 *.RData
 *.o
 *.dll
+.Rproj.user
+PhylGeo.Rcheck/00_pkg_src
+00check.log
+phylosim.Rproj
 RcppExports.cpp
