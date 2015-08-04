@@ -5,7 +5,3 @@ callModel <- function(x, y, dispersal, runs, specRate, dens, env, mort, repro, n
     invisible(.Call('PhylGeo_callModel', PACKAGE = 'PhylGeo', x, y, dispersal, runs, specRate, dens, env, mort, repro, neutral, dispersalCutoff, densityCutoff, seed, specOut, traitOut, neutralOut, compOut, envOut, phyloOut))
 }
 
-callModelDefault <- function(runs, specOut, traitOut, neutralOut, compOut, envOut, phyloOut) {
-    invisible(.Call('PhylGeo_callModelDefault', PACKAGE = 'PhylGeo', runs, specOut, traitOut, neutralOut, compOut, envOut, phyloOut))
-}
-
