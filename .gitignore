@@ -7,3 +7,6 @@ workspace/
 *.txt
 *.out
 *.RData
+*.o
+*.dll
+RcppExports.cpp
