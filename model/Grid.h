@@ -33,16 +33,11 @@ class Landscape {
 		int m_Xdimensions, m_Ydimensions;
 		// Counter for all the species that are born.
 		unsigned long long m_Global_Species_Counter;
-		unsigned int m_mortalityStrength;
 
 		// Indicates whether the species dispersion depends on local conditions or not.
 		bool m_Neutral;
 		bool m_DD;
 		bool m_Env;
-		// switches to determine wheather fitness should affect mortality or reproduction
-		bool m_mortality;
-		bool m_reproduction;
-
 		// The size of the landscape is defined as m_Xdimensions * m_Ydimensions
 		unsigned int m_LandscapeSize;
 		int m_KernelSize;
@@ -59,8 +54,8 @@ class Landscape {
 
 	Landscape();
 	Landscape(int xsize, int ysize, int type, bool neutral,
-	      bool dd, bool env, bool mort, bool repro, unsigned int runs, double specRate,
-	      int dispersalCutoff, int densityCutoff, unsigned int mortalityStrength);
+	      bool dd, bool env, unsigned int runs, double specRate,
+	      int dispersalCutoff, int densityCutoff);
 	virtual ~Landscape();
 
 	// TODO(Betim): Should it really be public?
@@ -87,8 +82,8 @@ class GlobalEnvironment : public Landscape
 {
  public:
 		GlobalEnvironment();
-		GlobalEnvironment(int xsize, int ysize, int type, bool neutral, bool dd, bool env,bool mort, bool repro,
-		      unsigned int runs, double specRate, int dispersalCutoff, int densityCutoff, unsigned int mortalityStrength);
+		GlobalEnvironment(int xsize, int ysize, int type, bool neutral, bool dd, bool env,
+		      unsigned int runs, double specRate, int dispersalCutoff, int densityCutoff);
 
 		virtual ~GlobalEnvironment();
 
@@ -99,8 +94,8 @@ class LocalEnvironment : public Landscape
 {
 	public:
 	LocalEnvironment();
-	LocalEnvironment(int xsize, int ysize, int type, bool neutral, bool dd, bool env,bool mort, bool repro,
-	      unsigned int runs, double specRate, int dispersalCutoff, int densityCutoff, unsigned int mortalityStrength);
+	LocalEnvironment(int xsize, int ysize, int type, bool neutral, bool dd, bool env,
+	      unsigned int runs, double specRate, int dispersalCutoff, int densityCutoff);
 	virtual ~LocalEnvironment();
 
 	void reproduce(unsigned int generation);

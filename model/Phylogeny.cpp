@@ -6,6 +6,7 @@
  */
 
 #include "Phylogeny.h"
+#include "StringConversion.h"
 
 #include <fstream>
 #include <iostream>
@@ -15,7 +16,7 @@
 #include <utility>
 
 Phylogeny::Phylogeny() {
-
+   m_PrunedPhylo = new std::multimap<unsigned long long, Species*>();
    m_FullPhylogeny = new std::multimap<unsigned long long, Species*>();
 }
 
@@ -44,7 +45,6 @@ void Phylogeny::writeSpeciesData()
 
 void Phylogeny::prunePhylogeny(std::multimap<unsigned long long, Species*> *fullPhylogenyMap)
 {
-	m_PrunedPhylo = new std::multimap<unsigned long long, Species*>();
 
 		//todo prune phylogeny
 	for(unsigned long long i=1; i <= fullPhylogenyMap->size(); i++)
@@ -63,7 +63,6 @@ void Phylogeny::prunePhylogeny(std::multimap<unsigned long long, Species*> *full
 					 if(child->m_Children.empty() && child->m_Count==0)
 					 {
 						 father->m_Children.erase(father->m_Children.begin()+j);
-
 					 }
 	//				 else if(!(child->children.empty()) && child->count==0)
 	//				 {
@@ -131,9 +130,9 @@ void Phylogeny::writePhylogeny(unsigned long long start, unsigned int runs,
 			{
 				if(position[parent->m_ID] != 0) throw std::runtime_error("unexpected value for position value in a leaf") ;
 				branchLength = parent->m_Date_of_Extinction - parent->m_Date_of_Emergence;
-				tree.insert(0, std::to_string(branchLength) );
+				tree.insert(0, to_string(branchLength) );
 				tree.insert(0, ":" );
-				tree.insert(0, std::to_string(parent->m_ID) );
+				tree.insert(0, to_string(parent->m_ID) );
 				tree.insert(0, "s" );
 				tree.insert(0, "," );
 				parent = phylogenyMap->find(parent->m_Ancestor)->second ;
@@ -145,9 +144,9 @@ void Phylogeny::writePhylogeny(unsigned long long start, unsigned int runs,
 			{
 				branchLength = parent->m_Date_of_Extinction - phylogenyMap->find(parent->m_Children.back())->second->m_Date_of_Emergence;
 
-				tree.insert(0, std::to_string(branchLength));
+				tree.insert(0, to_string(branchLength));
 				tree.insert(0, ":");
-				tree.insert(0, std::to_string(parent->m_ID));
+				tree.insert(0, to_string(parent->m_ID));
 				tree.insert(0, "s" );
 				tree.insert(0, paranthesis[parent->m_ID],'(' );
 				tree.insert(0, "," );
@@ -185,9 +184,9 @@ void Phylogeny::writePhylogeny(unsigned long long start, unsigned int runs,
 						branchLength = phylogenyMap->find(parent->m_Children[position[parent->m_ID]])->second->m_Date_of_Emergence - phylogenyMap->find(parent->m_Children[position[parent->m_ID ]-1])->second->m_Date_of_Emergence;
 					}
 
-					tree.insert(0, std::to_string(branchLength));
+					tree.insert(0, to_string(branchLength));
 					tree.insert(0, ":");
-					tree.insert(0, std::to_string(parent->m_ID));
+					tree.insert(0, to_string(parent->m_ID));
 					tree.insert(0, "s");
 					tree.insert(0, ")");
 					paranthesis[parent->m_ID] += 1;
@@ -222,12 +221,14 @@ std::string Phylogeny::writePhylogenyR(unsigned long long start, unsigned int ru
 
 	std::string tree = ";" ;
 
-	std::vector <unsigned long long> position  (phylogenyMap->size(),0);
-	std::vector <unsigned long long> paranthesis  (phylogenyMap->size(),0);
+	std::vector <size_t> position  (phylogenyMap->size(),0);
+	std::vector <size_t> paranthesis  (phylogenyMap->size(),0);
 
     bool go = true;
 	while(go )
 	{
+
+
 			// todo rename paerent to focusSpecies
 		    // todo long term: think about changing children from integer vector + map to pointer
 
@@ -237,9 +238,9 @@ std::string Phylogeny::writePhylogenyR(unsigned long long start, unsigned int ru
 			{
 				if(position[parent->m_ID] != 0) throw std::runtime_error("unexpected value for position value in a leaf") ;
 				branchLength = parent->m_Date_of_Extinction - parent->m_Date_of_Emergence;
-				tree.insert(0, std::to_string(branchLength) );
+				tree.insert(0, to_string(branchLength) );
 				tree.insert(0, ":" );
-				tree.insert(0, std::to_string(parent->m_ID) );
+				tree.insert(0, to_string(parent->m_ID) );
 				tree.insert(0, "s" );
 				tree.insert(0, "," );
 				parent = phylogenyMap->find(parent->m_Ancestor)->second ;
@@ -251,9 +252,9 @@ std::string Phylogeny::writePhylogenyR(unsigned long long start, unsigned int ru
 			{
 				branchLength = parent->m_Date_of_Extinction - phylogenyMap->find(parent->m_Children.back())->second->m_Date_of_Emergence;
 
-				tree.insert(0, std::to_string(branchLength));
+				tree.insert(0, to_string(branchLength));
 				tree.insert(0, ":");
-				tree.insert(0, std::to_string(parent->m_ID));
+				tree.insert(0, to_string(parent->m_ID));
 				tree.insert(0, "s" );
 				tree.insert(0, paranthesis[parent->m_ID],'(' );
 				tree.insert(0, "," );
@@ -291,9 +292,9 @@ std::string Phylogeny::writePhylogenyR(unsigned long long start, unsigned int ru
 						branchLength = phylogenyMap->find(parent->m_Children[position[parent->m_ID]])->second->m_Date_of_Emergence - phylogenyMap->find(parent->m_Children[position[parent->m_ID ]-1])->second->m_Date_of_Emergence;
 					}
 
-					tree.insert(0, std::to_string(branchLength));
+					tree.insert(0, to_string(branchLength));
 					tree.insert(0, ":");
-					tree.insert(0, std::to_string(parent->m_ID));
+					tree.insert(0, to_string(parent->m_ID));
 					tree.insert(0, "s");
 					tree.insert(0, ")");
 					paranthesis[parent->m_ID] += 1;

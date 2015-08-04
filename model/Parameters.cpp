@@ -6,6 +6,7 @@
  *              Betim Musa <musab@informatik.uni-freiburg.de>
  */
 #include <Parameters.h>
+#include "StringConversion.h"
 #include <XML/ThirdPartySoftware/PugiXML/src/pugixml.hpp>
 #include <string>
 #include <ctime>
@@ -90,10 +91,10 @@ void Parameters::readParameterFromXMLFile(string xmlFileName) {
       // Put parameter in according map
       // TODO(Betim): Catch conversion exceptions!
       if (paramType == string("int")) {
-         int value = stoi(paramValue);
+         int value = str_to_int(paramValue);
          m_IntParameters.insert(pair<string, int>(paramName, value));
       } else if (paramType == string("double")) {
-         double value = stod(paramValue);
+         double value = str_to_double(paramValue);
          m_DoubleParameters.insert(pair<string, double>(paramName, value));
       } else if (paramType == string("bool")) {
          bool value = false;
@@ -181,12 +182,12 @@ void Parameters::createParameters() {
 
    // Parameters for Landscape
    intParameters.push_back(pair<string, int>(string("LandscapeSizeX"), 100));
-   intParameters.push_back(pair<string, int>(string("LandscapeSizeY"), 100));
+   intParameters.push_back(pair<string, int>(string("LandscapeSizeY"), 200));
    intParameters.push_back(pair<string, int>(string("numberOfRuns"), 1000));
 
 
    // Parameters for Dispersion
-   intParameters.push_back(pair<string, int>(string("DispersalMode"), 1));
+   intParameters.push_back(pair<string, int>(string("DispersalMode"), 2));
    intParameters.push_back(pair<string, int>(string("DispersalCutOff"), 2));
    intParameters.push_back(pair<string, int>(string("DensityCutOff"), 2));
 

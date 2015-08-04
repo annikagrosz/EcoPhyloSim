@@ -65,15 +65,13 @@
 //}
 
 
-Landscape::Landscape(int xsize, int ysize, int type, bool neutral, bool dd, bool env, bool mort, bool repro, unsigned int runs, double specRate, int dispersalCutoff, int DensityCutoff, unsigned int mortalityStrength)
+Landscape::Landscape(int xsize, int ysize, int type, bool neutral, bool dd, bool env, unsigned int runs, double specRate, int dispersalCutoff, int DensityCutoff)
 {
 
    m_Cutoff= dispersalCutoff;
    m_Neutral = neutral;
    m_DD = dd;
    m_Env = env;
-   m_mortality = mort;
-   m_reproduction = repro;
    m_Runs = runs;
    m_DensityCutoff = DensityCutoff;
    m_Dispersal_type = type;
@@ -82,7 +80,6 @@ Landscape::Landscape(int xsize, int ysize, int type, bool neutral, bool dd, bool
    m_LandscapeSize = xsize * ysize;
    m_Xdimensions = xsize;
    m_Ydimensions = ysize;
-   m_mortalityStrength = mortalityStrength;
    //	func.seedrand(1500);
 
    // Construct grid of individuals
@@ -190,8 +187,8 @@ void Landscape::moistChange(int sign, double magnitude)
 }
 
 
-GlobalEnvironment::GlobalEnvironment(int xsize, int ysize, int type, bool neutral, bool dd, bool env, bool mort, bool repro, unsigned int runs, double specRate, int dispersalCutoff, int densityCutoff, unsigned int mortalityStrength) :
-	                              Landscape(xsize,  ysize,  type,  neutral,  dd,  env, mort, repro,  runs, specRate, dispersalCutoff, densityCutoff, mortalityStrength)
+GlobalEnvironment::GlobalEnvironment(int xsize, int ysize, int type, bool neutral, bool dd, bool env, unsigned int runs, double specRate, int dispersalCutoff, int densityCutoff) :
+	                              Landscape(xsize,  ysize,  type,  neutral,  dd,  env,  runs, specRate, dispersalCutoff, densityCutoff)
 {
 
 }
@@ -244,9 +241,8 @@ void GlobalEnvironment::reproduce(unsigned int generation)
       int x_parent = 0;
       int y_parent = 0;
       unsigned int array_length = 0;
-      unsigned int numberOfRuns = 0;
       double seedSum = 0.0;
-      int new_parent = 0;
+      int new_parent;
 
       m_KernelSize =(m_Xdimensions)*(m_Ydimensions);
 
@@ -261,7 +257,7 @@ void GlobalEnvironment::reproduce(unsigned int generation)
          {
             if(m_Env)
             {
-               double envFitnessParent = 1.2 * exp(-0.5 * pow((m_Environment[kernel_x * m_Ydimensions + kernel_y].first - m_Individuals[kernel_x][kernel_y].m_Mean) / m_Individuals[kernel_x][kernel_y].m_Variance, 2.0));
+               double envFitnessParent = (1.0 / (m_Individuals[kernel_x][kernel_y].m_Variance * sqrt(2.0 * 3.147))) * exp(-0.5 * pow((m_Environment[kernel_x * m_Ydimensions + kernel_y].first - m_Individuals[kernel_x][kernel_y].m_Mean) / m_Individuals[kernel_x][kernel_y].m_Variance, 2.0));
                if(m_DD) weights[array_length] = envFitnessParent  * m_Individuals[kernel_x][kernel_y].m_LocalDensity + (DBL_MIN*100.0); //weights plus base value
                else if (!m_DD) weights[array_length] = envFitnessParent  + (DBL_MIN*100.0) ; //weights plus base value
                //								std::cout <<  weights[array_length] << '\n';
@@ -287,22 +283,10 @@ void GlobalEnvironment::reproduce(unsigned int generation)
       }
       //			std::cout << seedSum << " : " << cumWeights[kernelsize-1] << " : " << weights[kernelsize-1]<< " : " << kernelsize-1 <<  '\n';
 
-      if(m_mortality) numberOfRuns = m_LandscapeSize*2;
-      else numberOfRuns = m_LandscapeSize;
-
-      for(unsigned int event = 0; event < numberOfRuns; event++)
+      for(unsigned int event = 0; event < m_LandscapeSize; event++)
       {
-
          int x_coordinate = m_RandomGenerator.randomInt(0,m_Xdimensions-1);
          int y_coordinate = m_RandomGenerator.randomInt(0,m_Ydimensions-1);
-
-         if(event % m_mortalityStrength != 0 && m_mortality){// important!! the frequency in relation to the base mortality controls the intensity of the mechanisms
-        	 	 double chanceOfDeath = m_RandomGenerator.randomDouble(0.0,1.0);
-           		  if(weights[x_coordinate * m_Ydimensions + y_coordinate] > chanceOfDeath){
-           			  continue;
-           		  }
-           	  }
-
 
          if(m_Individuals[x_coordinate][y_coordinate].m_Species->m_Count-1 < 1)
          {
@@ -316,8 +300,7 @@ void GlobalEnvironment::reproduce(unsigned int generation)
             m_Individuals[x_coordinate][y_coordinate].m_Species->updateMean();
          }
 
-         if(m_reproduction) new_parent = m_RandomGenerator.multinomialDraw(cumWeights, array_length-1, seedSum);
-         else if (!m_reproduction && m_mortality) new_parent = m_RandomGenerator.randomInt(0, array_length-1);
+         new_parent = m_RandomGenerator.multinomialDraw(cumWeights, array_length-1, seedSum);
          x_parent = parents[new_parent].first;
          y_parent = parents[new_parent].second;
 
@@ -336,7 +319,7 @@ void GlobalEnvironment::reproduce(unsigned int generation)
             double newWeight = 0.0;
             if(m_Env)
             {
-               double envFitnessParent = 1.2 * exp(-0.5 * pow((m_Environment[x_coordinate * m_Ydimensions + y_coordinate].first - m_Individuals[x_coordinate][y_coordinate].m_Mean) / m_Individuals[x_coordinate][y_coordinate].m_Variance, 2.0));
+               double envFitnessParent = (1.0 / (m_Individuals[x_coordinate][y_coordinate].m_Variance * sqrt(2.0 * 3.147))) * exp(-0.5 * pow((m_Environment[x_coordinate * m_Ydimensions + y_coordinate].first - m_Individuals[x_coordinate][y_coordinate].m_Mean) / m_Individuals[x_coordinate][y_coordinate].m_Variance, 2.0));
                //						double envFitnessPropagule = (1.0 / (individuals[kernel_x][kernel_y].variance * sqrt(2.0 * 3.147))) * exp(-0.5 * pow((environment[x_coordinate][y_coordinate].first - individuals[kernel_x][kernel_y].mean) / individuals[kernel_x][kernel_y].variance, 2.0)); // environmental influence !
                newWeight = envFitnessParent  + (DBL_MIN*100.0) ; //weights plus base value
             }
@@ -407,7 +390,7 @@ void GlobalEnvironment::reproduce(unsigned int generation)
 
                   if(m_Env)
                   {
-                     double envFitnessParent = 1.2 * exp((-0.5 * (m_Environment[focus_x * m_Ydimensions + focus_y].first - m_Individuals[focus_x][focus_y].m_Mean) / m_Individuals[focus_x][focus_y].m_Variance * (m_Environment[focus_x * m_Ydimensions + focus_y].first - m_Individuals[focus_x][focus_y].m_Mean) / m_Individuals[focus_x][focus_y].m_Variance)); // environmental influence !
+                     double envFitnessParent = (1.0 / (m_Individuals[focus_x][focus_y].m_Variance * sqrt(2.0 * 3.147))) * exp((-0.5 * (m_Environment[focus_x * m_Ydimensions + focus_y].first - m_Individuals[focus_x][focus_y].m_Mean) / m_Individuals[focus_x][focus_y].m_Variance * (m_Environment[focus_x * m_Ydimensions + focus_y].first - m_Individuals[focus_x][focus_y].m_Mean) / m_Individuals[focus_x][focus_y].m_Variance)); // environmental influence !
                      //								double envFitnessPropagule = (1.0 / (individuals[focus_x][focus_y].variance * sqrt(2.0 * 3.147))) * exp((-0.5 * (environment[x_coordinate][y_coordinate].first - individuals[focus_x][focus_y].mean) / individuals[focus_x][focus_y].variance * (environment[x_coordinate][y_coordinate].first - individuals[focus_x][focus_y].mean) / individuals[focus_x][focus_y].variance)); // environmental influence !
 
                      seedSum -= weights[focus_x*m_Ydimensions + focus_y ];
@@ -444,8 +427,8 @@ void GlobalEnvironment::reproduce(unsigned int generation)
 }
 
 
-LocalEnvironment::LocalEnvironment(int xsize, int ysize, int type, bool neutral, bool dd, bool env,bool mort, bool repro, unsigned int runs, double specRate, int dispersalCutoff, int densityCutoff, unsigned int mortalityStrength) :
-	                              Landscape(xsize,  ysize,  type,  neutral,  dd,  env, mort, repro,  runs, specRate, dispersalCutoff, densityCutoff, mortalityStrength)
+LocalEnvironment::LocalEnvironment(int xsize, int ysize, int type, bool neutral, bool dd, bool env, unsigned int runs, double specRate, int dispersalCutoff, int densityCutoff) :
+	                              Landscape(xsize,  ysize,  type,  neutral,  dd,  env,  runs, specRate, dispersalCutoff, densityCutoff)
 {
 
 }
@@ -463,25 +446,13 @@ void LocalEnvironment::reproduce(unsigned int generation)
    unsigned int array_length;
    double seedSum = 0.0;
    int new_parent;
-   unsigned int numberOfRuns = 0;
+
    m_KernelSize = ((2*m_Cutoff+1)*(2*m_Cutoff+1)-1);
 
-   if(m_mortality) numberOfRuns =  m_LandscapeSize*2;
-   else numberOfRuns =  m_LandscapeSize;
-
-   for(unsigned int event = 0; event < numberOfRuns; event++)
+   for(unsigned int event = 0; event < m_LandscapeSize; event++)
    {
-
       x_coordinate = m_RandomGenerator.randomInt(0,m_Xdimensions-1);
       y_coordinate = m_RandomGenerator.randomInt(0,m_Ydimensions-1);
-
-      if(event % m_mortalityStrength != 0 && m_mortality){ // important!! the frequency in relation to the base mortality controls the intensity of the mechanisms
-    	  double weight = m_Individuals[kernel_x][kernel_y].getSeedsTo(0,0, m_Dispersal_type, m_Environment[x_coordinate * m_Ydimensions + y_coordinate].first, m_Env, m_DD);
-    	  double chanceOfDeath = m_RandomGenerator.randomDouble(0.0,1.0);
-		  if(weight > chanceOfDeath){
-			  continue;
-		  }
-	  }
 
       if(m_Individuals[x_coordinate][y_coordinate].m_Species->m_Count-1 < 1)
       {
@@ -510,8 +481,8 @@ void LocalEnvironment::reproduce(unsigned int generation)
             {
                parents[array_length].first = kernel_x;
                parents[array_length].second =  kernel_y;
-               if(m_reproduction) weights[array_length] = m_Individuals[kernel_x][kernel_y].getSeedsTo(relativeX,relativeY, m_Dispersal_type, m_Environment[kernel_x * m_Ydimensions + kernel_y].first, m_Env, m_DD);
-               else if(!m_reproduction && m_mortality)  weights[array_length] = m_Individuals[kernel_x][kernel_y].dispersal(m_Dispersal_type, m_Individuals[kernel_x][kernel_y].euclidian_distance(relativeX, relativeY));
+               weights[array_length] = m_Individuals[kernel_x][kernel_y].getSeedsTo(relativeX,relativeY, m_Dispersal_type, m_Environment[kernel_x * m_Ydimensions + kernel_y].first, m_Env, m_DD);
+
                seedSum += weights[array_length];
                array_length +=1;
             }
