@@ -14,3 +14,5 @@ PhylGeo.Rcheck/00_pkg_src
 00check.log
 phylosim.Rproj
 RcppExports.cpp
+
+.Rhistory
