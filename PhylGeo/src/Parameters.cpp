@@ -71,7 +71,7 @@ void Parameters::readParameterFromXMLFile(string xmlFileName) {
      cout << "Filename of the XML document to load parameters from: " << xmlFileName.c_str() << endl;
   }
   // Load xml document
-  xml_parse_result pars_res = parameterDocument.load_file(xmlFileName.c_str(), format_default, xml_encoding::encoding_utf8);
+  xml_parse_result pars_res = parameterDocument.load_file(xmlFileName.c_str(), format_default, encoding_utf8);
   if (s_LogInfos) {
      // Print loading result
      cout << "Loading result: " << (pars_res == 1 ? "SUCCESS" : "FAIL") << endl;
@@ -163,7 +163,7 @@ void Parameters::writeParametersToXMLFile() {
      cout << "Creating XML document!" << endl;
      cout << "Filename of the XML document: " << file << endl;
   }
-  bool saveSuccessful = parameterDocument.save_file(file, "\t", format_default, xml_encoding::encoding_utf8);
+  bool saveSuccessful = parameterDocument.save_file(file, "\t", format_default, encoding_utf8);
   if (s_LogInfos) {
      cout << "Saving XML file..." << (saveSuccessful ? "SUCCESS" : "FAIL") << endl;
   }
@@ -177,9 +177,9 @@ void Parameters::readParameterFromXMLFile() {
 //
 //
 void Parameters::createParameters() {
-  vector<pair<string, int>> intParameters;
-  vector<pair<string, double>> doubleParameters;
-  vector<pair<string, bool>> boolParameters;
+  vector<pair<string, int> > intParameters;
+  vector<pair<string, double> > doubleParameters;
+  vector<pair<string, bool> > boolParameters;
 //
   // Parameters for Landscape
   intParameters.push_back(pair<string, int>(string("LandscapeSizeX"), 100));

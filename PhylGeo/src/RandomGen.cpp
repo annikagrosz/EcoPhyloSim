@@ -16,7 +16,7 @@ RandomGen::~RandomGen(){
 
 std::default_random_engine & RandomGen::my_engine( )
 {
- static std::default_random_engine e{};
+ static std::default_random_engine e;
  return e;
 }
 

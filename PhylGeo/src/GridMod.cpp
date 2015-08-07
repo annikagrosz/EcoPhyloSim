@@ -249,8 +249,8 @@ void GlobalEnvironment::reproduce(unsigned int generation)
 
       double weights[m_KernelSize];
       double cumWeights[m_KernelSize] ;
-      std::pair<int, int> parents[m_KernelSize];
-
+      
+      std::vector<std::pair<int, int> > parents (m_KernelSize);
 
       for(int kernel_x = 0; kernel_x < m_Xdimensions; kernel_x++)
       {
@@ -468,7 +468,8 @@ void LocalEnvironment::reproduce(unsigned int generation)
       }
 
 
-      std::pair<int, int> parents[m_KernelSize];
+      std::vector<std::pair<int, int> > parents (m_KernelSize);
+      
       double weights[m_KernelSize];
       array_length = 0;
       seedSum = 0.0;

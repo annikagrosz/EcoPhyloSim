@@ -6,11 +6,8 @@
 #' @param runs The number of generations the model runs through
 #' @details Be careful with the dimensions you choose. Large grids and many generations may take very long to compute. You can assume to have reached the equilibrium state of the model after dim^2/2.
 #' @examples
-#' # Using compiler may speed up the process.
-#' library(compiler) 
-#' Cmodel = cmpfun(model)
 #' # Run the model
-#' metaCom <- Cmodel(dim=50, specRate=2, seed=1500, runs=1500)
+#' metaCom <- NeutralMod(dim=50, specRate=2, seed=1500, runs=1500)
 #' # Visualize the grid
 #' image(metaCom)
 #' # Calculate the species area-relation

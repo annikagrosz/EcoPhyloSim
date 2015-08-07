@@ -17,7 +17,7 @@ multiNom::~multiNom(){
 
 std::default_random_engine & multiNom::my_engine( )
 {
- static std::default_random_engine e{};
+ static std::default_random_engine e;
  return e;
 }
 

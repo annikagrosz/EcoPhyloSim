@@ -63,7 +63,7 @@ class Landscape {
 
 	// A 2-D array of individuals.
 	Individual **m_Individuals;
-	std::vector<std::pair<double, double> > m_Environment;
+	std::vector<std::pair<double, double> > m_Environment;  
 	RandomGen m_RandomGenerator;
 
 	unsigned int m_Runs;

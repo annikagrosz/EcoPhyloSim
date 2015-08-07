@@ -16,3 +16,5 @@ phylosim.Rproj
 RcppExports.cpp
 
 .Rhistory
+
+PhylGeo/src/PhylGeo.so
