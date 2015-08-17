@@ -46,13 +46,13 @@ fullMod <- function(x = NULL, y = NULL, dispersal = NULL, runs = NULL, specRate 
     environment  = FALSE
   }
   
-  out <- .C(callModel, 
-            as.integer(x),as.integer(y), as.integer(dispersal), as.integer(runs), as.numeric(specRate), #1-5
+  out <- .C("callModel", as.integer(x),as.integer(y), as.integer(dispersal), as.integer(runs), as.numeric(specRate), #1-5
             as.logical(density),as.logical(environment) ,as.logical(neutral), #6-8
             as.logical(mortalityFitness), as.integer(mortalityStrength), as.logical(reproductiveFitness),   #9-11
             as.integer(dispersalCut), as.integer(densityCut), as.integer(seed), as.character(saveLocation), #12-15
             specOut = as.integer(outVec), traitOut = as.numeric(outVec),neutralOut = as.numeric(outVec), #16-18 Output starts here
             compOut = as.numeric(outVec), envOut = as.numeric(outVec), phyloOut = character(length = 1))[16:21] #19-21
+  
   print("simulation is done")
   
   print("writing specMat")
@@ -70,5 +70,6 @@ fullMod <- function(x = NULL, y = NULL, dispersal = NULL, runs = NULL, specRate 
   phylogeny = ape::read.tree(text = out[[6]])
   
   print (paste("Finished after",floor(((proc.time() - ptm)[3])/60), "minute(s) and", ((proc.time() - ptm)[3])%%60, "second(s)."))
+  
   return(list(specMat = specMat, traitMat=traitMat, envMat = envMat, compMat = compMat, neutMat = neutMat, phylogeny = phylogeny, phyloTXT = out[[6]]))
 }
