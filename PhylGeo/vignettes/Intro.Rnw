@@ -8,11 +8,24 @@
 \maketitle
 
 
+\section{Basic functionality}
 
 
+\subsection{Loading the package}
+
+Loading the package
 
 <<>>=
 library(PhylGeo)
+@
+
+
+
+\subsection{Neutral model}
+
+
+<<>>=
+
 
 
 # Run the model
@@ -24,6 +37,25 @@ rac(metaCom, plot=T)
 
 @
 
+
+\subsection{Full model}
+
+
+<<>>=
+# Run the model
+myModel <- fullMod(x = 50, y = 50, dispersal = 2, runs = 500, specRate = 1.0, density = FALSE, environment = FALSE, neutral = TRUE, seed = 1500)
+
+ # Look at the phylogeny (requires package 'ape')
+ require(ape)
+
+ # Get the phylogeny
+ phylogeny <- myModel$phylogeny
+
+ # Only extant taxa
+ extantPhylogeny <- drop.fossil(phylogeny)
+
+ plot(extantPhylogeny)
+@
 
 
 \end{document}
