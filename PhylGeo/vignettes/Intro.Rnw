@@ -1,0 +1,29 @@
+\documentclass{article}
+
+\author{Florian Hartig}
+\title{Introduction to the phylosim package}
+
+\begin{document}
+\SweaveOpts{concordance=TRUE}
+\maketitle
+
+
+
+
+
+<<>>=
+library(PhylGeo)
+
+
+# Run the model
+metaCom <- NeutralMod(dim=50, specRate=2, seed=1500, runs=1500)
+# Visualize the grid
+image(metaCom)
+# Calculate the species area-relation
+rac(metaCom, plot=T)
+
+@
+
+
+
+\end{document}
