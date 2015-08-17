@@ -51,7 +51,8 @@ fullMod <- function(x = NULL, y = NULL, dispersal = NULL, runs = NULL, specRate 
             as.logical(mortalityFitness), as.integer(mortalityStrength), as.logical(reproductiveFitness),   #9-11
             as.integer(dispersalCut), as.integer(densityCut), as.integer(seed), as.character(saveLocation), #12-15
             specOut = as.integer(outVec), traitOut = as.numeric(outVec),neutralOut = as.numeric(outVec), #16-18 Output starts here
-            compOut = as.numeric(outVec), envOut = as.numeric(outVec), phyloOut = character(length = 1))[16:21] #19-21
+            compOut = as.numeric(outVec), envOut = as.numeric(outVec), phyloOut = character(length = 1),
+            PACKAGE = "PhylGeo")[16:21] #19-21
   
   print("simulation is done")
   
