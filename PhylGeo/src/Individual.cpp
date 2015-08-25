@@ -128,7 +128,7 @@ void Individual::operator=(const Individual &ind)
 
 		    double newTrait = (1.0 - weightSpecies) * ancestor +  weightSpecies * species + weightRandom * randomTrait;
 		    if(newTrait > upperBound) newTrait = upperBound - (newTrait - upperBound);
-		    else if(newTrait < lowerBound) newTrait = lowerBound + abs(newTrait);
+		    else if(newTrait < lowerBound) newTrait = lowerBound + std::abs(newTrait);
 
 		return newTrait ;
 	}

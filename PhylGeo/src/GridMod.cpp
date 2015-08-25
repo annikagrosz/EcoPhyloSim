@@ -600,15 +600,15 @@ void Landscape::speciation (unsigned int generation,unsigned int runs)
 
       m_Individuals[x][y].m_Mean =  oldMean + (0.2 * newMean);
       if(m_Individuals[x][y].m_Mean > max) m_Individuals[x][y].m_Mean = m_Individuals[x][y].m_Mean - max;
-      else if(m_Individuals[x][y].m_Mean < min) m_Individuals[x][y].m_Mean = min + abs(m_Individuals[x][y].m_Mean);
+      else if(m_Individuals[x][y].m_Mean < min) m_Individuals[x][y].m_Mean = min + std::abs(m_Individuals[x][y].m_Mean);
 
       m_Individuals[x][y].m_NeutralMarker =   oldNeutralMarker + (0.2 * newNeutralMarker);
       if(m_Individuals[x][y].m_NeutralMarker > max) m_Individuals[x][y].m_NeutralMarker = m_Individuals[x][y].m_NeutralMarker - max;
-      else if(m_Individuals[x][y].m_NeutralMarker < min) m_Individuals[x][y].m_NeutralMarker = min + abs(m_Individuals[x][y].m_NeutralMarker);
+      else if(m_Individuals[x][y].m_NeutralMarker < min) m_Individuals[x][y].m_NeutralMarker = min + std::abs(m_Individuals[x][y].m_NeutralMarker);
 
       m_Individuals[x][y].m_CompetitionMarker =   oldCompetitionMarker + (0.2 * newCompetitionMarker);
       if(m_Individuals[x][y].m_CompetitionMarker > max) m_Individuals[x][y].m_CompetitionMarker = m_Individuals[x][y].m_CompetitionMarker - max;
-      else if(m_Individuals[x][y].m_CompetitionMarker < min) m_Individuals[x][y].m_CompetitionMarker = min + abs(m_Individuals[x][y].m_CompetitionMarker);
+      else if(m_Individuals[x][y].m_CompetitionMarker < min) m_Individuals[x][y].m_CompetitionMarker = min + std::abs(m_Individuals[x][y].m_CompetitionMarker);
 
       m_Individuals[x][y].m_Species->m_Mean = m_Individuals[x][y].m_Mean;
       m_Individuals[x][y].m_Species->m_CompetitionMean = m_Individuals[x][y].m_CompetitionMarker;
