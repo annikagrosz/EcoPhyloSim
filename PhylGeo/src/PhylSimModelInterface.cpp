@@ -24,13 +24,17 @@ using namespace Rcpp;
 
 // [[Rcpp::export]]
 void callModel(int x, int y, int dispersal, int runs, double specRate, bool dens, 
-               bool env, bool mort, bool repro, bool neutral,int dispersalCutoff, 
-               int densityCutoff,int seed, IntegerVector specOut, NumericVector traitOut, NumericVector neutralOut,
+               bool env, bool neutral, bool mort, int mortStrength, bool repro, int dispersalCutoff, 
+               int densityCutoff, int seed, CharacterVector saveLocation, IntegerVector specOut, NumericVector traitOut, NumericVector neutralOut,
                NumericVector compOut, NumericVector envOut,  CharacterVector phyloOut) {
    RandomGen ran;
    ran.seedrand(seed);
-   PhylSimModel phylSimModel(x, y,dispersal, neutral, dens, env, runs, specRate,
-         dispersalCutoff, densityCutoff);
+   
+   std::string tempSaveLoc = Rcpp::as<std::string>(saveLocation); 
+   
+   PhylSimModel phylSimModel(x, y, dispersal, runs, specRate, dens, 
+               env, neutral, mort, mortStrength, repro, dispersalCutoff, 
+               densityCutoff, tempSaveLoc);
 
    phylSimModel.update(runs);
    // TODO: Assert that the given vectors specOut, traitOut, neutralOut, compOut, envOut, phyloOut

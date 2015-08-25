@@ -19,16 +19,19 @@
 #include "Species.h"
 
 
-PhylSimModel::PhylSimModel(int X, int Y, int type, bool neutral, bool dd, bool env, unsigned int runs, double specRate, int dispersalCutoff, int densityCutoff)
+PhylSimModel::PhylSimModel(int X, int Y, int dispersal, int runs, double specRate, bool dens, 
+               bool env, bool neutral, bool mort, int mortalityStrength, bool repro, int dispersalCutoff, 
+               int densityCutoff,std::string saveLocation)
 {
-   if (type == 1) {
-      m_Global = new GlobalEnvironment(X,Y, type, neutral, dd, env, runs, specRate, dispersalCutoff, densityCutoff);
+   if (dispersal == 1) {
+               
+      m_Global = new GlobalEnvironment(X,Y, dispersal, neutral, dens, env, mort, repro, runs, specRate, dispersalCutoff, densityCutoff, mortalityStrength);
       m_Local = NULL;
-   } else if (type == 2 || type == 3) {
+   } else if (dispersal == 2 || dispersal == 3) {
       m_Global = NULL;
-      m_Local = new LocalEnvironment(X,Y, type, neutral, dd, env, runs, specRate, dispersalCutoff, densityCutoff);
+      m_Local = new LocalEnvironment(X,Y, dispersal, neutral, dens, env, mort, repro, runs, specRate, dispersalCutoff, densityCutoff, mortalityStrength);
    }
-   m_Dispersal = type;
+   m_Dispersal = dispersal;
    m_X_coordinate = X;
    m_Y_coordinate = Y;
 }
@@ -188,10 +191,15 @@ void PhylSimModel::getclimate(){
 }
 
 
-void callModel(int* x, int* y, int* dispersal, int* runs, double* specRate, bool* dens, bool* env, bool* neutral,int* dispersalCutoff, int* densityCutoff,int* seed, int* specOut, double* traitOut, double* neutralOut, double* compOut, double* envOut,  std::string* phyloOut){
+void callModel(int* x, int* y, int* dispersal, int* runs, double* specRate, bool* dens, 
+               bool* env, bool* neutral, bool* mort, int* mortStrength, bool* repro, int* dispersalCutoff, 
+               int* densityCutoff, int* seed, std::string* saveLocation, std::string* specOut, std::string* traitOut, std::string* neutralOut,
+               std::string* compOut, std::string* envOut, std::string* phyloOut){
    RandomGen ran;
    ran.seedrand(seed[0]);
-   PhylSimModel Model(x[0],y[0],dispersal[0], neutral[0], dens[0], env[0], runs[0], specRate[0], dispersalCutoff[0], densityCutoff[0]);
+   
+   PhylSimModel Model(x[0],y[0],dispersal[0], runs[0], specRate[0], dens[0], env[0],  
+                      neutral[0], mort[0], mortStrength[0], repro[0], dispersalCutoff[0], densityCutoff[0], saveLocation[0]);
 
    Model.update(runs[0]);
 

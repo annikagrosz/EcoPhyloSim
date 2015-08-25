@@ -21,8 +21,9 @@ class PhylSimModel {
    GlobalEnvironment* m_Global;
    LocalEnvironment* m_Local;
 
-   PhylSimModel(int x, int y, int type, bool neutral, bool dd,bool env,
-            unsigned int runs, double specRate, int dispersalCutoff, int densityCutoff);
+   PhylSimModel(int x, int y, int dispersal, int runs, double specRate, bool dens, 
+               bool env, bool neutral, bool mort, int mortStrength, bool repro, int dispersalCutoff, 
+               int densityCutoff,std::string saveLocation);
    ~PhylSimModel();
    void get_data();
    void getclimate();
@@ -34,9 +35,10 @@ private:
 };
 
 extern "C" {
-void callModel(int* x, int* y, int* dispersal, int* runs, double* specRate, bool* dens,
-      bool* env, bool* neutral,int* dispersalCutoff, int* densityCutoff, int* seed, int* specOut,
-      double* traitOut,double* neutralOut, double* compOut, double* envOut, std::string* phyloOut);
+void callModel(int* x, int* y, int* dispersal, int* runs, double* specRate, bool* dens, 
+               bool* env, bool* neutral, bool* mort, int* mortStrength, bool* repro, int* dispersalCutoff, 
+               int* densityCutoff, int* seed, std::string* saveLocation, std::string* specOut, 
+               std::string* traitOut, std::string* neutralOut, std::string* compOut, std::string* envOut,  std::string* phyloOut);
 // void runModel(model* Model, int* runs);
 // void getModelData(model* Model, int* dispersal, int* specOut, double* traitOut, double* envOut, std::string* phyloOut);
 }
