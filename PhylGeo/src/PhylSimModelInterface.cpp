@@ -21,9 +21,8 @@
 using namespace Rcpp;
 
 
-
 // [[Rcpp::export]]
-void callModel(int x, int y, int dispersal, int runs, double specRate, bool dens, 
+Rcpp::List callModel(int x, int y, int dispersal, int runs, double specRate, bool dens, 
                bool env, bool neutral, bool mort, int mortStrength, bool repro, int dispersalCutoff, 
                int densityCutoff, int seed, CharacterVector saveLocation, IntegerVector specOut, NumericVector traitOut, NumericVector neutralOut,
                NumericVector compOut, NumericVector envOut,  CharacterVector phyloOut) {
@@ -39,6 +38,8 @@ void callModel(int x, int y, int dispersal, int runs, double specRate, bool dens
    phylSimModel.update(runs);
    // TODO: Assert that the given vectors specOut, traitOut, neutralOut, compOut, envOut, phyloOut
    // have enough place, i.e. size of them must always be x*y
+   
+   
    if (dispersal == 1) {
       std::cout << "Writing : Species Matrix..." << '\n';
       int indCounter = 0; // individual counter
@@ -166,4 +167,10 @@ void callModel(int x, int y, int dispersal, int runs, double specRate, bool dens
 
       phyloOut[0] = cstr;
    }
+   return Rcpp::List::create(Rcpp::Named("vec") = specOut,
+                          Rcpp::Named("lst") = traitOut,
+                          Rcpp::Named("vec2") = neutralOut,
+                          Rcpp::Named("n") = compOut,
+                          Rcpp::Named("h") = envOut,
+                          Rcpp::Named("hh") = phyloOut);
 }

@@ -36,7 +36,7 @@
 #'  
 #'  species <- myModel$specMat
 #'  sac(area = c(1,10,100,1000), matrix = species, rep = 100, plot= T)
-fullMod <- function(x = NULL, y = NULL, dispersal = NULL, runs = NULL, specRate = NULL, density = NULL, environment = NULL, mortalityFitness = NULL,mortalityStrength = NULL, reproductiveFitness = NULL, neutral = NULL, dispersalCut = 2, densityCut = 1, seed=NULL, saveLocation = NULL)
+fullMod <- function(x = NULL, y = NULL, dispersal = NULL, runs = NULL, specRate = NULL, density = NULL, environment = NULL, mortalityFitness = NULL,mortalityStrength = NULL, reproductiveFitness = NULL, neutral = NULL, dispersalCut = 2, densityCut = 1, seed=1, saveLocation = NULL)
 {
   ptm <- proc.time()
   outVec <- rep.int(0,x*y)
@@ -46,14 +46,21 @@ fullMod <- function(x = NULL, y = NULL, dispersal = NULL, runs = NULL, specRate 
     environment  = FALSE
   }
   
-  out <- .C("callModel", as.integer(x),as.integer(y), as.integer(dispersal), as.integer(runs), as.numeric(specRate), #1-5
-            as.logical(density),as.logical(environment) ,as.logical(neutral), #6-8
-            as.logical(mortalityFitness), as.integer(mortalityStrength), as.logical(reproductiveFitness),   #9-11
-            as.integer(dispersalCut), as.integer(densityCut), as.integer(seed), as.character(saveLocation), #12-15
-            specOut = as.integer(outVec), traitOut = as.numeric(outVec),neutralOut = as.numeric(outVec), #16-18 Output starts here
-            compOut = as.numeric(outVec), envOut = as.numeric(outVec), phyloOut = character(length = 1),
-            PACKAGE = "PhylGeo")[16:21] #19-21
-  
+  #out <- .C("callModel", as.integer(x),as.integer(y), as.integer(dispersal), as.integer(runs), as.numeric(specRate), #1-5
+#             as.logical(density),as.logical(environment) ,as.logical(neutral), #6-8
+#             as.logical(mortalityFitness), as.integer(mortalityStrength), as.logical(reproductiveFitness),   #9-11
+#             as.integer(dispersalCut), as.integer(densityCut), as.integer(seed), as.character(saveLocation), #12-15
+#             specOut = as.integer(outVec), traitOut = as.numeric(outVec),neutralOut = as.numeric(outVec), #16-18 Output starts here
+#             compOut = as.numeric(outVec), envOut = as.numeric(outVec), phyloOut = character(length = 1),
+#             PACKAGE = "PhylGeo")[16:21] #19-21
+#   
+  out <- callModel( x,  y,  dispersal,  runs,  specRate, density, 
+                    environment, neutral, mortalityFitness, mortalityStrength, reproductiveFitness, dispersalCut, 
+                    densityCut, seed, saveLocation, 
+                    specOut = as.integer(outVec), traitOut = as.numeric(outVec),neutralOut = as.numeric(outVec),
+                    compOut = as.numeric(outVec), envOut = as.numeric(outVec), phyloOut = character(length = 1)
+    )  
+
   print("simulation is done")
   
   print("writing specMat")
