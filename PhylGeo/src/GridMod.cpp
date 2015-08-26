@@ -478,7 +478,7 @@ void LocalEnvironment::reproduce(unsigned int generation)
       y_coordinate = m_RandomGenerator.randomInt(0,m_Ydimensions-1);
 
       if(event % m_mortalityStrength != 0 && m_mortality){ // important!! the frequency in relation to the base mortality controls the intensity of the mechanisms
-    	  double weight = m_Individuals[kernel_x][kernel_y].getSeedsTo(0,0, m_Dispersal_type, m_Environment[x_coordinate * m_Ydimensions + y_coordinate].first, m_Env, m_DD);
+    	  double weight = m_Individuals[kernel_x][kernel_y].getSeedsTo(0,0, m_Dispersal_type, m_Environment[x_coordinate * m_Ydimensions + y_coordinate].first, m_Env, m_DD, m_Cutoff);
     	  double chanceOfDeath = m_RandomGenerator.randomDouble(0.0,1.0);
 		  if(weight > chanceOfDeath){
 			  continue;
@@ -512,8 +512,8 @@ void LocalEnvironment::reproduce(unsigned int generation)
             {
                parents[array_length].first = kernel_x;
                parents[array_length].second =  kernel_y;
-               if(m_reproduction) weights[array_length] = m_Individuals[kernel_x][kernel_y].getSeedsTo(relativeX,relativeY, m_Dispersal_type, m_Environment[kernel_x * m_Ydimensions + kernel_y].first, m_Env, m_DD);
-               else if(!m_reproduction && m_mortality)  weights[array_length] = m_Individuals[kernel_x][kernel_y].dispersal(m_Dispersal_type, m_Individuals[kernel_x][kernel_y].euclidian_distance(relativeX, relativeY));
+               if(m_reproduction) weights[array_length] = m_Individuals[kernel_x][kernel_y].getSeedsTo(relativeX,relativeY, m_Dispersal_type, m_Environment[kernel_x * m_Ydimensions + kernel_y].first, m_Env, m_DD, m_Cutoff);
+               else if(!m_reproduction && m_mortality)  weights[array_length] = m_Individuals[kernel_x][kernel_y].dispersal(m_Dispersal_type, m_Individuals[kernel_x][kernel_y].euclidian_distance(relativeX, relativeY), m_Cutoff);
                seedSum += weights[array_length];
                array_length +=1;
             }

@@ -18,7 +18,7 @@
  */
 class Individual {
  private:
-	double kernel(double distance);
+	double kernel(double distance, int cutoff);
 	double evolution(double ancestor, double species, double weightSpecies, double weightRandom);
 
  public:
@@ -44,12 +44,13 @@ class Individual {
 	double m_Mean;
 	double m_CompetitionMarker;
 	double m_NeutralMarker;
+	double m_dispersalDistance;
 
 	RandomGen m_RandomGenerator;
 
-	double getSeedsTo(int rel_x, int rel_y, int dispersal_type, double temp, bool env, bool dd);
+	double getSeedsTo(int rel_x, int rel_y, int dispersal_type, double temp, bool env, bool dd, int cutoff);
 
-	double dispersal(int dispersal_type, double distance);  // 1 for kernel, 2 for nearest neighbor, 3 for global
+	double dispersal(int dispersal_type, double distance, int cutoff);  // 1 for kernel, 2 for nearest neighbor, 3 for global
 };
 
 #endif /* INDIVIDUAL_H_ */

@@ -27,6 +27,7 @@ Individual::Individual()
 	this -> m_Mean = 1.0;
 	this -> m_CompetitionMarker = 0.5;
 	this -> m_NeutralMarker = 0.5;
+	this -> m_dispersalDistance = 0.0;
 
 }
 
@@ -45,7 +46,7 @@ Individual::Individual(const Individual &ind)
 	this -> m_Mean = evolution(ind.m_Mean, ind.m_Species->m_Mean, 0.3, 0.05);
 	this -> m_CompetitionMarker = evolution(ind.m_CompetitionMarker, ind.m_Species->m_CompetitionMean, 0.3, 0.05);
 	this -> m_NeutralMarker = evolution(ind.m_NeutralMarker, ind.m_Species->m_NeutralMean, 0.3, 0.05);
-
+	this -> m_dispersalDistance = ind.m_dispersalDistance;
 }
 
 Individual::~Individual(){
@@ -67,16 +68,17 @@ void Individual::operator=(const Individual &ind)
 	this -> m_Mean = evolution(ind.m_Mean, ind.m_Species->m_Mean, 0.3, 0.05);
 	this -> m_CompetitionMarker = evolution(ind.m_CompetitionMarker, ind.m_Species->m_CompetitionMean, 0.3, 0.05);
 	this -> m_NeutralMarker = evolution(ind.m_NeutralMarker, ind.m_Species->m_NeutralMean, 0.3, 0.05);
-
+	this -> m_dispersalDistance = ind.m_dispersalDistance;
 }
 
-	double Individual::kernel(double distance){
-		return exp(-distance/2.0);
+	double Individual::kernel(double distance, int cutoff){
+		m_dispersalDistance = cutoff / 2.0;
+		return exp(-distance/m_dispersalDistance);
 	}
 
 
 
-	double Individual::dispersal(int dispersal_type,double distance)
+	double Individual::dispersal(int dispersal_type,double distance, int cutoff)
 	{
 
 		if (dispersal_type == 2) //nearest neighbor
@@ -86,18 +88,18 @@ void Individual::operator=(const Individual &ind)
 		}
 		else if (dispersal_type == 3) // kernel
 		{
-			return kernel(distance);
+			return kernel(distance, cutoff);
 		}
 		else return 0.0;
 	}
 
 
-	double Individual::getSeedsTo(int rel_x, int rel_y, int dispersal_type, double temp, bool env, bool dd)
+	double Individual::getSeedsTo(int rel_x, int rel_y, int dispersal_type, double temp, bool env, bool dd, int cutoff)
 	{
 		double sum_of_weights = 0.0;
 		double dispersal_weight = 0.0;
 
-		dispersal_weight = dispersal(dispersal_type, euclidian_distance(rel_x, rel_y)); // Kernel or NN
+		dispersal_weight = dispersal(dispersal_type, euclidian_distance(rel_x, rel_y), cutoff); // Kernel or NN
 		if(env)
 		{	double envFitness = 1.2 * exp(-0.5 * pow((temp - m_Mean) / m_Variance, 2.0)); // environmental niche
 			if(dd)	sum_of_weights = dispersal_weight * envFitness * m_LocalDensity + (DBL_MIN*100.0); //weights plus base value
