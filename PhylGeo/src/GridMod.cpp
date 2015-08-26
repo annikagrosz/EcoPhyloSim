@@ -470,6 +470,19 @@ void LocalEnvironment::reproduce(unsigned int generation)
 
    if(m_mortality) numberOfRuns =  m_LandscapeSize*2;
    else numberOfRuns =  m_LandscapeSize;
+   
+   
+   double densityCells = 0 ;
+
+   for(int relativeX2= - m_DensityCutoff; relativeX2 <= m_DensityCutoff; relativeX2++)
+   {
+      int yLims2 = floor(sqrt(m_DensityCutoff* m_DensityCutoff - relativeX2*relativeX2 )); // avoid diagonal bias
+      for(int relativeY2 = - yLims2 ; relativeY2 <=  yLims2 ; relativeY2++)
+      {
+        densityCells += 1.0 ;
+      }
+   } 
+  
 
    for(unsigned int event = 0; event < numberOfRuns; event++)
    {
@@ -479,7 +492,8 @@ void LocalEnvironment::reproduce(unsigned int generation)
 
       if(event % m_mortalityStrength != 0 && m_mortality){ // important!! the frequency in relation to the base mortality controls the intensity of the mechanisms
     	  double weight = m_Individuals[kernel_x][kernel_y].getSeedsTo(0,0, m_Dispersal_type, m_Environment[x_coordinate * m_Ydimensions + y_coordinate].first, m_Env, m_DD, m_Cutoff);
-    	  double chanceOfDeath = m_RandomGenerator.randomDouble(0.0,1.0);
+    	  //std::cout<<weight<<"\n"; write out weights
+        double chanceOfDeath = m_RandomGenerator.randomDouble(0.0,1.0);
 		  if(weight > chanceOfDeath){
 			  continue;
 		  }
@@ -502,13 +516,18 @@ void LocalEnvironment::reproduce(unsigned int generation)
       double weights[m_KernelSize];
       array_length = 0;
       seedSum = 0.0;
+      
+      // DISPERSAL 
+      // TODO ... implement round cutoff directly through the coordinates !!!
+      
       for(int relativeX = - m_Cutoff; relativeX <= m_Cutoff; relativeX++)
       {
-         for(int relativeY = - m_Cutoff ; relativeY <=  m_Cutoff ; relativeY++)
+         int yLims = floor(sqrt(m_Cutoff* m_Cutoff - relativeX*relativeX )); // avoid diagonal bias
+         for(int relativeY = - yLims ; relativeY <=  yLims ; relativeY++)
          {
             kernel_x = (x_coordinate + relativeX + m_Xdimensions) % m_Xdimensions;
             kernel_y = (y_coordinate + relativeY + m_Ydimensions) % m_Ydimensions;
-            if (!(kernel_x == x_coordinate && kernel_y == y_coordinate) && sqrt((relativeX*relativeX) + (relativeY*relativeY)) <= m_Cutoff) // avoid diagonal bias
+            if (!(kernel_x == x_coordinate && kernel_y == y_coordinate)) 
             {
                parents[array_length].first = kernel_x;
                parents[array_length].second =  kernel_y;
@@ -544,13 +563,12 @@ void LocalEnvironment::reproduce(unsigned int generation)
       {
          int focus_x, focus_y, densityKernel_x, densityKernel_y;
          double relatedness;
-         double cells = double((m_DensityCutoff * 2 +1) * (m_DensityCutoff * 2 +1) - 1) ;
 
          for(int relativeX= - m_DensityCutoff; relativeX <= m_DensityCutoff; relativeX++)
          {
-            for(int relativeY = - m_DensityCutoff ; relativeY <=  m_DensityCutoff ; relativeY++)
+            int yLims = floor(sqrt(m_DensityCutoff* m_DensityCutoff - relativeX*relativeX )); // avoid diagonal bias
+            for(int relativeY = - yLims ; relativeY <=  yLims ; relativeY++)
             {
-
                // get focus cell
                focus_x = ((x_coordinate + relativeX + m_Xdimensions) % m_Xdimensions);
                focus_y = ((y_coordinate + relativeY + m_Ydimensions) % m_Ydimensions);
@@ -559,7 +577,8 @@ void LocalEnvironment::reproduce(unsigned int generation)
 
                for(int relativeX2= - m_DensityCutoff; relativeX2 <= m_DensityCutoff; relativeX2++)
                {
-                  for(int relativeY2 = - m_DensityCutoff ; relativeY2 <=  m_DensityCutoff ; relativeY2++)
+                  int yLims2 = floor(sqrt(m_DensityCutoff* m_DensityCutoff - relativeX2*relativeX2 )); // avoid diagonal bias
+                  for(int relativeY2 = - yLims2 ; relativeY2 <=  yLims2 ; relativeY2++)
                   {
                      densityKernel_x = ((focus_x + relativeX2 + m_Xdimensions) % m_Xdimensions);
                      densityKernel_y = ((focus_y + relativeY2 + m_Ydimensions) % m_Ydimensions);
@@ -570,8 +589,7 @@ void LocalEnvironment::reproduce(unsigned int generation)
                      }
                   }
                }
-               m_Individuals[focus_x][focus_y].m_LocalDensity = relatedness / cells;
-
+               m_Individuals[focus_x][focus_y].m_LocalDensity = relatedness / densityCells;
             }
          }
       }
