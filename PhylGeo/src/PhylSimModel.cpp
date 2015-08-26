@@ -7,7 +7,6 @@
  */
 
 
-
 #include <iostream>
 #include <fstream>
 #include <string>
@@ -50,10 +49,16 @@ void PhylSimModel::update(unsigned int runs)
 {
    for(unsigned int generation = 1; generation < runs+1; generation++)
    {
+     
+     #ifdef DEBUG
       if(generation % 1000 == 0){
-         //		std::cout << '\n';
+         //  	std::cout << '\n';
          std::cout << "generation :" <<  generation << '/' << runs << '\n';
       }
+     #endif
+
+     
+
 
       if(m_Dispersal==1){
          //			std::stringstream filename1;

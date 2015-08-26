@@ -582,7 +582,7 @@ void LocalEnvironment::reproduce(unsigned int generation)
 
 void Landscape::speciation (unsigned int generation,unsigned int runs)
 {
-   std::cout << generation << '\n';
+   // std::cout << generation << '\n';
    std::pair<int, int> birthplace;
    int specRate = m_RandomGenerator.randomPoisson(m_Speciation_Rate);
 
