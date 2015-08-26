@@ -36,15 +36,49 @@
 #'  
 #'  species <- myModel$specMat
 #'  sac(area = c(1,10,100,1000), matrix = species, rep = 100, plot= T)
-fullMod <- function(x = NULL, y = NULL, dispersal = NULL, runs = NULL, specRate = NULL, density = NULL, environment = NULL, mortalityFitness = NULL,mortalityStrength = NULL, reproductiveFitness = NULL, neutral = NULL, dispersalCut = 2, densityCut = 1, seed=1, saveLocation = NULL)
+fullMod <- function(x = NULL, y = NULL, dispersal = "global", runs = NULL, specRate = NULL, density = F, environment = F, fitnessActsOn = "mortality" , mortalityStrength = 10, densityCut = 1, seed=1, saveLocation = NULL)
 {
+  
+  if (dispersal == "global" | dispersal == 0){
+    dispersal = 1
+    dispersalCut = 1
+  }else{
+    if (is.numeric(dispersal) & dispersal > 0){
+      dispersalCut = 2*dispersal
+      dispersal = 3
+    }
+  }
+  
+  if(fitnessActsOn == "mortality"){
+    reproductiveFitness = F
+    mortalityFitness = T    
+  }
+  
+  if(fitnessActsOn == "reproduction"){
+    reproductiveFitness = T
+    mortalityFitness = F    
+  }
+  
+  if(fitnessActsOn == "both"){
+    reproductiveFitness = T
+    mortalityFitness = T    
+  }
+  
+  if(!(exists("reproductiveFitness") & exists("reproductiveFitness"))) stop("wrong parameters")
+  
+  # TODO exists
+
   ptm <- proc.time()
   outVec <- rep.int(0,x*y)
-  if(neutral == TRUE)
+  if(density == FALSE & environment == FALSE)
   {
-    density = FALSE
-    environment  = FALSE
+    neutral = TRUE
+    
+  }else{
+    neutral = F
   }
+    
+  
   
   #out <- .C("callModel", as.integer(x),as.integer(y), as.integer(dispersal), as.integer(runs), as.numeric(specRate), #1-5
 #             as.logical(density),as.logical(environment) ,as.logical(neutral), #6-8

@@ -24,7 +24,7 @@
 //Landscape::Landscape()
 //{
 //  m_Cutoff= 4;
-//	m_Neutral = false;
+//  m_Neutral = false;
 //	m_DD = true;
 //	m_Env = true;
 //	m_DensityCutoff = 2;
@@ -292,6 +292,8 @@ void GlobalEnvironment::reproduce(unsigned int generation)
       if(m_mortality) numberOfRuns = m_LandscapeSize*2;
       else numberOfRuns = m_LandscapeSize;
 
+      
+      
       for(unsigned int event = 0; event < numberOfRuns; event++)
       {
 
@@ -300,6 +302,7 @@ void GlobalEnvironment::reproduce(unsigned int generation)
 
          if(event % m_mortalityStrength != 0 && m_mortality){// important!! the frequency in relation to the base mortality controls the intensity of the mechanisms
         	 	 double chanceOfDeath = m_RandomGenerator.randomDouble(0.0,1.0);
+                std::cout<<weights[x_coordinate * m_Ydimensions + y_coordinate]<<"\n"; // DEBUG
            		  if(weights[x_coordinate * m_Ydimensions + y_coordinate] > chanceOfDeath){
            			  continue;
            		  }
@@ -336,17 +339,19 @@ void GlobalEnvironment::reproduce(unsigned int generation)
          if(!(m_DD))
          {
             double newWeight = 0.0;
-            if(m_Env)
-            {
+            
+            // TODO check for this assertion somewhere else
+            //if(m_Env)
+            //{
                double envFitnessParent = 1.2 * exp(-0.5 * pow((m_Environment[x_coordinate * m_Ydimensions + y_coordinate].first - m_Individuals[x_coordinate][y_coordinate].m_Mean) / m_Individuals[x_coordinate][y_coordinate].m_Variance, 2.0));
                //						double envFitnessPropagule = (1.0 / (individuals[kernel_x][kernel_y].variance * sqrt(2.0 * 3.147))) * exp(-0.5 * pow((environment[x_coordinate][y_coordinate].first - individuals[kernel_x][kernel_y].mean) / individuals[kernel_x][kernel_y].variance, 2.0)); // environmental influence !
                newWeight = envFitnessParent  + (DBL_MIN*100.0) ; //weights plus base value
-            }
+            //}
 
             //						double envFitnessParent = (1.0 / (individuals[x_coordinate][y_coordinate].variance * sqrt(2.0 * 3.147))) * exp(-0.5 * pow((environment[x_coordinate][y_coordinate].first - individuals[x_coordinate][y_coordinate].mean) / individuals[x_coordinate][y_coordinate].variance, 2.0)); // environmental influence !
             //						double envFitnessPropagule = (1.0 / (individuals[x_coordinate][y_coordinate].variance * sqrt(2.0 * 3.147))) * exp(-0.5 * pow((environment[x_coordinate][y_coordinate].first - individuals[x_coordinate][y_coordinate].mean) / individuals[x_coordinate][y_coordinate].variance, 2.0)); // environmental influence !
             //						newWeight = envFitnessParent * envFitnessPropagule + (DBL_MIN*100.0);
-            else throw std::runtime_error("This should not happen, Neutral conditions are defined differently");
+            //else throw std::runtime_error("This should not happen, Neutral conditions are defined differently");
 
             unsigned int vecPos = x_coordinate*m_Ydimensions + y_coordinate;
             double oldWeight = weights[vecPos];
@@ -354,8 +359,10 @@ void GlobalEnvironment::reproduce(unsigned int generation)
 
             double diff = newWeight - oldWeight; // recalculate accumulated weights
             seedSum += diff;
-            if (oldWeight < 0.)std::cout << oldWeight << '\n';
-            if (newWeight < 0.)std::cout << newWeight << '\n';
+            
+            // TODO make debug around this 
+            //if (oldWeight < 0.)std::cout << oldWeight << '\n';
+            //if (newWeight < 0.)std::cout << newWeight << '\n';
 
             if(vecPos == 0)
             {
@@ -406,7 +413,9 @@ void GlobalEnvironment::reproduce(unsigned int generation)
                      }
                   }
                   m_Individuals[focus_x][focus_y].m_LocalDensity = relatedness / cells;
+                  //std::cout<<m_Individuals[focus_x][focus_y].m_LocalDensity<<"\n"; // DEBUG
 
+                  // TODO  THIS IS PROBALY USELESS IF MORTALITY FITNESS 
                   if(m_Env)
                   {
                      double envFitnessParent = 1.2 * exp((-0.5 * (m_Environment[focus_x * m_Ydimensions + focus_y].first - m_Individuals[focus_x][focus_y].m_Mean) / m_Individuals[focus_x][focus_y].m_Variance * (m_Environment[focus_x * m_Ydimensions + focus_y].first - m_Individuals[focus_x][focus_y].m_Mean) / m_Individuals[focus_x][focus_y].m_Variance)); // environmental influence !
@@ -422,6 +431,7 @@ void GlobalEnvironment::reproduce(unsigned int generation)
                      weights[focus_x*m_Ydimensions + focus_y ] = m_Individuals[focus_x][focus_y].m_LocalDensity + (DBL_MIN*100.0);
                      seedSum +=  weights[focus_x*m_Ydimensions + focus_y ];
                   }
+                  // end useless                  
                }
             }
 
@@ -472,7 +482,7 @@ void LocalEnvironment::reproduce(unsigned int generation)
    else numberOfRuns =  m_LandscapeSize;
    
    
-   double densityCells = 0 ;
+   double densityCells = 0.0 ;
 
    for(int relativeX2= - m_DensityCutoff; relativeX2 <= m_DensityCutoff; relativeX2++)
    {
@@ -483,6 +493,7 @@ void LocalEnvironment::reproduce(unsigned int generation)
       }
    } 
   
+  // TODO 
 
    for(unsigned int event = 0; event < numberOfRuns; event++)
    {
@@ -491,10 +502,11 @@ void LocalEnvironment::reproduce(unsigned int generation)
       y_coordinate = m_RandomGenerator.randomInt(0,m_Ydimensions-1);
 
       if(event % m_mortalityStrength != 0 && m_mortality){ // important!! the frequency in relation to the base mortality controls the intensity of the mechanisms
-    	  double weight = m_Individuals[kernel_x][kernel_y].getSeedsTo(0,0, m_Dispersal_type, m_Environment[x_coordinate * m_Ydimensions + y_coordinate].first, m_Env, m_DD, m_Cutoff);
-    	  //std::cout<<weight<<"\n"; write out weights
+    	  double weight = m_Individuals[x_coordinate][y_coordinate].getSeedsTo(0,0, m_Dispersal_type, m_Environment[x_coordinate * m_Ydimensions + y_coordinate].first, m_Env, m_DD, m_Cutoff);
+//    	  double weight = 1.2 * exp(-0.5 pow(m_Individuals[kernel_x][kernel_Y].mean - m_Environment[kernel_x][kernel_Y]
+ //       std::cout<<weight<<"\n"; // DEBUG
         double chanceOfDeath = m_RandomGenerator.randomDouble(0.0,1.0);
-		  if(weight > chanceOfDeath){
+		  if(weight > chanceOfDeath){ // factor to adjust mortality rate
 			  continue;
 		  }
 	  }
@@ -590,6 +602,7 @@ void LocalEnvironment::reproduce(unsigned int generation)
                   }
                }
                m_Individuals[focus_x][focus_y].m_LocalDensity = relatedness / densityCells;
+               //std::cout<<m_Individuals[focus_x][focus_y].m_LocalDensity<<"\n"; //DEBUG
             }
          }
       }

@@ -7,7 +7,7 @@ library(PhylGeo)
 # dispersal = 3
 # dispersal = 2 
 
-myModel <- fullMod(x = 100, y = 100, dispersal = 3, dispersalCut = 4, runs = 200, specRate = 1.0, density = T, environment = F, neutral = F, seed = 1510, mortalityFitness = T, reproductiveFitness = F, mortalityStrength = 10, saveLocation = "./")
+myModel <- fullMod(x = 50, y = 50, dispersal = 0.5, runs = 2000, specRate = 1.0, density = T, environment = T, seed = sample(1:1000,1), mortalityStrength = 2, saveLocation = "./")
 
 # Look at the phylogeny (requires package 'ape')
 require(ape)
@@ -26,6 +26,8 @@ extantPhylogeny <- drop.fossil(phylogeny)
 
 plotSpatialPhylo(myModel$specMat, extantPhylogeny, plot = "both")
 
-par(mfrow = c(1,2))
-rac(myModel$specMat)
-sac(myModel$specMat)
+specRich(myModel$specMat)
+
+#par(mfrow = c(1,2))
+#rac(myModel$specMat)
+#sac(myModel$specMat)
