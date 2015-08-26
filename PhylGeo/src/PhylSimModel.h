@@ -8,6 +8,10 @@
 #ifndef PHYLSIMMODEL_H_
 #define PHYLSIMMODEL_H_
 
+#ifndef DEBUG
+#define DEBUG
+#endif
+
 
 #include <string>
 
