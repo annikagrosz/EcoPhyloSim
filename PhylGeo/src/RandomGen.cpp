@@ -102,6 +102,10 @@ return pois(my_engine());
 //	return position[new_parent];
 //}
 
+
+// Chances need to be a cummulative function, unnormalized
+// Would like to check this again in detail
+
 int RandomGen::multinomialDraw(double * chances, int size, double max)
 {
 
