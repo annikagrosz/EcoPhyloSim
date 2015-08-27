@@ -36,7 +36,7 @@
 #'  
 #'  species <- myModel$specMat
 #'  sac(area = c(1,10,100,1000), matrix = species, rep = 100, plot= T)
-fullMod <- function(x = NULL, y = NULL, dispersal = "global", runs = NULL, specRate = NULL, density = F, environment = F, fitnessActsOn = "mortality" , mortalityStrength = 10, densityCut = 1, seed=NULL, saveLocation = NULL)
+fullMod <- function(x = 100, y = 100, dispersal = "global", runs = 100, specRate = 1.0, density = F, environment = F, fitnessActsOn = "mortality" , fitnessBaseMortalityRatio = 10, densityCut = 1, seed=NULL, saveTimes = "last")
 {
   
   if (is.null(seed)) seed = sample(1:10000,1)
@@ -68,11 +68,14 @@ fullMod <- function(x = NULL, y = NULL, dispersal = "global", runs = NULL, specR
   if(density == FALSE & environment == FALSE)
   {
     neutral = TRUE
-    
   }else{
     neutral = F
   }
+  
+  # saveTimes TODO implement save time!!!!
     
+  
+  saveLocation = "./" # only for backword compatibility, remove save location from call 
   
   
   #out <- .C("callModel", as.integer(x),as.integer(y), as.integer(dispersal), as.integer(runs), as.numeric(specRate), #1-5
@@ -84,7 +87,7 @@ fullMod <- function(x = NULL, y = NULL, dispersal = "global", runs = NULL, specR
 #             PACKAGE = "PhylGeo")[16:21] #19-21
 #   
   out <- callModel( x,  y,  dispersal,  runs,  specRate, density, 
-                    environment, neutral, mortalityFitness, mortalityStrength, reproductiveFitness, dispersalCut, 
+                    environment, neutral, mortalityFitness, fitnessBaseMortalityRatio, reproductiveFitness, dispersalCut, 
                     densityCut, seed, saveLocation, 
                     specOut = as.integer(outVec), traitOut = as.numeric(outVec),neutralOut = as.numeric(outVec),
                     compOut = as.numeric(outVec), envOut = as.numeric(outVec), phyloOut = character(length = 1)
@@ -115,6 +118,8 @@ fullMod <- function(x = NULL, y = NULL, dispersal = "global", runs = NULL, specR
     compMat = compMat, 
     neutMat = neutMat, 
     phylogeny = phylogeny, 
-    phyloTXT = out[[6]]),
-    seed = seed)
+    phyloTXT = out[[6]],
+    seed = seed
+    
+    ))
 }
