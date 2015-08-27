@@ -36,35 +36,30 @@
 #'  
 #'  species <- myModel$specMat
 #'  sac(area = c(1,10,100,1000), matrix = species, rep = 100, plot= T)
-fullMod <- function(x = NULL, y = NULL, dispersal = "global", runs = NULL, specRate = NULL, density = F, environment = F, fitnessActsOn = "mortality" , mortalityStrength = 10, densityCut = 1, seed=1, saveLocation = NULL)
+fullMod <- function(x = NULL, y = NULL, dispersal = "global", runs = NULL, specRate = NULL, density = F, environment = F, fitnessActsOn = "mortality" , mortalityStrength = 10, densityCut = 1, seed=NULL, saveLocation = NULL)
 {
+  
+  if (is.null(seed)) seed = sample(1:10000,1)
   
   if (dispersal == "global" | dispersal == 0){
     dispersal = 1
     dispersalCut = 1
-  }else{
-    if (is.numeric(dispersal) & dispersal > 0){
-      dispersalCut = 2*dispersal
-      dispersal = 3
-    }
-  }
+  }else if (is.numeric(dispersal)){
+    if (dispersal < 0.5) stop("dispersal parameter too small") 
+    dispersalCut = 2*dispersal
+    dispersal = 3
+  }else stop("wrong dispersal parameter") 
   
   if(fitnessActsOn == "mortality"){
     reproductiveFitness = F
     mortalityFitness = T    
-  }
-  
-  if(fitnessActsOn == "reproduction"){
+  }else if(fitnessActsOn == "reproduction"){
     reproductiveFitness = T
     mortalityFitness = F    
-  }
-  
-  if(fitnessActsOn == "both"){
+  }else if (fitnessActsOn == "both"){
     reproductiveFitness = T
     mortalityFitness = T    
-  }
-  
-  if(!(exists("reproductiveFitness") & exists("reproductiveFitness"))) stop("wrong parameters")
+  }else stop("wrong fitness parameters")
   
   # TODO exists
 
@@ -113,5 +108,13 @@ fullMod <- function(x = NULL, y = NULL, dispersal = "global", runs = NULL, specR
   
   print (paste("Finished after",floor(((proc.time() - ptm)[3])/60), "minute(s) and", ((proc.time() - ptm)[3])%%60, "second(s)."))
   
-  return(list(specMat = specMat, traitMat=traitMat, envMat = envMat, compMat = compMat, neutMat = neutMat, phylogeny = phylogeny, phyloTXT = out[[6]]))
+  return(list(
+    specMat = specMat, 
+    traitMat=traitMat, 
+    envMat = envMat, 
+    compMat = compMat, 
+    neutMat = neutMat, 
+    phylogeny = phylogeny, 
+    phyloTXT = out[[6]]),
+    seed = seed)
 }
