@@ -14,8 +14,7 @@
 
 #include "Phylogeny.h"
 #include "RandomGen.h"
-
-class Individual;
+#include "Individual.h"
 
 /**
  * The landscape is the main component of our world. It is separated into global environment and
@@ -51,6 +50,8 @@ class Landscape {
 		double m_SoilMoistureRange;
 		double m_GradientStep;
 		double m_Speciation_Rate;
+    
+    double cellsWithinDensityCutoff;
 
 		// Change the temperature in the environment by the given magnitude.
 		void tempChange(int sign, double magnitude);
@@ -79,6 +80,7 @@ class Landscape {
 	void increaseAge();
 
 	void speciation(unsigned int generation, unsigned int runs);
+  void densityUpdate(int x, int y);
 	void initialize(int xsize, int ysize, unsigned int runs);
 	std::pair<int, int> get_dimensions();
 };
