@@ -49,6 +49,8 @@ class Individual {
 	RandomGen m_RandomGenerator;
 
 	double getSeedsTo(int rel_x, int rel_y, int dispersal_type, double temp, bool env, bool dd, int cutoff);
+  
+  double getFitness(double temp, bool env, bool dd);
 
 	double dispersal(int dispersal_type, double distance, int cutoff);  // 1 for kernel, 2 for nearest neighbor, 3 for global
 };
