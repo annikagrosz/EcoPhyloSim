@@ -11,7 +11,8 @@
 #' modelParameters <- getParametersXML(path)
 #' modelParameters
 getParametersXML <- function(file){
-  parameters <- XML::xmlToDataFrame(file)
+  load(file)
+  #parameters <- XML::xmlToDataFrame(file)
   return (parameters)
 }
 
@@ -90,9 +91,10 @@ setLeipzigParametersXML <- function(scenarios, x, y, runs, dispersal, nSpec, spe
 #' @param seed Integer setting the random seed for the model
 #' @param saveLocation Path of the folder to save the extracted files to
 #' @return Creates a .xml file at the specified location
-setModelParametersXML <- function(scenarios, x, y, runs, dispersal, specRate, density, environment, mortalityFitness, mortalityStrength, reproductiveFitness, neutral, location, dispersalCut, densityCut, saveLocation, seed)
+setModelParametersXML <- function(list, file)
 {
-  parameters <- data.frame(scenarios = scenarios, x = x, y = y, runs = runs, dispersal = dispersal, specRate = specRate, density = as.integer(density), environment = as.integer(environment), mortalityFitness = as.integer(mortalityFitness), mortalityStrength = as.integer(mortalityStrength), reproductiveFitness = as.integer(reproductiveFitness), neutral = as.integer(neutral), dispersalCut = dispersalCut, densityCut = densityCut, saveLocation = saveLocation, seed = seed)
-  file <- location
-  kulife::write.xml(parameters, file)
+  parameters <- as.data.frame(pars)
+  save(parameters, file = file)
+  #kulife::write.xml(parameters, location)
 }
+
