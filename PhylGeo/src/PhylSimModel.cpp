@@ -196,109 +196,109 @@ void PhylSimModel::getclimate(){
 }
 
 
-void callModel(int* x, int* y, int* dispersal, int* runs, double* specRate, bool* dens, 
-               bool* env, bool* neutral, bool* mort, int* mortStrength, bool* repro, int* dispersalCutoff, 
-               int* densityCutoff, int* seed, std::string* saveLocation, std::string* specOut, std::string* traitOut, std::string* neutralOut,
-               std::string* compOut, std::string* envOut, std::string* phyloOut){
-   RandomGen ran;
-   ran.seedrand(seed[0]);
-   
-   PhylSimModel Model(x[0],y[0],dispersal[0], runs[0], specRate[0], dens[0], env[0],  
-                      neutral[0], mort[0], mortStrength[0], repro[0], dispersalCutoff[0], densityCutoff[0], saveLocation[0]);
-
-   Model.update(runs[0]);
-
-   if(dispersal[0] == 1){
-      int i = 0;
-      for(int ba=0;ba<x[0];ba++){
-         for(int bu=0;bu<y[0];bu++){
-            specOut[i] = Model.m_Global->m_Individuals[ba][bu].m_Species->m_ID;
-            i=i+1;
-         }
-      }
-
-      i = 0;
-      for(int ba=0;ba<x[0];ba++){
-         for(int bu=0;bu<y[0];bu++){
-            traitOut[i] = Model.m_Global->m_Individuals[ba][bu].m_Mean;
-            i=i+1;
-         }
-      }
-
-      i = 0;
-      for(int ba=0;ba<x[0];ba++){
-         for(int bu=0;bu<y[0];bu++){
-            envOut[i] = Model.m_Global->m_Environment[ba * y[0] + bu].first;
-            i=i+1;
-         }
-      }
-
-      i = 0;
-      for(int ba=0;ba<x[0];ba++){
-         for(int bu=0;bu<y[0];bu++){
-            neutralOut[i] = Model.m_Global->m_Individuals[ba][bu].m_NeutralMarker;
-            i=i+1;
-         }
-      }
-
-      i = 0;
-      for(int ba=0;ba<x[0];ba++){
-         for(int bu=0;bu<y[0];bu++){
-            compOut[i] = Model.m_Global->m_Individuals[ba][bu].m_CompetitionMarker;
-            i=i+1;
-         }
-      }
-
-      Model.m_Global->m_Phylogeny.prunePhylogeny(Model.m_Global->m_Phylogeny.m_FullPhylogeny);
-      phyloOut[0] = Model.m_Global->m_Phylogeny.writePhylogenyR(1, runs[0], Model.m_Global->m_Phylogeny.m_PrunedPhylo);
-   }
-
-   else if(dispersal[0] == 2 ||dispersal[0] == 3){
-      int i = 0;
-      for(int ba=0;ba<x[0];ba++){
-         for(int bu=0;bu<y[0];bu++){
-            specOut[i] = Model.m_Local->m_Individuals[ba][bu].m_Species->m_ID;
-            i=i+1;
-         }
-      }
-
-      i = 0;
-      for(int ba=0;ba<x[0];ba++){
-         for(int bu=0;bu<y[0];bu++){
-            traitOut[i] = Model.m_Local->m_Individuals[ba][bu].m_Mean;
-            i=i+1;
-         }
-      }
-
-      i = 0;
-      for(int ba=0;ba<x[0];ba++){
-         for(int bu=0;bu<y[0];bu++){
-            envOut[i] = Model.m_Local->m_Environment[ba * y[0] + bu].first;
-            i=i+1;
-         }
-      }
-
-      i = 0;
-      for(int ba=0;ba<x[0];ba++){
-         for(int bu=0;bu<y[0];bu++){
-            neutralOut[i] = Model.m_Local->m_Individuals[ba][bu].m_NeutralMarker;
-            i=i+1;
-         }
-      }
-
-      i = 0;
-      for(int ba=0;ba<x[0];ba++){
-         for(int bu=0;bu<y[0];bu++){
-            compOut[i] = Model.m_Local->m_Individuals[ba][bu].m_CompetitionMarker;
-            i=i+1;
-         }
-      }
-
-      Model.m_Local->m_Phylogeny.prunePhylogeny(Model.m_Local->m_Phylogeny.m_FullPhylogeny);
-      phyloOut[0] = Model.m_Local->m_Phylogeny.writePhylogenyR(1, runs[0], Model.m_Local->m_Phylogeny.m_PrunedPhylo);
-   }
-}
-
+//void callModel(int* x, int* y, int* dispersal, int* runs, double* specRate, bool* dens, 
+//               bool* env, bool* neutral, bool* mort, int* mortStrength, bool* repro, int* dispersalCutoff, 
+//               int* densityCutoff, int* seed, std::string* saveLocation, std::string* specOut, std::string* traitOut, std::string* neutralOut,
+//               std::string* compOut, std::string* envOut, std::string* phyloOut){
+//   RandomGen ran;
+//   ran.seedrand(seed[0]);
+//   
+//   PhylSimModel Model(x[0],y[0],dispersal[0], runs[0], specRate[0], dens[0], env[0],  
+//                      neutral[0], mort[0], mortStrength[0], repro[0], dispersalCutoff[0], densityCutoff[0], saveLocation[0]);
+//
+//   Model.update(runs[0]);
+//
+//   if(dispersal[0] == 1){
+//      int i = 0;
+//      for(int ba=0;ba<x[0];ba++){
+//         for(int bu=0;bu<y[0];bu++){
+//            specOut[i] = Model.m_Global->m_Individuals[ba][bu].m_Species->m_ID;
+//            i=i+1;
+//         }
+//      }
+//
+//      i = 0;
+//      for(int ba=0;ba<x[0];ba++){
+//         for(int bu=0;bu<y[0];bu++){
+//            traitOut[i] = Model.m_Global->m_Individuals[ba][bu].m_Mean;
+//            i=i+1;
+//         }
+//      }
+//
+//      i = 0;
+//      for(int ba=0;ba<x[0];ba++){
+//         for(int bu=0;bu<y[0];bu++){
+//            envOut[i] = Model.m_Global->m_Environment[ba * y[0] + bu].first;
+//            i=i+1;
+//         }
+//      }
+//
+//      i = 0;
+//      for(int ba=0;ba<x[0];ba++){
+//         for(int bu=0;bu<y[0];bu++){
+//            neutralOut[i] = Model.m_Global->m_Individuals[ba][bu].m_NeutralMarker;
+//            i=i+1;
+//         }
+//      }
+//
+//      i = 0;
+//      for(int ba=0;ba<x[0];ba++){
+//         for(int bu=0;bu<y[0];bu++){
+//            compOut[i] = Model.m_Global->m_Individuals[ba][bu].m_CompetitionMarker;
+//            i=i+1;
+//         }
+//      }
+//
+//      Model.m_Global->m_Phylogeny.prunePhylogeny(Model.m_Global->m_Phylogeny.m_FullPhylogeny);
+//      phyloOut[0] = Model.m_Global->m_Phylogeny.writePhylogenyR(1, runs[0], Model.m_Global->m_Phylogeny.m_PrunedPhylo);
+//   }
+//
+//   else if(dispersal[0] == 2 ||dispersal[0] == 3){
+//      int i = 0;
+//      for(int ba=0;ba<x[0];ba++){
+//         for(int bu=0;bu<y[0];bu++){
+//            specOut[i] = Model.m_Local->m_Individuals[ba][bu].m_Species->m_ID;
+//            i=i+1;
+//         }
+//      }
+//
+//      i = 0;
+//      for(int ba=0;ba<x[0];ba++){
+//         for(int bu=0;bu<y[0];bu++){
+//            traitOut[i] = Model.m_Local->m_Individuals[ba][bu].m_Mean;
+//            i=i+1;
+//         }
+//      }
+//
+//      i = 0;
+//      for(int ba=0;ba<x[0];ba++){
+//         for(int bu=0;bu<y[0];bu++){
+//            envOut[i] = Model.m_Local->m_Environment[ba * y[0] + bu].first;
+//            i=i+1;
+//         }
+//      }
+//
+//      i = 0;
+//      for(int ba=0;ba<x[0];ba++){
+//         for(int bu=0;bu<y[0];bu++){
+//            neutralOut[i] = Model.m_Local->m_Individuals[ba][bu].m_NeutralMarker;
+//            i=i+1;
+//         }
+//      }
+//
+//      i = 0;
+//      for(int ba=0;ba<x[0];ba++){
+//         for(int bu=0;bu<y[0];bu++){
+//            compOut[i] = Model.m_Local->m_Individuals[ba][bu].m_CompetitionMarker;
+//            i=i+1;
+//         }
+//      }
+//
+//      Model.m_Local->m_Phylogeny.prunePhylogeny(Model.m_Local->m_Phylogeny.m_FullPhylogeny);
+//      phyloOut[0] = Model.m_Local->m_Phylogeny.writePhylogenyR(1, runs[0], Model.m_Local->m_Phylogeny.m_PrunedPhylo);
+//   }
+//}
+//
 
 
 

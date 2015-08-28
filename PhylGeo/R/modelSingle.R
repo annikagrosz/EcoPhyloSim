@@ -87,26 +87,13 @@ fullMod <- function(x = 100, y = 100, dispersal = "global", runs = 100, specRate
 #             PACKAGE = "PhylGeo")[16:21] #19-21
 #   
   out <- callModel( x,  y,  dispersal,  runs,  specRate, density, 
-                    environment, neutral, mortalityFitness, fitnessBaseMortalityRatio, reproductiveFitness, dispersalCut, 
-                    densityCut, seed, saveLocation, 
-                    specOut = as.integer(outVec), traitOut = as.numeric(outVec),neutralOut = as.numeric(outVec),
-                    compOut = as.numeric(outVec), envOut = as.numeric(outVec), phyloOut = character(length = 1)
-    )  
+                    environment, neutral, mortalityFitness, fitnessBaseMortalityRatio, reproductiveFitness, dispersalCut, densityCut, seed, saveLocation)  
 
-  print("simulation is done")
-  
-  print("writing specMat")
   specMat = matrix(out[[1]],ncol=x, nrow=y)
-  print("writing traitMat")
   traitMat = matrix(out[[2]],ncol=x, nrow=y)
-  print("writing neutMat")
   neutMat = matrix(out[[3]],ncol=x, nrow=y)
-  print("writing compMat")
   compMat = matrix(out[[4]],ncol=x, nrow=y)
-  print("writing envMat")
   envMat = matrix(out[[5]],ncol=x, nrow=y)
-  print("writing phylogeny")
-  
   phylogeny = ape::read.tree(text = out[[6]])
   
   print (paste("Finished after",floor(((proc.time() - ptm)[3])/60), "minute(s) and", ((proc.time() - ptm)[3])%%60, "second(s)."))
@@ -123,3 +110,19 @@ fullMod <- function(x = 100, y = 100, dispersal = "global", runs = 100, specRate
     
     ))
 }
+
+
+
+
+# x = 100
+# y = 100
+# dispersal = 0.5
+# runs = 100
+# specRate = 1.0
+# density = F
+# environment = F
+# seed = 1
+# fitnessBaseMortalityRatio = 5
+# fitnessActsOn = "mortality" 
+# densityCut = 1
+# saveTimes = "last"
