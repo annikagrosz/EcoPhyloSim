@@ -6,10 +6,13 @@
 #' @param numberOfPlots number of plots drawn within the metacommunity
 #' @param repetitions number of generated null model plots
 #' @return A numeric vector with pValues for each plot in the observed metacommunity
-nullModel <- function(speciesMatrix, phylogeny, localPlotSize, numberOfPlots, repetitions){
+nullModel <- function(speciesMatrix, phylogeny, localPlotSize, numberOfPlots, repetitions, fun = mpd){
   
   extantPhyloCophen <- stats::cophenetic(phylogeny) # create distance matrix from phylogeny (requires picante)
   comMat <- localPlots(size = localPlotSize, n = numberOfPlots, matrix = speciesMatrix, community = T)$communityTable # create community matrix from local communities (requires PhylGeo)
+  
+  observedMPD = fun(samp = comMat, dis = extantPhyloCophen, abundance.weighted = T) # calculate fun for "real matrix
+  #observedMPD = pd(samp = comMat, phylogeny)
   
   metaabundance <- table(speciesMatrix) # calculate abundances of species in metacommunity
   names(metaabundance) <- paste("s", names(metaabundance), sep="") # set names equal to those in the local communities and the distance matrix
@@ -18,8 +21,7 @@ nullModel <- function(speciesMatrix, phylogeny, localPlotSize, numberOfPlots, re
   distribution <- rmultinom(n = repetitions, size=localPlotSize,  prob=metaabundance) # create multinomial distributed matrix
   
   
-  NullDistribution = mpd(samp = t(distribution), dis = extantPhyloCophen, abundance.weighted = T) # calculate mpd for null matrix
-  observedMPD = mpd(samp = comMat, dis = extantPhyloCophen, abundance.weighted = T) # calculate mpd for "real matrix
+  NullDistribution = fun(samp = t(distribution), dis = extantPhyloCophen, abundance.weighted = T) # calculate mpd for null matrix
   
   observedMPD[which(is.na(observedMPD))] <- 0
   
@@ -30,3 +32,4 @@ nullModel <- function(speciesMatrix, phylogeny, localPlotSize, numberOfPlots, re
   
   return(pValues)
 }
+
