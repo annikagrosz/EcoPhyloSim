@@ -7,29 +7,23 @@ library(PhylGeo)
 # dispersal = 3
 # dispersal = 2 
 
-myModel <- fullMod(x = 100, y = 100, dispersal = 0.5, runs = 1000, specRate = 1.0, density = F, environment = F, seed = 1, fitnessBaseMortalityRatio = 5)
+simu <- fullMod(x = 10, y = 10, dispersal = 0.5, runs = 1000, specRate = 1.0, density = F, environment = F, seed = 1, fitnessBaseMortalityRatio = 5)
+
+str(simu)
 
 # Look at the phylogeny (requires package 'ape')
 require(ape)
 
-# Get the phylogeny
-phylogeny <- myModel$phylogeny
 
-# Get the phylogeny
-#plot(myModel$phylogeny)
+plotSpatialPhylo(simu, plot = "both")
 
-# Only extant taxa
-extantPhylogeny <- drop.fossil(phylogeny)
-
-#plot(extantPhylogeny)
-
-plotTraitDistribution(myModel)
-
-plotSpatialPhylo(myModel$specMat, extantPhylogeny, plot = "both")
-
-specRich(myModel$specMat)
+specRich(simu$specMat)
 
 
 par(mfrow = c(1,2))
-rac(myModel$specMat)
-sac(myModel$specMat)
+rac(simu$specMat)
+sac(simu$specMat)
+
+plotTraitDistribution(simu)
+
+
