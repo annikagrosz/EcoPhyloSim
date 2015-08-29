@@ -73,9 +73,6 @@ fullMod <- function(x = 100, y = 100, dispersal = "global", runs = 100, specRate
   }
   
   # saveTimes TODO implement save time!!!!
-    
-  
-  saveLocation = "./" # only for backword compatibility, remove save location from call 
   
   
   #out <- .C("callModel", as.integer(x),as.integer(y), as.integer(dispersal), as.integer(runs), as.numeric(specRate), #1-5
@@ -87,7 +84,7 @@ fullMod <- function(x = 100, y = 100, dispersal = "global", runs = 100, specRate
 #             PACKAGE = "PhylGeo")[16:21] #19-21
 #   
   out <- callModel( x,  y,  dispersal,  runs,  specRate, density, 
-                    environment, neutral, mortalityFitness, fitnessBaseMortalityRatio, reproductiveFitness, dispersalCut, densityCut, seed, saveLocation)  
+                    environment, neutral, mortalityFitness, fitnessBaseMortalityRatio, reproductiveFitness, dispersalCut, densityCut, seed)  
 
   specMat = matrix(out[[1]],ncol=x, nrow=y)
   traitMat = matrix(out[[2]],ncol=x, nrow=y)
