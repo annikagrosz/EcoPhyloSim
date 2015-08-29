@@ -26,9 +26,7 @@ Rcpp::List callModel(int x, int y, int dispersal, IntegerVector runs, double spe
                bool env, bool neutral, bool mort, int mortStrength, bool repro, int dispersalCutoff, 
                int densityCutoff, int seed) {
                 
-   
-   std::cout << "Run model for" <<  "HELLO" << "steps \n";
-   
+ 
    RandomGen ran;
    ran.seedrand(seed);
    
@@ -72,7 +70,7 @@ Rcpp::List callModel(int x, int y, int dispersal, IntegerVector runs, double spe
               indCounter++;
            }
         }
-        phylSimModel.m_Global->m_Phylogeny.prunePhylogeny(phylSimModel.m_Global->m_Phylogeny.m_FullPhylogeny);
+        phylSimModel.m_Global->m_Phylogeny.prunePhylogeny(runcount);
         std::string phyloPass("\0");
         phyloPass = phylSimModel.m_Global->m_Phylogeny.writePhylogenyR(1, phylSimModel.m_Global->m_Phylogeny.m_PrunedPhylo);
         char * cstr = new char [phyloPass.length()+1];
@@ -90,7 +88,7 @@ Rcpp::List callModel(int x, int y, int dispersal, IntegerVector runs, double spe
               indCounter++;
            }
         }
-        phylSimModel.m_Local->m_Phylogeny.prunePhylogeny(phylSimModel.m_Local->m_Phylogeny.m_FullPhylogeny);
+        phylSimModel.m_Local->m_Phylogeny.prunePhylogeny(runcount);
         std::string phyloPass = phylSimModel.m_Local->m_Phylogeny.writePhylogenyR(1, phylSimModel.m_Local->m_Phylogeny.m_PrunedPhylo);
         char * cstr = new char [phyloPass.length()+1];
         std::strcpy (cstr, phyloPass.c_str());

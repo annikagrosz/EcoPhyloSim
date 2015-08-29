@@ -31,7 +31,7 @@ class Phylogeny {
 	      std::multimap<unsigned long long, Species*> *phylogenyMap);
 
 	void writeSpeciesData();
-	void prunePhylogeny(std::multimap<unsigned long long, Species*>  * fullPhylogenyMap);
+	void prunePhylogeny(int current);
 	std::vector<Species*> specVec;
 };
 

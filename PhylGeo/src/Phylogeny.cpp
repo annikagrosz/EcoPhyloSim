@@ -44,25 +44,32 @@ void Phylogeny::writeSpeciesData()
 }
 
 
-void Phylogeny::prunePhylogeny(std::multimap<unsigned long long, Species*> *fullPhylogenyMap)
+void Phylogeny::prunePhylogeny(int current)
 {
+  
+  m_PrunedPhylo->clear();
 
-  //std::multimap<unsigned long long, Species*> *fullPhylogenyMap = m_FullPhylogeny
-
-		//todo prune phylogeny
-	for(unsigned long long i=1; i <= fullPhylogenyMap->size(); i++)
+  // Create deep copy
+  // TODO -> I tried the deep copy of multimap, but it doesn't work ... sort this out!!!
+  for(unsigned long long i=1; i <= m_FullPhylogeny->size(); i++){
+    Species * specp = new Species(*m_FullPhylogeny->find(i)->second);
+    if (specp->m_Date_of_Extinction > current) specp->m_Date_of_Extinction = current;
+    m_PrunedPhylo->insert( std::pair<unsigned long long, Species*>(specp->m_ID, specp));
+  }
+  
+  // TODO - I somehow don't understand 100% why this works .. we go through the phylogeny size, erase things inbetween, why don't we get into 
+  // trouble for trying to access indices that have already been erase?
+  
+	for(unsigned long long i=1; i <= m_PrunedPhylo->size(); i++)
 	{
-		Species * specp = new Species(*fullPhylogenyMap->find(i)->second);
-
-		m_PrunedPhylo->insert( std::pair<unsigned long long, Species*>(specp->m_ID, specp) );
-		Species * father = m_PrunedPhylo->find(specp->m_ID)->second;
+		Species * father = m_PrunedPhylo->find(i)->second;
 
 		for(int i = 0; i<10; i++){
 			if(!(father->m_Children.empty()))
 			{
 				 for(unsigned int j=0; j<  father->m_Children.size(); j++)
 				 {
-					 Species * child = fullPhylogenyMap->find(father->m_Children[j])->second;
+					 Species * child = m_PrunedPhylo->find(father->m_Children[j])->second;
 					 if(child->m_Children.empty() && child->m_Count==0)
 					 {
 						 father->m_Children.erase(father->m_Children.begin()+j);
