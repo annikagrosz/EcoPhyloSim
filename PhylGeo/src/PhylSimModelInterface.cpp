@@ -20,11 +20,14 @@
 
 using namespace Rcpp;
 
-
+//’ call main model
+//’
+//’ @param x ...
+//’ @return list of model results
 // [[Rcpp::export]]
 Rcpp::List callModel(int x, int y, int dispersal, int runs, double specRate, bool dens, 
                bool env, bool neutral, bool mort, int mortStrength, bool repro, int dispersalCutoff, 
-               int densityCutoff, int seed, CharacterVector saveLocation) {
+               int densityCutoff, int seed) {
                  
    Rcpp::IntegerVector specOut(x*y);                 
    Rcpp::NumericVector traitOut(x*y);
@@ -33,12 +36,10 @@ Rcpp::List callModel(int x, int y, int dispersal, int runs, double specRate, boo
    Rcpp::NumericVector compOut(x*y);
    Rcpp::CharacterVector phyloOut = "";   
    
-
-
    RandomGen ran;
    ran.seedrand(seed);
    
-   std::string tempSaveLoc = Rcpp::as<std::string>(saveLocation); 
+   std::string tempSaveLoc = "./"; 
    
    PhylSimModel phylSimModel(x, y, dispersal, runs, specRate, dens, 
                env, neutral, mort, mortStrength, repro, dispersalCutoff, 
@@ -47,13 +48,10 @@ Rcpp::List callModel(int x, int y, int dispersal, int runs, double specRate, boo
    phylSimModel.update(runs);
    // TODO: Assert that the given vectors specOut, traitOut, neutralOut, compOut, envOut, phyloOut
    // have enough place, i.e. size of them must always be x*y
-   
+
+    int indCounter = 0; 
  
    if (dispersal == 1) {
-     
-      std::cout << "Writing : Species Matrix..." << '\n';
-      int indCounter = 0; // individual counter
-
       for (int i = 0; i < x; i++) {
          for (int j = 0; j < y; j++) {
             specOut[indCounter] = phylSimModel.m_Global->m_Individuals[i][j].m_Species->m_ID;
@@ -71,10 +69,7 @@ Rcpp::List callModel(int x, int y, int dispersal, int runs, double specRate, boo
       std::strcpy (cstr, phyloPass.c_str());
       phyloOut[0] = cstr;
       
-      } else if(dispersal == 2 || dispersal == 3) {
-     
-      int indCounter = 0; // individual counter
-
+      } else {
       for (int i = 0; i < x; i++) {
          for (int j = 0; j < y; j++) {
             specOut[indCounter] = phylSimModel.m_Local->m_Individuals[i][j].m_Species->m_ID;
@@ -85,18 +80,19 @@ Rcpp::List callModel(int x, int y, int dispersal, int runs, double specRate, boo
             indCounter++;
          }
       }
-      
       phylSimModel.m_Local->m_Phylogeny.prunePhylogeny(phylSimModel.m_Local->m_Phylogeny.m_FullPhylogeny);
       std::string phyloPass = phylSimModel.m_Local->m_Phylogeny.writePhylogenyR(1, runs, phylSimModel.m_Local->m_Phylogeny.m_PrunedPhylo);
       char * cstr = new char [phyloPass.length()+1];
       std::strcpy (cstr, phyloPass.c_str());
-
       phyloOut[0] = cstr;
-   }
-   return Rcpp::List::create(Rcpp::Named("vec") = specOut,
-                          Rcpp::Named("lst") = traitOut,
-                          Rcpp::Named("vec2") = neutralOut,
-                          Rcpp::Named("n") = compOut,
-                          Rcpp::Named("h") = envOut,
-                          Rcpp::Named("hh") = phyloOut);
+}
+   
+
+      
+   return Rcpp::List::create(Rcpp::Named("Species") = specOut,
+                          Rcpp::Named("EnvTrait") = traitOut,
+                          Rcpp::Named("NeutralTrait") = neutralOut,
+                          Rcpp::Named("CompetitionTrait") = compOut,
+                          Rcpp::Named("Environment") = envOut,
+                          Rcpp::Named("Phylogeny") = phyloOut);
 }
