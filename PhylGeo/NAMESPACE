@@ -1,6 +1,4 @@
 useDynLib(PhylGeo)
-#useDynLib(model, callRandomGenRandomPoisson, callModel, callLeipzig)
-#useDynLib(libtrainDLL, add_, multi_, call_MyClass_func)
 exportPattern("^[[:alpha:]]+")
 importFrom(Rcpp, sourceCpp)
 

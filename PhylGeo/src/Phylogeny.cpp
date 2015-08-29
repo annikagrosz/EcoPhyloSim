@@ -43,8 +43,11 @@ void Phylogeny::writeSpeciesData()
 
 }
 
+
 void Phylogeny::prunePhylogeny(std::multimap<unsigned long long, Species*> *fullPhylogenyMap)
 {
+
+  //std::multimap<unsigned long long, Species*> *fullPhylogenyMap = m_FullPhylogeny
 
 		//todo prune phylogeny
 	for(unsigned long long i=1; i <= fullPhylogenyMap->size(); i++)
@@ -77,8 +80,7 @@ void Phylogeny::prunePhylogeny(std::multimap<unsigned long long, Species*> *full
 //	std::cout <<"phylosize : " << prunedPhylo.size() << '\n';
 }
 
-void Phylogeny::writePhylogeny(unsigned long long start, unsigned int runs,
-      std::multimap<unsigned long long, Species*> *phylogenyMap, char suffix)
+void Phylogeny::writePhylogeny(unsigned long long start, std::multimap<unsigned long long, Species*> *phylogenyMap, char suffix)
 {
 	Species * parent = phylogenyMap->find(start)->second;
 	Species * ancestorSpecies = new Species(0,0,0,std::make_pair(0,0),0);
@@ -209,8 +211,7 @@ void Phylogeny::writePhylogeny(unsigned long long start, unsigned int runs,
 }
 
 
-std::string Phylogeny::writePhylogenyR(unsigned long long start, unsigned int runs,
-      std::multimap<unsigned long long, Species*> * phylogenyMap)
+std::string Phylogeny::writePhylogenyR(unsigned long long start, std::multimap<unsigned long long, Species*> * phylogenyMap)
 {
 	Species * parent = phylogenyMap->find(start)->second;
 	Species * ancestorSpecies = new Species(0,0,0,std::make_pair(0,0),0);

@@ -76,7 +76,7 @@ Landscape::Landscape(int xsize, int ysize, int type, bool neutral, bool dd, bool
    m_Env = env;
    m_mortality = mort;
    m_reproduction = repro;
-   m_Runs = runs;
+   m_SimulationEnd = runs;
    m_DensityCutoff = DensityCutoff;
    m_Dispersal_type = type;
    m_Global_Species_Counter = 1;
@@ -95,7 +95,7 @@ Landscape::Landscape(int xsize, int ysize, int type, bool neutral, bool dd, bool
    }
 
    // Initialization
-   initialize(m_Xdimensions,m_Ydimensions, m_Runs);
+   initialize(m_Xdimensions,m_Ydimensions, m_SimulationEnd);
 
    m_AirTemperature =  0.0; // Celsius
    m_GradientStep = (1.0/(double)m_Xdimensions)*2.0;
@@ -149,10 +149,11 @@ std::pair<int, int> Landscape::get_dimensions()
    return dimensions;
 }
 
-void Landscape::initialize(int xsize, int ysize,unsigned int runs)
+void Landscape::initialize(int xsize, int ysize,unsigned int simulationEnd)
 {
-   Species * spec = new Species(1, 1, 0, std::make_pair<int,int>(0,0), runs);
+   Species * spec = new Species(1, 1, 0, std::make_pair<int,int>(0,0), simulationEnd);
 
+   // TODO this should go in the contructor ... need a borg pattern variable or something to get correct species count
    for(int cols = 0; cols < xsize;cols++)
    {
       for(int rows=0; rows < ysize; rows++)
@@ -163,7 +164,7 @@ void Landscape::initialize(int xsize, int ysize,unsigned int runs)
          this->m_Individuals[cols][rows].m_Species->m_Count += 1;
          this->m_Individuals[cols][rows].m_Species->sumMean(m_Individuals[cols][rows].m_Mean, m_Individuals[cols][rows].m_CompetitionMarker, m_Individuals[cols][rows].m_NeutralMarker);
          this->m_Individuals[cols][rows].m_Species->updateMean();
-         //				this->individuals[cols][rows].Species->date_of_extinction = runs;
+         //this->individuals[cols][rows].Species->date_of_extinction = runs;
       }
    }
    m_Phylogeny.updatePhylogeny(m_Individuals[xsize-1][ysize-1].m_Species);
@@ -718,7 +719,7 @@ void Landscape::densityUpdate(int x, int y){
 
 
 
-void Landscape::speciation (unsigned int generation,unsigned int runs)
+void Landscape::speciation (unsigned int generation)
 {
    // std::cout << generation << '\n';
    std::pair<int, int> birthplace;
@@ -762,7 +763,7 @@ void Landscape::speciation (unsigned int generation,unsigned int runs)
       }
 
 
-      m_Individuals[x][y].m_Species = new Species(m_Global_Species_Counter, m_Individuals[x][y].m_Species->get_species_ID(), generation, std::make_pair(birthplace.first, birthplace.second), m_Runs);
+      m_Individuals[x][y].m_Species = new Species(m_Global_Species_Counter, m_Individuals[x][y].m_Species->get_species_ID(), generation, std::make_pair(birthplace.first, birthplace.second), m_SimulationEnd);
       m_Individuals[x][y].m_Age = 0;
 
       m_Individuals[x][y].m_Mean =  oldMean + (0.2 * newMean);
