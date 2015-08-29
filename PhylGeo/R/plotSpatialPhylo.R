@@ -5,6 +5,8 @@
 #' @param plot defines what to plot. "both" plots the landscape and phylogeny side-by-side
 plotSpatialPhylo <- function (simu, plot = "both", plotTraits = T, col = "phylodist"){
   
+  require(ape)
+  
   phylogeny = simu$phylogeny
   
   extantPhylogeny <- drop.fossil(phylogeny)
@@ -14,7 +16,7 @@ plotSpatialPhylo <- function (simu, plot = "both", plotTraits = T, col = "phylod
   landscape = simu$specMat
   
   if (plotTraits == T){
-    #library(adephylo)
+    library(adephylo)
     #library(shape)
     traits = getAverageTraits(simu)  
     #rootDist <- distRoot(extantPhylogeny, 1)
@@ -42,8 +44,9 @@ plotSpatialPhylo <- function (simu, plot = "both", plotTraits = T, col = "phylod
     text(1:4 - 0.5, 0, colnames(traits), srt = 45, pos = 4)
 
     plot.new()
+    size = dev.size()[2]/3
     
-    plot(extantPhylogeny, tip.color = cols)
+    plot(extantPhylogeny, tip.color = cols, cex = 1.3)
 
 
     plot(rep(1:4, each = nSpecies), rep(1:nSpecies, 4), cex = size*traits, pch = 16, frame = F, yaxt='n', xaxt='n', ann=FALSE, xlim = c(0,7))
@@ -56,7 +59,7 @@ plotSpatialPhylo <- function (simu, plot = "both", plotTraits = T, col = "phylod
     par(oldpar)
   }
   par(mar = c(1,1,1,1))
-  image(landscape, col = cols)
+  image(landscape, col = cols, yaxt='n', xaxt='n')
 
   
 }

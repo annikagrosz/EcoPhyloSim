@@ -13,11 +13,17 @@ specRich <- function(matrix){
 #' @param plot Logical determining whether to plot the RAC or not
 #' @details The higest abundance is assigned rank "1" while the lowest is assigned the rank corresponding with species richness.
 #' @return A dataframe containing the ranked abundances, sorted by ascending rank.
-rac <- function(matrix, plot=T){
+rac <- function(matrix, plot="line"){
   Abundances <- as.data.frame(table(matrix))
-  RAC <- data.frame(Rank = seq(1,length(Abundances$Freq),1), Abundance = sort(Abundances$Freq, decreasing=T))
-  if(plot==T){
-    plot(RAC, type="l",log="y",ylab="Abundance", xlab="Rank", main="RAC", lwd=2)
+  sel <- order(Abundances$Freq, decreasing=T)
+  RAC <- data.frame(Rank = seq(1,length(Abundances$Freq),1), Abundance = Abundances$Freq[sel], Species = Abundances$matrix[sel])
+  if(plot=="bar"){
+    barplot(RAC$Abundance, log="y",ylab="Log abundance", xlab="Rank", main="RAC", names.arg = RAC$Rank)
   }
+  if(plot=="line"){
+    plot(RAC$Rank, RAC$Abundance, type="l",log="y",ylab="Log abundance", xlab="Rank", main="RAC", lwd=2)
+  }
+  
   return(RAC) 
 }
+
