@@ -15,7 +15,6 @@ fullModBatch <- function(pars, parallel = F, backup = FALSE){
   ptm <- proc.time() 
   
   # getParametersXML(XMLfile)
-  pars 
   
   if (parallel != F){
     cat("running ",nrow(pars), " batch simualations with parallelization", "\n")
@@ -25,35 +24,41 @@ fullModBatch <- function(pars, parallel = F, backup = FALSE){
     cl <- parallel::makeCluster(cores)
     doParallel::registerDoParallel(cl)
     
-    out <- foreach(i=1:nrow(pars), .packages = c("PhylGeo")) %dopar%{
+    out <- foreach(i=1:length(pars), .packages = c("PhylGeo")) %dopar%{
       
-      outVec <- rep.int(0,pars$x[i]*pars$y[i])
-      OUT <- fullMod(x = pars$x[i], y = pars$y[i], dispersal = pars$dispersal[i], runs = pars$runs[i], specRate = pars$specRate[i], density = pars$density[i], environment = pars$environment[i], fitnessBaseMortalityRatio = pars$fitnessBaseMortalityRatio[i], densityCut = pars$densityCut[i], seed=pars$seed[i], saveTimes = "last")
+      par = pars[[i]]
+      
+      outVec <- rep.int(0,par$x*par$y)
+      OUT <- fullMod(x = par$x, y = par$y, dispersal = par$dispersal, runs = par$runs, specRate = par$specRate, density = par$density, environment = par$environment, fitnessBaseMortalityRatio = par$fitnessBaseMortalityRatio, densityCut = par$densityCut, seed=par$seed, saveTimes = "last")
       
       if(backup == TRUE){
-        name <- paste(pars$scenarios[i], ".RData", sep="", collapse="")
+        name <- paste(par$scenarios, ".RData", sep="", collapse="")
         save(OUT, file = name)
       }
+      OUT$par = par
       OUT
     }
   }else{
     cat("running ",nrow(pars), " batch simualations without parallelization", "\n")
     out <- foreach(i=1:nrow(pars), .packages = c("PhylGeo")) %do%{
       
+      par = pars[[i]]
+      
       cat("running parameter", i , "\n")
       
-      outVec <- rep.int(0,pars$x[i]*pars$y[i])
-      OUT <- fullMod(x = pars$x[i], y = pars$y[i], dispersal = pars$dispersal[i], runs = pars$runs[i], specRate = pars$specRate[i], density = pars$density[i], environment = pars$environment[i], fitnessBaseMortalityRatio = pars$fitnessBaseMortalityRatio[i], densityCut = pars$densityCut[i], seed=pars$seed[i])
+      outVec <- rep.int(0,par$x*par$y)
+      OUT <- fullMod(x = par$x, y = par$y, dispersal = par$dispersal, runs = par$runs, specRate = par$specRate, density = par$density, environment = par$environment, fitnessBaseMortalityRatio = par$fitnessBaseMortalityRatio, densityCut = par$densityCut, seed=par$seed)
       
       if(backup == TRUE){
-        name <- paste(pars$scenarios[i], ".RData", sep="", collapse="")
+        name <- paste(par$scenarios, ".RData", sep="", collapse="")
         save(OUT, file = name)
       }
+      OUT$par = par
       OUT
     }
   }
   
-  names(out) <- pars$scenarios
+  for (i in 1:length(pars)) names(out)[i] <- pars[i]$scenario
   #Stop cluster and timing
   parallel::stopCluster(cl)
   time <- proc.time() - ptm
