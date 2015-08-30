@@ -60,7 +60,7 @@ class Landscape {
 
 	Landscape();
 	Landscape(int xsize, int ysize, int type, bool neutral,
-	      bool dd, bool env, bool mort, bool repro, unsigned int runs, double specRate,
+	      bool dd, bool env, bool mort, bool repro, unsigned int simulationEnd, double specRate,
 	      int dispersalCutoff, int densityCutoff, unsigned int mortalityStrength);
 	virtual ~Landscape();
 
@@ -72,14 +72,14 @@ class Landscape {
 	std::vector<std::pair<double, double> > m_Environment;
 	RandomGen m_RandomGenerator;
 
-	unsigned int m_Runs;
+	unsigned int m_SimulationEnd;
 
 	// Start the reproduction of the species.
 	virtual void reproduce(unsigned int generation);
 	// Increase the age of each individual by 1.
 	void increaseAge();
 
-	void speciation(unsigned int generation, unsigned int runs);
+	void speciation(unsigned int generation);
   void densityUpdate(int x, int y);
 	void initialize(int xsize, int ysize, unsigned int runs);
 	std::pair<int, int> get_dimensions();

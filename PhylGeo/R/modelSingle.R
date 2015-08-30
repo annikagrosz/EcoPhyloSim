@@ -60,61 +60,55 @@ fullMod <- function(x = 100, y = 100, dispersal = "global", runs = 100, specRate
     reproductiveFitness = T
     mortalityFitness = T    
   }else stop("wrong fitness parameters")
-  
-  # TODO exists
 
-  ptm <- proc.time()
-  outVec <- rep.int(0,x*y)
   if(density == FALSE & environment == FALSE)
   {
     neutral = TRUE
   }else{
     neutral = F
   }
+  if (length(runs)>1){
+    if (any(runs[-length(runs)] > runs[-1])) stop( "wrong argument to runs")
+  }
   
-  # saveTimes TODO implement save time!!!!
   
+  ptm <- proc.time()
   
-  #out <- .C("callModel", as.integer(x),as.integer(y), as.integer(dispersal), as.integer(runs), as.numeric(specRate), #1-5
-#             as.logical(density),as.logical(environment) ,as.logical(neutral), #6-8
-#             as.logical(mortalityFitness), as.integer(mortalityStrength), as.logical(reproductiveFitness),   #9-11
-#             as.integer(dispersalCut), as.integer(densityCut), as.integer(seed), as.character(saveLocation), #12-15
-#             specOut = as.integer(outVec), traitOut = as.numeric(outVec),neutralOut = as.numeric(outVec), #16-18 Output starts here
-#             compOut = as.numeric(outVec), envOut = as.numeric(outVec), phyloOut = character(length = 1),
-#             PACKAGE = "PhylGeo")[16:21] #19-21
-#   
-  out <- callModel( x,  y,  dispersal,  runs,  specRate, density, 
-                    environment, neutral, mortalityFitness, fitnessBaseMortalityRatio, reproductiveFitness, dispersalCut, densityCut, seed)  
-
-  specMat = matrix(out[[1]],ncol=x, nrow=y)
-  traitMat = matrix(out[[2]],ncol=x, nrow=y)
-  neutMat = matrix(out[[3]],ncol=x, nrow=y)
-  compMat = matrix(out[[4]],ncol=x, nrow=y)
-  envMat = matrix(out[[5]],ncol=x, nrow=y)
-  phylogeny = ape::read.tree(text = out[[6]])
+  out <- callModel( x,  y,  dispersal,  runs,  specRate, density, environment, neutral, mortalityFitness, fitnessBaseMortalityRatio, reproductiveFitness, dispersalCut, densityCut, seed)  
   
-  print (paste("Finished after",floor(((proc.time() - ptm)[3])/60), "minute(s) and", ((proc.time() - ptm)[3])%%60, "second(s)."))
+  print (paste("Core simulation finished after",floor(((proc.time() - ptm)[3])/60), "minute(s) and", ((proc.time() - ptm)[3])%%60, "second(s). Converting data"))
   
-  return(list(
-    specMat = specMat, 
-    traitMat=traitMat, 
-    envMat = envMat, 
-    compMat = compMat, 
-    neutMat = neutMat, 
-    phylogeny = phylogeny, 
-    phyloTXT = out[[6]],
-    seed = seed
-    
-    ))
+  for (i in 1:length(runs)){
+    specMat = matrix(out[[i]][[1]],ncol=x, nrow=y)
+    traitMat = matrix(out[[i]][[2]],ncol=x, nrow=y)
+    neutMat = matrix(out[[i]][[3]],ncol=x, nrow=y)
+    compMat = matrix(out[[i]][[4]],ncol=x, nrow=y)
+    envMat = matrix(out[[i]][[5]],ncol=x, nrow=y)
+    phylogeny = ape::read.tree(text = out[[i]][[6]])
+    temp = list(
+      specMat = specMat, 
+      traitMat=traitMat, 
+      envMat = envMat, 
+      compMat = compMat, 
+      neutMat = neutMat, 
+      phylogeny = phylogeny, 
+      phyloTXT = out[[i]][[6]],
+      seed = seed,
+      runs = i)
+    out[[i]] = temp
+  }
+  if (length(runs) == 1)out = out[[i]]
+  cat("done! \n")
+  return(out)
 }
 
 
 
-
-# x = 100
-# y = 100
+# neutral = T
+# x = 50
+# y = 50
 # dispersal = 0.5
-# runs = 100
+# runs = c(100,200)
 # specRate = 1.0
 # density = F
 # environment = F
@@ -123,3 +117,39 @@ fullMod <- function(x = 100, y = 100, dispersal = "global", runs = 100, specRate
 # fitnessActsOn = "mortality" 
 # densityCut = 1
 # saveTimes = "last"
+# 
+# 
+# if (dispersal == "global" | dispersal == 0){
+#   dispersal = 1
+#   dispersalCut = 1
+# }else if (is.numeric(dispersal)){
+#   if (dispersal < 0.5) stop("dispersal parameter too small") 
+#   dispersalCut = 2*dispersal
+#   dispersal = 3
+# }else stop("wrong dispersal parameter") 
+# 
+# if(fitnessActsOn == "mortality"){
+#   reproductiveFitness = F
+#   mortalityFitness = T    
+# }else if(fitnessActsOn == "reproduction"){
+#   reproductiveFitness = T
+#   mortalityFitness = F    
+# }else if (fitnessActsOn == "both"){
+#   reproductiveFitness = T
+#   mortalityFitness = T    
+# }else stop("wrong fitness parameters")
+# 
+# if(density == FALSE & environment == FALSE)
+# {
+#   neutral = TRUE
+# }else{
+#   neutral = F
+# }
+# if (length(runs)>1){
+#   if (any(runs[-length(runs)] > runs[-1])) stop( "wrong argument to runs")
+# }
+# 
+# 
+# out <- callModel( x,  y,  dispersal,  runs,  specRate, density, environment, neutral, mortalityFitness, fitnessBaseMortalityRatio, reproductiveFitness, dispersalCut, densityCut, seed)  
+
+

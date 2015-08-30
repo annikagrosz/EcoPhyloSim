@@ -24,14 +24,14 @@ class Phylogeny {
 	std::multimap<unsigned long long, Species*> *m_PrunedPhylo;
 	void updatePhylogeny(Species * spec);
 
-	void writePhylogeny(unsigned long long start, unsigned int runs,
-	      std::multimap<unsigned long long, Species*> *phylogenyMap, char suffix);
+	void writePhylogeny(unsigned long long start, 
+  std::multimap<unsigned long long, Species*> *phylogenyMap, char suffix);
 
-	std::string writePhylogenyR(unsigned long long start, unsigned int runs,
+	std::string writePhylogenyR(unsigned long long start, 
 	      std::multimap<unsigned long long, Species*> *phylogenyMap);
 
 	void writeSpeciesData();
-	void prunePhylogeny(std::multimap<unsigned long long, Species*>  * fullPhylogenyMap);
+	void prunePhylogeny(int current);
 	std::vector<Species*> specVec;
 };
 
