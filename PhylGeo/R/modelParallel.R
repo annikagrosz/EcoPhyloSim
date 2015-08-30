@@ -17,7 +17,7 @@ fullModBatch <- function(pars, parallel = F, backup = FALSE){
   # getParametersXML(XMLfile)
   
   if (parallel != F){
-    cat("running ",nrow(pars), " batch simualations with parallelization", "\n")
+    cat("running ",length(pars), " batch simualations with parallelization", "\n")
     
     if (parallel == T | parallel == "auto") cores <- parallel::detectCores() - 1
     if (is.numeric(parallel)) cores <- parallel
@@ -28,7 +28,6 @@ fullModBatch <- function(pars, parallel = F, backup = FALSE){
       
       par = pars[[i]]
       
-      outVec <- rep.int(0,par$x*par$y)
       OUT <- fullMod(x = par$x, y = par$y, dispersal = par$dispersal, runs = par$runs, specRate = par$specRate, density = par$density, environment = par$environment, fitnessBaseMortalityRatio = par$fitnessBaseMortalityRatio, densityCut = par$densityCut, seed=par$seed, saveTimes = "last")
       
       if(backup == TRUE){
@@ -40,13 +39,12 @@ fullModBatch <- function(pars, parallel = F, backup = FALSE){
     }
   }else{
     cat("running ",nrow(pars), " batch simualations without parallelization", "\n")
-    out <- foreach(i=1:nrow(pars), .packages = c("PhylGeo")) %do%{
+    out <- foreach(i=1:length(pars), .packages = c("PhylGeo")) %do%{
       
       par = pars[[i]]
       
       cat("running parameter", i , "\n")
       
-      outVec <- rep.int(0,par$x*par$y)
       OUT <- fullMod(x = par$x, y = par$y, dispersal = par$dispersal, runs = par$runs, specRate = par$specRate, density = par$density, environment = par$environment, fitnessBaseMortalityRatio = par$fitnessBaseMortalityRatio, densityCut = par$densityCut, seed=par$seed)
       
       if(backup == TRUE){
