@@ -4,6 +4,7 @@
 #' @param cores  Integer, The number of cores reserved for parallel computing
 #' @details This function uses the \pkg{foreach} and \pkg{doParallel} package to compute the model scenarios parallel on several cores. if you want to keep working on your computer make sure to reserve at least one core for your other endevors (by assigning n-1 cores to the function). By default all cores are employed to ensure maximum speed. 
 #' @return a list of numerical matrices of species distribution and local density values for each scenario (each cell in a matrix represents an individual of a species)
+#' @export
 #' @examples
 #' # Define parameter values
 #' scenarios = c("globalDens", "globalNoDens", 

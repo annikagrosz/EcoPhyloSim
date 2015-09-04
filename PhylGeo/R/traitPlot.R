@@ -3,6 +3,7 @@
 #' @param landscape the species landscape
 #' @param phylogeny the corresponding (extant) phylogeny
 #' @param plot defines what to plot. "both" plots the landscape and phylogeny side-by-side
+#' @export
 plotTraitDistribution <- function (simu, type = "hist"){
   
   if (type == "hist"){

@@ -6,6 +6,7 @@
 #' @param numberOfPlots number of plots drawn within the metacommunity
 #' @param repetitions number of generated null model plots
 #' @return A numeric vector with pValues for each plot in the observed metacommunity
+#' @export
 nullModelSample <- function(speciesMatrix, phylogeny, localPlotSize, numberOfPlots, repetitions){
   
   extantPhyloCophen <- stats::cophenetic(phylogeny) # create distance matrix from phylogeny (requires picante)

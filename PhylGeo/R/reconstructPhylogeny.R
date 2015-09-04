@@ -4,6 +4,7 @@
 #' @param traitMatrix A square matrix containing the neutral trait of a species community (one trait value per individual per grid cell
 #' @param ...  Additional arguments to be passed to function \code{\link{hclust}}
 #' @return An object of class 'phylo'
+#' @export
 phyloReconstruct <- function(speciesMatrix, traitMatrix, ...)
 {
   

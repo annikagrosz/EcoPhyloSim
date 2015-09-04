@@ -3,6 +3,7 @@
 #' @param phylo An object of class 'phylo'
 #' @param community A community matrix
 #' @param n The number of clades to visualise
+#' @export
 clades <- function(phylo, community, n){
   
   for( i in 1:n){

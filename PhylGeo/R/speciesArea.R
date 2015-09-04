@@ -5,6 +5,7 @@
 #' @param rep The number of repetitions per size to calculate the mean 
 #' @param plot Logical determining whether to plot the SAC or not
 #' @return A list containing the mean species richness for each size and the respective standard deviation
+#' @export
 sac <- function(matrix, area = NULL, rep=50, plot=T)
 {
   landscapeDim = dim(matrix)

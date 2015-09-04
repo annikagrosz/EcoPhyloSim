@@ -3,9 +3,12 @@
 #' @param simu simulation output, consisting of a list contain at least $specMat with the spatial species matrix, and $phylogeny with the phylogeny
 #' @param phylogeny the corresponding (extant) phylogeny
 #' @param plot defines what to plot. "both" plots the landscape and phylogeny side-by-side
+#' 
+#' @import ape
+#' @importFrom adephylo distTips
+#' @export
 plotSpatialPhylo <- function (simu, plot = "both", plotTraits = T, col = "phylodist", main = ""){
   
-  require(ape)
   
   phylogeny = simu$phylogeny
   
@@ -16,7 +19,6 @@ plotSpatialPhylo <- function (simu, plot = "both", plotTraits = T, col = "phylod
   landscape = simu$specMat
   
   if (plotTraits == T){
-    library(adephylo)
     #library(shape)
     traits = getAverageTraits(simu)  
     #rootDist <- distRoot(extantPhylogeny, 1)

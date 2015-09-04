@@ -12,6 +12,7 @@
 #' image(metaCom)
 #' # Calculate the species area-relation
 #' rac(metaCom, plot=T)
+#' @export
 NeutralMod <- function(  dim = 100, specRate = 2,  seed = NULL, runs = 5000 ){
   
   ptm <- proc.time()

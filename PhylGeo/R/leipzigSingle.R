@@ -9,6 +9,7 @@
 #' @param density Logical determining whether or not density dependence influences the model
 #' @param densityStrength Numerical (0-1) determining the strength of the density dependence
 #' @return a numerical matrix (each cell represents an individual of a species)
+#' @export
 leip <- function(params)
 {
   f <- XML::xmlToDataFrame(doc = params, colClasses = rep("numeric", 8))

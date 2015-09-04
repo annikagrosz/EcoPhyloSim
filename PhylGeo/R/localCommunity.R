@@ -5,6 +5,7 @@
 #' @param matrix A square matrix containing the metacommunity (one individual per grid cell) 
 #' @param community Logical, determining whther to generate a community matrix or not default is FALSE
 #' @return A list of subplots and (if coomunity = T) a community matrix with plots in rows and species in collumns
+#' @export
 localPlots <- function(size, n, matrix, community=F)
 {
   edge <- round(sqrt(size))-1

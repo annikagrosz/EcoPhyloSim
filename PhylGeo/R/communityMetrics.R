@@ -2,6 +2,7 @@
 #' @description Calculate the total species richness of a community
 #' @param matrix A square matrix containing a species community (one individual per grid cell) 
 #' @return An integer value for the species richness
+#' @export
 specRich <- function(matrix){  
   sr <- length(unique(c(matrix)))
   return(speciesRichness = sr)
@@ -13,6 +14,7 @@ specRich <- function(matrix){
 #' @param plot Logical determining whether to plot the RAC or not
 #' @details The higest abundance is assigned rank "1" while the lowest is assigned the rank corresponding with species richness.
 #' @return A dataframe containing the ranked abundances, sorted by ascending rank.
+#' @export
 rac <- function(matrix, plot="line"){
   Abundances <- as.data.frame(table(matrix))
   sel <- order(Abundances$Freq, decreasing=T)

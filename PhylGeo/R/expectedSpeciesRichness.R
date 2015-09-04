@@ -3,6 +3,7 @@
 #' @param specRate The speciation rate in speciations per generation
 #' @param dimensions The length of the grid edge
 #' @return A float value for the expected species richness
+#' @export
 #' @examples
 #' es(2, 100)
 es <- function(specRate, dimensions){
