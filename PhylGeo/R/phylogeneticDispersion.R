@@ -99,15 +99,20 @@ plotPhylogeneticDispersion <- function(pvalues, pars, title = "P-values", multip
       if (multiple == T){
         
         mpv <- mean(z[,k])
-        filledrectangle(wx = 0.3, wy = 0.3, col = Cols[which.max(index[index <= mpv])], mid = c(x, y), angle = 0)
+        filledrectangle(wx = 0.3, wy = 0.3, col = Cols[which.max(index[index <= mpv])], mid = c(x, y), angle = 0, lcol = "darkgrey")
         
         xval <- (lengths - min(lengths)) / lRange *0.3 -0.15
         yval <- z[,k] * 0.3 - 0.15
         yUP <- zCIUP[,k] * 0.3 - 0.15 
         yLOW <- zCILOW[,k] * 0.3 - 0.15
         
-        polygon(c(x+xval, rev(x+xval)), c(y+yUP, rev(y+yLOW)), col = "gray", border = NA)
+        polygon(c(x+xval, rev(x+xval)), c(y+yUP, rev(y+yLOW)), col = "#99999940", border = NA)
         lines(x+xval, y+yval)
+        lines(c(x-0.15,x-0.13) , c(y , y ))
+        lines(c(x+0.13,x+0.15) , c(y , y ))
+        #lines(x+xval, y+ 0.5, lty=2)
+        #lines(x+xval, y+yUP, lty = 2)
+        #lines(x+xval, y+yLOW, lty = 2)
         
       }else{    
         filledrectangle(wx = 0.3, wy = 0.3, col = Cols[which.max(index[index <= z[k]])], mid = c(x, y), angle = 0)
