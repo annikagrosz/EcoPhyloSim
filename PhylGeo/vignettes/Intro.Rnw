@@ -8,25 +8,66 @@
 \maketitle
 
 
+\section{Introduction}
+
+
+
 \section{Basic functionality}
 
 
 \subsection{Loading the package}
 
-Loading the package
+Loading the package via
 
 <<>>=
 library(PhylGeo)
 @
 
 
+\subsection{Run the model}
 
-\subsection{Neutral model}
+<<fig=TRUE>>=
+simu <- fullMod(x = 20, y = 20, dispersal = 0.5, runs = 100, specRate = 1.0, density = F, environment = F, seed = 1, fitnessBaseMortalityRatio = 5)
+@
+
+The output is saved in a list
+
+<<>>=
+str(simu)
+@
+
+
+\subsection{Plots and summary statistics}
+
+
+<<fig=TRUE>>=
+plotSpatialPhylo(simu, plot = "both")
+@
+
+
+We can plot the rank-abundace curve (RAC) and species-area curve (SAC) for the output
+
+<<fig=TRUE>>=
+par(mfrow = c(1,2))
+rac(simu$specMat)
+sac(simu$specMat)
+@
 
 
 <<>>=
 
+specRich(simu$specMat)
 
+@
+
+
+\section{Other models}
+
+\subsection{Neutral model}
+
+This implements a purely neutral model in R ... only for test and teaching purposes, far too slow to be useful in practice
+
+<<fig=TRUE>>=
 
 # Run the model
 metaCom <- NeutralMod(dim=50, specRate=2, seed=1500, runs=1500)
@@ -37,25 +78,6 @@ rac(metaCom, plot=T)
 
 @
 
-
-\subsection{Full model}
-
-
-<<>>=
-# Run the model
-myModel <- fullMod(x = 50, y = 50, dispersal = 2, runs = 500, specRate = 1.0, density = FALSE, environment = FALSE, neutral = TRUE, seed = 1500)
-
- # Look at the phylogeny (requires package 'ape')
- require(ape)
-
- # Get the phylogeny
- phylogeny <- myModel$phylogeny
-
- # Only extant taxa
- extantPhylogeny <- drop.fossil(phylogeny)
-
- plot(extantPhylogeny)
-@
 
 
 \end{document}
