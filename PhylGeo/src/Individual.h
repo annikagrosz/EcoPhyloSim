@@ -50,6 +50,8 @@ class Individual {
   double m_compStrength;
 
 	RandomGen m_RandomGenerator;
+  
+  void die(int generation);
 
 	double getSeedsTo(int rel_x, int rel_y, int dispersal_type, double temp, bool env, bool dd);
   

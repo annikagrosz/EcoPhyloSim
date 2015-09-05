@@ -175,5 +175,21 @@ void Individual::operator=(const Individual &ind)
 
 		return newTrait ;
 	}
+  
+  void Individual::die(int generation){
+    
+      if(m_Species->m_Count-1 < 1)
+      {
+         m_Species->m_Date_of_Extinction = generation;
+         m_Species->m_Count -= 1;
+      }
+      else
+      {
+         m_Species->m_Count -=1;
+         m_Species->decMean(m_Mean, m_CompetitionMarker, m_NeutralMarker);
+         m_Species->updateMean();
+      }
+    
+  }
 
 

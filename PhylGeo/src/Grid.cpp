@@ -17,6 +17,7 @@
 #include "Grid.h"
 #include "Individual.h"
 #include "Species.h"
+#include "debug.h"
 //#include "./Utils/RandomGen.h"
 #include "./RandomGen.h"
 
@@ -234,6 +235,10 @@ void GlobalEnvironment::reproduce(unsigned int generation)
   
    if(m_Neutral)
    {
+      #ifdef DEBUG
+      std::cout<<"In global neutral \n";
+      #endif
+     
       int x_coordinate, y_coordinate, x_parent, y_parent;
 
       //			srand(time(0));
@@ -275,6 +280,10 @@ void GlobalEnvironment::reproduce(unsigned int generation)
    else // Density dependence and / or Environmental dependence
    {
      
+      #ifdef DEBUG
+      std::cout<<"In global non-neutral \n";
+      #endif
+     
       int x_parent = 0;
       int y_parent = 0;
       unsigned int numberOfRuns = 0;
@@ -305,6 +314,10 @@ void GlobalEnvironment::reproduce(unsigned int generation)
       // only if env and dens affect reproduction
         
       if(m_reproduction){
+        
+         #ifdef DEBUG
+         std::cout<<"In global non-neutral, reproduction fitness \n";
+         #endif
         
         array_length = 0;
         
@@ -340,6 +353,8 @@ void GlobalEnvironment::reproduce(unsigned int generation)
       int event = 0;
       int numberDeath = 0;
       
+      // TODO - seems to me the next for loop is not yet corrected if fitness goes on reproduction, 
+      
       while(numberDeath < numberOfRuns)
       {
          event++;
@@ -358,18 +373,7 @@ void GlobalEnvironment::reproduce(unsigned int generation)
           }
           numberDeath++;
 
-
-         if(m_Individuals[x_coordinate][y_coordinate].m_Species->m_Count-1 < 1)
-         {
-            m_Individuals[x_coordinate][y_coordinate].m_Species->m_Date_of_Extinction = generation;
-            m_Individuals[x_coordinate][y_coordinate].m_Species->m_Count -= 1;
-         }
-         else
-         {
-            m_Individuals[x_coordinate][y_coordinate].m_Species->m_Count -=1;
-            m_Individuals[x_coordinate][y_coordinate].m_Species->decMean(m_Individuals[x_coordinate][y_coordinate].m_Mean, m_Individuals[x_coordinate][y_coordinate].m_CompetitionMarker, m_Individuals[x_coordinate][y_coordinate].m_NeutralMarker);
-            m_Individuals[x_coordinate][y_coordinate].m_Species->updateMean();
-         }
+         m_Individuals[x_coordinate][y_coordinate].die(generation);
 
          if(m_reproduction){
             new_parent = m_RandomGenerator.multinomialDraw(cumWeights, m_LandscapeSize-1, seedSum); 
@@ -445,6 +449,10 @@ void GlobalEnvironment::reproduce(unsigned int generation)
          
         // only if env and dens affect reproduction
         if(m_reproduction){
+          
+        #ifdef DEBUG
+        std::cout<<"In global non-neutral, reproduction fitness \n";
+        #endif
 
            if(!(m_DD))
            {
@@ -576,6 +584,11 @@ LocalEnvironment::~LocalEnvironment() {
 
 void LocalEnvironment::reproduce(unsigned int generation)
 {
+  
+   #ifdef DEBUG
+   std::cout<<"In local \n";
+   #endif
+  
    int x_coordinate;
    int y_coordinate;
    int x_parent = 0, kernel_x = 0;
@@ -605,31 +618,19 @@ void LocalEnvironment::reproduce(unsigned int generation)
       x_coordinate = m_RandomGenerator.randomInt(0,m_Xdimensions-1);
       y_coordinate = m_RandomGenerator.randomInt(0,m_Ydimensions-1);
 
-      // Decide if this coordinate will die
-
-      if(event % m_mortalityStrength != 0 && m_mortality){ // important!! the frequency in relation to the base mortality controls the intensity of the mechanisms
+      // If fitness acts on mortality, break here with a chance ~ fitness
+      
+      if(m_mortality && event % m_mortalityStrength != 0){ // important!! the frequency in relation to the base mortality controls the intensity of the mechanisms
     	  double weight = m_Individuals[x_coordinate][y_coordinate].getFitness(m_Environment[x_coordinate * m_Ydimensions + y_coordinate].first, m_Env, m_DD);
-//    	  double weight = 1.2 * exp(-0.5 pow(m_Individuals[kernel_x][kernel_Y].mean - m_Environment[kernel_x][kernel_Y]
- //       std::cout<<weight<<"\n"; // DEBUG
         double chanceOfDeath = m_RandomGenerator.randomDouble(0.0,1.0);
-		  if(weight > chanceOfDeath){ // factor to adjust mortality rate
-        continue;
-		    }
+		  if(weight > chanceOfDeath) continue;
 	    }
+      
+      // If we continue, count up number of deaths and perform replacement
+      
       numberDeath++;
       
-
-      if(m_Individuals[x_coordinate][y_coordinate].m_Species->m_Count-1 < 1)
-      {
-         m_Individuals[x_coordinate][y_coordinate].m_Species->m_Date_of_Extinction = generation;
-         m_Individuals[x_coordinate][y_coordinate].m_Species->m_Count -= 1;
-      }
-      else
-      {
-         m_Individuals[x_coordinate][y_coordinate].m_Species->m_Count -=1;
-         m_Individuals[x_coordinate][y_coordinate].m_Species->decMean(m_Individuals[x_coordinate][y_coordinate].m_Mean, m_Individuals[x_coordinate][y_coordinate].m_CompetitionMarker, m_Individuals[x_coordinate][y_coordinate].m_NeutralMarker);
-         m_Individuals[x_coordinate][y_coordinate].m_Species->updateMean();
-      }
+      m_Individuals[x_coordinate][y_coordinate].die(generation);
 
       ////////////////////////////////////////////
       // DISPERSAL 

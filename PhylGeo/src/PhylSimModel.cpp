@@ -22,6 +22,16 @@ PhylSimModel::PhylSimModel(int X, int Y, int dispersal, int simulationEnd, doubl
                bool env, bool neutral, bool mort, int mortalityStrength, bool repro, int dispersalCutoff, 
                int densityCutoff,std::string saveLocation, double envStrength, double compStrength){
    
+   
+   #ifdef DEBUG
+   std::cout<<"Running simulation with \n";
+   std::cout<<"Dispersal "<< dispersal << "cutoff" << dispersalCutoff <<  "\n";
+   std::cout<<"Competition"<< dens << "strength" << compStrength <<  "cutoff " << densityCutoff << "\n";
+   std::cout<<"Environment"<< env << "strength" << envStrength<<  "\n";   
+   std::cout<<"\n---- debug message for development purposes, remove debug switch in debug.h for turning this off \n\n";
+   #endif
+   
+   
    if (dispersal == 1) {    
       m_Global = new GlobalEnvironment(X,Y, dispersal, neutral, dens, env, mort, repro, simulationEnd, specRate, dispersalCutoff, densityCutoff, mortalityStrength, envStrength, compStrength);
       m_Local = NULL;
