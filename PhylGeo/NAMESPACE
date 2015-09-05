@@ -1,4 +1,6 @@
 useDynLib(PhylGeo)
 exportPattern("^[[:alpha:]]+")
 importFrom(Rcpp, sourceCpp)
+importFrom(adephylo, distTips)
+import(ape)
 
