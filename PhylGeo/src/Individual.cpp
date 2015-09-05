@@ -3,7 +3,8 @@
  *
  *  Created on: 20.06.2014
  *      Author: Paul
- *              Betim Musa <musab@informatik.uni-freiburg.de>
+ *              Betim Musa
+ *              Florian Hartig
  */
 
 #include "Individual.h"
@@ -19,16 +20,25 @@ Individual::Individual()
   this ->m_Species = new Species();
 	this ->m_X_coordinate = 0;
 	this ->m_Y_coordinate = 0;
-	this ->m_LocalDensity = 0.0;
+  
+	this ->m_LocalDensity = 0.0; // density experienced around itself, will be updated automatically 
 	this ->m_Age = 0;
+  
+  // THESE SEEM OBSOLTE ???
 	this ->m_FitnessWeight = 0.5;
 	this ->m_DensityStrength = 0.4;
 	this ->m_Weight = 1.0;
+  // END OBSOLETE
+  
 	this -> m_Variance = 0.03659906;
 	this -> m_Mean = 1.0;
 	this -> m_CompetitionMarker = 0.5;
 	this -> m_NeutralMarker = 0.5;
-	this -> m_dispersalDistance = 0.0;
+  
+  this -> m_envStrength = 1;
+  this -> m_compStrength = 1;
+  
+	this -> m_dispersalDistance = 0.0; // parameter for dispersal kernel 
 
 }
 
@@ -48,13 +58,19 @@ Individual::Individual(const Individual &ind)
 	this -> m_CompetitionMarker = evolution(ind.m_CompetitionMarker, ind.m_Species->m_CompetitionMean, 0.3, 0.05);
 	this -> m_NeutralMarker = evolution(ind.m_NeutralMarker, ind.m_Species->m_NeutralMean, 0.3, 0.05);
 	this -> m_dispersalDistance = ind.m_dispersalDistance;
+  
+  this -> m_envStrength = ind.m_envStrength;
+  this -> m_compStrength = ind.m_compStrength;
 }
 
 Individual::~Individual(){
 
 }
 
-
+// FH - This is a weird construction ... this operator is used 
+// for creating a new individual, and applying evolution?
+// why not create a child function or something like that
+// that would be far more logical
 void Individual::operator=(const Individual &ind)
 {
 	this ->m_Species = ind.m_Species;
@@ -70,24 +86,28 @@ void Individual::operator=(const Individual &ind)
 	this -> m_CompetitionMarker = evolution(ind.m_CompetitionMarker, ind.m_Species->m_CompetitionMean, 0.3, 0.05);
 	this -> m_NeutralMarker = evolution(ind.m_NeutralMarker, ind.m_Species->m_NeutralMean, 0.3, 0.05);
 	this -> m_dispersalDistance = ind.m_dispersalDistance;
+  
+  this -> m_envStrength = ind.m_envStrength;
+  this -> m_compStrength = ind.m_compStrength;
 }
 
-  // I leave this for the moment, but I don't use it any more, moved the function 
-  // directly in the dispersal function
 
-	double Individual::kernel(double distance, int cutoff){
-		m_dispersalDistance = cutoff / 2.0;
+  // Dispersal Kernel
+  // One would think it's easier to calculate this directly in the dispersal
+  // Function, but for some reason it seems faster that way
+
+	double Individual::kernel(double distance){
 		return exp(-distance/m_dispersalDistance);
 	}
 
 
 
-	double Individual::dispersal(int dispersal_type,double distance, int cutoff)
+	double Individual::dispersal(int dispersal_type, double distance)
 	{
 		if (dispersal_type == 3) // kernel
 		{
       //return exp(-distance / cutoff / 2.0) ; 
-			return kernel(distance, cutoff); // for some weird reason, this option is considerably faster!!!
+			return kernel(distance); // for some weird reason, this option is considerably faster!!!
 		}
     else if (dispersal_type == 2) //nearest neighbor
 		{
@@ -98,36 +118,38 @@ void Individual::operator=(const Individual &ind)
 	}
 
 
-	double Individual::getSeedsTo(int rel_x, int rel_y, int dispersal_type, double temp, bool env, bool dd, int cutoff)
+	double Individual::getSeedsTo(int rel_x, int rel_y, int dispersal_type, double temp, bool env, bool dd)
 	{
-		double sum_of_weights = 0.0;
-		double dispersal_weight = 0.0;
-
-		dispersal_weight = dispersal(dispersal_type, euclidian_distance(rel_x, rel_y), cutoff); // Kernel or NN
-		if(env)
-		{	double envFitness = 1.2 * exp(-0.5 * pow((temp - m_Mean) / m_Variance, 2.0)); // environmental niche
-			if(dd)	sum_of_weights = dispersal_weight * envFitness * m_LocalDensity + (DBL_MIN*100.0); //weights plus base value
-			else if(!dd)	sum_of_weights = dispersal_weight * envFitness + (DBL_MIN*100.0); //weights plus base value
+    double dispersal_weight = 0.0;
+		dispersal_weight = dispersal(dispersal_type, euclidian_distance(rel_x, rel_y)); // Kernel or NN
+    
+		if(env && dd) {
+      double fitness_weight = 0.0;
+      fitness_weight = getFitness(temp, env, dd);
+      return(dispersal_weight * fitness_weight + (DBL_MIN*100.0));
+		}else{
+      return(dispersal_weight + (DBL_MIN*100.0));
 		}
-		else {
-			if(dd)	sum_of_weights = dispersal_weight * m_LocalDensity + (DBL_MIN*100.0); //weights plus base value
-			else if(!dd)	sum_of_weights = dispersal_weight + (DBL_MIN*100.0); //weights plus base value
-		}
-
-		return sum_of_weights;
 	}
   
+   /**
+   * gets the fitness of the current individual 
+   * @param temp environmental parameter
+   * @param env environment acting
+   * @param dd density acting 
+   * @return Fitness
+   */
   double Individual::getFitness(double temp, bool env, bool dd)
 	{
 		if(env)
 		{	
-      double envFitness = 1.2 * exp(-0.5 * pow((temp - m_Mean) / m_Variance, 2.0)); // environmental niche
+      double envFitness = (m_envStrength * 1.2 * exp(-0.5 * pow((temp - m_Mean) / m_Variance, 2.0)) + 1-m_envStrength); // environmental niche
 			
-      if(dd)	return envFitness * m_LocalDensity + (DBL_MIN*100.0); //weights plus base value
+      if(dd)	return envFitness * (m_compStrength * m_LocalDensity + 1- m_compStrength) + (DBL_MIN*100.0); //weights plus base value
 			else return	envFitness + (DBL_MIN*100.0); //weights plus base value
 		}
 		else {
-			return m_LocalDensity + (DBL_MIN*100.0); //weights plus base value
+			return (m_compStrength * m_LocalDensity + 1- m_compStrength) + (DBL_MIN*100.0); //weights plus base value
 		}
 		throw std::invalid_argument( "neither dd nor env true" );
 	}

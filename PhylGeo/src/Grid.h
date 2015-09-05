@@ -52,6 +52,9 @@ class Landscape {
 		double m_Speciation_Rate;
     
     double cellsWithinDensityCutoff;
+    
+    double m_envStrength;
+    double m_compStrength;
 
 		// Change the temperature in the environment by the given magnitude.
 		void tempChange(int sign, double magnitude);
@@ -61,7 +64,7 @@ class Landscape {
 	Landscape();
 	Landscape(int xsize, int ysize, int type, bool neutral,
 	      bool dd, bool env, bool mort, bool repro, unsigned int simulationEnd, double specRate,
-	      int dispersalCutoff, int densityCutoff, unsigned int mortalityStrength);
+	      int dispersalCutoff, int densityCutoff, unsigned int mortalityStrength, double envStrength, double compStrength);
 	virtual ~Landscape();
 
 	// TODO(Betim): Should it really be public?
@@ -90,7 +93,7 @@ class GlobalEnvironment : public Landscape
  public:
 		GlobalEnvironment();
 		GlobalEnvironment(int xsize, int ysize, int type, bool neutral, bool dd, bool env,bool mort, bool repro,
-		      unsigned int runs, double specRate, int dispersalCutoff, int densityCutoff, unsigned int mortalityStrength);
+		      unsigned int runs, double specRate, int dispersalCutoff, int densityCutoff, unsigned int mortalityStrength, double envStrength, double compStrength);
 
 		virtual ~GlobalEnvironment();
 
@@ -102,7 +105,7 @@ class LocalEnvironment : public Landscape
 	public:
 	LocalEnvironment();
 	LocalEnvironment(int xsize, int ysize, int type, bool neutral, bool dd, bool env,bool mort, bool repro,
-	      unsigned int runs, double specRate, int dispersalCutoff, int densityCutoff, unsigned int mortalityStrength);
+	      unsigned int runs, double specRate, int dispersalCutoff, int densityCutoff, unsigned int mortalityStrength, double envStrength, double compStrength);
 	virtual ~LocalEnvironment();
 
 	void reproduce(unsigned int generation);

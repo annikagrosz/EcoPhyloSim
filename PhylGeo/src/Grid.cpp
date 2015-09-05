@@ -67,7 +67,10 @@
 //}
 
 
-Landscape::Landscape(int xsize, int ysize, int type, bool neutral, bool dd, bool env, bool mort, bool repro, unsigned int runs, double specRate, int dispersalCutoff, int DensityCutoff, unsigned int mortalityStrength)
+Landscape::Landscape(int xsize, int ysize, int type, bool neutral, bool dd, bool env, 
+bool mort, bool repro, unsigned int runs, double specRate, int dispersalCutoff, 
+int DensityCutoff, unsigned int mortalityStrength, 
+double envStrength, double compStrength)
 {
 
    m_Cutoff= dispersalCutoff;
@@ -85,6 +88,9 @@ Landscape::Landscape(int xsize, int ysize, int type, bool neutral, bool dd, bool
    m_Xdimensions = xsize;
    m_Ydimensions = ysize;
    m_mortalityStrength = mortalityStrength;
+   m_envStrength = envStrength;
+   m_compStrength = compStrength;
+
    //	func.seedrand(1500);
 
    // Construct grid of individuals
@@ -164,6 +170,11 @@ void Landscape::initialize(int xsize, int ysize,unsigned int simulationEnd)
          this->m_Individuals[cols][rows].m_Species->m_Count += 1;
          this->m_Individuals[cols][rows].m_Species->sumMean(m_Individuals[cols][rows].m_Mean, m_Individuals[cols][rows].m_CompetitionMarker, m_Individuals[cols][rows].m_NeutralMarker);
          this->m_Individuals[cols][rows].m_Species->updateMean();
+         this->m_Individuals[cols][rows].m_dispersalDistance = m_Cutoff / 2.0;
+         
+         this->m_Individuals[cols][rows].m_envStrength = m_envStrength;
+         this->m_Individuals[cols][rows].m_compStrength = m_compStrength;      
+         
          //this->individuals[cols][rows].Species->date_of_extinction = runs;
       }
    }
@@ -205,8 +216,8 @@ void Landscape::moistChange(int sign, double magnitude)
 }
 
 
-GlobalEnvironment::GlobalEnvironment(int xsize, int ysize, int type, bool neutral, bool dd, bool env, bool mort, bool repro, unsigned int runs, double specRate, int dispersalCutoff, int densityCutoff, unsigned int mortalityStrength) :
-	                              Landscape(xsize,  ysize,  type,  neutral,  dd,  env, mort, repro,  runs, specRate, dispersalCutoff, densityCutoff, mortalityStrength)
+GlobalEnvironment::GlobalEnvironment(int xsize, int ysize, int type, bool neutral, bool dd, bool env, bool mort, bool repro, unsigned int runs, double specRate, int dispersalCutoff, int densityCutoff, unsigned int mortalityStrength,double envStrength, double compStrength) :
+	                              Landscape(xsize,  ysize,  type,  neutral,  dd,  env, mort, repro,  runs, specRate, dispersalCutoff, densityCutoff, mortalityStrength, envStrength, compStrength)
 {
 
 }
@@ -553,8 +564,8 @@ void GlobalEnvironment::reproduce(unsigned int generation)
 }
 
 
-LocalEnvironment::LocalEnvironment(int xsize, int ysize, int type, bool neutral, bool dd, bool env,bool mort, bool repro, unsigned int runs, double specRate, int dispersalCutoff, int densityCutoff, unsigned int mortalityStrength) :
-	                              Landscape(xsize,  ysize,  type,  neutral,  dd,  env, mort, repro,  runs, specRate, dispersalCutoff, densityCutoff, mortalityStrength)
+LocalEnvironment::LocalEnvironment(int xsize, int ysize, int type, bool neutral, bool dd, bool env,bool mort, bool repro, unsigned int runs, double specRate, int dispersalCutoff, int densityCutoff, unsigned int mortalityStrength,double envStrength, double compStrength) :
+	                              Landscape(xsize,  ysize,  type,  neutral,  dd,  env, mort, repro,  runs, specRate, dispersalCutoff, densityCutoff, mortalityStrength, envStrength, compStrength)
 {
 
 }
@@ -641,9 +652,9 @@ void LocalEnvironment::reproduce(unsigned int generation)
                parents[array_length].first = kernel_x;
                parents[array_length].second =  kernel_y;
                if(m_reproduction){
-                 weights[array_length] = m_Individuals[kernel_x][kernel_y].getSeedsTo(relativeX,relativeY, m_Dispersal_type, m_Environment[kernel_x * m_Ydimensions + kernel_y].first, m_Env, m_DD, m_Cutoff);
+                 weights[array_length] = m_Individuals[kernel_x][kernel_y].getSeedsTo(relativeX,relativeY, m_Dispersal_type, m_Environment[kernel_x * m_Ydimensions + kernel_y].first, m_Env, m_DD);
                }else if(m_mortality){
-                 weights[array_length] = m_Individuals[kernel_x][kernel_y].dispersal(m_Dispersal_type, m_Individuals[kernel_x][kernel_y].euclidian_distance(relativeX, relativeY), m_Cutoff);
+                 weights[array_length] = m_Individuals[kernel_x][kernel_y].dispersal(m_Dispersal_type, m_Individuals[kernel_x][kernel_y].euclidian_distance(relativeX, relativeY));
                }else throw 11;
                seedSum += weights[array_length];
                array_length +=1;

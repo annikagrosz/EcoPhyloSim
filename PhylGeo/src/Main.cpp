@@ -35,6 +35,9 @@ int main(){
 	std:: string saveLoc = "C:/Users/Paul/Documents/GitHub/phylogeography/results/saveLocation";
 	RandomGen ran;
 	ran.seedrand(1000);
+  
+  double envStrength = 1.0;
+  double compStrength = 1.0;
 	// Just to test
 	//Parameters* pa = new Parameters();
 	//std::cout << "Value of numberOfRuns: " << pa->getParameterValue<int>(std::string("numberOfRuns")) << std::endl;
@@ -43,9 +46,12 @@ int main(){
 	if(neutral && dd) throw std::runtime_error("A neutral model can't be density dependent!");
 	if(neutral && env) throw std::runtime_error("A neutral model can't be depending on the environment!");
 
+
+
 	//Running the model
   
-	PhylSimModel Model(xDim,yDim,dispersal, runs, specrate, dd, env, neutral, mort, mortalityStrength, repro, dispersalCut, densityCut, saveLoc);   
+	PhylSimModel Model(xDim,yDim,dispersal, runs, specrate, dd, env, neutral, mort, 
+  mortalityStrength, repro, dispersalCut, densityCut, saveLoc, envStrength, compStrength);   
   Model.update(runs);
 //	Model.get_data();
 //	Model.getclimate();

@@ -3,11 +3,9 @@
 library(PhylGeo)
  
 
-par <- createCompletePar()
+par <- createCompletePar(dispersal = 1, runs = 1000, density = 0.7)
 
 simu <- runSimulation(par)
-
-str(simu)
 
 plotSpatialPhylo(simu, plot = "both")
 

@@ -20,14 +20,14 @@
 
 PhylSimModel::PhylSimModel(int X, int Y, int dispersal, int simulationEnd, double specRate, bool dens, 
                bool env, bool neutral, bool mort, int mortalityStrength, bool repro, int dispersalCutoff, 
-               int densityCutoff,std::string saveLocation){
+               int densityCutoff,std::string saveLocation, double envStrength, double compStrength){
    
    if (dispersal == 1) {    
-      m_Global = new GlobalEnvironment(X,Y, dispersal, neutral, dens, env, mort, repro, simulationEnd, specRate, dispersalCutoff, densityCutoff, mortalityStrength);
+      m_Global = new GlobalEnvironment(X,Y, dispersal, neutral, dens, env, mort, repro, simulationEnd, specRate, dispersalCutoff, densityCutoff, mortalityStrength, envStrength, compStrength);
       m_Local = NULL;
    } else if (dispersal == 2 || dispersal == 3) {
       m_Global = NULL;
-      m_Local = new LocalEnvironment(X,Y, dispersal, neutral, dens, env, mort, repro, simulationEnd, specRate, dispersalCutoff, densityCutoff, mortalityStrength);
+      m_Local = new LocalEnvironment(X,Y, dispersal, neutral, dens, env, mort, repro, simulationEnd, specRate, dispersalCutoff, densityCutoff, mortalityStrength, envStrength, compStrength);
    }
    
    timeStep = 0;

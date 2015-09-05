@@ -26,7 +26,7 @@ createCompletePar <- function(x = 50, y = 50, dispersal = "global", runs = 100, 
   
   if (is.null(seed)) seed = sample(1:10000,1)
   
-  par = list(x=x,y=y,dispersal = dispersal, runs = runs, specRate = specRate, density = density, environment = environment, fitnessActsOn=fitnessActsOn, fitnessBaseMortalityRatio=fitnessBaseMortalityRatio, densityCut = densityCut, seed = seed, type = type )
+  par = list(x=x,y=y,dispersal = dispersal, runs = runs, specRate = specRate, density = density, environment = environment, fitnessActsOn=fitnessActsOn, fitnessBaseMortalityRatio=fitnessBaseMortalityRatio, densityCut = densityCut, seed = seed, type = type)
   
 
   return(par)

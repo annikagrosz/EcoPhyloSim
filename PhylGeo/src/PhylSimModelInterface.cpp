@@ -24,9 +24,10 @@ using namespace Rcpp;
 // [[Rcpp::export]]
 Rcpp::List callModel(int x, int y, int dispersal, IntegerVector runs, double specRate, bool dens, 
                bool env, bool neutral, bool mort, int mortStrength, bool repro, int dispersalCutoff, 
-               int densityCutoff, int seed) {
+               int densityCutoff, int seed, double envStrength, double compStrength) {
                 
  
+   
    RandomGen ran;
    ran.seedrand(seed);
    
@@ -39,7 +40,7 @@ Rcpp::List callModel(int x, int y, int dispersal, IntegerVector runs, double spe
 
    PhylSimModel phylSimModel(x, y, dispersal, runs[steps-1], specRate, dens, 
                env, neutral, mort, mortStrength, repro, dispersalCutoff, 
-               densityCutoff, tempSaveLoc);
+               densityCutoff, tempSaveLoc, envStrength, compStrength);
 
 
   for (int step = 0; step < steps; step++) {

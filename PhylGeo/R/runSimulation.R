@@ -47,6 +47,24 @@ runSimulation <- function(par)
       mortalityFitness = T    
     }else stop("wrong fitness parameters")
     
+    
+    if (is.numeric(par$density)) if(par$density == 0){
+      par$density = F
+      par$compStrength = 1
+    }else{
+      par$compStrength = par$density
+      par$density = T
+    }
+    
+    if (is.numeric(par$environment)) if(par$environment == 0){
+      par$environment = F
+      par$envStrength = 1
+    }else{
+      par$envStrength = par$environment
+      par$environment = T
+    }
+    
+    
     if(par$density == FALSE & par$environment == FALSE)
     {
       neutral = TRUE
@@ -56,7 +74,7 @@ runSimulation <- function(par)
     
     ptm <- proc.time()
     
-    out <- callModel( par$x,  par$y,  dispersal,  par$runs,  par$specRate, par$density, par$environment, neutral, mortalityFitness, par$fitnessBaseMortalityRatio, reproductiveFitness, dispersalCut, par$densityCut, par$seed)  
+    out <- callModel( par$x,  par$y,  dispersal,  par$runs,  par$specRate, par$density, par$environment, neutral, mortalityFitness, par$fitnessBaseMortalityRatio, reproductiveFitness, dispersalCut, par$densityCut, par$seed, par$envStrength, par$compStrength)  
     
     print (paste("Core simulation finished after",floor(((proc.time() - ptm)[3])/60), "minute(s) and", ((proc.time() - ptm)[3])%%60, "second(s). Converting data"))
     
