@@ -1,8 +1,5 @@
-########################################################
-# Complex Model
-########################################################
 
-#' @title  Species community Simulation
+#' @title Batch runner
 #' @description A model of species community assembly under different assembly mechanisms, using parallel computing to make use of multi core cpus and clusters in order to reduce computation time.
 #' @param XMLfile .xml file containing all parameters for the model scenarios (must be set)
 #' @param parallel The number of cores to be used for parallel computing (default null is no parallelization)
@@ -27,39 +24,33 @@ fullModBatch <- function(pars, parallel = F, backup = FALSE){
     
     out <- foreach(i=1:length(pars), .packages = c("PhylGeo")) %dopar%{
       
-      par = pars[[i]]
-      
-      OUT <- fullMod(x = par$x, y = par$y, dispersal = par$dispersal, runs = par$runs, specRate = par$specRate, density = par$density, environment = par$environment, fitnessBaseMortalityRatio = par$fitnessBaseMortalityRatio, densityCut = par$densityCut, seed=par$seed, saveTimes = "last")
+      OUT <- runSimulation(pars[[i]])
       
       if(backup == TRUE){
-        name <- paste(par$scenarios, ".RData", sep="", collapse="")
+        name <- paste(pars[[i]]$scenario, ".RData", sep="", collapse="")
         save(OUT, file = name)
       }
-      OUT$par = par
       OUT
     }
+   parallel::stopCluster(cl)
   }else{
     cat("running ",nrow(pars), " batch simualations without parallelization", "\n")
     out <- foreach(i=1:length(pars), .packages = c("PhylGeo")) %do%{
       
-      par = pars[[i]]
-      
       cat("running parameter", i , "\n")
       
-      OUT <- fullMod(x = par$x, y = par$y, dispersal = par$dispersal, runs = par$runs, specRate = par$specRate, density = par$density, environment = par$environment, fitnessBaseMortalityRatio = par$fitnessBaseMortalityRatio, densityCut = par$densityCut, seed=par$seed)
+      OUT <- runSimulation(pars[[i]])
       
       if(backup == TRUE){
-        name <- paste(par$scenarios, ".RData", sep="", collapse="")
+        name <- paste(pars[[i]]$scenario, ".RData", sep="", collapse="")
         save(OUT, file = name)
       }
-      OUT$par = par
       OUT
     }
   }
   
   for (i in 1:length(pars)) names(out)[i] <- pars[i]$scenario
   #Stop cluster and timing
-  parallel::stopCluster(cl)
   time <- proc.time() - ptm
   print (paste("Finished after",floor(((proc.time() - ptm)[3])/60), "minute(s) and", ((proc.time() - ptm)[3])%%60, "second(s)."))
   
