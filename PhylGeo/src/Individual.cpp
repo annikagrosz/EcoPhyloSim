@@ -178,6 +178,7 @@ void Individual::operator=(const Individual &ind)
 		return newTrait ;
 	}
   
+  // TODO move this in the species class
   void Individual::die(int generation){
     
       if(m_Species->m_Count-1 < 1)

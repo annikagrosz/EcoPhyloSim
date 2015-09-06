@@ -84,7 +84,6 @@ class Landscape {
 
 	void speciation(unsigned int generation);
   void densityUpdate(int x, int y);
-	void initialize(int xsize, int ysize, unsigned int runs);
 	std::pair<int, int> get_dimensions();
 };
 

@@ -102,7 +102,33 @@ double envStrength, double compStrength)
    }
 
    // Initialization
-   initialize(m_Xdimensions,m_Ydimensions, m_SimulationEnd);
+   
+   // Create new species 
+   Species * spec = new Species(1, 1, 0, std::make_pair<int,int>(0,0), m_SimulationEnd);
+
+   // Add individuas of this new species across the grid
+   for(int cols = 0; cols < m_Xdimensions; cols++)
+   {
+      for(int rows=0; rows < m_Ydimensions; rows++)
+      {
+         this ->m_Individuals[cols][rows].m_Species = spec;
+         this ->m_Individuals[cols][rows].m_X_coordinate = cols;
+         this->m_Individuals[cols][rows].m_Y_coordinate =rows;
+         this->m_Individuals[cols][rows].m_Species->m_Count += 1;
+         this->m_Individuals[cols][rows].m_Species->sumMean(m_Individuals[cols][rows].m_Mean, m_Individuals[cols][rows].m_CompetitionMarker, m_Individuals[cols][rows].m_NeutralMarker);
+         this->m_Individuals[cols][rows].m_Species->updateMean();
+         this->m_Individuals[cols][rows].m_dispersalDistance = m_Cutoff / 2.0;
+         
+         this->m_Individuals[cols][rows].m_envStrength = m_envStrength;
+         this->m_Individuals[cols][rows].m_compStrength = m_compStrength;      
+         
+         //this->individuals[cols][rows].Species->date_of_extinction = runs;
+      }
+   }
+   m_Phylogeny.updatePhylogeny(m_Individuals[xsize-1][ysize-1].m_Species);
+
+
+  // Set up Environment
 
    m_AirTemperature =  0.0; // Celsius
    m_GradientStep = (1.0/(double)m_Xdimensions)*2.0;
@@ -117,9 +143,11 @@ double envStrength, double compStrength)
          envi.second = 1.0;
          m_Environment.push_back(envi);
       }
-      if(i < m_Xdimensions / 2) m_AirTemperature += m_GradientStep;
+      if(i < m_Xdimensions / 2.0) m_AirTemperature += m_GradientStep;
       else m_AirTemperature -= m_GradientStep;
    }
+   
+   // Grid Geometry calculations 
    
    cellsWithinDensityCutoff = 0.0 ;
 
@@ -156,35 +184,9 @@ std::pair<int, int> Landscape::get_dimensions()
    return dimensions;
 }
 
-void Landscape::initialize(int xsize, int ysize,unsigned int simulationEnd)
-{
-   Species * spec = new Species(1, 1, 0, std::make_pair<int,int>(0,0), simulationEnd);
-
-   // TODO this should go in the contructor ... need a borg pattern variable or something to get correct species count
-   for(int cols = 0; cols < xsize;cols++)
-   {
-      for(int rows=0; rows < ysize; rows++)
-      {
-         this ->m_Individuals[cols][rows].m_Species = spec;
-         this ->m_Individuals[cols][rows].m_X_coordinate = cols;
-         this->m_Individuals[cols][rows].m_Y_coordinate =rows;
-         this->m_Individuals[cols][rows].m_Species->m_Count += 1;
-         this->m_Individuals[cols][rows].m_Species->sumMean(m_Individuals[cols][rows].m_Mean, m_Individuals[cols][rows].m_CompetitionMarker, m_Individuals[cols][rows].m_NeutralMarker);
-         this->m_Individuals[cols][rows].m_Species->updateMean();
-         this->m_Individuals[cols][rows].m_dispersalDistance = m_Cutoff / 2.0;
-         
-         this->m_Individuals[cols][rows].m_envStrength = m_envStrength;
-         this->m_Individuals[cols][rows].m_compStrength = m_compStrength;      
-         
-         //this->individuals[cols][rows].Species->date_of_extinction = runs;
-      }
-   }
-   m_Phylogeny.updatePhylogeny(m_Individuals[xsize-1][ysize-1].m_Species);
-}
 
 void Landscape::increaseAge()
 {
-
    for (int rows = 0; rows < this->m_Xdimensions; rows++)
    {
       for (int cols =0; cols < this->m_Ydimensions; cols++)
@@ -719,7 +721,13 @@ void Landscape::densityUpdate(int x, int y){
 
                if (!(neighborX == focus_x && neighborY == focus_y))
                {
-                  relatedness += std::abs(m_Individuals[focus_x][focus_y].m_CompetitionMarker - m_Individuals[neighborX][neighborY].m_CompetitionMarker);
+                 double a = m_Individuals[focus_x][focus_y].m_CompetitionMarker;
+                 double b = m_Individuals[neighborX][neighborY].m_CompetitionMarker;
+                 double diff1 = std::abs(fmod(a + 1 - b, 1.0));
+                 double diff2 = std::abs(fmod(b + 1 - a, 1.0));
+                 double diff =  std::min(diff1,diff2);
+                 if (diff < 0.2) relatedness += diff / 0.2;
+                 else relatedness += 1;
                }
             }
          }
