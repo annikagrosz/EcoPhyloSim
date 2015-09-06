@@ -3,7 +3,7 @@ require(PhylGeo)
 # SET WD TO SOURCE FILE LOCATION !!!!
 
 
-runs = round(seq(25000, 50000, len = 50))
+runs = seq(25000, 50000, len = 50)
 
 dispOptions = 4
 fitOptions = 7

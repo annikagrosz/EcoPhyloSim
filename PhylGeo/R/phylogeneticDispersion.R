@@ -1,49 +1,71 @@
 
-.calculatePhylogeneticDispersion <- function(simu, plotlength = 5, plots = 250, replicates = 500 , type = "PhylMeta", fun = mpd){
-  plotsize = plotlength^2
-  pvalues = list()
-  for(i in 1:length(simu)){
-    
-    s <- simu[[i]]$specMat
-    phyl <- simu[[i]]$phylogeny
-    extantPhylo <- drop.fossil(phy = phyl)
-    extantPhyloDis <- cophenetic(extantPhylo)
-    
-    if (type == "PhylMeta"){
-      pvalues[[i]] <- nullModel(speciesMatrix = s, localPlotSize = plotsize, phylogeny = extantPhylo, numberOfPlots = plots, repetitions = replicates, fun = mpd)
-    }else if (type == "PhylSample"){
-      pvalues[[i]] <- nullModelSample(speciesMatrix = s, localPlotSize = plotsize, phylogeny = extantPhylo, numberOfPlots = plots,repetitions = replicates)    
-    }else if (type == "PhylPool"){
-      comMat <- localPlots(size = plotsize, n = plots, matrix = s, community = T)$communityTable
-      pvalues[[i]] <- ses.mpd(samp = comMat, dis = extantPhyloDis, null.model = "phylogeny.pool", abundance.weighted = TRUE, runs = replicates)$mpd.obs.p      
-    }else if (type == "SamplePool"){
-      comMat <- localPlots(size = plotsize, n = plots, matrix = s, community = T)$communityTable
-      pvalues[[i]] <- ses.mpd(samp = comMat, dis = extantPhyloDis, null.model = "sample.pool", abundance.weighted = TRUE, runs = replicates)$mpd.obs.p
-      
-    }
-  }
-  names(pvalues) <- names(simu)
-  return(pvalues)
-}
-
 # Version that accepts multiple types
-calculatePhylogeneticDispersion <- function(simu, plotlengths = 10,  plots = 250, replicates = 500, types = "PhylMeta", fun = mpd, reduce = T){
+calculatePhylogeneticDispersion <- function(simu, plotlengths = 10,  plots = 200, replicates = 500, types = "PhylMeta", fun = mpd, reduce = T, times = "last"){
   
-  pValues = list(list())
+  
+  ## TODO implement function for only 1 scenario
+  
+  nScenarios = length(simu)
+  nRuns = length(simu[[1]]) - 1
+  parIndex = simu[[1]] 
+  if (times == "last") times = nRuns
+  
+  # type / scenario / plotlength / repetition
+  
+  pValues = list()
   
   for (i in 1:length(types)){
-    for (j in 1:length(plotlengths)){
-      pValues[[i]][[j]] = .calculatePhylogeneticDispersion(simu, plotlength = plotlengths[j], plots = plots, replicates = replicates, type = types[i], fun = fun)
+    pValues[[i]] = list()
+    
+    type = types[i]
+    
+    for(k in 1:nScenarios){
+      pValues[[i]][[k]] = list()
+      
+      for (j in 1:length(plotlengths)){
+        
+        plotsize = plotlengths[j]^2
+        pval = list()
+        
+        for (l in 1:length(times)){
+          
+          timeindex = times[i]
+          
+          s <- simu[[k]][[timeindex]]$specMat
+          phyl <- simu[[k]][[timeindex]]$phylogeny
+          extantPhylo <- drop.fossil(phy = phyl)
+          extantPhyloDis <- cophenetic(extantPhylo)
+          
+          if (type == "PhylMeta"){
+            pval[[l]] <- nullModel(speciesMatrix = s, localPlotSize = plotsize, phylogeny = extantPhylo, numberOfPlots = plots, repetitions = replicates, fun = mpd)
+          }else if (type == "PhylSample"){
+            pval[[l]] <- nullModelSample(speciesMatrix = s, localPlotSize = plotsize, phylogeny = extantPhylo, numberOfPlots = plots,repetitions = replicates)    
+          }else if (type == "PhylPool"){
+            comMat <- localPlots(size = plotsize, n = plots, matrix = s, community = T)$communityTable
+            pval[[l]] <- ses.mpd(samp = comMat, dis = extantPhyloDis, null.model = "phylogeny.pool", abundance.weighted = TRUE, runs = replicates)$mpd.obs.p      
+          }else if (type == "SamplePool"){
+            comMat <- localPlots(size = plotsize, n = plots, matrix = s, community = T)$communityTable
+            pval[[l]] <- ses.mpd(samp = comMat, dis = extantPhyloDis, null.model = "sample.pool", abundance.weighted = TRUE, runs = replicates)$mpd.obs.p
+            
+          }
+        }
+        names(pval) = times
+        
+        if(reduce == T & length(times) == 1) pval = pval[[1]]
+        
+        pValues[[i]][[k]][[j]] = pval
+      }
+      names(pValues[[i]][[k]]) = plotlengths
     }
-    names(pValues[[i]]) = plotlengths
+    names(pValues[[i]]) = names(simu)
   }
   names(pValues) = types
   if (reduce == T){
-    if (length(plotlengths) == 1){
-      for (i in 1:length(types)){
-        pValues[[i]]= pValues[[i]][[1]]
-      }
-    }
+    #     if (length(plotlengths) == 1){
+    #       for (i in 1:length(types)){
+    #         pValues[[i]]= pValues[[i]][[1]]
+    #       }
+    #     }
     if (length(types) == 1) pValues = pValues[[1]]       
   }
   return(pValues)
@@ -53,48 +75,47 @@ calculatePhylogeneticDispersion <- function(simu, plotlengths = 10,  plots = 250
 
 
 
-plotPhylogeneticDispersion <- function(pvalues, pars, title = "P-values", multiple = T){
+plotPhylogeneticDispersion <- function(pvalues, positions, title = "P-values", multiple = T){
   
   if(multiple == T){
-    lengths = as.numeric(names(pvalues))
+    lengths = as.numeric(names(pvalues[[1]]))
     nlengths = length(lengths)
     lRange <- max(lengths) - min(lengths)
     
-    z <- matrix(nrow = nlengths, ncol = length(pvalues[[1]]), dimnames = list(names(pvalues), names(pvalues[[1]])))
+    z <- matrix(nrow = nlengths, ncol = length(pvalues), dimnames = list(names(pvalues[[1]]), names(pvalues)))
     zCILOW <- z
     zCIUP <- z
-    for (i in 1:nlengths){
-      z[i,] <- sapply(pvalues[[i]], median, na.rm = T)
-      zCILOW[i,] <- sapply(pvalues[[i]], function(x)quantile(x,0.25, na.rm = T))   
-      zCIUP[i,] <- sapply(pvalues[[i]], function(x)quantile(x,0.75, na.rm = T))
+    for (i in 1:length(pvalues)){
+      z[,i] <- sapply(pvalues[[i]], median, na.rm = T)
+      zCILOW[,i] <- sapply(pvalues[[i]], function(x)quantile(x,0.25, na.rm = T))   
+      zCIUP[,i] <- sapply(pvalues[[i]], function(x)quantile(x,0.75, na.rm = T))
     }
   }else{
     z <- sapply(pvalues, median, na.rm = T)
     zSD <- sapply(pvalues, sd, na.rm = T) 
   }
   
-  lev = c(0, rev(unique(pars$dispersal)[order(unique(pars$dispersal))]))
-  if (lev[length(lev)] == 0) lev = lev[1:(length(lev)-1)]
   
-  dispersalValues <- factor(pars$dispersal, levels = lev)
-  fitnessValues <- factor( pars$density - pars$environment + 2* pars$density * pars$environment, labels = c("Env", "Neutral", "Dens", "Both"))
   
   ColPalet <- colorRampPalette(c("turquoise4", "white", "palevioletred"))
   Cols <- ColPalet(100)
   index <- seq(0,1,0.01)
   par(mar=c(0, 2, 0, 0), xpd=TRUE)
-  emptyplot(xlim=c(0, 3.5), ylim=c(0,3.5), frame.plot = FALSE)
+  emptyplot(xlim=c(0, 5.5), ylim=c(0.5,2.5), frame.plot = FALSE)
   title(title, line=-2)
   
   
   
-  for(i in 1:length(unique(dispersalValues))){
-    for(j in 1:length(unique(fitnessValues))){
-      disp = unique(dispersalValues)[i]
-      fitn = unique(fitnessValues)[j]
-      k <- which(dispersalValues == disp & fitnessValues == fitn)
-      x <- as.numeric(fitn) / 2
-      y <- (length(unique(dispersalValues)) - as.numeric(disp) + 1) / 2
+  for(i in 1:length(positions$y)){
+    for(j in 1:length(positions$x)){
+      
+      x <- positions$x[j] / 2
+      fitn = positions$xname[j]
+      
+      disp = positions$yname[i]
+      y <- positions$y[i] / 2
+      
+      k <- 7*(i-1) + j
       
       if (multiple == T){
         
@@ -122,13 +143,13 @@ plotPhylogeneticDispersion <- function(pvalues, pars, title = "P-values", multip
     }
   }
   
-  text(x = 0, y = seq(0.5,2.5,0.5), labels = rev(levels(dispersalValues)) , pos = 4) 
-  text(x = seq(0.5,2,0.5), y = 2.8, labels = levels(fitnessValues) ) 
+  text(x = 0, y = positions$y/2, labels = positions$yname , pos = 4) 
+  text(x = positions$x/2, y = 2.3, labels =  positions$xname ) 
   
-  barx <- 2.5
-  bary <- 1.5
-  barl <- 0.45
-  colorbar.plot(x = 2.5, y = bary, strip=seq(0,1,0.001), col=Cols, strip.length = barl, horizontal = F, strip.width = 0.05)
+  barx <- 4.5
+  bary <- 1.2
+  barl <- 0.3
+  colorbar.plot(x = barx, y = bary, strip=seq(0,1,0.001), col=Cols, strip.length = barl, horizontal = F, strip.width = 0.04)
   text(x = barx + 0.2, y = bary + 1.8* barl, labels = "overdispersed" , pos = 4) 
   text(x = barx + 0.2, y = bary, labels = "neutral" , pos = 4) 
   text(x = barx + 0.2, y = bary - 1.8* barl, labels = "underdispersed \n(clustered)", pos = 4) 

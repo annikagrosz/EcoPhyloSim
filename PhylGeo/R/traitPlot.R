@@ -4,14 +4,28 @@
 #' @param phylogeny the corresponding (extant) phylogeny
 #' @param plot defines what to plot. "both" plots the landscape and phylogeny side-by-side
 #' @export
-plotTraitDistribution <- function (simu, type = "hist"){
+plotTraitDistribution <- function (simu, type = "hist", time = NULL){
+  
+  if (is.null(time)) time = length(simu) - 1
+  
+  dat <- simu[[time]]
+  
   
   if (type == "hist"){
-    oldpar <- par(mfrow = c(2,2), mar = c(3,3,3,3))
-    hist(simu$traitMat)
-    hist(simu$envMat)
-    hist(simu$compMat)
-    hist(simu$neutMat)
+    oldpar <- par(mfrow = c(3,3), mar = c(3,3,3,3))
+    
+    plot(dat$envMat, dat$traitMat, col = dat$specMat)
+    plot(dat$envMat, dat$compMat, col = dat$specMat)
+    plot(dat$envMat, dat$neutMat, col = dat$specMat)
+    
+    image(dat$traitMat)
+    image(dat$compMat)
+    image(dat$neutMat)
+    
+    hist(dat$traitMat, breaks = 100)
+    hist(dat$compMat, breaks = 100)
+    hist(dat$neutMat, breaks = 100)
+    
     par(oldpar)
   }else if(type == "phylo"){
     require(phytools)

@@ -7,20 +7,22 @@
 #' @import ape
 #' @importFrom adephylo distTips
 #' @export
-plotSpatialPhylo <- function (simu, plot = "both", plotTraits = T, col = "phylodist", main = ""){
+plotSpatialPhylo <- function (simu, plot = "both", plotTraits = T, col = "phylodist", main = "", time = NULL){
+  
+  if (is.null(time)) time = length(simu) - 1
   
   
-  phylogeny = simu$phylogeny
+  phylogeny = simu[[time]]$phylogeny
   
   extantPhylogeny <- drop.fossil(phylogeny)
   
   nSpecies = length(extantPhylogeny$tip.label)
   
-  landscape = simu$specMat
+  landscape = simu[[time]]$specMat
   
   if (plotTraits == T){
     #library(shape)
-    traits = getAverageTraits(simu)  
+    traits = getAverageTraits(simu[[time]])  
     #rootDist <- distRoot(extantPhylogeny, 1)
   }
   
