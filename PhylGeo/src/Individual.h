@@ -37,9 +37,11 @@ class Individual {
 
 	double m_LocalDensity;
 	unsigned long long m_Age;
-	double m_DensityStrength;
-	double m_FitnessWeight;
-	int m_Weight;
+  
+//	double m_DensityStrength;
+//	double m_FitnessWeight;
+//	int m_Weight;
+  
 	double m_Variance;
 	double m_Mean;
 	double m_CompetitionMarker;

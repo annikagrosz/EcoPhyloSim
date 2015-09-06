@@ -25,9 +25,9 @@ Individual::Individual()
 	this ->m_Age = 0;
   
   // THESE SEEM OBSOLTE ???
-	this ->m_FitnessWeight = 0.5;
-	this ->m_DensityStrength = 0.4;
-	this ->m_Weight = 1.0;
+	//this ->m_FitnessWeight = 0.5;
+	//this ->m_DensityStrength = 0.4;
+	//this ->m_Weight = 1.0;
   // END OBSOLETE
   
 	this -> m_Variance = 0.03659906;
@@ -42,6 +42,8 @@ Individual::Individual()
 
 }
 
+// COPY CONSTRUCTOR
+// better change the overload below to deep copy
 Individual::Individual(const Individual &ind)
 {
 
@@ -50,9 +52,9 @@ Individual::Individual(const Individual &ind)
 	this -> m_Y_coordinate = ind.m_Y_coordinate;
 	this -> m_LocalDensity = ind.m_LocalDensity;
 	this -> m_Age = 0;
-	this -> m_FitnessWeight = ind.m_FitnessWeight;
-	this -> m_DensityStrength = ind.m_DensityStrength;
-	this -> m_Weight = ind.m_Weight;
+//	this -> m_FitnessWeight = ind.m_FitnessWeight;
+//	this -> m_DensityStrength = ind.m_DensityStrength;
+//	this -> m_Weight = ind.m_Weight;
 	this -> m_Variance = ind.m_Variance;
 	this -> m_Mean = evolution(ind.m_Mean, ind.m_Species->m_Mean, 0.3, 0.05);
 	this -> m_CompetitionMarker = evolution(ind.m_CompetitionMarker, ind.m_Species->m_CompetitionMean, 0.3, 0.05);
@@ -78,9 +80,9 @@ void Individual::operator=(const Individual &ind)
 	this -> m_Y_coordinate = 0;
 	this -> m_LocalDensity = ind.m_LocalDensity;
 	this -> m_Age = 0;
-	this -> m_FitnessWeight = ind.m_FitnessWeight;
-	this -> m_DensityStrength = ind.m_DensityStrength;
-	this -> m_Weight = ind.m_Weight;
+//	this -> m_FitnessWeight = ind.m_FitnessWeight;
+//	this -> m_DensityStrength = ind.m_DensityStrength;
+//	this -> m_Weight = ind.m_Weight;
 	this -> m_Variance = ind.m_Variance;
 	this -> m_Mean = evolution(ind.m_Mean, ind.m_Species->m_Mean, 0.3, 0.05);
 	this -> m_CompetitionMarker = evolution(ind.m_CompetitionMarker, ind.m_Species->m_CompetitionMean, 0.3, 0.05);
@@ -143,7 +145,7 @@ void Individual::operator=(const Individual &ind)
 	{
 		if(env)
 		{	
-      double envFitness = (m_envStrength * 1.2 * exp(-0.5 * pow((temp - m_Mean) / m_Variance, 2.0)) + 1-m_envStrength); // environmental niche
+      double envFitness = (m_envStrength * 1.0 * exp(-0.5 * pow((temp - m_Mean) / m_Variance, 2.0)) + 1-m_envStrength); // environmental niche
 			
       if(dd)	return envFitness * (m_compStrength * m_LocalDensity + 1- m_compStrength) + (DBL_MIN*100.0); //weights plus base value
 			else return	envFitness + (DBL_MIN*100.0); //weights plus base value
