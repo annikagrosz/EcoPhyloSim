@@ -74,25 +74,30 @@ runSimulation <- function(par)
     
     ptm <- proc.time()
     
-    out <- callModel( par$x,  par$y,  dispersal,  par$runs,  par$specRate, par$density, par$environment, neutral, mortalityFitness, par$fitnessBaseMortalityRatio, reproductiveFitness, dispersalCut, par$densityCut, par$seed, par$envStrength, par$compStrength)  
+    out <- callModel( par$x,  par$y,  dispersal,  round(par$runs),  par$specRate, par$density, par$environment, neutral, mortalityFitness, par$fitnessBaseMortalityRatio, reproductiveFitness, dispersalCut, par$densityCut, par$seed, par$envStrength, par$compStrength)  
     
     print (paste("Core simulation finished after",floor(((proc.time() - ptm)[3])/60), "minute(s) and", ((proc.time() - ptm)[3])%%60, "second(s). Converting data"))
+    
+#     Rcpp::List listResults = Rcpp::List::create(Rcpp::Named("Species") = specOut,
+#                                                 Rcpp::Named("EnvTrait") = traitOut,
+#                                                 Rcpp::Named("NeutralTrait") = neutralOut,
+#                                                 Rcpp::Named("CompetitionTrait") = compOut,
+#                                                 Rcpp::Named("Environment") = envOut,
+#                                                 Rcpp::Named("Phylogeny") = phyloOut);
     
     for (i in 1:length(par$runs)){
 
       out[[i]] = list(
-        specMat = matrix(out[[i]][[1]],ncol=par$x, nrow=par$y), 
-        traitMat= matrix(out[[i]][[2]],ncol=par$x, nrow=par$y), 
-        envMat = matrix(out[[i]][[3]],ncol=par$x, nrow=par$y), 
-        compMat = matrix(out[[i]][[4]],ncol=par$x, nrow=par$y), 
-        neutMat = matrix(out[[i]][[5]],ncol=par$x, nrow=par$y), 
-        phylogeny = ape::read.tree(text = out[[i]][[6]]), 
-        phyloTXT = out[[i]][[6]])
+        specMat = matrix(out[[i]]$Species,ncol=par$x, nrow=par$y), 
+        traitMat= matrix(out[[i]]$EnvTrait,ncol=par$x, nrow=par$y), 
+        envMat = matrix(out[[i]]$Environment,ncol=par$x, nrow=par$y), 
+        compMat = matrix(out[[i]]$CompetitionTrait,ncol=par$x, nrow=par$y), 
+        neutMat = matrix(out[[i]]$NeutralTrait,ncol=par$x, nrow=par$y), 
+        phylogeny = ape::read.tree(text = out[[i]]$Phylogeny), 
+        phyloTXT = out[[i]]$Phylogeny)
     }
     cat("done! \n")
     
-    
-    if (length(par$runs) == 1) out = out[[i]]
     out$par = par
     class(out) <- append(class(out),"Phylosim")
     return(out)
