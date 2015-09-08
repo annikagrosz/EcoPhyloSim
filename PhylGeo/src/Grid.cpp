@@ -253,26 +253,14 @@ void GlobalEnvironment::reproduce(unsigned int generation)
          x_parent = m_RandomGenerator.randomInt(0,m_Xdimensions-1); //rand() % xdimensions;
          y_parent = m_RandomGenerator.randomInt(0,m_Ydimensions-1); //rand() % ydimensions;
          //				std::cout << x_coordinate << "::" << x_parent << "::" << y_coordinate << "::" << y_parent << '\n';
-         if(m_Individuals[x_coordinate][y_coordinate].m_Species->m_Count-1 < 1)
-         {
-            m_Individuals[x_coordinate][y_coordinate].m_Species->m_Date_of_Extinction = generation;
-            m_Individuals[x_coordinate][y_coordinate].m_Species->m_Count -= 1;
-         }
-
-         else
-         {
-            m_Individuals[x_coordinate][y_coordinate].m_Species->m_Count-=1;
-            m_Individuals[x_coordinate][y_coordinate].m_Species->decMean(m_Individuals[x_coordinate][y_coordinate].m_Mean, m_Individuals[x_coordinate][y_coordinate].m_CompetitionMarker, m_Individuals[x_coordinate][y_coordinate].m_NeutralMarker);
-            m_Individuals[x_coordinate][y_coordinate].m_Species->updateMean();
-         }
+         
+         m_Individuals[x_coordinate][y_coordinate].reportDeath(generation);
 
          m_Individuals[x_coordinate][y_coordinate] = m_Individuals[x_parent][y_parent]; //deep copy !
          //				individuals[x_coordinate][y_coordinate].x_coordinate = x_coordinate;
          //				individuals[x_coordinate][y_coordinate].y_coordinate = y_coordinate;
-         m_Individuals[x_coordinate][y_coordinate].m_Species->m_Count += 1;
-         m_Individuals[x_coordinate][y_coordinate].m_Species->sumMean(m_Individuals[x_coordinate][y_coordinate].m_Mean, m_Individuals[x_coordinate][y_coordinate].m_CompetitionMarker, m_Individuals[x_coordinate][y_coordinate].m_NeutralMarker);
-         m_Individuals[x_coordinate][y_coordinate].m_Species->updateMean();
-         //				double survival = (rand() % 101) / 100.0;
+         
+         m_Individuals[x_coordinate][y_coordinate].reportBirth();
       }
    }
    
@@ -375,7 +363,7 @@ void GlobalEnvironment::reproduce(unsigned int generation)
           }
           numberDeath++;
 
-         m_Individuals[x_coordinate][y_coordinate].die(generation);
+         m_Individuals[x_coordinate][y_coordinate].reportDeath(generation);
 
          if(m_reproduction){
             new_parent = m_RandomGenerator.multinomialDraw(cumWeights, m_LandscapeSize-1, seedSum); 
@@ -389,9 +377,9 @@ void GlobalEnvironment::reproduce(unsigned int generation)
          m_Individuals[x_coordinate][y_coordinate] = m_Individuals[x_parent][y_parent]; //deep copy !
          m_Individuals[x_coordinate][y_coordinate].m_X_coordinate = x_coordinate;
          m_Individuals[x_coordinate][y_coordinate].m_Y_coordinate = y_coordinate;
-         m_Individuals[x_coordinate][y_coordinate].m_Species->m_Count += 1;
-         m_Individuals[x_coordinate][y_coordinate].m_Species->sumMean(m_Individuals[x_coordinate][y_coordinate].m_Mean, m_Individuals[x_coordinate][y_coordinate].m_CompetitionMarker, m_Individuals[x_coordinate][y_coordinate].m_NeutralMarker);
-         m_Individuals[x_coordinate][y_coordinate].m_Species->updateMean();
+         
+         m_Individuals[x_coordinate][y_coordinate].reportBirth();
+         
          parents[x_coordinate*m_Ydimensions + y_coordinate].first = x_coordinate;
          parents[x_coordinate*m_Ydimensions + y_coordinate].second = y_coordinate;
          
@@ -632,7 +620,7 @@ void LocalEnvironment::reproduce(unsigned int generation)
       
       numberDeath++;
       
-      m_Individuals[x_coordinate][y_coordinate].die(generation);
+      m_Individuals[x_coordinate][y_coordinate].reportDeath(generation);
 
       ////////////////////////////////////////////
       // DISPERSAL 
@@ -683,10 +671,9 @@ void LocalEnvironment::reproduce(unsigned int generation)
       m_Individuals[x_coordinate][y_coordinate] = m_Individuals[x_parent][y_parent]; //deep copy !
       m_Individuals[x_coordinate][y_coordinate].m_X_coordinate = x_coordinate;
       m_Individuals[x_coordinate][y_coordinate].m_Y_coordinate = y_coordinate;
-      m_Individuals[x_coordinate][y_coordinate].m_Species->m_Count += 1;
-      m_Individuals[x_coordinate][y_coordinate].m_Species->sumMean(m_Individuals[x_coordinate][y_coordinate].m_Mean, m_Individuals[x_coordinate][y_coordinate].m_CompetitionMarker, m_Individuals[x_coordinate][y_coordinate].m_NeutralMarker);
-      m_Individuals[x_coordinate][y_coordinate].m_Species->updateMean();
-
+      
+      m_Individuals[x_coordinate][y_coordinate].reportBirth();
+ 
       // UPDATE RELATEDNESS
 
       if(m_DD) densityUpdate(x_coordinate,y_coordinate);
@@ -723,10 +710,8 @@ void Landscape::densityUpdate(int x, int y){
                {
                  double a = m_Individuals[focus_x][focus_y].m_CompetitionMarker;
                  double b = m_Individuals[neighborX][neighborY].m_CompetitionMarker;
-                 double diff1 = std::abs(fmod(a + 1 - b, 1.0));
-                 double diff2 = std::abs(fmod(b + 1 - a, 1.0));
-                 double diff =  std::min(diff1,diff2);
-                 if (diff < 0.2) relatedness += diff / 0.2;
+                 double diff = std::abs(a -b);
+                 if (diff < 0.3) relatedness += diff / 0.3;
                  else relatedness += 1;
                }
             }
@@ -742,7 +727,7 @@ void Landscape::densityUpdate(int x, int y){
 void Landscape::speciation (unsigned int generation)
 {
    // std::cout << generation << '\n';
-   std::pair<int, int> birthplace;
+
    int specRate = m_RandomGenerator.randomPoisson(m_Speciation_Rate);
 
    for (int i = 0; i < specRate; i++)
@@ -752,62 +737,14 @@ void Landscape::speciation (unsigned int generation)
 
       m_Global_Species_Counter+=1;
 
-      birthplace.first = x;
-      birthplace.second = y;
-
-      double max = 1.0;
-      double min = 0.0;
-      double upper = 1.0;
-      double lower = -1.0;
-
-      double oldMean = m_Individuals[x][y].m_Mean;
-      double oldNeutralMarker = m_Individuals[x][y].m_NeutralMarker;
-      double oldCompetitionMarker = m_Individuals[x][y].m_CompetitionMarker;
-
-      double newMean = m_RandomGenerator.randomDouble(lower,upper);
-      double newCompetitionMarker = m_RandomGenerator.randomDouble(lower,upper);
-      double newNeutralMarker = m_RandomGenerator.randomDouble(lower,upper);
-
       m_Individuals[x][y].m_Species->m_Children.push_back(m_Global_Species_Counter);
 
-      if(m_Individuals[x][y].m_Species->m_Count-1 < 1)
-      {
-         m_Individuals[x][y].m_Species->m_Date_of_Extinction = generation;
-         m_Individuals[x][y].m_Species->m_Count -= 1;
-      }
-      else
-      {
-         m_Individuals[x][y].m_Species->m_Count -= 1;
-         m_Individuals[x][y].m_Species->decMean(m_Individuals[x][y].m_Mean, m_Individuals[x][y].m_CompetitionMarker, m_Individuals[x][y].m_NeutralMarker);
-         m_Individuals[x][y].m_Species->updateMean();
-      }
+      m_Individuals[x][y].reportDeath(generation);
 
+      m_Individuals[x][y].m_Species = new Species(m_Global_Species_Counter, m_Individuals[x][y].m_Species->get_species_ID(), generation, std::make_pair(x, y), m_SimulationEnd);
+      
+      m_Individuals[x][y].evolveDuringSpeciation();
 
-      m_Individuals[x][y].m_Species = new Species(m_Global_Species_Counter, m_Individuals[x][y].m_Species->get_species_ID(), generation, std::make_pair(birthplace.first, birthplace.second), m_SimulationEnd);
-      m_Individuals[x][y].m_Age = 0;
-
-      m_Individuals[x][y].m_Mean =  oldMean + (0.2 * newMean);
-      if(m_Individuals[x][y].m_Mean > max) m_Individuals[x][y].m_Mean = m_Individuals[x][y].m_Mean - max;
-      else if(m_Individuals[x][y].m_Mean < min) m_Individuals[x][y].m_Mean = min + std::abs(m_Individuals[x][y].m_Mean);
-
-      m_Individuals[x][y].m_NeutralMarker =   oldNeutralMarker + (0.2 * newNeutralMarker);
-      if(m_Individuals[x][y].m_NeutralMarker > max) m_Individuals[x][y].m_NeutralMarker = m_Individuals[x][y].m_NeutralMarker - max;
-      else if(m_Individuals[x][y].m_NeutralMarker < min) m_Individuals[x][y].m_NeutralMarker = min + std::abs(m_Individuals[x][y].m_NeutralMarker);
-
-      m_Individuals[x][y].m_CompetitionMarker =   oldCompetitionMarker + (0.2 * newCompetitionMarker);
-      if(m_Individuals[x][y].m_CompetitionMarker > max) m_Individuals[x][y].m_CompetitionMarker = m_Individuals[x][y].m_CompetitionMarker - max;
-      else if(m_Individuals[x][y].m_CompetitionMarker < min) m_Individuals[x][y].m_CompetitionMarker = min + std::abs(m_Individuals[x][y].m_CompetitionMarker);
-
-      m_Individuals[x][y].m_Species->m_Mean = m_Individuals[x][y].m_Mean;
-      m_Individuals[x][y].m_Species->m_CompetitionMean = m_Individuals[x][y].m_CompetitionMarker;
-      m_Individuals[x][y].m_Species->m_NeutralMean = m_Individuals[x][y].m_NeutralMarker;
-
-      m_Individuals[x][y].m_Species->m_Count += 1;
-      m_Individuals[x][y].m_Species->sumMean(m_Individuals[x][y].m_Mean, m_Individuals[x][y].m_CompetitionMarker, m_Individuals[x][y].m_NeutralMarker);
-      m_Individuals[x][y].m_Species->updateMean();
-      m_Individuals[x][y].m_Species->m_FirstComp = m_Individuals[x][y].m_Species->m_CompetitionMean;
-      m_Individuals[x][y].m_Species->m_FirstMean = m_Individuals[x][y].m_Species->m_Mean;
-      m_Individuals[x][y].m_Species->m_FirstNeutral = m_Individuals[x][y].m_Species->m_NeutralMean;
       //			individuals[x][y].Species->date_of_extinction = runs;
       m_Phylogeny.updatePhylogeny(m_Individuals[x][y].m_Species);
 
