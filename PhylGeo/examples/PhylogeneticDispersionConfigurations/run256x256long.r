@@ -2,30 +2,26 @@ require(PhylGeo)
 
 # SET WD TO SOURCE FILE LOCATION !!!!
 
-modes <- c(rep("global",4), rep("local",16))
-modesDists <- paste(modes, c(rep("0",4),as.character(sort(rep(c(0.5,1,2,4),4)))),sep = "")
-modesDistsMechs <- paste(modesDists, rep(c("Envi", "Neut", "Dens", "Hybr"),4), sep = "")
+setwd("C:/Users/fhartig/Desktop/phylosim/PhylGeo/examples/PhylogeneticDispersionConfigurations")
+
+runs = seq(75000, 100000, len = 50)
+
+dispOptions = 4
+fitOptions = 7
+
+dispersal =  rep(c(0,0.5, 2,4), each = fitOptions)
+density = rep(c(0,seq(0,1,len = fitOptions-2),1),dispOptions)
+environment = rep(c(0,seq(1,0,len = fitOptions-2),1),dispOptions)
+
+modes <- ifelse(dispersal == 0, "global", "local")
+scenarios <- paste(modes, " dens=", density, " env=", environment, sep = "")
 
 
-pars <-data.frame(
-  n <- length(modes),
-  modes = modes,
-  scenarios = modesDistsMechs,
-  x = rep(256,n),
-  y = rep(256,n),
-  runs = rep(100000,n),
-  dispersal = c(rep(0,4), rep(0.5,4), rep(1,4), rep(2,4), rep(4,4)),
-  specRate = rep(1.0,n),
-  density = rep(c(F,F,T,T),5),
-  environment = rep(c(T,F,F,T),5),
-  fitnessBaseMortalityRatio = rep(10,n),
-  densityCut = rep(1,n),
-  seed <- rep(1000,n)
-)
+pars <- list()
+
+for (i in 1:length(scenarios)){pars[[i]] = createCompletePar(x = 256,y = 256, runs = runs, modes = modes[i],scenario = scenarios[i], dispersal = dispersal[i],specRate = 1,density = density[i],environment = environment[i], fitnessBaseMortalityRatio = 5, densityCut = 1,seed = 1000)}
 
 
+system.time(simulationOut <- fullModBatch(pars, parallel = T)) 
 
-system.time(simulationOut <- fullModBatch(pars, parallel = T)) # Set cores depending on cluster size (optimal: nCores = nScenarios) !!
-
-save(simulationOut, pars, file = "results3.Rdata" )
-
+save(simulationOut, pars, file = "results100x100.Rdata" )

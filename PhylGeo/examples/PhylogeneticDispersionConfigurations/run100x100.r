@@ -2,6 +2,7 @@ require(PhylGeo)
 
 # SET WD TO SOURCE FILE LOCATION !!!!
 
+setwd("C:/Users/fhartig/Desktop/phylosim/PhylGeo/examples/PhylogeneticDispersionConfigurations")
 
 runs = seq(25000, 50000, len = 50)
 
