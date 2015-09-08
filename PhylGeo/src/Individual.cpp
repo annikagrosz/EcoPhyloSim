@@ -12,14 +12,15 @@
 #include <float.h>
 #include <cmath>
 #include <stdexcept>
+#include <iostream>
 
 
 
 Individual::Individual()
 {
   this ->m_Species = new Species();
-	this ->m_X_coordinate = 0;
-	this ->m_Y_coordinate = 0;
+	this ->m_X_coordinate = -999;
+	this ->m_Y_coordinate = -999;
   
 	this ->m_LocalDensity = 0.0; // density experienced around itself, will be updated automatically 
 	this ->m_Age = 0;
@@ -46,6 +47,8 @@ Individual::Individual()
 // better change the overload below to deep copy
 Individual::Individual(const Individual &ind)
 {
+  
+  std::cout << "CHEKC IF THIS WORKS";
 
 	this ->m_Species = ind.m_Species;
 	this -> m_X_coordinate = ind.m_X_coordinate;
@@ -61,7 +64,6 @@ Individual::Individual(const Individual &ind)
 	this -> m_CompetitionMarker = ind.m_CompetitionMarker; 
 	this -> m_NeutralMarker = ind.m_NeutralMarker; 
 	this -> m_dispersalDistance = ind.m_dispersalDistance;
-  this -> evolve();
   
   this -> m_envStrength = ind.m_envStrength;
   this -> m_compStrength = ind.m_compStrength;
@@ -78,19 +80,20 @@ Individual::~Individual(){
 void Individual::operator=(const Individual &ind)
 {
 	this ->m_Species = ind.m_Species;
-	this -> m_X_coordinate = 0;
-	this -> m_Y_coordinate = 0;
+	this -> m_X_coordinate = -999;
+	this -> m_Y_coordinate = -999;
 	this -> m_LocalDensity = ind.m_LocalDensity;
 	this -> m_Age = 0;
 //	this -> m_FitnessWeight = ind.m_FitnessWeight;
 //	this -> m_DensityStrength = ind.m_DensityStrength;
 //	this -> m_Weight = ind.m_Weight;
-	this -> m_Variance = ind.m_Variance;
 
+	this -> m_Variance = ind.m_Variance;
+  
+  this -> m_Mean = ind.m_Mean;
   this -> m_CompetitionMarker = ind.m_CompetitionMarker; 
 	this -> m_NeutralMarker = ind.m_NeutralMarker; 
 	this -> m_dispersalDistance = ind.m_dispersalDistance;
-  this -> evolve();
 
 	this -> m_dispersalDistance = ind.m_dispersalDistance;
   
@@ -161,37 +164,38 @@ void Individual::operator=(const Individual &ind)
 
 	void Individual::evolve()
 	{
-			double width = 0.025;
+    
+			double width = 0.05;
       
 			double upperBound = 1.0;
 			double lowerBound = 0.0;
       
-      double weightSpecies = 0.15;
+      double weightSpecies = 0.0;
       
       // Environment
 
-			double randomTrait = m_RandomGenerator.randomDouble(-width, width);
+      std::cout << m_X_coordinate << m_Y_coordinate << m_Mean << "mean" << m_Species->m_Mean << " ... ";
+    
       
-      m_Mean = (1.0 - weightSpecies) * m_Mean +  weightSpecies * m_Species->m_Mean + randomTrait;
+      m_Mean = (1.0 - weightSpecies) * m_Mean +  weightSpecies * m_Species->m_Mean + m_RandomGenerator.randomDouble(-width, width);
+      std::cout << m_Mean;
       if(m_Mean > upperBound) m_Mean = upperBound - (m_Mean - upperBound);
 		  else if(m_Mean < lowerBound) m_Mean = lowerBound + std::abs(m_Mean);
+      std::cout << m_Mean << "\n";
       
       // Competition
       
-      randomTrait = m_RandomGenerator.randomDouble(-width, width);
-      
-      m_CompetitionMarker = (1.0 - weightSpecies) * m_CompetitionMarker +  weightSpecies * m_Species->m_CompetitionMean + randomTrait;
+      m_CompetitionMarker = (1.0 - weightSpecies) * m_CompetitionMarker +  weightSpecies * m_Species->m_CompetitionMean + m_RandomGenerator.randomDouble(-width, width);
 		  if(m_CompetitionMarker > upperBound) m_CompetitionMarker = upperBound - (m_CompetitionMarker - upperBound);
 		  else if(m_CompetitionMarker < lowerBound) m_CompetitionMarker = lowerBound + std::abs(m_CompetitionMarker);
       
       //Neutral
-      
-      randomTrait = m_RandomGenerator.randomDouble(- width, width);
         
-      m_NeutralMarker = (1.0 - weightSpecies) * m_NeutralMarker +  weightSpecies * m_Species->m_NeutralMean + randomTrait;
+      m_NeutralMarker = (1.0 - weightSpecies) * m_NeutralMarker +  weightSpecies * m_Species->m_NeutralMean + m_RandomGenerator.randomDouble(-width, width);
 		  if(m_NeutralMarker > upperBound) m_NeutralMarker = upperBound - (m_NeutralMarker - upperBound);
 		  else if(m_NeutralMarker < lowerBound) m_NeutralMarker = lowerBound + std::abs(m_NeutralMarker);
-
+      
+      reportBirth();      
 	}
   
   
@@ -208,26 +212,20 @@ void Individual::operator=(const Individual &ind)
 			double lowerBound = 0.0;
       
       // Environment
-
-			double randomTrait = m_RandomGenerator.randomDouble(-width, width);
       
-      m_Mean =  m_Mean +  randomTrait;
+      //m_Mean +=  m_RandomGenerator.randomDouble(-width, width);
       if(m_Mean > upperBound) m_Mean = upperBound - (m_Mean - upperBound);
 		  else if(m_Mean < lowerBound) m_Mean = lowerBound + std::abs(m_Mean);
       
       // Competition
       
-      randomTrait = m_RandomGenerator.randomDouble(-width, width);
-      
-      m_CompetitionMarker = m_CompetitionMarker + randomTrait;
+      //m_CompetitionMarker += m_RandomGenerator.randomDouble(-width, width);
 		  if(m_CompetitionMarker > upperBound) m_CompetitionMarker = upperBound - (m_CompetitionMarker - upperBound);
 		  else if(m_CompetitionMarker < lowerBound) m_CompetitionMarker = lowerBound + std::abs(m_CompetitionMarker);
       
       //Neutral
-      
-      randomTrait = m_RandomGenerator.randomDouble(- width, width);
-        
-      m_NeutralMarker = m_NeutralMarker + randomTrait;
+              
+      //m_NeutralMarker += m_RandomGenerator.randomDouble(-width, width);
 		  if(m_NeutralMarker > upperBound) m_NeutralMarker = upperBound - (m_NeutralMarker - upperBound);
 		  else if(m_NeutralMarker < lowerBound) m_NeutralMarker = lowerBound + std::abs(m_NeutralMarker);
       
@@ -246,25 +244,11 @@ void Individual::operator=(const Individual &ind)
   // TODO move this in the species class
    // TODO move this in the species class
   void Individual::reportDeath(int generation){
-    
-      if(m_Species->m_Count-1 < 1)
-      {
-         m_Species->m_Date_of_Extinction = generation;
-         m_Species->m_Count -= 1;
-      }
-      else
-      {
-         m_Species->m_Count -=1;
-         m_Species->decMean(m_Mean, m_CompetitionMarker, m_NeutralMarker);
-         m_Species->updateMean();
-      }
-    
+      m_Species->removeIndividual(m_Mean, m_CompetitionMarker, m_NeutralMarker, generation);
   }
   
   void Individual::reportBirth(){
-      m_Species->m_Count += 1;
-      m_Species->sumMean(m_Mean, m_CompetitionMarker, m_NeutralMarker);
-      m_Species->updateMean();
+      m_Species->addIndividual(m_Mean, m_CompetitionMarker, m_NeutralMarker);
   } 
 
 

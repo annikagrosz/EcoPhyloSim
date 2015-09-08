@@ -114,11 +114,8 @@ double envStrength, double compStrength)
          this ->m_Individuals[cols][rows].m_Species = spec;
          this ->m_Individuals[cols][rows].m_X_coordinate = cols;
          this->m_Individuals[cols][rows].m_Y_coordinate =rows;
-         this->m_Individuals[cols][rows].m_Species->m_Count += 1;
-         this->m_Individuals[cols][rows].m_Species->sumMean(m_Individuals[cols][rows].m_Mean, m_Individuals[cols][rows].m_CompetitionMarker, m_Individuals[cols][rows].m_NeutralMarker);
-         this->m_Individuals[cols][rows].m_Species->updateMean();
-         this->m_Individuals[cols][rows].m_dispersalDistance = m_Cutoff / 2.0;
-         
+         this->m_Individuals[cols][rows].reportBirth();
+         this->m_Individuals[cols][rows].m_dispersalDistance = m_Cutoff / 2.0;       
          this->m_Individuals[cols][rows].m_envStrength = m_envStrength;
          this->m_Individuals[cols][rows].m_compStrength = m_compStrength;      
          
@@ -247,20 +244,20 @@ void GlobalEnvironment::reproduce(unsigned int generation)
       for(unsigned int event = 0; event < m_LandscapeSize; event++)
       {
 
-         x_coordinate =  m_RandomGenerator.randomInt(0,m_Xdimensions-1); // rand() % xdimensions;
-         y_coordinate = m_RandomGenerator.randomInt(0,m_Ydimensions-1); // rand() % ydimensions;
+         x_coordinate =  m_RandomGenerator.randomInt(0,m_Xdimensions-1); 
+         y_coordinate = m_RandomGenerator.randomInt(0,m_Ydimensions-1); 
 
-         x_parent = m_RandomGenerator.randomInt(0,m_Xdimensions-1); //rand() % xdimensions;
-         y_parent = m_RandomGenerator.randomInt(0,m_Ydimensions-1); //rand() % ydimensions;
+         x_parent = m_RandomGenerator.randomInt(0,m_Xdimensions-1); 
+         y_parent = m_RandomGenerator.randomInt(0,m_Ydimensions-1); 
+         
          //				std::cout << x_coordinate << "::" << x_parent << "::" << y_coordinate << "::" << y_parent << '\n';
          
          m_Individuals[x_coordinate][y_coordinate].reportDeath(generation);
 
-         m_Individuals[x_coordinate][y_coordinate] = m_Individuals[x_parent][y_parent]; //deep copy !
-         //				individuals[x_coordinate][y_coordinate].x_coordinate = x_coordinate;
-         //				individuals[x_coordinate][y_coordinate].y_coordinate = y_coordinate;
-         
-         m_Individuals[x_coordinate][y_coordinate].reportBirth();
+         m_Individuals[x_coordinate][y_coordinate] = m_Individuals[x_parent][y_parent]; // overloaded operator, deep copy ! // report birth and evolve is automatic
+         m_Individuals[x_coordinate][y_coordinate].m_X_coordinate = x_coordinate;
+         m_Individuals[x_coordinate][y_coordinate].m_Y_coordinate = y_coordinate;
+         m_Individuals[x_coordinate][y_coordinate].evolve();
       }
    }
    
@@ -276,6 +273,7 @@ void GlobalEnvironment::reproduce(unsigned int generation)
      
       int x_parent = 0;
       int y_parent = 0;
+      
       unsigned int numberOfRuns = 0;
       double seedSum = 0.0;
       int new_parent = 0;
@@ -300,9 +298,8 @@ void GlobalEnvironment::reproduce(unsigned int generation)
             count ++;
          }
       }
-     
-      // only if env and dens affect reproduction
-        
+ 
+      // IF FITNESS ACTS ON REPRODUCTION, calculate average fitness for lottery competition
       if(m_reproduction){
         
          #ifdef DEBUG
@@ -310,7 +307,6 @@ void GlobalEnvironment::reproduce(unsigned int generation)
          #endif
         
         array_length = 0;
-        
         for(int kernel_x = 0; kernel_x < m_Xdimensions; kernel_x++)
         {
            for(int kernel_y = 0 ; kernel_y <  m_Ydimensions ; kernel_y++)
@@ -320,18 +316,16 @@ void GlobalEnvironment::reproduce(unsigned int generation)
               array_length ++;
            }
         }
-        //			std::cout << array_length << " : " << kernelsize <<   '\n';
-                
         
+        // TODO this seems inefficient, can just calculate cumweights directly
+                   
         cumWeights[0] = weights[0] ;
-  
         for(unsigned int i =1; i< m_LandscapeSize; i++)
         {
            cumWeights[i] = weights[i] + cumWeights[i-1];
-           //				std::cout << seedSum << " : " << cumWeights[i] << " : " << weights[i] << " : " << i <<  '\n';
-           //				std::cout << cumWeights[i] << '\n';
+
         }
-        //			std::cout << seedSum << " : " << cumWeights[kernelsize-1] << " : " << weights[kernelsize-1]<< " : " << kernelsize-1 <<  '\n';
+        
       }
       
       //if(m_mortality) numberOfRuns = m_LandscapeSize*2;
@@ -374,11 +368,11 @@ void GlobalEnvironment::reproduce(unsigned int generation)
          x_parent = parents[new_parent].first;
          y_parent = parents[new_parent].second;
 
-         m_Individuals[x_coordinate][y_coordinate] = m_Individuals[x_parent][y_parent]; //deep copy !
+         m_Individuals[x_coordinate][y_coordinate] = m_Individuals[x_parent][y_parent];  // overloaded operator, deep copy ! // report birth and evolve is automatic
          m_Individuals[x_coordinate][y_coordinate].m_X_coordinate = x_coordinate;
          m_Individuals[x_coordinate][y_coordinate].m_Y_coordinate = y_coordinate;
          
-         m_Individuals[x_coordinate][y_coordinate].reportBirth();
+         m_Individuals[x_coordinate][y_coordinate].evolve();
          
          parents[x_coordinate*m_Ydimensions + y_coordinate].first = x_coordinate;
          parents[x_coordinate*m_Ydimensions + y_coordinate].second = y_coordinate;
@@ -440,118 +434,120 @@ void GlobalEnvironment::reproduce(unsigned int generation)
         // only if env and dens affect reproduction
         if(m_reproduction){
           
-        #ifdef DEBUG
-        std::cout<<"In global non-neutral, reproduction fitness \n";
-        #endif
-
-           if(!(m_DD))
-           {
-              double newWeight = 0.0;
-              
-              double envFitnessParent = 1.2 * exp(-0.5 * pow((m_Environment[x_coordinate * m_Ydimensions + y_coordinate].first - m_Individuals[x_coordinate][y_coordinate].m_Mean) / m_Individuals[x_coordinate][y_coordinate].m_Variance, 2.0));
-              //						double envFitnessPropagule = (1.0 / (individuals[kernel_x][kernel_y].variance * sqrt(2.0 * 3.147))) * exp(-0.5 * pow((environment[x_coordinate][y_coordinate].first - individuals[kernel_x][kernel_y].mean) / individuals[kernel_x][kernel_y].variance, 2.0)); // environmental influence !
-              newWeight = envFitnessParent  + (DBL_MIN*100.0) ; //weights plus base value
-  
-              //						double envFitnessParent = (1.0 / (individuals[x_coordinate][y_coordinate].variance * sqrt(2.0 * 3.147))) * exp(-0.5 * pow((environment[x_coordinate][y_coordinate].first - individuals[x_coordinate][y_coordinate].mean) / individuals[x_coordinate][y_coordinate].variance, 2.0)); // environmental influence !
-              //						double envFitnessPropagule = (1.0 / (individuals[x_coordinate][y_coordinate].variance * sqrt(2.0 * 3.147))) * exp(-0.5 * pow((environment[x_coordinate][y_coordinate].first - individuals[x_coordinate][y_coordinate].mean) / individuals[x_coordinate][y_coordinate].variance, 2.0)); // environmental influence !
-              //						newWeight = envFitnessParent * envFitnessPropagule + (DBL_MIN*100.0);
-  
-              unsigned int vecPos = x_coordinate*m_Ydimensions + y_coordinate;
-              double oldWeight = weights[vecPos];
-              weights[vecPos] = newWeight;
-  
-              double diff = newWeight - oldWeight; // recalculate accumulated weights
-              seedSum += diff;
-              
-              // TODO make debug around this 
-              //if (oldWeight < 0.)std::cout << oldWeight << '\n';
-              //if (newWeight < 0.)std::cout << newWeight << '\n';
-  
-              if(vecPos == 0)
-              {
-                 cumWeights[0] = weights[0];
-              }
-              else
-              {
-                 cumWeights[vecPos] = cumWeights[vecPos -1] + newWeight;
-              }
-  
-              for (unsigned int i = vecPos+1; i < m_LandscapeSize; i++)
-              {
-                 cumWeights[i] += diff;
-                 //						std::cout << cumWeights[i] << '\n';
-              }
-              cumWeights[0] = weights[0] ;
-              for(unsigned int i =1; i< m_LandscapeSize; i++)
-              {
-                 cumWeights[i] = weights[i] + cumWeights[i-1];
-              }
-           }
-  
-           else if(m_DD)
-           {
-              int  densityKernel_x, densityKernel_y, focus_x, focus_y;
-              double relatedness = 0.0;
-              double cells = double((m_DensityCutoff * 2 +1) * (m_DensityCutoff * 2 +1) - 1) ;
-  
-              for(int relativeX= - m_DensityCutoff; relativeX <= m_DensityCutoff; relativeX++)
-              {
-                 for(int relativeY = - m_DensityCutoff ; relativeY <=  m_DensityCutoff ; relativeY++)
-                 {
-                    // get focus cell
-                    focus_x = ((x_coordinate + relativeX + m_Xdimensions) % m_Xdimensions);
-                    focus_y = ((y_coordinate + relativeY + m_Ydimensions) % m_Ydimensions);
-  
-                    for(int relativeX2= - m_DensityCutoff; relativeX2 <= m_DensityCutoff; relativeX2++)
-                    {
-                       for(int relativeY2 = - m_DensityCutoff ; relativeY2 <=  m_DensityCutoff ; relativeY2++)
-                       {
-                          densityKernel_x = ((focus_x + relativeX2 + m_Xdimensions) % m_Xdimensions);
-                          densityKernel_y = ((focus_y + relativeY2 + m_Ydimensions) % m_Ydimensions);
-  
-                          if (!(densityKernel_x == focus_x && densityKernel_y == focus_y))
-                          {
-                             relatedness += std::abs(m_Individuals[focus_x][focus_y].m_CompetitionMarker - m_Individuals[densityKernel_x][densityKernel_y].m_CompetitionMarker);
-                          }
-                       }
-                    }
-                    m_Individuals[focus_x][focus_y].m_LocalDensity = relatedness / cells;
-                    //std::cout<<m_Individuals[focus_x][focus_y].m_LocalDensity<<"\n"; // DEBUG
-  
-                    // TODO  THIS IS PROBALY USELESS IF MORTALITY FITNESS 
-                    if(m_Env)
-                    {
-                       double envFitnessParent = 1.2 * exp((-0.5 * (m_Environment[focus_x * m_Ydimensions + focus_y].first - m_Individuals[focus_x][focus_y].m_Mean) / m_Individuals[focus_x][focus_y].m_Variance * (m_Environment[focus_x * m_Ydimensions + focus_y].first - m_Individuals[focus_x][focus_y].m_Mean) / m_Individuals[focus_x][focus_y].m_Variance)); // environmental influence !
-                       //								double envFitnessPropagule = (1.0 / (individuals[focus_x][focus_y].variance * sqrt(2.0 * 3.147))) * exp((-0.5 * (environment[x_coordinate][y_coordinate].first - individuals[focus_x][focus_y].mean) / individuals[focus_x][focus_y].variance * (environment[x_coordinate][y_coordinate].first - individuals[focus_x][focus_y].mean) / individuals[focus_x][focus_y].variance)); // environmental influence !
-  
-                       seedSum -= weights[focus_x*m_Ydimensions + focus_y ];
-                       weights[focus_x*m_Ydimensions + focus_y ] = envFitnessParent  * m_Individuals[focus_x][focus_y].m_LocalDensity + (DBL_MIN*100.0);
-                       seedSum += weights[focus_x*m_Ydimensions + focus_y ];
-                    }
-                    else
-                    {
-                       seedSum -= weights[focus_x*m_Ydimensions + focus_y ];
-                       weights[focus_x*m_Ydimensions + focus_y ] = m_Individuals[focus_x][focus_y].m_LocalDensity + (DBL_MIN*100.0);
-                       seedSum +=  weights[focus_x*m_Ydimensions + focus_y ];
-                    }
-                    // end useless                  
-                 }
-              }
-  
-              unsigned int start =  ((x_coordinate -m_DensityCutoff + m_Xdimensions) % m_Xdimensions) * m_Ydimensions + ((y_coordinate - m_DensityCutoff + m_Ydimensions) % m_Ydimensions) ;
-              unsigned int end = m_LandscapeSize;
-  
-              if(start == 0) cumWeights[0] = weights[0] ;
-              else cumWeights[start] = cumWeights[start-1] + weights[start] ;
-  
-              for(unsigned int kk = start+1; kk < end; kk++)
-              {
-                 cumWeights[kk] = weights[kk] + cumWeights[kk-1];
-                 //						std::cout << seedSum << " : " << cumWeights[kk] << " : " << kk << " : " << array_length-1 <<  '\n';
-              }
-              //					std::cout << seedSum << " : " << cumWeights[array_length-1] << " : " << array_length-1  << " : " << start  << " : " << end <<  '\n';
-           }
-         
+          std::cout<<"REPRODUCTION AT THE MOMENT NOT IMPLEMENTED";
+          
+//        #ifdef DEBUG
+//        std::cout<<"In global non-neutral, reproduction fitness \n";
+//        #endif
+//
+//           if(!(m_DD))
+//           {
+//              double newWeight = 0.0;
+//              
+//              double envFitnessParent = 1.2 * exp(-0.5 * pow((m_Environment[x_coordinate * m_Ydimensions + y_coordinate].first - m_Individuals[x_coordinate][y_coordinate].m_Mean) / m_Individuals[x_coordinate][y_coordinate].m_Variance, 2.0));
+//              //						double envFitnessPropagule = (1.0 / (individuals[kernel_x][kernel_y].variance * sqrt(2.0 * 3.147))) * exp(-0.5 * pow((environment[x_coordinate][y_coordinate].first - individuals[kernel_x][kernel_y].mean) / individuals[kernel_x][kernel_y].variance, 2.0)); // environmental influence !
+//              newWeight = envFitnessParent  + (DBL_MIN*100.0) ; //weights plus base value
+//  
+//              //						double envFitnessParent = (1.0 / (individuals[x_coordinate][y_coordinate].variance * sqrt(2.0 * 3.147))) * exp(-0.5 * pow((environment[x_coordinate][y_coordinate].first - individuals[x_coordinate][y_coordinate].mean) / individuals[x_coordinate][y_coordinate].variance, 2.0)); // environmental influence !
+//              //						double envFitnessPropagule = (1.0 / (individuals[x_coordinate][y_coordinate].variance * sqrt(2.0 * 3.147))) * exp(-0.5 * pow((environment[x_coordinate][y_coordinate].first - individuals[x_coordinate][y_coordinate].mean) / individuals[x_coordinate][y_coordinate].variance, 2.0)); // environmental influence !
+//              //						newWeight = envFitnessParent * envFitnessPropagule + (DBL_MIN*100.0);
+//  
+//              unsigned int vecPos = x_coordinate*m_Ydimensions + y_coordinate;
+//              double oldWeight = weights[vecPos];
+//              weights[vecPos] = newWeight;
+//  
+//              double diff = newWeight - oldWeight; // recalculate accumulated weights
+//              seedSum += diff;
+//              
+//              // TODO make debug around this 
+//              //if (oldWeight < 0.)std::cout << oldWeight << '\n';
+//              //if (newWeight < 0.)std::cout << newWeight << '\n';
+//  
+//              if(vecPos == 0)
+//              {
+//                 cumWeights[0] = weights[0];
+//              }
+//              else
+//              {
+//                 cumWeights[vecPos] = cumWeights[vecPos -1] + newWeight;
+//              }
+//  
+//              for (unsigned int i = vecPos+1; i < m_LandscapeSize; i++)
+//              {
+//                 cumWeights[i] += diff;
+//                 //						std::cout << cumWeights[i] << '\n';
+//              }
+//              cumWeights[0] = weights[0] ;
+//              for(unsigned int i =1; i< m_LandscapeSize; i++)
+//              {
+//                 cumWeights[i] = weights[i] + cumWeights[i-1];
+//              }
+//           }
+//  
+//           else if(m_DD)
+//           {
+//              int  densityKernel_x, densityKernel_y, focus_x, focus_y;
+//              double relatedness = 0.0;
+//              double cells = double((m_DensityCutoff * 2 +1) * (m_DensityCutoff * 2 +1) - 1) ;
+//  
+//              for(int relativeX= - m_DensityCutoff; relativeX <= m_DensityCutoff; relativeX++)
+//              {
+//                 for(int relativeY = - m_DensityCutoff ; relativeY <=  m_DensityCutoff ; relativeY++)
+//                 {
+//                    // get focus cell
+//                    focus_x = ((x_coordinate + relativeX + m_Xdimensions) % m_Xdimensions);
+//                    focus_y = ((y_coordinate + relativeY + m_Ydimensions) % m_Ydimensions);
+//  
+//                    for(int relativeX2= - m_DensityCutoff; relativeX2 <= m_DensityCutoff; relativeX2++)
+//                    {
+//                       for(int relativeY2 = - m_DensityCutoff ; relativeY2 <=  m_DensityCutoff ; relativeY2++)
+//                       {
+//                          densityKernel_x = ((focus_x + relativeX2 + m_Xdimensions) % m_Xdimensions);
+//                          densityKernel_y = ((focus_y + relativeY2 + m_Ydimensions) % m_Ydimensions);
+//  
+//                          if (!(densityKernel_x == focus_x && densityKernel_y == focus_y))
+//                          {
+//                             relatedness += std::abs(m_Individuals[focus_x][focus_y].m_CompetitionMarker - m_Individuals[densityKernel_x][densityKernel_y].m_CompetitionMarker);
+//                          }
+//                       }
+//                    }
+//                    m_Individuals[focus_x][focus_y].m_LocalDensity = relatedness / cells;
+//                    //std::cout<<m_Individuals[focus_x][focus_y].m_LocalDensity<<"\n"; // DEBUG
+//  
+//                    // TODO  THIS IS PROBALY USELESS IF MORTALITY FITNESS 
+//                    if(m_Env)
+//                    {
+//                       double envFitnessParent = 1.2 * exp((-0.5 * (m_Environment[focus_x * m_Ydimensions + focus_y].first - m_Individuals[focus_x][focus_y].m_Mean) / m_Individuals[focus_x][focus_y].m_Variance * (m_Environment[focus_x * m_Ydimensions + focus_y].first - m_Individuals[focus_x][focus_y].m_Mean) / m_Individuals[focus_x][focus_y].m_Variance)); // environmental influence !
+//                       //								double envFitnessPropagule = (1.0 / (individuals[focus_x][focus_y].variance * sqrt(2.0 * 3.147))) * exp((-0.5 * (environment[x_coordinate][y_coordinate].first - individuals[focus_x][focus_y].mean) / individuals[focus_x][focus_y].variance * (environment[x_coordinate][y_coordinate].first - individuals[focus_x][focus_y].mean) / individuals[focus_x][focus_y].variance)); // environmental influence !
+//  
+//                       seedSum -= weights[focus_x*m_Ydimensions + focus_y ];
+//                       weights[focus_x*m_Ydimensions + focus_y ] = envFitnessParent  * m_Individuals[focus_x][focus_y].m_LocalDensity + (DBL_MIN*100.0);
+//                       seedSum += weights[focus_x*m_Ydimensions + focus_y ];
+//                    }
+//                    else
+//                    {
+//                       seedSum -= weights[focus_x*m_Ydimensions + focus_y ];
+//                       weights[focus_x*m_Ydimensions + focus_y ] = m_Individuals[focus_x][focus_y].m_LocalDensity + (DBL_MIN*100.0);
+//                       seedSum +=  weights[focus_x*m_Ydimensions + focus_y ];
+//                    }
+//                    // end useless                  
+//                 }
+//              }
+//  
+//              unsigned int start =  ((x_coordinate -m_DensityCutoff + m_Xdimensions) % m_Xdimensions) * m_Ydimensions + ((y_coordinate - m_DensityCutoff + m_Ydimensions) % m_Ydimensions) ;
+//              unsigned int end = m_LandscapeSize;
+//  
+//              if(start == 0) cumWeights[0] = weights[0] ;
+//              else cumWeights[start] = cumWeights[start-1] + weights[start] ;
+//  
+//              for(unsigned int kk = start+1; kk < end; kk++)
+//              {
+//                 cumWeights[kk] = weights[kk] + cumWeights[kk-1];
+//                 //						std::cout << seedSum << " : " << cumWeights[kk] << " : " << kk << " : " << array_length-1 <<  '\n';
+//              }
+//              //					std::cout << seedSum << " : " << cumWeights[array_length-1] << " : " << array_length-1  << " : " << start  << " : " << end <<  '\n';
+//           }
+//         
         }
         // end reproduction calculations
 
@@ -668,11 +664,11 @@ void LocalEnvironment::reproduce(unsigned int generation)
       x_parent = parents[new_parent].first;
       y_parent = parents[new_parent].second;
 
-      m_Individuals[x_coordinate][y_coordinate] = m_Individuals[x_parent][y_parent]; //deep copy !
+      m_Individuals[x_coordinate][y_coordinate] = m_Individuals[x_parent][y_parent];  // overloaded operator, deep copy ! // report birth and evolve is automatic
       m_Individuals[x_coordinate][y_coordinate].m_X_coordinate = x_coordinate;
       m_Individuals[x_coordinate][y_coordinate].m_Y_coordinate = y_coordinate;
       
-      m_Individuals[x_coordinate][y_coordinate].reportBirth();
+      m_Individuals[x_coordinate][y_coordinate].evolve();
  
       // UPDATE RELATEDNESS
 

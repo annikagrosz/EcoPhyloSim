@@ -19,7 +19,6 @@
 class Individual {
  private:
 	double kernel(double distance);
-	void evolve();
 
  public:
 	Individual();
@@ -54,7 +53,11 @@ class Individual {
 	RandomGen m_RandomGenerator;
   
   void reportDeath(int generation);
-  void reportBirth();
+  
+    void reportBirth(); // should make this private later, but at the moment used in init
+
+  void evolve();
+
   void evolveDuringSpeciation();
 
 	double getSeedsTo(int rel_x, int rel_y, int dispersal_type, double temp, bool env, bool dd);
