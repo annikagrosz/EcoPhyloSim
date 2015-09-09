@@ -65,6 +65,8 @@ class Individual {
   double getFitness(double temp, bool env, bool dd);
 
 	double dispersal(int dispersal_type, double distance);  // 1 for kernel, 2 for nearest neighbor, 3 for global
+
+  void printInfo();
 };
 
 #endif /* INDIVIDUAL_H_ */

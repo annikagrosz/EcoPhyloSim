@@ -50,6 +50,7 @@ class Species {
 	void removeIndividual(double env, double comp, double neutral, int generation);
 	unsigned long long get_species_count();
 	unsigned long long get_species_ID();
+  void printInfo();
 };
 
 

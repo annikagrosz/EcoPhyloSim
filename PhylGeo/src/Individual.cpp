@@ -165,23 +165,20 @@ void Individual::operator=(const Individual &ind)
 	void Individual::evolve()
 	{
     
-			double width = 0.05;
+      //if (m_X_coordinate == 0 && m_Y_coordinate == 0) printInfo();
+    
+			double width = 0.003;
       
 			double upperBound = 1.0;
 			double lowerBound = 0.0;
       
-      double weightSpecies = 0.0;
+      double weightSpecies = 0.1;
       
       // Environment
-
-      std::cout << m_X_coordinate << m_Y_coordinate << m_Mean << "mean" << m_Species->m_Mean << " ... ";
     
-      
       m_Mean = (1.0 - weightSpecies) * m_Mean +  weightSpecies * m_Species->m_Mean + m_RandomGenerator.randomDouble(-width, width);
-      std::cout << m_Mean;
       if(m_Mean > upperBound) m_Mean = upperBound - (m_Mean - upperBound);
 		  else if(m_Mean < lowerBound) m_Mean = lowerBound + std::abs(m_Mean);
-      std::cout << m_Mean << "\n";
       
       // Competition
       
@@ -206,7 +203,7 @@ void Individual::operator=(const Individual &ind)
     
       // EVOLUTION DURING SPECIATION
     
-			double width = 0.05;
+			double width = 0.01;
       
 			double upperBound = 1.0;
 			double lowerBound = 0.0;
@@ -250,5 +247,8 @@ void Individual::operator=(const Individual &ind)
   void Individual::reportBirth(){
       m_Species->addIndividual(m_Mean, m_CompetitionMarker, m_NeutralMarker);
   } 
-
+  
+  void Individual::printInfo(){
+    std::cout << "Location: " << m_X_coordinate << m_Y_coordinate << " EnvTrait:" << m_Mean << " Spec " << m_Species->m_ID << " mean" << m_Species->m_Mean << " ... \n";
+  }
 
