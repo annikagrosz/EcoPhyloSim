@@ -24,4 +24,4 @@ for (i in 1:length(scenarios)){pars[[i]] = createCompletePar(x = 256,y = 256, ru
 
 system.time(simulationOut <- fullModBatch(pars, parallel = T)) 
 
-save(simulationOut, pars, file = "results100x100.Rdata" )
+save(simulationOut, pars, file = "results256x256.Rdata" )
