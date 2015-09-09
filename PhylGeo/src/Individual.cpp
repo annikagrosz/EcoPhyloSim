@@ -151,7 +151,7 @@ void Individual::operator=(const Individual &ind)
   double Individual::getFitness(double temp, bool env, bool dd)
 	{
     double out = (DBL_MIN*100.0); 
-		if(env) out += m_envStrength * 1.2 * exp(-0.5 * pow((temp - m_Mean) / m_Variance, 2.0)) + 1-m_envStrength; // environmental niche
+		if(env) out += m_envStrength * exp(-0.5 * pow((temp - m_Mean) / m_Variance, 2.0)) + 1-m_envStrength; // environmental niche
     if(dd) out += m_compStrength * m_LocalDensity + 1- m_compStrength + (DBL_MIN*100.0);
     return out;
 	}
@@ -167,7 +167,7 @@ void Individual::operator=(const Individual &ind)
     
       //if (m_X_coordinate == 0 && m_Y_coordinate == 0) printInfo();
     
-			double width = 0.003;
+			double width = 0.01;
       
 			double upperBound = 1.0;
 			double lowerBound = 0.0;
@@ -202,29 +202,35 @@ void Individual::operator=(const Individual &ind)
       m_Age = 0;
     
       // EVOLUTION DURING SPECIATION
-    
-			double width = 0.01;
       
-			double upperBound = 1.0;
-			double lowerBound = 0.0;
+      if (false) {
       
-      // Environment
+  			double width = 0.01;
+        
+  			double upperBound = 1.0;
+  			double lowerBound = 0.0;
+        
+        // Environment
+        
+        m_Mean +=  m_RandomGenerator.randomDouble(-width, width);
+        if(m_Mean > upperBound) m_Mean = upperBound - (m_Mean - upperBound);
+  		  else if(m_Mean < lowerBound) m_Mean = lowerBound + std::abs(m_Mean);
+        
+        // Competition
+        
+        m_CompetitionMarker += m_RandomGenerator.randomDouble(-width, width);
+  		  if(m_CompetitionMarker > upperBound) m_CompetitionMarker = upperBound - (m_CompetitionMarker - upperBound);
+  		  else if(m_CompetitionMarker < lowerBound) m_CompetitionMarker = lowerBound + std::abs(m_CompetitionMarker);
+        
+        //Neutral
+                
+        m_NeutralMarker += m_RandomGenerator.randomDouble(-width, width);
+  		  if(m_NeutralMarker > upperBound) m_NeutralMarker = upperBound - (m_NeutralMarker - upperBound);
+  		  else if(m_NeutralMarker < lowerBound) m_NeutralMarker = lowerBound + std::abs(m_NeutralMarker);
+        
+      }
       
-      m_Mean +=  m_RandomGenerator.randomDouble(-width, width);
-      if(m_Mean > upperBound) m_Mean = upperBound - (m_Mean - upperBound);
-		  else if(m_Mean < lowerBound) m_Mean = lowerBound + std::abs(m_Mean);
-      
-      // Competition
-      
-      m_CompetitionMarker += m_RandomGenerator.randomDouble(-width, width);
-		  if(m_CompetitionMarker > upperBound) m_CompetitionMarker = upperBound - (m_CompetitionMarker - upperBound);
-		  else if(m_CompetitionMarker < lowerBound) m_CompetitionMarker = lowerBound + std::abs(m_CompetitionMarker);
-      
-      //Neutral
-              
-      m_NeutralMarker += m_RandomGenerator.randomDouble(-width, width);
-		  if(m_NeutralMarker > upperBound) m_NeutralMarker = upperBound - (m_NeutralMarker - upperBound);
-		  else if(m_NeutralMarker < lowerBound) m_NeutralMarker = lowerBound + std::abs(m_NeutralMarker);
+      // END EVOLUTION
       
       m_Species->m_Mean = m_Mean;
       m_Species->m_CompetitionMean = m_CompetitionMarker;
