@@ -62,7 +62,7 @@ Rcpp::List callModel(int x, int y, int dispersal, IntegerVector runs, double spe
         for (int i = 0; i < x; i++) {
            for (int j = 0; j < y; j++) {
               specOut[indCounter] = phylSimModel.m_Global->m_Individuals[i][j].m_Species->m_ID;
-              traitOut[indCounter] = phylSimModel.m_Global->m_Individuals[i][j].m_Species->m_Mean;  
+              traitOut[indCounter] = phylSimModel.m_Global->m_Individuals[i][j].m_Mean;  
               envOut[indCounter] = phylSimModel.m_Global->m_Environment[i * y + j].first;
               neutralOut[indCounter] = phylSimModel.m_Global->m_Individuals[i][j].m_NeutralMarker;            
               compOut[indCounter] = phylSimModel.m_Global->m_Individuals[i][j].m_CompetitionMarker;
@@ -80,7 +80,7 @@ Rcpp::List callModel(int x, int y, int dispersal, IntegerVector runs, double spe
         for (int i = 0; i < x; i++) {
            for (int j = 0; j < y; j++) {
               specOut[indCounter] = phylSimModel.m_Local->m_Individuals[i][j].m_Species->m_ID;
-              traitOut[indCounter] = phylSimModel.m_Local->m_Individuals[i][j].m_Species->m_Mean;
+              traitOut[indCounter] = phylSimModel.m_Local->m_Individuals[i][j].m_Mean;
               envOut[indCounter] = phylSimModel.m_Local->m_Environment[i * y + j].first;
               neutralOut[indCounter] = phylSimModel.m_Local->m_Individuals[i][j].m_NeutralMarker;
               compOut[indCounter] = phylSimModel.m_Local->m_Individuals[i][j].m_CompetitionMarker;

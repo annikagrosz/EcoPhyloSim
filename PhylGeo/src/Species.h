@@ -24,6 +24,7 @@ class Species {
 	double m_NeutralSum;
 	double m_CompetitionSum;
 	double m_Variance;
+  void updateMean();
 
  public:
 	unsigned long long m_Count;
@@ -45,11 +46,11 @@ class Species {
 	Species(const Species & spec);
 	void operator=(const Species & spec);
 	~Species();
-	void sumMean(double env, double comp, double neutral);
-	void decMean(double env, double comp, double neutral);
-	void updateMean();
+	void addIndividual(double env, double comp, double neutral);
+	void removeIndividual(double env, double comp, double neutral, int generation);
 	unsigned long long get_species_count();
 	unsigned long long get_species_ID();
+  void printInfo();
 };
 
 

@@ -12,14 +12,15 @@
 #include <float.h>
 #include <cmath>
 #include <stdexcept>
+#include <iostream>
 
 
 
 Individual::Individual()
 {
   this ->m_Species = new Species();
-	this ->m_X_coordinate = 0;
-	this ->m_Y_coordinate = 0;
+	this ->m_X_coordinate = -999;
+	this ->m_Y_coordinate = -999;
   
 	this ->m_LocalDensity = 0.0; // density experienced around itself, will be updated automatically 
 	this ->m_Age = 0;
@@ -31,7 +32,7 @@ Individual::Individual()
   // END OBSOLETE
   
 	this -> m_Variance = 0.03659906;
-	this -> m_Mean = 1.0;
+	this -> m_Mean = 0.5;
 	this -> m_CompetitionMarker = 0.5;
 	this -> m_NeutralMarker = 0.5;
   
@@ -46,6 +47,8 @@ Individual::Individual()
 // better change the overload below to deep copy
 Individual::Individual(const Individual &ind)
 {
+  
+  std::cout << "CHEKC IF THIS WORKS";
 
 	this ->m_Species = ind.m_Species;
 	this -> m_X_coordinate = ind.m_X_coordinate;
@@ -56,9 +59,10 @@ Individual::Individual(const Individual &ind)
 //	this -> m_DensityStrength = ind.m_DensityStrength;
 //	this -> m_Weight = ind.m_Weight;
 	this -> m_Variance = ind.m_Variance;
-	this -> m_Mean = evolution(ind.m_Mean, ind.m_Species->m_Mean, 0.3, 0.05);
-	this -> m_CompetitionMarker = evolution(ind.m_CompetitionMarker, ind.m_Species->m_CompetitionMean, 0.3, 0.05);
-	this -> m_NeutralMarker = evolution(ind.m_NeutralMarker, ind.m_Species->m_NeutralMean, 0.3, 0.05);
+	this -> m_Mean = ind.m_Mean;
+  
+	this -> m_CompetitionMarker = ind.m_CompetitionMarker; 
+	this -> m_NeutralMarker = ind.m_NeutralMarker; 
 	this -> m_dispersalDistance = ind.m_dispersalDistance;
   
   this -> m_envStrength = ind.m_envStrength;
@@ -76,17 +80,21 @@ Individual::~Individual(){
 void Individual::operator=(const Individual &ind)
 {
 	this ->m_Species = ind.m_Species;
-	this -> m_X_coordinate = 0;
-	this -> m_Y_coordinate = 0;
+	this -> m_X_coordinate = -999;
+	this -> m_Y_coordinate = -999;
 	this -> m_LocalDensity = ind.m_LocalDensity;
 	this -> m_Age = 0;
 //	this -> m_FitnessWeight = ind.m_FitnessWeight;
 //	this -> m_DensityStrength = ind.m_DensityStrength;
 //	this -> m_Weight = ind.m_Weight;
+
 	this -> m_Variance = ind.m_Variance;
-	this -> m_Mean = evolution(ind.m_Mean, ind.m_Species->m_Mean, 0.3, 0.05);
-	this -> m_CompetitionMarker = evolution(ind.m_CompetitionMarker, ind.m_Species->m_CompetitionMean, 0.3, 0.05);
-	this -> m_NeutralMarker = evolution(ind.m_NeutralMarker, ind.m_Species->m_NeutralMean, 0.3, 0.05);
+  
+  this -> m_Mean = ind.m_Mean;
+  this -> m_CompetitionMarker = ind.m_CompetitionMarker; 
+	this -> m_NeutralMarker = ind.m_NeutralMarker; 
+	this -> m_dispersalDistance = ind.m_dispersalDistance;
+
 	this -> m_dispersalDistance = ind.m_dispersalDistance;
   
   this -> m_envStrength = ind.m_envStrength;
@@ -125,12 +133,11 @@ void Individual::operator=(const Individual &ind)
     double dispersal_weight = 0.0;
 		dispersal_weight = dispersal(dispersal_type, euclidian_distance(rel_x, rel_y)); // Kernel or NN
     
-		if(env && dd) {
-      double fitness_weight = 0.0;
-      fitness_weight = getFitness(temp, env, dd);
-      return(dispersal_weight * fitness_weight + (DBL_MIN*100.0));
+		if(env || dd) {
+      double fitness_weight = getFitness(temp, env, dd);
+      return(dispersal_weight * fitness_weight);
 		}else{
-      return(dispersal_weight + (DBL_MIN*100.0));
+      return(dispersal_weight);
 		}
 	}
   
@@ -143,17 +150,10 @@ void Individual::operator=(const Individual &ind)
    */
   double Individual::getFitness(double temp, bool env, bool dd)
 	{
-		if(env)
-		{	
-      double envFitness = (m_envStrength * 1.0 * exp(-0.5 * pow((temp - m_Mean) / m_Variance, 2.0)) + 1-m_envStrength); // environmental niche
-			
-      if(dd)	return envFitness * (m_compStrength * m_LocalDensity + 1- m_compStrength) + (DBL_MIN*100.0); //weights plus base value
-			else return	envFitness + (DBL_MIN*100.0); //weights plus base value
-		}
-		else {
-			return (m_compStrength * m_LocalDensity + 1- m_compStrength) + (DBL_MIN*100.0); //weights plus base value
-		}
-		throw std::invalid_argument( "neither dd nor env true" );
+    double out = (DBL_MIN*100.0); 
+		if(env) out += m_envStrength * 1.2 * exp(-0.5 * pow((temp - m_Mean) / m_Variance, 2.0)) + 1-m_envStrength; // environmental niche
+    if(dd) out += m_compStrength * m_LocalDensity + 1- m_compStrength + (DBL_MIN*100.0);
+    return out;
 	}
 
 
@@ -162,37 +162,93 @@ void Individual::operator=(const Individual &ind)
 		return sqrt((x*x) + (y*y));
 	}
 
-	double Individual::evolution(double ancestor, double species, double weightSpecies, double weightRandom)
+	void Individual::evolve()
 	{
-			double max = 0.5;
-			double min = -0.5;
+    
+      //if (m_X_coordinate == 0 && m_Y_coordinate == 0) printInfo();
+    
+			double width = 0.003;
+      
 			double upperBound = 1.0;
 			double lowerBound = 0.0;
+      
+      double weightSpecies = 0.2;
+      
+      // Environment
+    
+      m_Mean = (1.0 - weightSpecies) * m_Mean +  weightSpecies * m_Species->m_Mean + m_RandomGenerator.randomDouble(-width, width);
+      if(m_Mean > upperBound) m_Mean = upperBound - (m_Mean - upperBound);
+		  else if(m_Mean < lowerBound) m_Mean = lowerBound + std::abs(m_Mean);
+      
+      // Competition
+      
+      m_CompetitionMarker = (1.0 - weightSpecies) * m_CompetitionMarker +  weightSpecies * m_Species->m_CompetitionMean + m_RandomGenerator.randomDouble(-width, width);
+		  if(m_CompetitionMarker > upperBound) m_CompetitionMarker = upperBound - (m_CompetitionMarker - upperBound);
+		  else if(m_CompetitionMarker < lowerBound) m_CompetitionMarker = lowerBound + std::abs(m_CompetitionMarker);
+      
+      //Neutral
+        
+      m_NeutralMarker = (1.0 - weightSpecies) * m_NeutralMarker +  weightSpecies * m_Species->m_NeutralMean + m_RandomGenerator.randomDouble(-width, width);
+		  if(m_NeutralMarker > upperBound) m_NeutralMarker = upperBound - (m_NeutralMarker - upperBound);
+		  else if(m_NeutralMarker < lowerBound) m_NeutralMarker = lowerBound + std::abs(m_NeutralMarker);
+      
+      reportBirth();      
+	}
+  
+  
+  void Individual::evolveDuringSpeciation()
+	{
+    
+      m_Age = 0;
+    
+      // EVOLUTION DURING SPECIATION
+    
+			double width = 0.01;
+      
+			double upperBound = 1.0;
+			double lowerBound = 0.0;
+      
+      // Environment
+      
+      m_Mean +=  m_RandomGenerator.randomDouble(-width, width);
+      if(m_Mean > upperBound) m_Mean = upperBound - (m_Mean - upperBound);
+		  else if(m_Mean < lowerBound) m_Mean = lowerBound + std::abs(m_Mean);
+      
+      // Competition
+      
+      m_CompetitionMarker += m_RandomGenerator.randomDouble(-width, width);
+		  if(m_CompetitionMarker > upperBound) m_CompetitionMarker = upperBound - (m_CompetitionMarker - upperBound);
+		  else if(m_CompetitionMarker < lowerBound) m_CompetitionMarker = lowerBound + std::abs(m_CompetitionMarker);
+      
+      //Neutral
+              
+      m_NeutralMarker += m_RandomGenerator.randomDouble(-width, width);
+		  if(m_NeutralMarker > upperBound) m_NeutralMarker = upperBound - (m_NeutralMarker - upperBound);
+		  else if(m_NeutralMarker < lowerBound) m_NeutralMarker = lowerBound + std::abs(m_NeutralMarker);
+      
+      m_Species->m_Mean = m_Mean;
+      m_Species->m_CompetitionMean = m_CompetitionMarker;
+      m_Species->m_NeutralMean = m_NeutralMarker;
+      
+      m_Species->m_FirstMean = m_Mean;
+      m_Species->m_FirstComp = m_CompetitionMarker;
+      m_Species->m_FirstNeutral = m_NeutralMarker;
+      
+      reportBirth();
 
-			 double randomTrait = m_RandomGenerator.randomDouble(min, max);
-
-		    double newTrait = (1.0 - weightSpecies) * ancestor +  weightSpecies * species + weightRandom * randomTrait;
-		    if(newTrait > upperBound) newTrait = upperBound - (newTrait - upperBound);
-		    else if(newTrait < lowerBound) newTrait = lowerBound + std::abs(newTrait);
-
-		return newTrait ;
 	}
   
   // TODO move this in the species class
-  void Individual::die(int generation){
-    
-      if(m_Species->m_Count-1 < 1)
-      {
-         m_Species->m_Date_of_Extinction = generation;
-         m_Species->m_Count -= 1;
-      }
-      else
-      {
-         m_Species->m_Count -=1;
-         m_Species->decMean(m_Mean, m_CompetitionMarker, m_NeutralMarker);
-         m_Species->updateMean();
-      }
-    
+   // TODO move this in the species class
+  void Individual::reportDeath(int generation){
+      m_Species->removeIndividual(m_Mean, m_CompetitionMarker, m_NeutralMarker, generation);
   }
-
+  
+  void Individual::reportBirth(){
+      m_Species->addIndividual(m_Mean, m_CompetitionMarker, m_NeutralMarker);
+  } 
+  
+  void Individual::printInfo(){
+    std::cout << "Location: " << m_X_coordinate << m_Y_coordinate << " EnvTrait:" << m_Mean << " Spec " << m_Species->m_ID << " mean" << m_Species->m_Mean << " ... \n";
+  }
 

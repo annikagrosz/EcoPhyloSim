@@ -19,7 +19,6 @@
 class Individual {
  private:
 	double kernel(double distance);
-	double evolution(double ancestor, double species, double weightSpecies, double weightRandom);
 
  public:
 	Individual();
@@ -53,13 +52,21 @@ class Individual {
 
 	RandomGen m_RandomGenerator;
   
-  void die(int generation);
+  void reportDeath(int generation);
+  
+    void reportBirth(); // should make this private later, but at the moment used in init
+
+  void evolve();
+
+  void evolveDuringSpeciation();
 
 	double getSeedsTo(int rel_x, int rel_y, int dispersal_type, double temp, bool env, bool dd);
   
   double getFitness(double temp, bool env, bool dd);
 
 	double dispersal(int dispersal_type, double distance);  // 1 for kernel, 2 for nearest neighbor, 3 for global
+
+  void printInfo();
 };
 
 #endif /* INDIVIDUAL_H_ */

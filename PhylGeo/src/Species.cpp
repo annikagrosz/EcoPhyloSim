@@ -5,7 +5,12 @@
  *      Author: Paul
  */
 
+
+#include <iostream>
+
 #include "Species.h"
+#include "debug.h"
+
 
 Species::Species()
 {
@@ -101,19 +106,34 @@ Species::~Species(){
 //		count-- ;
 //	}
 
-	void Species::sumMean(double env, double comp, double neutral){
+	void Species::addIndividual(double env, double comp, double neutral){
+    m_Count += 1;
 		m_MeanSum += env;
 		m_CompetitionSum += comp;
 		m_NeutralSum += neutral;
+    updateMean();
 	}
 
-	void Species::decMean(double env, double comp, double neutral){
-		m_MeanSum -= env;
-		m_CompetitionSum -= comp;
-		m_NeutralSum -= neutral;
+	void Species::removeIndividual(double env, double comp, double neutral, int generation){ 
+    
+    //std::cout << "remove Ind - count" << m_Count ; 
+    
+    m_Count -=1;
+  
+    if(m_Count == 0){
+       m_Date_of_Extinction = generation;
+       //printInfo();
+    }
+    else{
+       m_MeanSum -= env;
+       m_CompetitionSum -= comp;
+    	 m_NeutralSum -= neutral;
+       updateMean();
+    }
 	}
 
 	void Species::updateMean(){
+    //std::cout << "mean update";
 		m_Mean = m_MeanSum / (double(m_Count));
 		m_CompetitionMean = m_CompetitionSum / (double(m_Count));
 		m_NeutralMean = m_NeutralSum / (double(m_Count));
@@ -126,6 +146,7 @@ Species::~Species(){
 	unsigned long long Species::get_species_ID(){
 		return m_ID;
 	}
-
-
-
+  
+  void Species::printInfo(){
+    std::cout << "ID " << m_ID << " count " << m_Count;
+  }
