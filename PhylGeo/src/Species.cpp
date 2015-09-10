@@ -120,7 +120,7 @@ Species::~Species(){
     
     m_Count -=1;
   
-    if(m_Count == 0){
+    if(m_Count < 0){
        m_Date_of_Extinction = generation;
        //printInfo();
     }
