@@ -118,18 +118,21 @@ Species::~Species(){
     
     //std::cout << "remove Ind - count" << m_Count ; 
     
-    m_Count -=1;
-  
-    if(m_Count < 0){
+
+    // before mcount -1 < 1
+    if(m_Count < 2){
        m_Date_of_Extinction = generation;
+       m_Count -=1;
        //printInfo();
     }
     else{
+       m_Count -=1;
        m_MeanSum -= env;
        m_CompetitionSum -= comp;
     	 m_NeutralSum -= neutral;
        updateMean();
     }
+
 	}
 
 	void Species::updateMean(){
