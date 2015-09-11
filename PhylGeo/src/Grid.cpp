@@ -707,7 +707,7 @@ void Landscape::densityUpdate(int x, int y){
                  double a = m_Individuals[focus_x][focus_y].m_CompetitionMarker;
                  double b = m_Individuals[neighborX][neighborY].m_CompetitionMarker;
                  double diff = std::abs(a -b);
-                 if (diff < 0.3) relatedness += diff / 0.3;
+                 if (diff < 0.5) relatedness += diff / 0.5;
                  else relatedness += 1;
                }
             }
