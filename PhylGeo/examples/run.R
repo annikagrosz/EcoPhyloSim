@@ -3,9 +3,7 @@
 library(PhylGeo)
  
 
-par <- createCompletePar(x = 50, y = 50, dispersal = 0, runs = 10000, density = 0, environment = 1, specRate = 1)
-
-
+par <- createCompletePar(x = 50, y = 50, dispersal = 1, runs = c(500,1000), density = 1, environment = 0.5, specRate = 1)
 
 system.time(simu <- runSimulation(par))
 
@@ -13,6 +11,12 @@ plotSpatialPhylo(simu, plot = "both")
 
 plotTraitDistribution(simu)
 
+dis <- calculatePhylogeneticDispersion(simu)
+
+
+plot(simu[[1]]$phylogeny)
+  
+  unique(as.vector(simu[[1]]$specMat))
 
 plot(out, time = 1)
 

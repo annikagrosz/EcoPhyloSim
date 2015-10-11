@@ -2,10 +2,11 @@
 # Version that accepts multiple types
 calculatePhylogeneticDispersion <- function(simu, plotlengths = 10,  plots = 200, replicates = 500, types = "PhylMeta", fun = mpd, reduce = T, times = "last"){
   
+  if (class(simu) == "Phylosim") simu = list(simu)
   
   ## TODO implement function for only 1 scenario
   
-  nScenarios = length(simu)
+  nScenarios = length(simu) 
   nRuns = length(simu[[1]]) - 1
   parIndex = simu[[1]] 
   if (times == "last") times = nRuns
@@ -75,7 +76,11 @@ calculatePhylogeneticDispersion <- function(simu, plotlengths = 10,  plots = 200
 
 
 
-plotPhylogeneticDispersion <- function(pvalues, positions, title = "P-values", multiple = T){
+plotPhylogeneticDispersion <- function(pvalues, positions=NULL, title = "P-values", multiple = T){
+  
+  if (is.null(positions)){
+    positions = list(x=1, y = 1, xname = "", yname = "")
+  }  
   
   if(multiple == T){
     lengths = as.numeric(names(pvalues[[1]]))
