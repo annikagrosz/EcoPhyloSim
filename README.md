@@ -1,10 +1,12 @@
 # phylosim
 R package for simulation of biogeographical and phylogenetic data 
 
-Installation 
+### Installation 
 
-1. Either locally (if you want to make changes to the package, this is what you want to do), by cloning or forking the repo, and the following hints here http://biometry.github.io/APES/R/R70-PackageDevelopment.html
-2. Directly from gh, using the 'devtools' package:
+
+#### For users
+
+You can install directly from gh, using the 'devtools' package:
 
 ```{r}
 install.packages("devtools")
@@ -14,3 +16,8 @@ install_github("biometry/phylosim", subdir = "PhylGeo", auth_token ="fb17360869e
 ```
 
 For the moment this uses a private key that grants access to the repo, don't forward or copy this code elsewhere!
+
+#### From developers
+
+Clone or fork the repo, and the follow the hints here http://biometry.github.io/APES/R/R70-PackageDevelopment.html if you don't know how to compile a package
+
