@@ -17,7 +17,7 @@ install_github("biometry/phylosim", subdir = "PhylGeo", auth_token ="fb17360869e
 
 For the moment this uses a private key that grants access to the repo, don't forward or copy this code elsewhere!
 
-#### From developers
+#### For developers
 
 Clone or fork the repo, and the follow the hints here http://biometry.github.io/APES/R/R70-PackageDevelopment.html if you don't know how to compile a package
 
