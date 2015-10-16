@@ -3,7 +3,7 @@
 #' @param simu simulation output, consisting of a list contain at least $specMat with the spatial species matrix, and $phylogeny with the phylogeny
 #' @param phylogeny the corresponding (extant) phylogeny
 #' @param plot defines what to plot. "both" plots the landscape and phylogeny side-by-side
-#' 
+#' @param plotTraits TODO
 #' @import ape
 #' @importFrom adephylo distTips
 #' @export
