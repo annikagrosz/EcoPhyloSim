@@ -4,7 +4,8 @@
 \alias{nullModel}
 \title{Null Model}
 \usage{
-nullModel(speciesMatrix, phylogeny, localPlotSize, numberOfPlots, repetitions)
+nullModel(speciesMatrix, phylogeny, localPlotSize, numberOfPlots, repetitions,
+  fun = mpd)
 }
 \arguments{
 \item{speciesMatrix}{A square matrix containing the metacommunity (one individual per grid cell)}

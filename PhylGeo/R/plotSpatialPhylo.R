@@ -1,4 +1,4 @@
-#' @title Plot of Phylogeny and species Landscape
+#' @title Plot of phylogeny and species landscape
 #' @description Plots the phylogeny and species landscape, colored by taxon 
 #' @param simu simulation output, consisting of a list contain at least $specMat with the spatial species matrix, and $phylogeny with the phylogeny
 #' @param phylogeny the corresponding (extant) phylogeny
