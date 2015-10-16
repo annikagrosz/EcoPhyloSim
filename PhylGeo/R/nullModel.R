@@ -34,3 +34,5 @@ nullModel <- function(speciesMatrix, phylogeny, localPlotSize, numberOfPlots, re
   return(pValues)
 }
 
+# Test
+
