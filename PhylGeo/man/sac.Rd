@@ -4,12 +4,12 @@
 \alias{sac}
 \title{Species-area relation}
 \usage{
-sac(area, matrix, rep = 5, plot = T)
+sac(matrix, area = NULL, rep = 50, plot = T)
 }
 \arguments{
-\item{area}{A single value or a vector determining the size(s) of the generated subplots}
-
 \item{matrix}{The species community}
+
+\item{area}{a single value or a vector determining the size(s) of the subplots that for which areas are calculated. If not provided, 10 sizes logarithmically will be chosen}
 
 \item{rep}{The number of repetitions per size to calculate the mean}
 

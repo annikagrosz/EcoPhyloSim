@@ -1,7 +1,7 @@
 \documentclass{article}
 
 \author{Florian Hartig}
-\title{Introduction to the phylosim package}
+\title{Introduction to the phylosim package \\ Simulating species community assembly processes}
 
 \begin{document}
 \SweaveOpts{concordance=TRUE}
@@ -9,6 +9,15 @@
 
 
 \section{Introduction}
+The question whether or to which degree on can infer community assembly processes from their resulting spatial and phylogenetic patterns is of central importance in ecology. It is these processes that create and maintain local assemblages.\\
+Currently there are many different explanations as to how species communities are shaped based on the emerging spatial or phylogenetic patterns. 
+The phylosim package represents an expansion of previous models by combining these informations. This may yield pattern combinations that are much more distinct than phylogenetic or spatial patterns alone.\\
+The simulation includes dispersal limitation, environmental preferences and local competition, whereas the outcome consists of phylogenetic and spatial patterns.\\
+Among the central model the package comprises a set of functions to illustrate and analyze the results.
+
+
+
+\section{Background}
 
 
 
@@ -52,15 +61,13 @@ str(simu)
 
 \subsection{Plots and summary statistics}
 The phylosim package contaions  multiple functions to visualize the results of the simulation.
-The plotSpatialPhylo function gives an good overview over the resulting landscape and phylogeny as well as
-the evolved traits.
+The plotSpatialPhylo function can plot the resulting landscape, phylogeny and the evolved traits.
 
 <<fig=TRUE>>=
 plotSpatialPhylo(simu, plot = "both", plotTraits = T, time=1)
 @
 
-
-We can plot the rank-abundace curve (RAC) and species-area curve (SAC) for the output
+To analyze the results the package contains functions to calculate and visualize the rank-abundace curve (RAC) and species-area curve (SAC) for the output.
 
 <<fig=TRUE>>=
 par(mfrow = c(2,2),mar=c(1.5, 3, 3, 0.5))
@@ -70,6 +77,8 @@ rac(simu[[2]]$specMat)
 sac(simu[[2]]$specMat)
 @
 
+
+Further it is possible to calculate the species richness of the results.
 
 <<>>=
 
@@ -91,7 +100,7 @@ metaCom <- NeutralMod(dim=50, specRate=2, seed=1500, runs=1500)
 # Visualize the grid
 image(metaCom)
 # Calculate the species area-relation
-rac(metaCom, plot=T)
+rac(metaCom, plot="line")
 
 @
 

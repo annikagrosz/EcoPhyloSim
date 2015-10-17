@@ -4,14 +4,23 @@
 \alias{plotSpatialPhylo}
 \title{Plot of Phylogeny and species Landscape}
 \usage{
-plotSpatialPhylo(landscape, phylogeny, plot = "both")
+plotSpatialPhylo(simu, plot = "both", plotTraits = T, col = "phylodist",
+  main = "", time = NULL)
 }
 \arguments{
-\item{landscape}{the species landscape}
+\item{simu}{simulation output, consisting of a list contain at least $specMat with the spatial species matrix, and $phylogeny with the phylogeny}
+
+\item{plot}{defines what to plot. "both" plots the landscape and phylogeny side-by-side, other options are "landscape" and "phylogeny"}
+
+\item{plotTraits}{defines if the traits should be plotted}
+
+\item{col}{defines the color, options are "phylodist" (default) and "equidist"}
+
+\item{main}{defines the title of the plot}
+
+\item{time}{defines which simulation to choose in case your simu object contains multiple simulations. The default is the last one.}
 
 \item{phylogeny}{the corresponding (extant) phylogeny}
-
-\item{plot}{defines what to plot. "both" plots the landscape and phylogeny side-by-side}
 }
 \description{
 Plots the phylogeny and species landscape, colored by taxon

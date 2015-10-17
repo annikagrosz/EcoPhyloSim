@@ -11,7 +11,7 @@ specRich <- function(matrix){
 #' @title Rank-abundance relation 
 #' @description Calculates the rank-abundance pattern for a community matrix. 
 #' @param matrix Integer matrix representing the species community
-#' @param plot Logical determining whether to plot the RAC or not
+#' @param plot determining whether to plot the RAC as "line"(default) or "bar".
 #' @details The higest abundance is assigned rank "1" while the lowest is assigned the rank corresponding with species richness.
 #' @return A dataframe containing the ranked abundances, sorted by ascending rank.
 #' @export
