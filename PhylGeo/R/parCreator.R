@@ -2,7 +2,7 @@
 #' @description Function to create a list with parameters for the biogeographical simulations
 #' @param x  Integer, Dimension of the model landscape in x-direction
 #' @param y  Integer, Dimension of the model landscape in y-direction
-#' @param dispersal Integer, 1 = Gloabl dispersal, 2 = Nearest neighbor dispersal 
+#' @param dispersal Integer, 0 or "global" = Gloabl dispersal, all integers >=1 = Nearest neighbor dispersal  
 #' @param runs  Integer, Number of generations the model runs over
 #' @param specRate Integer, Number of Individuals introduced to the community in each generation
 #' @param density Logical, determining whether or not density dependence influences the model
