@@ -25,12 +25,25 @@ library(PhylGeo)
 
 
 \subsection{Run the model}
-
-<<fig=TRUE>>=
-simu <- fullMod(x = 20, y = 20, dispersal = 0.5, runs = 100, specRate = 1.0, density = F, environment = F, seed = 1, fitnessBaseMortalityRatio = 5)
+Running the model consists of two consecutive steps. First a list of parameters is generated based on the users settings.\\
+In the following example an area of 50*50 cells provides the basis for two simulations with 500 or 1000 generations respectively. \\
+<<>>=
+par <- createCompletePar(x = 50, y = 50, dispersal = 0 , runs = c(500,1000), density = 1, environment = 0.5, specRate = 1)
 @
 
-The output is saved in a list
+For further explanation and more settings see:
+<<>>=
+?createCompletePar
+@
+
+The list of parameters is now being used to exectute the simulation:
+
+<<>>=
+simu <- runSimulation(par)
+@
+
+
+The output is saved as a list. The first two list slices contain the results of the two simulations, whereas the last list slice contains the parameter settings.
 
 <<>>=
 str(simu)
@@ -38,26 +51,30 @@ str(simu)
 
 
 \subsection{Plots and summary statistics}
-
+The phylosim package contaions  multiple functions to visualize the results of the simulation.
+The plotSpatialPhylo function gives an good overview over the resulting landscape and phylogeny as well as
+the evolved traits.
 
 <<fig=TRUE>>=
-plotSpatialPhylo(simu, plot = "both")
+plotSpatialPhylo(simu, plot = "both", plotTraits = T, time=1)
 @
 
 
 We can plot the rank-abundace curve (RAC) and species-area curve (SAC) for the output
 
 <<fig=TRUE>>=
-par(mfrow = c(1,2))
-rac(simu$specMat)
-sac(simu$specMat)
+par(mfrow = c(2,2),mar=c(1.5, 3, 3, 0.5))
+rac(simu[[1]]$specMat)
+sac(simu[[1]]$specMat)
+rac(simu[[2]]$specMat)
+sac(simu[[2]]$specMat)
 @
 
 
 <<>>=
 
-specRich(simu$specMat)
-
+specRich(simu[[1]]$specMat)
+specRich(simu[[2]]$specMat)
 @
 
 
