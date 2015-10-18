@@ -21,6 +21,7 @@ Among the central model the package comprises a set of functions to illustrate a
 
 
 
+
 \section{Basic functionality}
 
 
