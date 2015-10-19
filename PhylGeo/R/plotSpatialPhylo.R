@@ -4,7 +4,7 @@
 #' @param phylogeny the corresponding (extant) phylogeny
 #' @param plot defines what to plot. "both" plots the landscape and phylogeny side-by-side, other options are "landscape" and "phylogeny"
 #' @param plotTraits defines if the traits should be plotted
-#' @param time defines which simulation to choose in case your simu object contains multiple simulations. The default is the last one.
+#' @param time defines which simulation run to choose in case you defined to save at multiple time steps. The default is the last one.
 #' @param col defines the color, options are "phylodist" (default) and "equidist" 
 #' @param main defines the title of the plot
 #' @import ape

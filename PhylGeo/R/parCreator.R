@@ -3,7 +3,7 @@
 #' @param x  Integer, Dimension of the model landscape in x-direction
 #' @param y  Integer, Dimension of the model landscape in y-direction
 #' @param dispersal Integer, 0 or "global" = Gloabl dispersal, all integers >=1 = Nearest neighbor dispersal  
-#' @param runs  Integer, Number of generations the model runs over
+#' @param runs  Integer, Number of generations the model runs over. You can also define a sequence of runs. Then the intermediate and end results are saved.
 #' @param specRate Integer, Number of Individuals introduced to the community in each generation
 #' @param density Logical, determining whether or not density dependence influences the model
 #' @param environment Logical, determining whether or not the environment influences the model

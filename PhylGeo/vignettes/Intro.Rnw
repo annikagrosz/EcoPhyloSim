@@ -12,18 +12,70 @@
 The question whether or to which degree on can infer community assembly processes from their resulting spatial and phylogenetic patterns is of central importance in ecology. It is these processes that create and maintain local assemblages.\\
 Currently there are many different explanations as to how species communities are shaped based on the emerging spatial or phylogenetic patterns. 
 The phylosim package represents an expansion of previous models by combining these informations. This may yield pattern combinations that are much more distinct than phylogenetic or spatial patterns alone.\\
-The simulation includes dispersal limitation, environmental preferences and local competition, whereas the outcome consists of phylogenetic and spatial patterns.\\
+The simulation can include different mechanisms of community assembly such as dispersal limitation, environmental preferences and local competition, whereas the outcome consists of phylogenetic and spatial patterns. The mechanisms can be activated seperately or in combination. This allows the user to identify biogeographic or phylogenetic patterns exclusively correlated with a certain mechanism or combination of mechanisms.\\
 Among the central model the package comprises a set of functions to illustrate and analyze the results.
 
 
 
 \section{Background}
+TODO References
+The field of community phylogenetics is based on the idea that species properties are often
+phylogenetically conserved. This means, that more recently diverged species have more similar traits and therefore more similar properties.\\
+Based on this idea one can infer dominant processes of community assembly by comparing the properties of the regional to the local phylogeny.
+These processes can be distinguished in two main classes of processes, environmental filtering and local interactions.
+Environmental filtering selects at each location species with a favorable trait for the specific environment. This would lead to phytogenetically similar species co-occuring together.
+On the other hand local interactions or competition should be more fierce for species with similar traits as this would lead to limiting sinilarity.\\
+The comparision of the phylogenetic signal of an observed assemblage with the signal from an randomly generated assemblage (created from a null-model) can give some indication about the dominate assembly process. 
+An overdispersed phylogeny can be interpreted as an assemblage dominated by environmental filtering, whereas a clustered phylogeny can be interpreted as an assemblage dominated by local competition (Weiher & Keddy, 1995; Webb, 2000).\\
+Whereas previous approaches to this topic dealt with phylogenetic or spatial patterns (and produced numeral explanations how species assemblages evolved) the present approach gives the opportunity to combine these informations.
+Among a neutral model the phylosim package can simulate dispersal limitation, environmental preferences, and local competition. This tackles the main criticism of previous approaches which focused on one mechanism (e.g. environmental filtering vs. competitive exclusion) and ignored the possibility that this mechanism might not be solely if at all responsible for the emerging community pattern.
 
+\section{The model}
+\subsection{The grid}
+The basis for the simualtion is a grid consiting of spatially discrete cells.
+Each cell is inhabited by one individual at any time. Additionally an environmental gradient can be included. To avoid boundary effects the boundaries of the grid are warped.
 
+\subsection{The indivuduals}
+TODO Formulas
+Each individual belongs to a species. The properties of the individual are represented in two traits ranging between zero and one.
+The competition trait represents the individual's preferences apart from the environment. The more similar the traits of two individuals, the stronger they compete with each other.\\
+The environmental trait simulates the individual's interaction with the environment. 
+It is defined as the mean of a Gaussian Distribution with $\sigma$ set to 0.047. This represents a niche width covering ten percent of the total space of the
+respective resource (approch see: Ackermann and Doebeli, 2004).\\
+Apart from the individual's traits each species has trait values. In the model they are not independent but defined as the mean of the respective traits of all individuals of the species. 
+The species traits serve as an attractor in the individual trait evolution proces.
+Further, each species contains information about its parent species and the species that emerged from it. 
+
+\subsection{Processes}
+The simulation runs over a defined number of generations. 
+In each generation the simulation consists of three consecutive steps.\\
+First the individuals reproduce and spread over the grid. All cells are sequentially chosen at random and the individuals are replaced by the offspring of other individuals.\\
+The individual which produces its offspring and disperses into an empty cell is chosen by an multinomial distribution which consists of all cells within the dispersion kernel.
+The dispersion kernel represents the distance to the cell to be populated and is defined as:
+TODO Formula
+Wd represents the weight weight derived from the euclidean distance (delta s) between the
+cell to be populated and the potential parent. An increasing distance to the cell leads to an exponential decline in reproductive fitness. The dispersal kernel can be cut at a certain radius.\\
+The density dependence is based on the competition traits of the indivuduals. The closer the values of the competition traits of two individuals, the stronger they compete. Numerically it can be written as the sum of all absolute competition trait differences in a certain area around the individual. The normalized value is now included in the multinomial distribution as follows:
+TODO Formula
+\\
+The second step in the simulation of one generation is the trait evolution. This step represents genetic recombination in the real world.
+The trait is modelled as the mean of a Gaussian Distribution (see above). In each generation this value is slightly changed. The new trait is influenced by the parent's value, a weighted random value and the attraction of the specie's value. The parent value has the highest influence whereas the other two traits have only slight influence.
+The trait values during trait evolution are calculated as follows:
+TODO Formula
+\\
+The last step in a generation is speciation. Here it describes the introduction of a new species via point mutations. These mutations can either become more abundand or go extinct (Hubbell, 1997).The frequency of these events is controlled by the speciation rate in the parameter settings. Each generation a number of new species is introduced in the system replacing randomly chosen individuals. The traits of these individuals are calculated from the parent's traits and a randomly generated value as follows:
+TODO Formula
+\\
+
+\subsection{Model output}
+The model output consists of five matrices representing the community landscape. 
+These are the distribution of species, the environment, the environmental as well as the competition traits of the species and TODO NeutralMat?.
+Further a table is produced including all information about the species and the phylogeny in the newick format. To faciliate the analysis the phylogeny is pruned by removing all extinct leaves without any branching events. 
+TODO check this section again. Especially the last paragraph!
 
 
 \section{Basic functionality}
-
+The following section descibes how the model is applied and shows some of the most important funktions to illustrate and analyze the results of the simulations.
 
 \subsection{Loading the package}
 
@@ -36,7 +88,7 @@ library(PhylGeo)
 
 \subsection{Run the model}
 Running the model consists of two consecutive steps. First a list of parameters is generated based on the users settings.\\
-In the following example an area of 50*50 cells provides the basis for two simulations with 500 or 1000 generations respectively. \\
+In the following example an area of 50*50 cells provides the basis for one simulations 1000 generations. The results are stored after 500 and 1000runs. \\
 <<>>=
 par <- createCompletePar(x = 50, y = 50, dispersal = 0 , runs = c(500,1000), density = 1, environment = 0.5, specRate = 1)
 @
@@ -53,7 +105,7 @@ simu <- runSimulation(par)
 @
 
 
-The output is saved as a list. The first two list slices contain the results of the two simulations, whereas the last list slice contains the parameter settings.
+The output is saved as a list. The first two list slices contain the results of the two simulation after 500 and 1000 runs, whereas the last list slice contains the parameter settings.
 
 <<>>=
 str(simu)
@@ -68,7 +120,7 @@ The plotSpatialPhylo function can plot the resulting landscape, phylogeny and th
 plotSpatialPhylo(simu, plot = "both", plotTraits = T, time=1)
 @
 
-To analyze the results the package contains functions to calculate and visualize the rank-abundace curve (RAC) and species-area curve (SAC) for the output.
+To analyze the results the package contains functions to calculate and visualize the rank-abundace curve (RAC) and species-area curve (SAC) for the output. Here the results are shown for the same simulation after 500 and 1000 runs.
 
 <<fig=TRUE>>=
 par(mfrow = c(2,2),mar=c(1.5, 3, 3, 0.5))
@@ -79,7 +131,7 @@ sac(simu[[2]]$specMat)
 @
 
 
-Further it is possible to calculate the species richness of the results.
+Further it is possible to calculate the species richness of the results. As before the result is calculated for the simulation after 500 and 1000 time steps.
 
 <<>>=
 
@@ -91,18 +143,23 @@ specRich(simu[[2]]$specMat)
 \section{Other models}
 
 \subsection{Neutral model}
+The package contains also a purely neutral model written in R. This model is to be seen only for test and teaching purpose. To be used in practice it is far too slow.
+The model can be run with:
 
-This implements a purely neutral model in R ... only for test and teaching purposes, far too slow to be useful in practice
+<<>>=
+metaCom <- NeutralMod(dim=50, specRate=2, seed=1500, runs=1500)
+@
+The output consists of a single matrix containing only the species distribution.
+
 
 <<fig=TRUE>>=
-
-# Run the model
-metaCom <- NeutralMod(dim=50, specRate=2, seed=1500, runs=1500)
-# Visualize the grid
 image(metaCom)
-# Calculate the species area-relation
-rac(metaCom, plot="line")
+@
 
+Nonetheless, some of the functions to analyze the results can be applied. For
+example:
+<<fig=TRUE>>=
+rac(metaCom, plot="line")
 @
 
 
