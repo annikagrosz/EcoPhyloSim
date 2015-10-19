@@ -2,7 +2,7 @@
 % Please edit documentation in R/plotSpatialPhylo.R
 \name{plotSpatialPhylo}
 \alias{plotSpatialPhylo}
-\title{Plot of Phylogeny and species Landscape}
+\title{Plot of phylogeny and species landscape}
 \usage{
 plotSpatialPhylo(simu, plot = "both", plotTraits = T, col = "phylodist",
   main = "", time = NULL)

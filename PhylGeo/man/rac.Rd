@@ -9,7 +9,7 @@ rac(matrix, plot = "line")
 \arguments{
 \item{matrix}{Integer matrix representing the species community}
 
-\item{plot}{Logical determining whether to plot the RAC or not}
+\item{plot}{determining whether to plot the RAC as "line"(default) or "bar".}
 }
 \value{
 A dataframe containing the ranked abundances, sorted by ascending rank.
