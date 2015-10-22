@@ -13,27 +13,29 @@
 #' # Calculate the species area-relation
 #' rac(metaCom, plot=T)
 #' @export
-NeutralMod <- function(  dim = 100, specRate = 2,  seed = NULL, runs = 5000 ){
+NeutralMod <- function(  xdim = 100, ydim=100, specRate = 2,  seed = NULL, runs = 500 ){
   
   ptm <- proc.time()
   if (! is.null(seed)) set.seed(seed)
-
+  
   counter <- 1
-  mat  <- matrix(counter,dim,dim)
+  mat  <- matrix(counter,xdim, ydim)
   
   for(i in 1:runs){
-  
-    for (j in 1:(dim^2)){
-      coord = sample.int(n=dim,4, T )
-      mat[coord[1], coord[2]] = mat[coord[3], coord[4]]
+    
+    for (j in 1:(xdim*ydim)){
+      coordx = sample.int(n=xdim,2, T )
+      coordy = sample.int(n=ydim,2, T )
+      mat[coordx[1], coordy[1]] = mat[coordx[2], coordy[2]]
     }
     for (j in 1:specRate){
-      SpecCoord = sample.int(n=dim,2, T )
-      mat[SpecCoord[1], SpecCoord[2]] <- counter +1
+      SpecCoordx = sample.int(n=xdim,1, T )
+      SpecCoordy = sample.int(n=ydim,1, T )
+      mat[SpecCoordx, SpecCoordy] <- counter +1
       counter <- counter +1  
     }
     if(i %% 100 == 0) print(i)
   }
-   print (paste("Finished after",floor(((proc.time() - ptm)[3])/60), "minute(s) and", ((proc.time() - ptm)[3])%%60, "second(s)."))
-   return (mat)
+  print (paste("Finished after",floor(((proc.time() - ptm)[3])/60), "minute(s) and", ((proc.time() - ptm)[3])%%60, "second(s)."))
+  return (mat)
 }

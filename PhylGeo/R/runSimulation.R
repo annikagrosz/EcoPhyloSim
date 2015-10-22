@@ -1,6 +1,9 @@
 #' @title  Species community Simulation
 #' @description A model of species community assembly under different assembly mechanism
-#' @examples 
+#' @par par, a list of parameters created with \code{\link[PhylGeo]{createCompletePar}}
+#' @return An object of class "Phylosim". This objet contains the species matrix, the trait matrix, the environmental matrix, the competition matrix and the neutral matrix, as well as the phlogeny and the parameter settings of the simulation. 
+#' @details If your parameterset contains more than one runs argument, each interim step is saved in the Phylosim object.
+#'  #' @examples 
 #' # Run the model
 #' myModel <- fullMod(x = 50, y = 50, dispersal = 1, runs = 100, specRate = 1.0, density = FALSE, environment = FALSE, neutral = TRUE, seed = 1500)
 #' 
@@ -115,7 +118,7 @@ runSimulation <- function(par)
   
   ###################################################################
   }else if (par$type == "Rneutral"){
-    result = NeutralMod(dim = par$x, specRate = par$specRate,  seed = par$seed, runs = par$runs )
+    result = NeutralMod(xdim = par$x, ydim=par$y, specRate = par$specRate,  seed = par$seed, runs = par$runs )
     out = list(specMat = result, par = par)
     class(out) <- append(class(out),"Phylosim")
     return(out)

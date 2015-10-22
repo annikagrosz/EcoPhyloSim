@@ -22,7 +22,7 @@ TODO References
 The field of community phylogenetics is based on the idea that species properties are often
 phylogenetically conserved. This means, that more recently diverged species have more similar traits and therefore more similar properties.\\
 Based on this idea one can infer dominant processes of community assembly by comparing the properties of the regional to the local phylogeny.
-These processes can be distinguished in two main classes of processes, environmental filtering and local interactions.
+These processes can be distinguished in two main classes, environmental filtering and local interactions.
 Environmental filtering selects at each location species with a favorable trait for the specific environment. This would lead to phytogenetically similar species co-occuring together.
 On the other hand local interactions or competition should be more fierce for species with similar traits as this would lead to limiting sinilarity.\\
 The comparision of the phylogenetic signal of an observed assemblage with the signal from an randomly generated assemblage (created from a null-model) can give some indication about the dominate assembly process. 
@@ -42,7 +42,7 @@ The competition trait represents the individual's preferences apart from the env
 The environmental trait simulates the individual's interaction with the environment. 
 It is defined as the mean of a Gaussian Distribution with $\sigma$ set to 0.047. This represents a niche width covering ten percent of the total space of the
 respective resource (approch see: Ackermann and Doebeli, 2004).\\
-Apart from the individual's traits each species has trait values. In the model they are not independent but defined as the mean of the respective traits of all individuals of the species. 
+Apart from the individual's traits each species has trait values. These traits are not independent but defined as the mean of the respective traits of all individuals of the species. 
 The species traits serve as an attractor in the individual trait evolution proces.
 Further, each species contains information about its parent species and the species that emerged from it. 
 
@@ -105,7 +105,7 @@ simu <- runSimulation(par)
 @
 
 
-The output is saved as a list. The first two list slices contain the results of the two simulation after 500 and 1000 runs, whereas the last list slice contains the parameter settings.
+The output is saved as a list. The first two list slices contain the results of the  simulation after 500 and 1000 runs, whereas the last list slice contains the parameter settings.
 
 <<>>=
 str(simu)
@@ -120,7 +120,14 @@ The plotSpatialPhylo function can plot the resulting landscape, phylogeny and th
 plotSpatialPhylo(simu, plot = "both", plotTraits = T, time=1)
 @
 
-To analyze the results the package contains functions to calculate and visualize the rank-abundace curve (RAC) and species-area curve (SAC) for the output. Here the results are shown for the same simulation after 500 and 1000 runs.
+The package contains two functions to analyze the spatial patterns of the results.
+The species-area curve (SAC) and the rank-abundace curve (RAC).
+The SAC shows the accumulated species richness as a function of the plot size. 
+A positively bent curve indicates clustering of a species community. An increase in plot size leads to an increase in specis richness. A negatively bent curve indicates a more neutral distribution of species within the cmmunity.\\
+RACs display the amount of equally abundand species that the community can support. A linear curve indicates a less stable or neutral community supporting only a few highly abundand species, whereas an S-shaped curve indicates a more stable community. In the latter case several species of the same abundance can be supported.\\
+
+Here the results are shown for the same simulation after 500 and 1000 runs.
+
 
 <<fig=TRUE>>=
 par(mfrow = c(2,2),mar=c(1.5, 3, 3, 0.5))
@@ -139,6 +146,29 @@ specRich(simu[[1]]$specMat)
 specRich(simu[[2]]$specMat)
 @
 
+TODO Reference
+To compare these values the package comprises a function to calculate the expected species richness based on the approach of Hubbel. For this example the expected species richness in 
+the equilibrium state would be:
+<<>>=
+es(specRate=1, dimensions=50)
+@
+
+It is possible to create subplots from a community landscape.
+Here 4 subplots are produced. Besides the subplots community matrix with plots in rows and species in collumns can be returned.
+<<>>=
+locals<-localPlots(size=20, 4, matrix=simu[[2]]$specMat, community=T)
+@
+
+<<>>=
+par(mfrow=c(2,2))
+for(i in 1:4){
+image(locals$subPlots[[i]])
+}
+@
+
+<<>>=
+locals$communityTable
+@
 
 \section{Other models}
 
@@ -161,6 +191,9 @@ example:
 <<fig=TRUE>>=
 rac(metaCom, plot="line")
 @
+
+
+\subsection{Null Model}
 
 
 
