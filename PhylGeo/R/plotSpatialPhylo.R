@@ -1,46 +1,40 @@
-#' @title Plot of phylogeny and species landscape
-#' @description Plots the phylogeny and species landscape, colored by taxon 
-#' @param simu simulation output, consisting of a list contain at least $specMat with the spatial species matrix, and $phylogeny with the phylogeny
+#' @title Phylogeny And Spatial Abundance Plot
+#' @description Provided with an output of a phylogeny-simulation this function can plot the phylogeny tree ,the spatially abundance of the evolved species and their traits.
+#' @param simu Simulation output of the class "Phylosim", usually consisting out of several lists. Needs to contain at least the spatial species matrix ($specMat) and the phylogeny ($phylogeny)   
 #' @param phylogeny the corresponding (extant) phylogeny
-#' @param plot defines what to plot. "both" plots the landscape and phylogeny side-by-side, other options are "landscape" and "phylogeny"
-#' @param plotTraits defines if the traits should be plotted
-#' @param time defines which simulation run to choose in case you defined to save at multiple time steps. The default is the last one.
-#' @param col defines the color, options are "phylodist" (default) and "equidist" 
-#' @param main defines the title of the plot
+#' @param plot defines what to plot."spatial" plots the spatial abundance, "phylogeny" the phylogeny tree. "both" plots both of them side by side 
+#' @param plotTraits logical, defines if the traits should be plotted 
+#' @param which.simulation defines which simulation run to choose in case you defined to save at multiple time steps. The default is the last one.
 #' @import ape
 #' @importFrom adephylo distTips
 #' @export
-plotSpatialPhylo <- function (simu, plot = "both", plotTraits = T, col = "phylodist", main = "", time = NULL){
+plotSpatialPhylo <- function (simu, plot = "both", plotTraits = T, which.simulation = NULL){
   
-  if (is.null(time)) time = length(simu) - 1
+  if (is.null(which.simulation)) which.simulation = length(simu) - 1
+  simu <- simu[[which.simulation]]
   
-  
-  phylogeny = simu[[time]]$phylogeny
+  phylogeny = simu$phylogeny
   
   extantPhylogeny <- drop.fossil(phylogeny)
   
   nSpecies = length(extantPhylogeny$tip.label)
   
-  landscape = simu[[time]]$specMat
+  landscape = simu$specMat
   
   if (plotTraits == T){
     #library(shape)
-    traits = getAverageTraits(simu[[time]])  
+    traits = getAverageTraits(simu)  
     #rootDist <- distRoot(extantPhylogeny, 1)
   }
   
-  tipDistances <- cumsum(c(1, diag(as.matrix(distTips(extantPhylogeny))[,-1])))
-  
-  if (col == "phylodist") cols<-rainbow(max(tipDistances), start = 0.19)[tipDistances]
-  if (col == "equidist")  cols<-rainbow(nSpecies, start = 0.19)
-  
+  cols <- rainbow(nSpecies,start=0)
   
   tipNumbers <- as.numeric(sapply(list(extantPhylogeny$tip.label), substring, 2))
-  
   
   landscape <- matrix(as.numeric(factor(landscape, levels = tipNumbers, labels = 1:nSpecies)), nrow = nrow(landscape))
   
   if(plot!="both"){
+    at <- 0.5
     if(plotTraits==T){
       layout(mat = matrix(1:4, nrow = 2, byrow = T), widths = c(0.5,1), heights = c(0.15,0.8))
       par(mar = c(0,0,0,0), oma = c(2,2,2,2))
@@ -49,17 +43,25 @@ plotSpatialPhylo <- function (simu, plot = "both", plotTraits = T, col = "phylod
       plot.new()
       size = dev.size()[2]/3
       plot(rep(1:4, each = nSpecies), rep(1:nSpecies, 4), cex = size*traits, pch = 16, frame = F, yaxt='n', xaxt='n', ann=FALSE, xlim = c(0,7))
+      mtext("Traits", at=0.1, outer=T, cex=1.5)
+      at <- 0.6
+      
     }
     
     if(plotTraits==F){
       par(mfrow=c(1,1),mar = c(1,1,1,1))
     }
-    if(plot=="landscape"){
+    if(plot=="spatial"){
       image(landscape, col = cols, yaxt='n', xaxt='n')
+      mtext(outer =T ,"Spatial Abundance", cex=1.5, at =at)
+      
     }
     else{
       if(plot=="phylogeny"){
         plot(extantPhylogeny, tip.color = cols, cex = 1.3)
+        mtext(outer =T ,"Phylogeny Tree", cex=1.5, at = at)
+        
+        
       }
       else stop("wrong plot argument")
     }
@@ -77,14 +79,19 @@ plotSpatialPhylo <- function (simu, plot = "both", plotTraits = T, col = "phylod
       plot(rep(1:4, each = nSpecies), rep(1:nSpecies, 4), cex = size*traits, pch = 16, frame = F, yaxt='n', xaxt='n', ann=FALSE, xlim = c(0,7))
       par(mar = c(1,1,1,1))
       image(landscape, col = cols, yaxt='n', xaxt='n')
+      mtext("Traits", at=0.48, outer=T, cex=1.5)
+      mtext(outer =T ,"Spatial Abundance",at =0.8, cex=1.5)
+      mtext(outer =T ,"Phylogeny Tree",at =0.2, cex=1.5)
     }
     else{
       par(mfrow=c(1,2))
       plot(extantPhylogeny, tip.color = cols, cex = 1.3)
       image(landscape, col = cols, yaxt='n', xaxt='n')
+      mtext(outer =T ,"Spatial Abundance",at =0.75, cex=1.5)
+      mtext(outer =T ,"Phylogeny Tree",at =0.25, cex=1.5)
     }
   }
-  mtext(main, outer = T)
-  
 }
+
+
 
