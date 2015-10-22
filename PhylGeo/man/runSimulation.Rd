@@ -6,8 +6,18 @@
 \usage{
 runSimulation(par)
 }
+\arguments{
+\item{par,}{a list of parameters created with \code{createCompletePar}}
+}
+\value{
+An object of class "Phylosim". This objet contains the species matrix, the trait matrix, the environmental matrix, the competition matrix and the neutral matrix, as well as the phlogeny and the parameter settings of the simulation.
+}
 \description{
 A model of species community assembly under different assembly mechanism
+}
+\details{
+If your parameterset contains more than one runs argument, each interim step is saved in the Phylosim object.
+ #'
 }
 \examples{
 # Run the model

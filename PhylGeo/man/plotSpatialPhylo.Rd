@@ -18,7 +18,7 @@ plotSpatialPhylo(simu, plot = "both", plotTraits = T, col = "phylodist",
 
 \item{main}{defines the title of the plot}
 
-\item{time}{defines which simulation to choose in case your simu object contains multiple simulations. The default is the last one.}
+\item{time}{defines which simulation run to choose in case you defined to save at multiple time steps. The default is the last one.}
 
 \item{phylogeny}{the corresponding (extant) phylogeny}
 }

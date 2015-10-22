@@ -4,16 +4,17 @@
 \alias{NeutralMod}
 \title{Model of neutral community assembly}
 \usage{
-NeutralMod(dim = 100, specRate = 2, seed = NULL, runs = 5000)
+NeutralMod(xdim = 100, ydim = 100, specRate = 2, seed = NULL,
+  runs = 500)
 }
 \arguments{
-\item{dim}{The edge-length of the square metacommunity matrix}
-
 \item{specRate}{The speciation rate in total speciation events per generation}
 
 \item{seed}{The random seed (do not change this option if you previously set the seed!)}
 
 \item{runs}{The number of generations the model runs through}
+
+\item{dim}{The edge-length of the square metacommunity matrix}
 }
 \description{
 Runs a simple model of species community assembly under neutral conditions as defined by Hubbel.

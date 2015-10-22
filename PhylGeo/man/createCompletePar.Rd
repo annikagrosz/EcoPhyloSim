@@ -2,7 +2,7 @@
 % Please edit documentation in R/parCreator.R
 \name{createCompletePar}
 \alias{createCompletePar}
-\title{parameter generator}
+\title{Parameter Generator}
 \usage{
 createCompletePar(x = 50, y = 50, dispersal = "global", runs = 100,
   specRate = 1, density = F, environment = F,
@@ -15,9 +15,9 @@ createCompletePar(x = 50, y = 50, dispersal = "global", runs = 100,
 
 \item{y}{Integer, Dimension of the model landscape in y-direction}
 
-\item{dispersal}{Integer, 0 or "global" = Gloabl dispersal, all integers >=1 = Nearest neighbor dispersal}
+\item{dispersal}{Integer. Type 0 or "global" for global dispersion. For local dispersion all integers >=1 set the dispersal distance.}
 
-\item{runs}{Integer, Number of generations the model runs over}
+\item{runs}{Integer, Number of generations the model runs over. You can also define a sequence of runs. Then the intermediate and end results are saved.}
 
 \item{specRate}{Integer, Number of Individuals introduced to the community in each generation}
 
@@ -25,29 +25,23 @@ createCompletePar(x = 50, y = 50, dispersal = "global", runs = 100,
 
 \item{environment}{Logical, determining whether or not the environment influences the model}
 
+\item{fitnessActsOn}{Character, determining how the fitness influences the individuals. Possible inputs are "mortality" (default), "reproduction" or "both"}
+
+\item{fitnessBaseMortalityRatio}{Integer, TODO}
+
 \item{densityCut}{Integer, defines the effective range of the competition (ignored if density = FALSE)}
 
 \item{seed}{numerical, sets the random seed}
 
-\item{mortalityFitness}{Logical, determining whether or not the individual fitness influences mortality}
-
-\item{mortalityStrength}{Integer determining the influence of fitness on mortality (see Details)}
-
-\item{reproductiveFitness}{Logical, determining whether or not the individual fitness influences reproduction}
-
-\item{neutral}{Logical, determining whether or not the model is run under neutral conditions (overrides density and environment)}
-
-\item{dispersalCut}{Integer, defines the dispersal distance for local dispersal (ignored if dispersal = 1 (Global))}
-
-\item{saveLocation}{Path of the folder to save the backup files to}
+\item{type}{Character, determining which model should be used. "base" is running the default model. Other possibilities are "Leipzig" and "Rneutral" which will run a neutral model purely in R.}
 }
 \value{
 A List with parameters
 }
 \description{
-Function to create a list with parameters for the biogeographical simulations
+Function to create a list with parameters for biogeographical simulations with \code{\link[PhylGeo]{runSimulation}} or \code{\link[PhylGeo]{runSimulationBatch}}
 }
 \details{
-If mortalityFitness = TRUE, the number of reproduction events per generation is doubled. The mortality strength is an Integer value which determines the number of events per generation in which the mortality depends on fitness. \cr E.g. if mortalityStrengt = 100 for every 100 events with fitness dependent mortality there is 1 run with random mortality. \cr This way the random base mortality can be increased or decreased. The higher the frequency of the random base mortality the more neutral the conditions get.
+If type = "Rneutral" the model will run entirely in R. This model is to be seen only for test and teaching purpose. To be used in practice it is far too slow. Also the output is reduced in comparision with the other models. Only the species landscape and the parameter settings will be displayed in the output.
 }
 
