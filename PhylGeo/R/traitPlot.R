@@ -1,46 +1,44 @@
 #' @title Trait plots
-#' @description Plot traits of simulation outputs
-#' @param landscape the species landscape
-#' @param phylogeny the corresponding (extant) phylogeny
-#' @param plot defines what to plot. "both" plots the landscape and phylogeny side-by-side
+#' @description Plots trait-histograms, trait ~ Environment relationship and the spatial distribution of the different traits
+#' @param simu Simulation output of the class "Phylosim", usually consisting out of several lists. Needs to contain at least the three trait matrices ($traitMat;$compMat;$neutMat) and the environment matrix ($envMat) 
+#' @param which.simulation defines which simulation run to choose in case you defined to save at multiple time steps. The default is the last one.
 #' @export
-plotTraitDistribution <- function (simu, type = "hist", time = NULL){
+
+plotTraitDistribution <- function (simu, type = "hist", which.simulation = NULL){
   
-  if (is.null(time)) time = length(simu) - 1
+  if (is.null(which.simulation)) which.simulation = length(simu) - 1
   
-  dat <- simu[[time]]
-  
+  dat <- simu[[which.simulation]]
   
   if (type == "hist"){
-    oldpar <- par(mfrow = c(3,3), mar = c(3,3,3,3))
+    par(mfrow = c(3,3))
+    par(mar = c(5, 4, 2, 2))
+    hist(dat$traitMat, breaks = 100,xlab="Environmenttrait", main = "Environmenttrait", ylab = "Frequency")
+    hist(dat$compMat, breaks = 100,xlab = "Competitiontrait",main = "Competitiontrait", ylab="" )
+    hist(dat$neutMat, breaks = 100,xlab="Neutraltrait", main = "Neutraltrait", ylab="")
     
-    plot(dat$envMat, dat$traitMat, col = dat$specMat)
-    plot(dat$envMat, dat$compMat, col = dat$specMat)
-    plot(dat$envMat, dat$neutMat, col = dat$specMat)
+    plot(dat$traitMat~dat$envMat, col = dat$specMat, ylab="Trait", xlab="Environment"  )
+    plot(dat$compMat~dat$envMat, col = dat$specMat, ylab= "", xlab="Environment")
+    plot(dat$neutMat~dat$envMat, col = dat$specMat, ylab= "", xlab="Environment")
     
-    image(dat$traitMat)
-    image(dat$compMat)
-    image(dat$neutMat)
     
-    hist(dat$traitMat, breaks = 100)
-    hist(dat$compMat, breaks = 100)
-    hist(dat$neutMat, breaks = 100)
-    
-    par(oldpar)
+    image(dat$traitMat, xaxt="n", yaxt="n", ylab="Spatial Distribution")
+    image(dat$compMat, xaxt="n", yaxt="n")
+    image(dat$neutMat, xaxt="n", yaxt="n")
   }else if(type == "phylo"){
     require(phytools)
     
-#     contMap(simu$phylogeny, x, res=100, fsize=NULL, ftype=NULL, lwd=4, legend=NULL,
-#             lims=NULL, outline=TRUE, sig=3, type="phylogram", direction="rightwards", 
-#             plot=TRUE, ...)
-#     
-#     x<-data.frame(species = paste("s", as.vector(simu$specMat)) , )
-#     
-#     trait.plot(tree, dat, cols, lab=names(cols), str=0:1, class=NULL,
-#                type="f", w=1/50, legend=length(cols) > 1, cex.lab=.5,
-#                font.lab=3, cex.legend=.75, margin=1/4,
-#                check=TRUE, quiet=FALSE)
-#     
+    #     contMap(simu$phylogeny, x, res=100, fsize=NULL, ftype=NULL, lwd=4, legend=NULL,
+    #             lims=NULL, outline=TRUE, sig=3, type="phylogram", direction="rightwards", 
+    #             plot=TRUE, ...)
+    #     
+    #     x<-data.frame(species = paste("s", as.vector(simu$specMat)) , )
+    #     
+    #     trait.plot(tree, dat, cols, lab=names(cols), str=0:1, class=NULL,
+    #                type="f", w=1/50, legend=length(cols) > 1, cex.lab=.5,
+    #                font.lab=3, cex.legend=.75, margin=1/4,
+    #                check=TRUE, quiet=FALSE)
+    #     
   }
 }
 
