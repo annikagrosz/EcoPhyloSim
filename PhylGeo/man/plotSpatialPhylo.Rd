@@ -2,27 +2,23 @@
 % Please edit documentation in R/plotSpatialPhylo.R
 \name{plotSpatialPhylo}
 \alias{plotSpatialPhylo}
-\title{Plot of phylogeny and species landscape}
+\title{Phylogeny And Spatial Abundance Plot}
 \usage{
-plotSpatialPhylo(simu, plot = "both", plotTraits = T, col = "phylodist",
-  main = "", time = NULL)
+plotSpatialPhylo(simu, plot = "both", plotTraits = T,
+  which.simulation = NULL)
 }
 \arguments{
-\item{simu}{simulation output, consisting of a list contain at least $specMat with the spatial species matrix, and $phylogeny with the phylogeny}
+\item{simu}{Simulation output of the class "Phylosim", usually consisting out of several lists. Needs to contain at least the spatial species matrix ($specMat) and the phylogeny ($phylogeny)}
 
-\item{plot}{defines what to plot. "both" plots the landscape and phylogeny side-by-side, other options are "landscape" and "phylogeny"}
+\item{plot}{defines what to plot."spatial" plots the spatial abundance, "phylogeny" the phylogeny tree. "both" plots both of them side by side}
 
-\item{plotTraits}{defines if the traits should be plotted}
+\item{plotTraits}{logical, defines if the traits should be plotted}
 
-\item{col}{defines the color, options are "phylodist" (default) and "equidist"}
-
-\item{main}{defines the title of the plot}
-
-\item{time}{defines which simulation run to choose in case you defined to save at multiple time steps. The default is the last one.}
+\item{which.simulation}{defines which simulation run to choose in case you defined to save at multiple time steps. The default is the last one.}
 
 \item{phylogeny}{the corresponding (extant) phylogeny}
 }
 \description{
-Plots the phylogeny and species landscape, colored by taxon
+Provided with an output of a phylogeny-simulation this function can plot the phylogeny tree ,the spatially abundance of the evolved species and their traits.
 }
 

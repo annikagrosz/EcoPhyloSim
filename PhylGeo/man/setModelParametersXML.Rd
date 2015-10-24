@@ -13,31 +13,31 @@ setModelParametersXML(list, file)
 
 \item{y}{Dimension of the model landscape in y-direction}
 
-\item{dispersal}{1 = Gloabl dispersal, 3 = Local dispersal}
+\item{dispersal}{1 = Global dispersal, 3 = Local dispersal}
 
-\item{specRate}{Numerical the number of species introduced into the community during each generation}
+\item{specRate}{Numerical, the number of species introduced into the community during each generation}
 
 \item{runs}{Number of generations the model runs over}
 
-\item{density}{Logical determining whether or not density dependence influences the model}
+\item{density}{Logical, determining whether or not density dependence influences the model}
 
-\item{environment}{Logical determining whether or not the environment influences the model}
+\item{environment}{Logical, determining whether or not the environment influences the model}
 
 \item{mortalityFitness}{Logical, determining whether or not the individual fitness influences mortality}
 
-\item{mortalityStrength}{Integer determining the influence of fitness on mortality}
+\item{mortalityStrength}{Integer, determining the influence of fitness on mortality}
 
 \item{reproductiveFitness}{Logical, determining whether or not the individual fitness influences reproducti}
 
-\item{neutral}{Logical determining whether or not the model is run under neutral conditions (overrides density and environment)}
+\item{neutral}{Logical, determining whether or not the model is run under neutral conditions (overrides density and environment)}
 
 \item{location}{A character vector specifing the folder to save the .xml file in (the filename is always parameters.xml and does not need to be set.)}
 
-\item{dispersalCut}{Integer defining the maximum dispersal distance of the kernel}
+\item{dispersalCut}{Integer, defining the maximum dispersal distance of the kernel}
 
-\item{densityCut}{Integer defining the range for the density dependence}
+\item{densityCut}{Integer, defining the range for the density dependence}
 
-\item{seed}{Integer setting the random seed for the model}
+\item{seed}{Integer, setting the random seed for the model}
 
 \item{saveLocation}{Path of the folder to save the extracted files to}
 }

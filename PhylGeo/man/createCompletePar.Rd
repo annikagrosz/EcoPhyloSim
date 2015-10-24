@@ -5,7 +5,7 @@
 \title{Parameter Generator}
 \usage{
 createCompletePar(x = 50, y = 50, dispersal = "global", runs = 100,
-  specRate = 1, density = F, environment = F,
+  specRate = 1, density = 0, environment = 0,
   fitnessActsOn = "mortality", fitnessBaseMortalityRatio = 10,
   densityCut = 1, seed = NULL, type = "base", modes = NULL,
   scenario = NULL)
@@ -17,13 +17,13 @@ createCompletePar(x = 50, y = 50, dispersal = "global", runs = 100,
 
 \item{dispersal}{Integer. Type 0 or "global" for global dispersion. For local dispersion all integers >=1 set the dispersal distance.}
 
-\item{runs}{Integer, Number of generations the model runs over. You can also define a sequence of runs. Then the intermediate and end results are saved.}
+\item{runs}{Integer, Number of generations or sequence of generations the model runs overn (see Details).}
 
 \item{specRate}{Integer, Number of Individuals introduced to the community in each generation}
 
-\item{density}{Logical, determining whether or not density dependence influences the model}
+\item{density}{Float, determining whether or how strong the density dependence influences the model. By default (density=0) there is no density dependence. The higher the value of the parameter, the stronger is the density dependence.}
 
-\item{environment}{Logical, determining whether or not the environment influences the model}
+\item{environment}{Float, determining whether or how strong the environment influences the model.  By default (environment=0) there is no influence of the environment. The higher the value of the parameter, the stronger is the influence of the environment.}
 
 \item{fitnessActsOn}{Character, determining how the fitness influences the individuals. Possible inputs are "mortality" (default), "reproduction" or "both"}
 
@@ -39,9 +39,9 @@ createCompletePar(x = 50, y = 50, dispersal = "global", runs = 100,
 A List with parameters
 }
 \description{
-Function to create a list with parameters for biogeographical simulations with \code{\link[PhylGeo]{runSimulation}} or \code{\link[PhylGeo]{runSimulationBatch}}
+Function to create a list with parameters for biogeographical simulations with \code{runSimulation} or \code{runSimulationBatch}
 }
 \details{
-If type = "Rneutral" the model will run entirely in R. This model is to be seen only for test and teaching purpose. To be used in practice it is far too slow. Also the output is reduced in comparision with the other models. Only the species landscape and the parameter settings will be displayed in the output.
+If runs is a sequence of generations the intermediate and end results are saved in the output of \code{runSimulation}. \cr\cr If type = "Rneutral" the model will run entirely in R. This model is to be seen only for test and teaching purpose. To be used in practice it is far too slow. Also the output is reduced in comparision with the other models. Only the species landscape and the parameter settings will be displayed in the output.
 }
 

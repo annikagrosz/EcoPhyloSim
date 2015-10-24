@@ -16,15 +16,15 @@ setLeipzigParametersXML(scenarios, x, y, runs, dispersal, nSpec, specRate,
 
 \item{runs}{Number of generations the model runs over}
 
-\item{dispersal}{1 = Gloabl dispersal, 2 = Nearest neighbor dispersal}
+\item{dispersal}{1 = Global dispersal, 2 = Nearest neighbor dispersal}
 
 \item{nSpec}{Number of initial Species in the model landscape}
 
-\item{specRate}{Numerical the number of species introduced into the community during each generation}
+\item{specRate}{Numerical, the number of species introduced into the community during each generation}
 
-\item{density}{Logical determining whether or not density dependence influences the model}
+\item{density}{Logical, determining whether or not density dependence influences the model}
 
-\item{densityStrength}{Numerical (0.0 - 1.0) determining the strength of the density dependence}
+\item{densityStrength}{Numerical, (0.0 - 1.0) determining the strength of the density dependence}
 
 \item{location}{A character vector specifing the folder to save the .xml file in (eg. "C:/parametersR/"). The "/" at the end is vital.}
 
