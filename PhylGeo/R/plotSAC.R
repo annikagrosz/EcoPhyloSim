@@ -46,5 +46,4 @@ sac <- function(simu,which.simulation=NULL, area = NULL, rep=50, plot=T){
   return(data.frame(area = area, sr.Mean = meanSpeciesRichness,sr.UpperCI = meanSpeciesRichnessUpperCI, sr.LowerCI = meanSpeciesRichnessLowerCI))
 }
 
-sac(simu)
 

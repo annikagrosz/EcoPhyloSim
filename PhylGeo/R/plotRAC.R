@@ -43,7 +43,3 @@ specRich <- function(simu,which.simulation=NULL){
 }
 
 
-rac(simu, plot ="line")
-
-
-

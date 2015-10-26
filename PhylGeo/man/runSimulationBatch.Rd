@@ -11,22 +11,22 @@ runSimulationBatch(pars, parallel = F, backup = FALSE)
 
 \item{parallel}{Logical, determining whether parallel computing should be executed.}
 
-\item{backup}{Logical determining whether the results of the individual scenario runs should be saved as a workspace image (advised if the simulation takes a long time, or if the individual scenarios vary greatly in runtime. Default is FALSE)}
+\item{backup}{Logical, determining whether the results of the individual scenario runs should be saved as a workspace image (advised if the simulation takes a long time, or if the individual scenarios vary greatly in runtime. Default is FALSE)}
 }
 \value{
 A list of Phylosim-Objects as created by \code{\link{runSimulation}}
 }
 \description{
-A model of species community assembly under different assembly mechanisms, using parallel computing to make use of multi core cpus and clusters in order to reduce computation time. The function is an extension to \link{runSimulation} in order to simulate multiple scenarios.
+A model of species community assembly under different assembly mechanisms, using parallel computing to make use of multi core CPUs and clusters in order to reduce computation time. The function is an extension to \link{runSimulation} in order to simulate multiple scenarios.
 }
 \details{
-This function uses the \code{\link{foreach}} and \code{\link{doParallel}} package to compute the model scenarios parallel on several cores. If you want to keep working on your computer make sure to reserve at least one core for your other endevors (by assigning n-1 cores to the function). By default all cores are employed to ensure maximum speed.\cr \cr The phylogeny is passed to R in the newick format and parsed to an object of class "phylo" with the function \code{\link[ape]{read.tree}} from the \code{\link{ape}} package.
+This function uses the \code{\link{foreach}} and \code{\link{doParallel}} package to compute the model scenarios parallel on several cores. If parallel = TRUE, n-1 cores are used.\cr \cr The phylogeny is passed to R in the newick format and parsed to an object of class "phylo" with the function \code{\link[ape]{read.tree}} from the \code{\link{ape}} package.
 }
 \examples{
 ## Define two parameter sets
 par1 <- createCompletePar(x = 50, y = 50, dispersal = 0 , runs = c(500,1000),
         density = 0, environment = 0.5, specRate = 1)
-par2 <- createCompletePar(x = 50, y = 50, dispersal = 5 , runs = c(500,1000),
+par2 <- createCompletePar(x = 50, y = 50, dispersal = 0 , runs = c(500,1000),
         density = 1, environment = 0.5, specRate = 1)
 
 ## Merge the parameter sets. It is important to note, that the funktion
@@ -36,7 +36,9 @@ par <- list(par1,par2)
 ## Run the model
 simu <- runSimulationBatch(par, parallel=T)
 
-## Compare the results
-##
+## Compare the results, here the SAC is shown exemplarily.
+par(mfrow=c(1,2))
+sac(simu[[1]][[2]]$specMat)
+sac(simu[[2]][[2]]$specMat)
 }
 
