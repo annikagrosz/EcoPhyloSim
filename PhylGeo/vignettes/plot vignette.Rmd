@@ -1,0 +1,46 @@
+---
+title: "Plot-Vignette"
+output: html_document
+---
+```{r, echo = FALSE}
+library(PhylGeo)
+par <- createCompletePar(x = 50, y = 50, dispersal = 1, runs = c(500,1000), density = 1, environment = 0.5, specRate = 1)
+
+simu <- runSimulation(par)
+
+```
+This package contains several functions that plot different figures that help illustrate the models outcome.
+
+
+
+
+
+Phylogeny and Spatial Abundance Plot
+
+This plot consist out of three different figures. The phylogeny tree that shows the phylogeny of the modeled community with colored tip labels. A traitplot that shows the magnitude of different traits for each of the species within the community. A plot that shows the spatial abundance of the species within the community. Here the species have the same color as the tip labels for recognition. Which of these figures are plotted can be triggered with the arguments "plot" and "plotTraits" (see help).
+```{r}
+plotSpatialPhylo(simu=simu, plot="both", plotTraits =T)
+```
+
+Trait Plots
+
+This plot consists out of three different figures for the three traits in the model (Environmenttrait, Competitiontrait, Neutraltrait). Figure one shows a histogram of the given trait. Figure two illustrates the trait's magnitude in dependency of the environment for different species. Figure two illustrates the spatial distribution of the given trait.
+
+```{r}
+plotTraitDistribution(simu = simu)
+```
+
+Plot Rank Abundance Curve
+
+This plot creates a rank abundance curve for a given community. For that each species is given a rank according to their abundance (highest = rank 1). Then the the species' abundance is plotted in dependency of their rank. It can be used as an indicator for the ammount of equally abundant species a community can support. With that, statements about the stability can be made as well. A linear curve means that a lot of species are in low abundance (unstable community) while an s shaped curve means there are more species with a similar magnitude of abundance(stable community). In addition to the plot the function returns the data frame from which the plot was created.
+
+```{r}
+rac(simu = simu)
+```
+
+Plot Species Area Curve
+
+```{r}
+sac(simu=simu)
+```
+
