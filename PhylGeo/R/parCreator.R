@@ -1,9 +1,9 @@
 #' @title  Parameter Generator 
-#' @description Function to create a list with parameters for biogeographical simulations with \code{runSimulation} or \code{runSimulationBatch}
+#' @description Function to create a list with parameters for biogeographical simulations with \code{\link{runSimulation}} or \code{\link{runSimulationBatch}}
 #' @param x  Integer, Dimension of the model landscape in x-direction
 #' @param y  Integer, Dimension of the model landscape in y-direction
 #' @param dispersal Integer. Type 0 or "global" for global dispersion. For local dispersion all integers >=1 set the dispersal distance.
-#' @param runs  Integer, Number of generations or sequence of generations the model runs overn (see Details). 
+#' @param runs  Integer, Number of generations or sequence of generations the model runs over (see Details). 
 #' @param specRate Integer, Number of Individuals introduced to the community in each generation
 #' @param density Float, determining whether or how strong the density dependence influences the model. By default (density=0) there is no density dependence. The higher the value of the parameter, the stronger is the density dependence.
 #' @param environment Float, determining whether or how strong the environment influences the model.  By default (environment=0) there is no influence of the environment. The higher the value of the parameter, the stronger is the influence of the environment.

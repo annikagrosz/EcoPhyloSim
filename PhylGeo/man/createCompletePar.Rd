@@ -17,7 +17,7 @@ createCompletePar(x = 50, y = 50, dispersal = "global", runs = 100,
 
 \item{dispersal}{Integer. Type 0 or "global" for global dispersion. For local dispersion all integers >=1 set the dispersal distance.}
 
-\item{runs}{Integer, Number of generations or sequence of generations the model runs overn (see Details).}
+\item{runs}{Integer, Number of generations or sequence of generations the model runs over (see Details).}
 
 \item{specRate}{Integer, Number of Individuals introduced to the community in each generation}
 
@@ -39,7 +39,7 @@ createCompletePar(x = 50, y = 50, dispersal = "global", runs = 100,
 A List with parameters
 }
 \description{
-Function to create a list with parameters for biogeographical simulations with \code{runSimulation} or \code{runSimulationBatch}
+Function to create a list with parameters for biogeographical simulations with \code{\link{runSimulation}} or \code{\link{runSimulationBatch}}
 }
 \details{
 If runs is a sequence of generations the intermediate and end results are saved in the output of \code{runSimulation}. \cr\cr If type = "Rneutral" the model will run entirely in R. This model is to be seen only for test and teaching purpose. To be used in practice it is far too slow. Also the output is reduced in comparision with the other models. Only the species landscape and the parameter settings will be displayed in the output.
