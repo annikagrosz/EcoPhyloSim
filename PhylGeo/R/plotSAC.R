@@ -1,3 +1,16 @@
+#' @title Species richness
+#' @description Calculate the total species richness of a community
+#' @param matrix A square matrix containing a species community (one individual per grid cell) 
+#' @return An integer value for the species richness
+#' @export
+
+
+specRich <- function(matrix){  
+  sr <- length(unique(c(matrix)))
+  return(speciesRichness = sr)
+}
+
+
 #' @title Species Area Curve
 #' @description Plots the species area curve for a given community. 
 #' @param simu Simulation output of the class "Phylosim", usually consisting out of several lists. Needs at least the spatial distribution of the species stored in a matrix ($specMat)

@@ -26,20 +26,4 @@ rac <- function(simu,which.simulation=NULL, plot="line"){
 }
 
 
-#' @title Species richness
-#' @description Calculate the total species richness of a community
-#' @param matrix A square matrix containing a species community (one individual per grid cell) 
-#' @return An integer value for the species richness
-#' @export
-
-specRich <- function(simu,which.simulation=NULL){
-  
-  if (is.null(which.simulation)) which.simulation = length(simu) - 1
-  simu <- simu[[which.simulation]]
-  matrix <- simu$specMat
-  
-  sr <- length(unique(c(matrix)))
-  return(speciesRichness = sr)
-}
-
 
