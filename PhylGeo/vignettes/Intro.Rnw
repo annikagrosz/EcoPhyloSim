@@ -17,19 +17,6 @@ Among the central model the package comprises a set of functions to illustrate a
 
 
 
-\section{Background}
-TODO References
-The field of community phylogenetics is based on the idea that species properties are often
-phylogenetically conserved. This means, that more recently diverged species have more similar traits and therefore more similar properties.\\
-Based on this idea one can infer dominant processes of community assembly by comparing the properties of the regional to the local phylogeny.
-These processes can be distinguished in two main classes, environmental filtering and local interactions.
-Environmental filtering selects at each location species with a favorable trait for the specific environment. This would lead to phytogenetically similar species co-occuring together.
-On the other hand local interactions or competition should be more fierce for species with similar traits as this would lead to limiting sinilarity.\\
-The comparision of the phylogenetic signal of an observed assemblage with the signal from an randomly generated assemblage (created from a null-model) can give some indication about the dominate assembly process. 
-An overdispersed phylogeny can be interpreted as an assemblage dominated by environmental filtering, whereas a clustered phylogeny can be interpreted as an assemblage dominated by local competition (Weiher & Keddy, 1995; Webb, 2000).\\
-Whereas previous approaches to this topic dealt with phylogenetic or spatial patterns (and produced numeral explanations how species assemblages evolved) the present approach gives the opportunity to combine these informations.
-Among a neutral model the phylosim package can simulate dispersal limitation, environmental preferences, and local competition. This tackles the main criticism of previous approaches which focused on one mechanism (e.g. environmental filtering vs. competitive exclusion) and ignored the possibility that this mechanism might not be solely if at all responsible for the emerging community pattern.
-
 \section{The model}
 \subsection{The grid}
 The basis for the simualtion is a grid consiting of spatially discrete cells.
@@ -88,28 +75,34 @@ library(PhylGeo)
 
 \subsection{Run the model}
 Running the model consists of two consecutive steps. First a list of parameters is generated based on the users settings.\\
-In the following example an area of 50*50 cells provides the basis for one simulations 1000 generations. The results are stored after 500 and 1000runs. \\
-<<>>=
-par <- createCompletePar(x = 50, y = 50, dispersal = 0 , runs = c(500,1000), density = 1, environment = 0.5, specRate = 1)
-@
-
-For further explanation and more settings see:
+In the following example an area of 50*50 cells provides the basis for one simulation with 1000 generations. Also the results after 500 generations will be stored in the output. \\
+The dispersal is set to global, meaning each individual could reproduce in every cell
+of the grid. Further, the density as well as the environment have an influence on the 
+individuals. For further explanations and more settings see:
 <<>>=
 ?createCompletePar
 @
 
-The list of parameters is now being used to exectute the simulation:
+<<>>=
+par <- createCompletePar(x = 50, y = 50, dispersal = "global" , runs = c(500,1000), density = 1, environment = 0.5, specRate = 1)
+@
 
+
+
+The list of parameters is now being used to exectute the simulation:
 <<>>=
 simu <- runSimulation(par)
 @
 
 
-The output is saved as a list. The first two list slices contain the results of the  simulation after 500 and 1000 runs, whereas the last list slice contains the parameter settings.
+The output is saved as an object of type "Phylosim".
+This objet contains the species matrix, the trait matrix, the environmental matrix, the competition matrix and the neutral matrix as well as the phlogeny for each generation as specified by the runs argument in the parameter settings (in this example after 500 and 1000 generations). Further the parameter settings of the simulation are included in the Phylosim object.
+
 
 <<>>=
 str(simu)
 @
+
 
 
 \subsection{Plots and summary statistics}
@@ -117,7 +110,7 @@ The phylosim package contaions  multiple functions to visualize the results of t
 The plotSpatialPhylo function can plot the resulting landscape, phylogeny and the evolved traits.
 
 <<fig=TRUE>>=
-plotSpatialPhylo(simu, plot = "both", plotTraits = T, time=1)
+plotSpatialPhylo(simu, plot = "both", plotTraits = T, which.simulation = NULL)
 @
 
 The package contains two functions to analyze the spatial patterns of the results.
