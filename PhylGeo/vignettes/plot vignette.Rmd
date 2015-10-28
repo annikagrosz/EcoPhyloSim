@@ -40,7 +40,12 @@ rac(simu = simu)
 
 Plot Species Area Curve
 
+The species are curve (SAC) displays the accumulated species richness as a function of plot size or the amount of equally sized plots. It serves as an indicator for the clustering of a species community. A positively bent curve usually indicates clustering since an increase in plot size or number leads to an increase in species richness while a negatively bent curve indicates a more neutral distribution of species within the community.The function returns a data frame with the data that created the plot as well.
+
 ```{r}
 sac(simu=simu)
 ```
+
+
+
 

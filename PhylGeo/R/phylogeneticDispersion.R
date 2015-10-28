@@ -2,7 +2,7 @@
 # Version that accepts multiple types
 calculatePhylogeneticDispersion <- function(simu, plotlengths = 10,  plots = 200, replicates = 500, types = "PhylMeta", fun = mpd, reduce = T, times = "last"){
   
-  if (class(simu) == "Phylosim") simu = list(simu)
+  if ("Phylosim" %in% simu ==T) simu = list(simu)
   
   ## TODO implement function for only 1 scenario
   
