@@ -1,4 +1,4 @@
-#' @title Phxlogeny Reconstruction
+#' @title Phylogeny Reconstruction
 #' @description reconstructs a phylogeny from a neutral trait matrix as returned by \code{\link{fullMod}}
 #' @param speciesMatrix A square matrix containing a species community (one individual per grid cell)
 #' @param traitMatrix A square matrix containing the neutral trait of a species community (one trait value per individual per grid cell

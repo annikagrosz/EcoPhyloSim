@@ -32,7 +32,9 @@
 #' ## Run the model
 #' simubatch <- runSimulationBatch(par, parallel=T) 
 #' 
-#' ## Compare results to null model
+#' ## Compare results to null model. Here it us mandatory to specify which Phylosim object 
+#' ## should be used.
+#' 
 #' nullModelSample(simubatch[[1]],localPlotSize = 100, numberOfPlots = 10, repetitions = 10)
 #' nullModelSample(simubatch[[2]],localPlotSize = 100, numberOfPlots = 10, repetitions = 10)
 #' 

@@ -1,5 +1,5 @@
 #' @title  Parameter Generator 
-#' @description Function to create a list with parameters for biogeographical simulations with \code{\link{runSimulation}} or \code{\link{runSimulationBatch}}
+#' @description Function to create a list of parameters for biogeographical simulations with \code{\link{runSimulation}} or \code{\link{runSimulationBatch}}
 #' @param x  Integer, Dimension of the model landscape in x-direction
 #' @param y  Integer, Dimension of the model landscape in y-direction
 #' @param dispersal Integer. Type 0 or "global" for global dispersion. For local dispersion all integers >=1 set the dispersal distance.
@@ -8,11 +8,11 @@
 #' @param density Float, determining whether or how strong the density dependence influences the model. By default (density=0) there is no density dependence. The higher the value of the parameter, the stronger is the density dependence.
 #' @param environment Float, determining whether or how strong the environment influences the model.  By default (environment=0) there is no influence of the environment. The higher the value of the parameter, the stronger is the influence of the environment.
 #' @param fitnessActsOn Character, determining how the fitness influences the individuals. Possible inputs are "mortality" (default), "reproduction" or "both"
-#' @param fitnessBaseMortalityRatio Integer, TODO
+#' @param fitnessBaseMortalityRatio Integer, determines the fitness based mortality ratio
 #' @param densityCut Integer, defines the effective range of the competition (ignored if density = FALSE)
 #' @param seed numerical, sets the random seed
 #' @param type Character, determining which model should be used. "base" is running the default model. Other possibilities are "Leipzig" and "Rneutral" which will run a neutral model purely in R.
-#' @details If runs is a sequence of generations the intermediate and end results are saved in the output of \code{runSimulation}. \cr\cr If type = "Rneutral" the model will run entirely in R. This model is to be seen only for test and teaching purpose. To be used in practice it is far too slow. Also the output is reduced in comparision with the other models. Only the species landscape and the parameter settings will be displayed in the output.
+#' @details If runs is a sequence of generations the intermediate and end results are saved in the output of \code{runSimulation}. \cr\cr If type = "Rneutral" the model will run entirely in R. This model is to be seen only for test and teaching purpose. To be used in practice it is far too slow. Also the output is reduced. Only the species landscape and the parameter settings will be displayed in the output.
 #' @return A List with parameters
 
 createCompletePar <- function(x = 50, y = 50, dispersal = "global", runs = 100, specRate = 1.0, density = 0, environment = 0, fitnessActsOn = "mortality" , fitnessBaseMortalityRatio = 10, densityCut = 1, seed=NULL,  type = "base", modes = NULL, scenario = NULL){

@@ -1,6 +1,6 @@
 
 #' @title Batch runner
-#' @description A model of species community assembly under different assembly mechanisms, using parallel computing to make use of multi core CPUs and clusters in order to reduce computation time. The function is an extension to \link{runSimulation} in order to simulate multiple scenarios.
+#' @description A model of species community assembly under different assembly mechanisms, using parallel computing to make use of multi core CPUs and clusters in order to reduce computation time. The function is an extension to \link{runSimulation} in order to accelerate the simulation of multiple scenarios.
 #' @param pars A single set of parameters as created by \code{\link{createCompletePar}} or a list of parameter sets
 #' @param parallel Logical, determining whether parallel computing should be executed.
 #' @param backup Logical, determining whether the results of the individual scenario runs should be saved as a workspace image (advised if the simulation takes a long time, or if the individual scenarios vary greatly in runtime. Default is FALSE)

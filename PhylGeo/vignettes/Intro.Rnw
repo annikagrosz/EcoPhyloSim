@@ -11,7 +11,7 @@
 \section{Introduction}
 The question whether or to which degree on can infer community assembly processes from their resulting spatial and phylogenetic patterns is of central importance in ecology. It is these processes that create and maintain local assemblages.\\
 Currently there are many different explanations as to how species communities are shaped based on the emerging spatial or phylogenetic patterns. 
-The phylosim package represents an expansion of previous models by combining these informations. This may yield pattern combinations that are much more distinct than phylogenetic or spatial patterns alone.\\
+The phylosim package represents an expansion of previous models by combining these informations.\\
 The simulation can include different mechanisms of community assembly such as dispersal limitation, environmental preferences and local competition, whereas the outcome consists of phylogenetic and spatial patterns. The mechanisms can be activated seperately or in combination. This allows the user to identify biogeographic or phylogenetic patterns exclusively correlated with a certain mechanism or combination of mechanisms.\\
 Among the central model the package comprises a set of functions to illustrate and analyze the results.
 
@@ -54,12 +54,6 @@ The last step in a generation is speciation. Here it describes the introduction 
 TODO Formula
 \\
 
-\subsection{Model output}
-The model output consists of five matrices representing the community landscape. 
-These are the distribution of species, the environment, the environmental as well as the competition traits of the species and TODO NeutralMat?.
-Further a table is produced including all information about the species and the phylogeny in the newick format. To faciliate the analysis the phylogeny is pruned by removing all extinct leaves without any branching events. 
-TODO check this section again. Especially the last paragraph!
-
 
 \section{Basic functionality}
 The following section descibes how the model is applied and shows some of the most important funktions to illustrate and analyze the results of the simulations.
@@ -78,13 +72,17 @@ Running the model consists of two consecutive steps. First a list of parameters 
 In the following example an area of 50*50 cells provides the basis for one simulation with 1000 generations. Also the results after 500 generations will be stored in the output. \\
 The dispersal is set to global, meaning each individual could reproduce in every cell
 of the grid. Further, the density as well as the environment have an influence on the 
-individuals. For further explanations and more settings see:
+individuals.\\
+The package can run three types of models. The default model, a Leipzig model and
+a neutral model purely written in R. The last one is to be seen only for test and teaching purpose. To be used in practice it is far too slow.
+
+For further explanations and more settings see:
 <<>>=
 ?createCompletePar
 @
 
 <<>>=
-par <- createCompletePar(x = 50, y = 50, dispersal = "global" , runs = c(500,1000), density = 1, environment = 0.5, specRate = 1)
+par <- createCompletePar(x = 50, y = 50, dispersal = "global" , runs = c(500,1000), density = 1, environment = 0.5, specRate = 1, type="base")
 @
 
 

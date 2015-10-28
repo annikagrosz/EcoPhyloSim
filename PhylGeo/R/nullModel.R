@@ -1,7 +1,7 @@
 #' @title Null Model
 #' @description Generates a null model to compare the observed results against.
 #' @param simu an object of class "phylosim" as created by \code{\link{runSimulation}} or \code{\link{runSimulationBatch}}
-#' @param which.simulation Integer, determines which result should be used. This argument is only usefull if interim steps are saved in the Phylosim object.
+#' @param which.simulation Integer, determines which result should be used. This argument is only usefull if interim steps are saved in the Phylosim object. By default (NULL), the end result is used.
 #' @param localPlotSize number of grid cells of the plots drawn within the metacommunity
 #' @param numberOfPlots number of plots drawn within the metacommunity
 #' @param repetitions number of generated null model plots
