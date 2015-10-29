@@ -57,14 +57,14 @@ nullModel <- function(simu, which.simulation=NULL, localPlotSize, numberOfPlots,
   distribution <- rmultinom(n = repetitions, size=localPlotSize,  prob=metaabundance) # create multinomial distributed matrix
   
   
-  NullDistribution = picante::mpd(samp = t(distribution), dis = extantPhyloCophen, abundance.weighted = T) # calculate mpd for null matrix
+  NullDistribution <- picante::mpd(samp = t(distribution), dis = extantPhyloCophen, abundance.weighted = T) # calculate mpd for null matrix
   
   observedMPD[which(is.na(observedMPD))] <- 0
   
-  CummulativeDensityFunction = ecdf(NullDistribution) # create cumulative density function from null matrix
+  CummulativeDensityFunction <- ecdf(NullDistribution) # create cumulative density function from null matrix
   
   
-  pValues = CummulativeDensityFunction(observedMPD) # use  cumulative density function on "real" mpd
+  pValues <- CummulativeDensityFunction(observedMPD) # use  cumulative density function on "real" mpd
   
   return(pValues)
 }
