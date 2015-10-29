@@ -4,11 +4,19 @@
 #' @param community A community matrix
 #' @param n The number of clades to visualise
 #' @export
-clades <- function(phylo, community, n){
+clades <- function(simu,which.simulation=NULL, size, n){
+  
+  lp <- localPlots(simu = simu,size = size, n=n,community=T , which.simulation =which.simulation)
+  
+  if (is.null(which.simulation)) which.simulation = length(simu) - 1
+  simu <- simu[[which.simulation]]
+  
+  phylo <- simu$phylogeny
+  community <- lp$communityTable
   
   for( i in 1:n){
-    x <- phylo$tip.label[is.element(phylo$tip.label,names(community[a,which(community[i,] >0)]))]
-    y <- phylo$tip.label[!is.element(phylo$tip.label,names(community[a,which(community[i,] >0)]))]
+    x <- phylo$tip.label[is.element(phylo$tip.label,names(community[which(community[i,] > 0)]))]
+    y <- phylo$tip.label[!is.element(phylo$tip.label,names(community[which(community[i,] > 0)]))]
     xy <- list(x,y)
     
     group <- ape::which.edge(phylo, x)
@@ -21,6 +29,12 @@ clades <- function(phylo, community, n){
     
     title <- paste("Phylogenetic clade plots \n Clade", i)
     plot(phylo,  direction="downwards", show.tip.label=F, show.node.label=F, edge.color=cladecolor, edge.width=cladewidth, main = title)
-    add.scale.bar()
+    
+    for(k in 1:length(x)){
+      place[k] <- which(phylo$tip.label==x[k])
+    }
+    
+    ape::tiplabels(text = x,tip = place, frame ="none", srt = 320, adj=0)
+    ape::add.scale.bar()
   }
 }

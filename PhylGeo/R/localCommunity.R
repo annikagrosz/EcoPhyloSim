@@ -6,8 +6,13 @@
 #' @param community Logical, determining whther to generate a community matrix or not default is FALSE
 #' @return A list of subplots and (if coomunity = T) a community matrix with plots in rows and species in collumns
 #' @export
-localPlots <- function(size, n, matrix, community=F)
-{
+localPlots <- function(simu,which.simulation=NULL,size, n, community=F){
+  
+  if (is.null(which.simulation)) which.simulation = length(simu) - 1
+  simu <- simu[[which.simulation]]
+  
+  matrix <- simu$specMat
+  
   edge <- round(sqrt(size))-1
   subPlots <- list()
   communityTable <- data.frame("species"= numeric())
@@ -38,15 +43,12 @@ localPlots <- function(size, n, matrix, community=F)
       communityTable <- merge(communityTable, dataTable , all=T)
       communityTable[is.na(communityTable)] <- 0
     } 
-    
-    # Transponate the community matrix
-    
-  }
+   }
   
   speciesNames <- character()
   for(b in 1:length(communityTable$species))
   {
-      speciesNames[b] <-  paste("s" ,communityTable$species[b], collapse="", sep="")
+    speciesNames[b] <-  paste("s" ,communityTable$species[b], collapse="", sep="")
   }
   
   if(community == T)
@@ -59,4 +61,4 @@ localPlots <- function(size, n, matrix, community=F)
   }
   
   return(list(subPlots=subPlots, communityTable=communityTable))
-}
+  }
