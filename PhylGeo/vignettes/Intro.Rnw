@@ -94,12 +94,33 @@ simu <- runSimulation(par)
 
 
 The output is saved as an object of type "Phylosim".
-This objet contains the species matrix, the trait matrix, the environmental matrix, the competition matrix and the neutral matrix as well as the phlogeny for each generation as specified by the runs argument in the parameter settings (in this example after 500 and 1000 generations). Further the parameter settings of the simulation are included in the Phylosim object.
-
-
+This objet contains the species matrix, the trait matrix, the environmental matrix, the competition matrix and the neutral matrix as well as the phlogeny for each generation as specified by the runs argument in the parameter settings (in this example after 500 and 1000 generations). Further the parameter settings of the simulation are included in the Phylosim object.\\
 <<>>=
 str(simu)
 @
+In the package, the Phylosim object serves as the basis of all further analysis.
+It can directly be passed to all other funktions.\\
+Because the simulations have a high computational cost, the package comprises a funktion to make use of parallel computing. This function can be seen as an extension to the
+runSimulation funktion in order to accelerate the simulation of multiple scenarios.\\
+As input serves a list of parameter settings as created by createCompletePar, whereas the output is a list of Phylosim objects.\\
+In the following example two slightly different parameter sets are created and processed using parallel computing.
+
+<<>>=
+par1 <- createCompletePar(x = 50, y = 50, dispersal = "global" , runs = 1000, density = 1, environment = 0.5, specRate = 1, type="base")
+
+par2 <- createCompletePar(x = 50, y = 50, dispersal = "global" , runs = 1000, density = 1, environment = 2, specRate = 1, type="base")
+
+parmBatch <- list(par1, par2)
+
+simuBatch <- runSimulationBatch(parmBatch, parallel = TRUE)
+@
+
+The simuBatch object contains two Phylosim objects saved in a list. You can easily access them seperately by indexing. For example:
+
+<<>>=
+simu1 <- simuBatch[[1]]
+@
+
 
 
 
