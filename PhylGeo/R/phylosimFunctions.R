@@ -1,14 +1,14 @@
 # To implement - functions for class phylosim
 
 
-plot.phylosim
+#plot.phylosim
 
 
 
-summary.phylosim
+#summary.phylosim
 
 
-print.phylosim 
+#print.phylosim 
 
 
-plot.phylosimbatch
+#plot.phylosimbatch

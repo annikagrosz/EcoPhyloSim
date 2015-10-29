@@ -1,10 +1,14 @@
 #' @title Phylogenetic clades
-#' @description Visualises the phylogenetic clades within a metacommunity from local community plots. 
-#' @param phylo An object of class 'phylo'
-#' @param community A community matrix
-#' @param n The number of clades to visualise
+#' @description Visualises the phylogenetic clades of a local community within a metacommunity. 
+#' @param simu Simulation output of the class "Phylosim", usually consisting out of several lists. Needs to contain at least the phylogeny ($phylogeny) and species matrix ($specMat)
+#' @param which.simulation defines which simulation run to choose in case you defined to save at multiple time steps. The default is the last one.
+#' @param n The number of local communities. For each community a new plot is created
+#' @param subplot if no simu object is given, a communitytable of a local community can be given here
+#' @param phylogeny if no simu object is ginve, an object of the class 'phylo' can be given here to describe the communites phylogeny
+#' @details 
+
 #' @export
-plotclades <- function(simu,which.simulation=NULL, size, n){
+plotclades <- function(simu,which.simulation=NULL, size, n, subplot = NULL, phylogeny=NULL){
   
   if(is.null(subplot)){
   lp <- localPlots(simu = simu,size = size, n=n,community=T , which.simulation =which.simulation)
@@ -33,6 +37,7 @@ plotclades <- function(simu,which.simulation=NULL, size, n){
     title <- paste("Phylogenetic clade plots \n Clade", i)
     plot(phylo,  direction="downwards", show.tip.label=F, show.node.label=F, edge.color=cladecolor, edge.width=cladewidth, main = title)
     
+    place<- numeric(length(x))
     for(k in 1:length(x)){
       place[k] <- which(phylo$tip.label==x[k])
     }
