@@ -14,3 +14,6 @@ es <- function(specRate, dimensions){
   ES <- sum(y) 
   return (ES)
 }
+
+
+
