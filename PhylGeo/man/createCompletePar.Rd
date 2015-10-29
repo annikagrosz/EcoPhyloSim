@@ -27,7 +27,7 @@ createCompletePar(x = 50, y = 50, dispersal = "global", runs = 100,
 
 \item{fitnessActsOn}{Character, determining how the fitness influences the individuals. Possible inputs are "mortality" (default), "reproduction" or "both"}
 
-\item{fitnessBaseMortalityRatio}{Integer, TODO}
+\item{fitnessBaseMortalityRatio}{Integer, determines the fitness based mortality ratio}
 
 \item{densityCut}{Integer, defines the effective range of the competition (ignored if density = FALSE)}
 
@@ -39,9 +39,17 @@ createCompletePar(x = 50, y = 50, dispersal = "global", runs = 100,
 A List with parameters
 }
 \description{
-Function to create a list with parameters for biogeographical simulations with \code{\link{runSimulation}} or \code{\link{runSimulationBatch}}
+Function to create a list of parameters for biogeographical simulations with \code{\link{runSimulation}} or \code{\link{runSimulationBatch}}
 }
 \details{
-If runs is a sequence of generations the intermediate and end results are saved in the output of \code{runSimulation}. \cr\cr If type = "Rneutral" the model will run entirely in R. This model is to be seen only for test and teaching purpose. To be used in practice it is far too slow. Also the output is reduced in comparision with the other models. Only the species landscape and the parameter settings will be displayed in the output.
+If runs is a sequence of generations the intermediate and end results are saved in the output of \code{runSimulation}. \cr\cr If type = "Rneutral" the model will run entirely in R. This model is to be seen only for test and teaching purpose. To be used in practice it is far too slow. Also the output is reduced. Only the species landscape and the parameter settings will be displayed in the output.
+}
+\examples{
+## Define a parameter set
+par <- createCompletePar(x = 50, y = 50, dispersal = F , runs = c(500,1000),
+        density = T, environment = 0.5, specRate = 1)
+
+## Run the model
+simu <- runSimulation(par)
 }
 

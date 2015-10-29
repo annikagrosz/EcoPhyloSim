@@ -2,7 +2,7 @@
 % Please edit documentation in R/reconstructPhylogeny.R
 \name{phyloReconstruct}
 \alias{phyloReconstruct}
-\title{Phxlogeny Reconstruction}
+\title{Phylogeny Reconstruction}
 \usage{
 phyloReconstruct(speciesMatrix, traitMatrix, ...)
 }

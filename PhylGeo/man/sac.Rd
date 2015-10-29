@@ -9,6 +9,8 @@ sac(simu, which.simulation = NULL, area = NULL, rep = 50, plot = T)
 \arguments{
 \item{simu}{Simulation output of the class "Phylosim", usually consisting out of several lists. Needs at least the spatial distribution of the species stored in a matrix ($specMat)}
 
+\item{which.simulation}{Integer, determines which simulation should be used. Only useful if your Phylosim object contains more than one result.}
+
 \item{area}{a single value or a vector determining the size(s) of the subplots that for which areas are calculated. If not provided, 10 sizes logarithmically will be chosen}
 
 \item{rep}{The number of repetitions per size to calculate the mean}

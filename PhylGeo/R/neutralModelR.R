@@ -1,18 +1,5 @@
-#' @title Model of neutral community assembly
-#' @description Runs a simple model of species community assembly under neutral conditions as defined by Hubbel. 
-#' @param dim The edge-length of the square metacommunity matrix
-#' @param specRate The speciation rate in total speciation events per generation
-#' @param seed The random seed (do not change this option if you previously set the seed!)
-#' @param runs The number of generations the model runs through
-#' @details Be careful with the dimensions you choose. Large grids and many generations may take very long to compute. You can assume to have reached the equilibrium state of the model after dim^2/2.
-#' @examples
-#' # Run the model
-#' metaCom <- NeutralMod(dim=50, specRate=2, seed=1500, runs=1500)
-#' # Visualize the grid
-#' image(metaCom)
-#' # Calculate the species area-relation
-#' rac(metaCom, plot=T)
-#' @export
+## Neutral Model. Function can be called by runSimulation.
+
 NeutralMod <- function(  xdim = 100, ydim=100, specRate = 2,  seed = NULL, runs = 500 ){
   
   ptm <- proc.time()

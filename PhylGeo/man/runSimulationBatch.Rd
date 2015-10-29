@@ -17,7 +17,7 @@ runSimulationBatch(pars, parallel = F, backup = FALSE)
 A list of Phylosim-Objects as created by \code{\link{runSimulation}}
 }
 \description{
-A model of species community assembly under different assembly mechanisms, using parallel computing to make use of multi core CPUs and clusters in order to reduce computation time. The function is an extension to \link{runSimulation} in order to simulate multiple scenarios.
+A model of species community assembly under different assembly mechanisms, using parallel computing to make use of multi core CPUs and clusters in order to reduce computation time. The function is an extension to \link{runSimulation} in order to accelerate the simulation of multiple scenarios.
 }
 \details{
 This function uses the \code{\link{foreach}} and \code{\link{doParallel}} package to compute the model scenarios parallel on several cores. If parallel = TRUE, n-1 cores are used.\cr \cr The phylogeny is passed to R in the newick format and parsed to an object of class "phylo" with the function \code{\link[ape]{read.tree}} from the \code{\link{ape}} package.

@@ -99,7 +99,8 @@ This objet contains the species matrix, the trait matrix, the environmental matr
 str(simu)
 @
 In the package, the Phylosim object serves as the basis of all further analysis.
-It can directly be passed to all other funktions.\\
+It can directly be passed to all other funktions.
+If the Phylsim object contains multiple results, they can in all functions be accessed by the which.simulation argument. By default always the end result is used.\\
 Because the simulations have a high computational cost, the package comprises a funktion to make use of parallel computing. This function can be seen as an extension to the
 runSimulation funktion in order to accelerate the simulation of multiple scenarios.\\
 As input serves a list of parameter settings as created by createCompletePar, whereas the output is a list of Phylosim objects.\\
@@ -125,11 +126,18 @@ simu1 <- simuBatch[[1]]
 
 
 \subsection{Plots and summary statistics}
-The phylosim package contaions  multiple functions to visualize the results of the simulation.
-The plotSpatialPhylo function can plot the resulting landscape, phylogeny and the evolved traits.
+The phylosim package contaions multiple functions to visualize the results of the simulation.
+The plotSpatialPhylo plot consist out of three different figures. The phylogeny tree that shows the phylogeny of the modeled community with colored tip labels. A traitplot that shows the magnitude of different traits for each of the species within the community. A plot that shows the spatial abundance of the species within the community. Here the species have the same color as the tip labels for recognition. Which of these figures are plotted can be triggered with the arguments "plot" and "plotTraits" (see help).\\
 
 <<fig=TRUE>>=
 plotSpatialPhylo(simu, plot = "both", plotTraits = T, which.simulation = NULL)
+@
+
+
+The plotTraitDistribution plot consists out of three different figures for the three traits in the model (Environmenttrait, Competitiontrait, Neutraltrait). Figure one shows a histogram of the given trait. Figure two illustrates the trait's magnitude in dependency of the environment for different species. Figure two illustrates the spatial distribution of the given trait.
+
+<<>>=
+plotTraitDistribution(simu = simu, which.simulation = NULL)
 @
 
 The package contains two functions to analyze the spatial patterns of the results.
@@ -138,24 +146,21 @@ The SAC shows the accumulated species richness as a function of the plot size.
 A positively bent curve indicates clustering of a species community. An increase in plot size leads to an increase in specis richness. A negatively bent curve indicates a more neutral distribution of species within the cmmunity.\\
 RACs display the amount of equally abundand species that the community can support. A linear curve indicates a less stable or neutral community supporting only a few highly abundand species, whereas an S-shaped curve indicates a more stable community. In the latter case several species of the same abundance can be supported.\\
 
-Here the results are shown for the same simulation after 500 and 1000 runs.
+Here the results are shown for the same simulation 1000 runs.
 
 
 <<fig=TRUE>>=
-par(mfrow = c(2,2),mar=c(1.5, 3, 3, 0.5))
-rac(simu[[1]]$specMat)
-sac(simu[[1]]$specMat)
-rac(simu[[2]]$specMat)
-sac(simu[[2]]$specMat)
+par(mfrow = c(1,2))
+rac(simu, which.simulation = NULL)
+sac(simu, which.simulation = NULL)
 @
 
 
-Further it is possible to calculate the species richness of the results. As before the result is calculated for the simulation after 500 and 1000 time steps.
+Further it is possible to calculate the species richness of the results. The result is calculated for the simulation after 500 and 1000 time steps.
 
 <<>>=
-
-specRich(simu[[1]]$specMat)
-specRich(simu[[2]]$specMat)
+specRich(simu, which.simulation = 1)
+specRich(simu, which.simulation = 2)
 @
 
 TODO Reference
@@ -168,7 +173,7 @@ es(specRate=1, dimensions=50)
 It is possible to create subplots from a community landscape.
 Here 4 subplots are produced. Besides the subplots community matrix with plots in rows and species in collumns can be returned.
 <<>>=
-locals<-localPlots(size=20, 4, matrix=simu[[2]]$specMat, community=T)
+locals<-localPlots(size=20, 4, matrix=simu, community=T)
 @
 
 <<>>=
@@ -183,26 +188,6 @@ locals$communityTable
 @
 
 \section{Other models}
-
-\subsection{Neutral model}
-The package contains also a purely neutral model written in R. This model is to be seen only for test and teaching purpose. To be used in practice it is far too slow.
-The model can be run with:
-
-<<>>=
-metaCom <- NeutralMod(dim=50, specRate=2, seed=1500, runs=1500)
-@
-The output consists of a single matrix containing only the species distribution.
-
-
-<<fig=TRUE>>=
-image(metaCom)
-@
-
-Nonetheless, some of the functions to analyze the results can be applied. For
-example:
-<<fig=TRUE>>=
-rac(metaCom, plot="line")
-@
 
 
 \subsection{Null Model}

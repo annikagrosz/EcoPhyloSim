@@ -10,7 +10,7 @@ nullModel(simu, which.simulation = NULL, localPlotSize, numberOfPlots,
 \arguments{
 \item{simu}{an object of class "phylosim" as created by \code{\link{runSimulation}} or \code{\link{runSimulationBatch}}}
 
-\item{which.simulation}{Integer, determines which result should be used. This argument is only usefull if interim steps are saved in the Phylosim object.}
+\item{which.simulation}{Integer, determines which result should be used. This argument is only usefull if interim steps are saved in the Phylosim object. By default (NULL), the end result is used.}
 
 \item{localPlotSize}{number of grid cells of the plots drawn within the metacommunity}
 

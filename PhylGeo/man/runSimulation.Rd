@@ -2,7 +2,7 @@
 % Please edit documentation in R/runSimulation.R
 \name{runSimulation}
 \alias{runSimulation}
-\title{Species community Simulation}
+\title{Species Community Simulation}
 \usage{
 runSimulation(par)
 }
@@ -13,7 +13,7 @@ runSimulation(par)
 An object of class "Phylosim". This objet contains the species matrix, the trait matrix, the environmental matrix, the competition matrix and the neutral matrix, as well as the phlogeny and the parameter settings of the simulation.
 }
 \description{
-A model of species community assembly under different assembly mechanism
+A model of species community assembly under different assembly mechanisms.
 }
 \details{
 If your parameterset contains more than one runs argument, each interim step is saved in the Phylosim object. \cr\cr For larger simularions consider \link{runSimulationBatch} to make use of parallel computing.

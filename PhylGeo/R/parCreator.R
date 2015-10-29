@@ -14,6 +14,15 @@
 #' @param type Character, determining which model should be used. "base" is running the default model. Other possibilities are "Leipzig" and "Rneutral" which will run a neutral model purely in R.
 #' @details If runs is a sequence of generations the intermediate and end results are saved in the output of \code{runSimulation}. \cr\cr If type = "Rneutral" the model will run entirely in R. This model is to be seen only for test and teaching purpose. To be used in practice it is far too slow. Also the output is reduced. Only the species landscape and the parameter settings will be displayed in the output.
 #' @return A List with parameters
+#' @examples 
+#' ## Define a parameter set
+#' par <- createCompletePar(x = 50, y = 50, dispersal = F , runs = c(500,1000),
+#'         density = T, environment = 0.5, specRate = 1)
+#'
+#' ## Run the model
+#' simu <- runSimulation(par)
+#' 
+#' @export
 
 createCompletePar <- function(x = 50, y = 50, dispersal = "global", runs = 100, specRate = 1.0, density = 0, environment = 0, fitnessActsOn = "mortality" , fitnessBaseMortalityRatio = 10, densityCut = 1, seed=NULL,  type = "base", modes = NULL, scenario = NULL){
     
