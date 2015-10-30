@@ -4,25 +4,29 @@
 \alias{nullModel}
 \title{Null Model}
 \usage{
-nullModel(simu, which.simulation = NULL, localPlotSize, numberOfPlots,
-  repetitions)
+nullModel(simu, which.simulation = NULL, abundance = FALSE, localPlotSize,
+  numberOfPlots, repetitions, dist = "mpd")
 }
 \arguments{
 \item{simu}{an object of class "phylosim" as created by \code{\link{runSimulation}} or \code{\link{runSimulationBatch}}}
 
 \item{which.simulation}{Integer, determines which result should be used. This argument is only usefull if interim steps are saved in the Phylosim object. By default (NULL), the end result is used.}
 
+\item{abundance}{Logical, determining wheather the null model should be based on the abundance distribution of the sample plots. Default is FALSE.}
+
 \item{localPlotSize}{number of grid cells of the plots drawn within the metacommunity}
 
 \item{numberOfPlots}{number of plots drawn within the metacommunity}
 
 \item{repetitions}{number of generated null model plots}
+
+\item{dist}{TODO}
 }
 \value{
 A numeric vector with pValues for each plot in the observed metacommunity
 }
 \description{
-Generates a null model to compare the observed results against.
+Generates a null model and compares the observed results against.
 }
 \examples{
 ### Usage with runSimulation
@@ -33,7 +37,7 @@ par <- createCompletePar(x = 50, y = 50, dispersal = 0 , runs = c(500,1000), den
 simu <- runSimulation(par)
 
 ## Compare to null model
-nullModel(simu, localPlotSize = 100, numberOfPlots = 10, repetitions = 10)
+nullModel(simu, abundance= FALSE, localPlotSize = 100, numberOfPlots = 10, repetitions = 10)
 
 ## Usage with runSimulationBatch
 ## Define two (or multiple) parameter sets

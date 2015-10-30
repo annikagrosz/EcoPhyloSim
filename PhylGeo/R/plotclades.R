@@ -5,7 +5,7 @@
 #' @param n The number of local communities. For each community a new plot is created
 #' @param subplot if no simu object is given, a communitytable of a local community can be given here
 #' @param phylogeny if no simu object is ginve, an object of the class 'phylo' can be given here to describe the communites phylogeny
-#' @details 
+#' @details a
 
 #' @export
 plotclades <- function(simu,which.simulation=NULL, size, n, subplot = NULL, phylogeny=NULL){

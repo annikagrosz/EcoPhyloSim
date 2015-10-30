@@ -190,7 +190,27 @@ locals$communityTable
 \section{Other models}
 
 
-\subsection{Null Model}
+\section{Null Model}
+To tackle the question, wheather there are pattern in the results of the 
+simualtions, the package comprises a set of null models to test the observed results
+against. These models are brought together in the nullModel function.\\
+In the function subplots of the results are created based on a Phylosim object.
+These subplots can also be created seperately for different purposes.
+<<>>=
+subPlots <- localPlots(simu = simu, size=100, n=10)
+@
+
+These subplots are now tested against randomly collected plots.\\
+You can choose, wheather the null model should be based on the abundance distribution of the 
+sample plots or not.
+
+<<>>=
+(pValues <- nullModel(simu = simu, abundance = FALSE, localPlotSize = 100, numberOfPlots = 10, repetitions = 100))
+@
+
+
+
+
 
 
 
