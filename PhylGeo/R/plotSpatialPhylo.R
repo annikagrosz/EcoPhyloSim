@@ -15,7 +15,7 @@ plotSpatialPhylo <- function (simu, plot = "both", plotTraits = T, which.simulat
   
   phylogeny = simu$phylogeny
   
-  extantPhylogeny <- drop.fossil(phylogeny)
+  extantPhylogeny <- ape::drop.fossil(phylogeny)
   
   nSpecies = length(extantPhylogeny$tip.label)
   
@@ -53,13 +53,13 @@ plotSpatialPhylo <- function (simu, plot = "both", plotTraits = T, which.simulat
     }
     if(plot=="spatial"){
       image(landscape, col = cols, yaxt='n', xaxt='n')
-      mtext(outer =T ,"Spatial Abundance", cex=1.5, at =at)
+      mtext(outer =T ,"Spatial distribution", cex=1.2, at =at)
       
     }
     else{
       if(plot=="phylogeny"){
         plot(extantPhylogeny, tip.color = cols, cex = 1.3)
-        mtext(outer =T ,"Phylogeny Tree", cex=1.5, at = at)
+        mtext(outer =T ,"Phylogeny", cex=1.2, at = at)
         
         
       }
@@ -79,16 +79,16 @@ plotSpatialPhylo <- function (simu, plot = "both", plotTraits = T, which.simulat
       plot(rep(1:4, each = nSpecies), rep(1:nSpecies, 4), cex = size*traits, pch = 16, frame = F, yaxt='n', xaxt='n', ann=FALSE, xlim = c(0,7))
       par(mar = c(1,1,1,1))
       image(landscape, col = cols, yaxt='n', xaxt='n')
-      mtext("Traits", at=0.48, outer=T, cex=1.5)
-      mtext(outer =T ,"Spatial Abundance",at =0.8, cex=1.5)
-      mtext(outer =T ,"Phylogeny Tree",at =0.2, cex=1.5)
+      mtext("Traits", at=0.48, outer=T, cex=1.2)
+      mtext(outer =T ,"Spatial distribution",at =0.8, cex=1.2)
+      mtext(outer =T ,"Phylogeny",at =0.2, cex=1.2)
     }
     else{
       par(mfrow=c(1,2))
       plot(extantPhylogeny, tip.color = cols, cex = 1.3)
       image(landscape, col = cols, yaxt='n', xaxt='n')
-      mtext(outer =T ,"Spatial Abundance",at =0.75, cex=1.5)
-      mtext(outer =T ,"Phylogeny Tree",at =0.25, cex=1.5)
+      mtext(outer =T ,"Spatial distribution",at =0.75, cex=1.2)
+      mtext(outer =T ,"Phylogeny",at =0.25, cex=1.2)
     }
   }
 }
