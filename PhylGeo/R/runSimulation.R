@@ -6,8 +6,8 @@
 #' @examples 
 #'  
 #' # Define a parameter set
-#' par <- createCompletePar(x = 50, y = 50, dispersal = F , runs = c(500,1000),
-#'         density = T, environment = 0.5, specRate = 1)
+#' par <- createCompletePar(x = 50, y = 50, dispersal = "global" , runs = c(500,1000),
+#'         density = 1, environment = 0.5, specRate = 1)
 #'
 #' # Run the model
 #' simu <- runSimulation(par)
@@ -84,18 +84,21 @@ runSimulation <- function(par)
     
     out <- callModel( par$x,  par$y,  dispersal,  round(par$runs),  par$specRate, par$density, par$environment, neutral, mortalityFitness, par$fitnessBaseMortalityRatio, reproductiveFitness, dispersalCut, par$densityCut, par$seed, par$envStrength, par$compStrength)  
     
+    runtime <- as.numeric((proc.time() - ptm)[3])
+    
     print (paste("Core simulation finished after",floor(((proc.time() - ptm)[3])/60), "minute(s) and", ((proc.time() - ptm)[3])%%60, "second(s). Converting data"))
     
-#     Rcpp::List listResults = Rcpp::List::create(Rcpp::Named("Species") = specOut,
-#                                                 Rcpp::Named("EnvTrait") = traitOut,
-#                                                 Rcpp::Named("NeutralTrait") = neutralOut,
-#                                                 Rcpp::Named("CompetitionTrait") = compOut,
-#                                                 Rcpp::Named("Environment") = envOut,
-#                                                 Rcpp::Named("Phylogeny") = phyloOut);
+    #     Rcpp::List listResults = Rcpp::List::create(Rcpp::Named("Species") = specOut,
+    #                                                 Rcpp::Named("EnvTrait") = traitOut,
+    #                                                 Rcpp::Named("NeutralTrait") = neutralOut,
+    #                                                 Rcpp::Named("CompetitionTrait") = compOut,
+    #                                                 Rcpp::Named("Environment") = envOut,
+    #                                                 Rcpp::Named("Phylogeny") = phyloOut);
     
+    output<-list()
     for (i in 1:length(par$runs)){
-
-      out[[i]] = list(
+      
+      output$Output[[i]] = list(
         specMat = matrix(out[[i]]$Species,ncol=par$x, nrow=par$y), 
         traitMat= matrix(out[[i]]$EnvTrait,ncol=par$x, nrow=par$y), 
         envMat = matrix(out[[i]]$Environment,ncol=par$x, nrow=par$y), 
@@ -106,11 +109,13 @@ runSimulation <- function(par)
     }
     cat("done! \n")
     
-    out$par = par
-    class(out) <- append(class(out),"Phylosim")
-    return(out)
-  
-  ##################################################################
+    par$runtime <- runtime
+    
+    output$Model <- par
+    class(output) <- append(class(output),"Phylosim")
+    return(output)
+    
+    ##################################################################
   }else if(par$type == "Leipzig"){
     
     # TODO ... NOT FUNCTIONAL YET !!!
@@ -120,16 +125,18 @@ runSimulation <- function(par)
     densMat = matrix(out[[2]],ncol=x, nrow=y)
     print (paste("Finished after",floor(((proc.time() - ptm)[3])/60), "minute(s) and", ((proc.time() - ptm)[3])%%60, "second(s)."))
     return(list(specMat = specMat, densMat=densMat))
-  
-  ###################################################################
+    
+    ###################################################################
   }else if (par$type == "Rneutral"){
-    result = NeutralMod(xdim = par$x, ydim=par$y, specRate = par$specRate,  seed = par$seed, runs = par$runs )
-    out = list(specMat = result, par = par)
+    ptm <- proc.time()
+    result = NeutralMod(xdim = par$x, ydim=par$y, specRate = par$specRate,  seed = par$seed, runs = par$runs)
+    runtime <- as.numeric((proc.time() - ptm)[3])
+    par$runtime <- runtime
+    out = list(specMat = result, Model = par)
     class(out) <- append(class(out),"Phylosim")
     return(out)
   }
 }
-
 
 
 # neutral = T
