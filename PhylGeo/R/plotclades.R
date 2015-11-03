@@ -2,13 +2,32 @@
 #' @description Visualises the phylogenetic clades of a local community within a metacommunity. 
 #' @param simu Simulation output of the class "Phylosim", usually consisting out of several lists. Needs to contain at least the phylogeny ($phylogeny) and species matrix ($specMat)
 #' @param which.simulation defines which simulation run to choose in case you defined to save at multiple time steps. The default is the last one.
-#' @param n The number of local communities. For each community a new plot is created
+#' @param n The number of local communities. For each community a new plot is created. Needs to be greater than 1
 #' @param subplot if no simu object is given, a communitytable of a local community can be given here
 #' @param phylogeny if no simu object is ginve, an object of the class 'phylo' can be given here to describe the communites phylogeny
+#' @examples  
+#' 
+#' #Plot clades for neutral model with global dispersal with three subplots
+#' par(mfrow=c(1,3))
+#' plotclades(simu.neutral.global, size = 50, n = 3) 
+#'
+#' #Plot clades for neutral model with local dispersal with three subplots
+#' par(mfrow=c(1,3))
+#' plotclades(simu.neutral.local, size = 50, n = 3) 
+#'
+#'#Plot clades for environment and competition model with global dispersal with three subplots
+#' par(mfrow=c(1,3))
+#' plotclades(simu.envcom.global, size = 50, n = 3) 
+#'
+#'#increasing plot size
+#'par(mfrow=c(2,2))
+#'plotclades(simu.envcom.global, size = 50, n =2)
+#'plotclades(simu.envcom.global, size = 1000, n =2)
 #' @details a
 
 #' @export
 plotclades <- function(simu,which.simulation=NULL, size, n, subplot = NULL, phylogeny=NULL){
+  
   
   if(is.null(subplot)){
   lp <- localPlots(simu = simu,size = size, n=n,community=T , which.simulation =which.simulation)
@@ -34,7 +53,7 @@ plotclades <- function(simu,which.simulation=NULL, size, n, subplot = NULL, phyl
     cladewidth<-rep(1, dim(phylo$edge)[1])
     cladewidth[group]<-2
     
-    title <- paste("Phylogenetic clade plots \n Clade", i)
+    title <- paste("Phylogenetic Clade Plots \n Clade", i)
     plot(phylo,  direction="downwards", show.tip.label=F, show.node.label=F, edge.color=cladecolor, edge.width=cladewidth, main = title)
     
     place<- numeric(length(x))
@@ -42,7 +61,7 @@ plotclades <- function(simu,which.simulation=NULL, size, n, subplot = NULL, phyl
       place[k] <- which(phylo$tip.label==x[k])
     }
     
-    ape::tiplabels(text = x,tip = place, frame ="none", srt = 320, adj=0)
+    ape::tiplabels(text = x,tip = place, frame ="none", srt = 270, adj=0)
     ape::add.scale.bar()
   }
 }
