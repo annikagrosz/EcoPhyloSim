@@ -53,16 +53,16 @@ nullModel <- function(simu, which.simulation=NULL, abundance = FALSE, localPlotS
   
   # calculate fun for "real matrix"
   ifelse (dist == "mpd", observedMPD <- picante::mpd(samp = comMat, dis = extantPhyloCophen, abundance.weighted = T),
-          ifelse(dist == "pd", observedMPD <- pd(samp = comMat, phylogeny), stop("wrong dist argument")))
+          ifelse(dist == "pd", observedMPD <- picante::pd(samp = comMat, phylogeny), stop("wrong dist argument")))
   
   
   # calculate abundances of species in metacommunity
   
-  ifelse(abundance==F, metaabundance <- table(speciesMatrix),
-         ifelse(abundance==T, metaabundance <- colSums(comMat), stop("wrong abundance argument") ))
+  ifelse(abundance==FALSE, metaabundance <- table(speciesMatrix),
+         ifelse(abundance==TRUE, metaabundance <- colSums(comMat), stop("wrong abundance argument") ))
   
   
-  if(abundance==F) names(metaabundance) <- paste("s", names(metaabundance), sep="") # set names equal to those in the local communities and the distance matrix
+  if(abundance==FALSE) names(metaabundance) <- paste("s", names(metaabundance), sep="") # set names equal to those in the local communities and the distance matrix
   
   
   distribution <- rmultinom(n = repetitions, size=localPlotSize,  prob=metaabundance) # create multinomial distributed matrix
