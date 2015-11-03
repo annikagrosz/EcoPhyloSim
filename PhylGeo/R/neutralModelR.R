@@ -1,4 +1,30 @@
-## Neutral Model. Function can be called by runSimulation.
+#' @title Model of neutral community assembly
+#' @description Runs a simple model of species community assembly under neutral conditions as defined by Hubbel. Usually called by \code{\link{runSimulation}}.
+#' @param xdim Integer, Dimension of the model landscape in x-direction
+#' @param ydim Integer, Dimension of the model landscape in y-direction
+#' @param specRate The speciation rate in total speciation events per generation
+#' @param seed The random seed (do not change this option if you previously set the seed!)
+#' @param runs The number of generations the model runs through
+#' @details Be careful with the dimensions you choose. Large grids and many generations may take very long to compute. You can assume to have reached the equilibrium state of the model after dim^2/2. 
+#' @examples
+#' # Run the model
+#' metaCom <- NeutralMod(xdim=50, ydim=50, specRate=2, seed=1500, runs=500)
+#' image(metaCom)
+#' 
+#' # Usually the function is called by the runSimualtion function
+#' # Define a parameter set
+#' parNeut <- createCompletePar(x = 50, y = 50, dispersal = F , runs = 500,
+#'         density = T, environment = 0.5, specRate = 1, type="Rneutral")
+#'
+#' # Run the model
+#' simuNeut <- runSimulation(parNeut)
+#' 
+#' # Visualize the grid
+#' image(simuNeut$specMat)
+#' 
+#' 
+#' @export
+
 
 NeutralMod <- function(  xdim = 100, ydim=100, specRate = 2,  seed = NULL, runs = 500 ){
   
