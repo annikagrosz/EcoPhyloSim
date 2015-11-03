@@ -7,9 +7,35 @@
 #' @param rep The number of repetitions per size to calculate the mean 
 #' @param plot Logical determining whether to plot the SAC or not
 #' @return A list containing the mean species richness for each size and the respective standard deviation
+#' @examples 
+#' 
+#' #Plot SAC curve for neutral model and global dispersion
+#' simu <- simu.neutral.global
+#' sac(simu = simu)
+#' 
+#' #Plot SAC curve for neutral model and local dispersion
+#' simu <- simu.neutral.local
+#' sac(simu = simu)
+#' 
+#' #Plot SAC curve for environment and competition model and local dispersion
+#' simu <- simu.envcom.local
+#' sac(simu = simu)
+#' 
+#' #Plot SAC curve with random plotsize 
+#' simu <- simu.envcom.local
+#' sac(simu=simu, area = sort(sample(c(10:1000), size = 10)))
+#' 
+#' #Plot SAC curve with different repititions
+#' simu <- simu.envcom.local
+#' par(mfrow=c(3,1))
+#' sac(simu=simu, rep = 3)
+#' sac(simu=simu, rep = 30)
+#' sac(simu=simu, rep = 30)
+#' 
 #' @export
 #' 
 sac <- function(simu,which.simulation=NULL, area = NULL, rep=50, plot=T){
+  
   
   if (is.null(which.simulation)) which.simulation = length(simu) - 1
   simu <- simu[[which.simulation]]
@@ -30,7 +56,7 @@ sac <- function(simu,which.simulation=NULL, area = NULL, rep=50, plot=T){
   for(i in 1:length(area))
   { 
     # Repetitions for each plot size
-    subPlots <- localPlots(size=area[i], n = rep, matrix=matrix)$subPlots
+    subPlots <- localPlots(size=area[i], n = rep, simu=simu)$subPlots
     speciesRichness <- sapply(subPlots, SR)
     meanSpeciesRichness[i] <- mean(speciesRichness)
     meanSpeciesRichnessUpperCI[i] <- quantile(speciesRichness, probs = 0.95, na.rm = T)

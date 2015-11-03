@@ -5,6 +5,52 @@
 #' @param plot defines what to plot."spatial" plots the spatial abundance, "phylogeny" the phylogeny tree. "both" plots both of them side by side 
 #' @param plotTraits logical, defines if the traits should be plotted 
 #' @param which.simulation defines which simulation run to choose in case you defined to save at multiple time steps. The default is the last one.
+#' @examples 
+#' 
+#' #neutral model with global dispersal
+#' simu <- simu.neutral.global
+#'    #phylogeny and traits
+#'    plotspatialphylo(simu, plot = "phylogeny")    
+#'
+#'    #phylogeny and spatial distribution
+#'    plotspatialphylo(simu, plot = "both", plotTraits=F)
+#'    
+#'    #all three
+#'    plotspatialphylo(simu, plot = "both", plotTraits=F)
+#' 
+#'  --------------------------------------------------------
+#'  #neutral model with local dispersal
+#'  simu <- simu.neutral.local
+#'    #phylogeny and traits
+#'    plotspatialphylo(simu, plot = "phylogeny")    
+#'
+#'    #phylogeny and spatial distribution
+#'    plotspatialphylo(simu, plot = "both", plotTraits=F)
+#'    
+#'    #all three
+#'    plotspatialphylo(simu, plot = "both", plotTraits=F)
+#'    
+#'  ---------------------------------------------------------
+#'  #evironment and competition model with local dispersal
+#'  simu <- simu.envcom.local
+#'    #phylogeny and traits
+#'    plotspatialphylo(simu, plot = "phylogeny")    
+#'
+#'    #phylogeny and spatial distribution
+#'    plotspatialphylo(simu, plot = "both", plotTraits=F)
+#'    
+#'    #all three
+#'    plotspatialphylo(simu, plot = "both", plotTraits=F)
+#' --------------------------------------------------------
+#' #Set simulation run with which.simulation
+#' #Here, two simulation runs are stored in simu (one with 500 timesteps, one with 1000)
+#' par <- createCompletePar(x = 50, y = 50, dispersal = 1, runs = c(500,1000), density = 1, environment = 0.5, specRate = 1)
+#' simu <- runSimulation(par)
+#' 
+#' #Choose to take the first simulation run (default is the last)
+#' plotspatialphylo(simu. which.simulation = 1)
+#' 
+#' 
 #' @import ape
 #' @importFrom adephylo distTips
 #' @export
@@ -92,6 +138,5 @@ plotSpatialPhylo <- function (simu, plot = "both", plotTraits = T, which.simulat
     }
   }
 }
-
 
 

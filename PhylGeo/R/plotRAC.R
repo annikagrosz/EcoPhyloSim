@@ -4,6 +4,25 @@
 #' @param plot determining whether to plot the RAC as "line"(default) or "bar".
 #' @details The highest abundance is assigned rank "1" while the lowest is assigned the rank corresponding with species richness.
 #' @return A dataframe containing the ranked abundances, sorted by ascending rank.
+#' @examples 
+#' 
+#' #Plot RAC curve for neutral model and global dispersion
+#' simu <- simu.neutral.global
+#' rac(simu = simu)
+#' rac(simu = simu, plot ="bar")
+#' 
+#' #Plot RAC curve for neutral model and local dispersion
+#' simu <- simu.neutral.local
+#' rac(simu = simu)
+#' rac(simu = simu, plot ="bar")
+#' 
+#' #Plot RAC curve for environment and competition model and local dispersion
+#' simu <- simu.envcom.local
+#' rac(simu = simu)
+#' rac(simu = simu, plot ="bar")
+#' 
+#'  
+#' 
 #' @export
 
 rac <- function(simu,which.simulation=NULL, plot="line"){
