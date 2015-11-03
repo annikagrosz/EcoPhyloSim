@@ -4,12 +4,12 @@
 \alias{phyloReconstruct}
 \title{Phylogeny Reconstruction}
 \usage{
-phyloReconstruct(speciesMatrix, traitMatrix, ...)
+phyloReconstruct(simu, which.simulation = NULL, ...)
 }
 \arguments{
-\item{speciesMatrix}{A square matrix containing a species community (one individual per grid cell)}
+\item{simu}{A object of class Phylosim}
 
-\item{traitMatrix}{A square matrix containing the neutral trait of a species community (one trait value per individual per grid cell}
+\item{which.simulation}{Integer, determines which simulation should be used. Only useful if your Phylosim object contains more than one result. By default the last result is chosen.}
 
 \item{...}{Additional arguments to be passed to function \code{\link{hclust}}}
 }
@@ -17,6 +17,21 @@ phyloReconstruct(speciesMatrix, traitMatrix, ...)
 An object of class 'phylo'
 }
 \description{
-reconstructs a phylogeny from a neutral trait matrix as returned by \code{\link{fullMod}}
+reconstructs a phylogeny from a neutral trait matrix as returned by \code{\link{runSimulation}}
+}
+\examples{
+## Run a simulation
+par <- createCompletePar(x = 50, y = 50, dispersal = "global" , runs = 500,
+        density = 1, environment = 0.5, specRate = 1)
+
+simu <- runSimulation(par)
+
+## Reconstruct phylogeny
+rePhyl <- phyloReconstruct(simu)
+
+## Compare to the real phylogeny
+par(mfrow=c(1,2))
+plot(simu$Output[[1]]$phylogeny)
+plot(rePhyl)
 }
 

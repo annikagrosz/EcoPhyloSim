@@ -34,8 +34,8 @@ plotclades <- function(simu,which.simulation=NULL, size, n, subplot = NULL, phyl
   community <- lp$communityTable} else community <- subplot
   
   if(is.null(phylogeny)){
-  if (is.null(which.simulation)) which.simulation = length(simu) - 1
-  simu <- simu[[which.simulation]]
+    if (is.null(which.simulation)) which.simulation = length(simu$Output) 
+    simu <- simu$Output[[which.simulation]]
   
   phylo <- simu$phylogeny} else phylo <- phylogeny
   

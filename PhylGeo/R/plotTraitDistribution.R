@@ -6,9 +6,9 @@
 
 plotTraitDistribution <- function (simu, type = "hist", which.simulation = NULL){
   
-  if (is.null(which.simulation)) which.simulation = length(simu) - 1
-  
-  dat <- simu[[which.simulation]]
+  if (is.null(which.simulation)) which.simulation = length(simu$Output) 
+ 
+  dat <- simu$Output[[which.simulation]]
   
   if (type == "hist"){
     par(mfrow = c(3,3))

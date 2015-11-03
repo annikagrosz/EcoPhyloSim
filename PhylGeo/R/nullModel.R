@@ -44,8 +44,8 @@ nullModel <- function(simu, which.simulation=NULL, abundance = FALSE, localPlotS
   comMat <- localPlots(simu=simu, which.simulation=which.simulation, size = localPlotSize, n = numberOfPlots, community = T)$communityTable # create community matrix from local communities (requires PhylGeo)
   
   
-  if (is.null(which.simulation)) which.simulation = length(simu) - 1
-  simu <- simu[[which.simulation]]
+  if (is.null(which.simulation)) which.simulation = length(simu$Output) 
+  simu <- simu$Output[[which.simulation]]
   phylogeny <- simu$phylogeny
   speciesMatrix <- simu$specMat
   

@@ -10,8 +10,8 @@
 localPlots <- function(simu,which.simulation=NULL,size, n, community=F){
   
   if("Phylosim" %in% class(simu)==T){
-  if (is.null(which.simulation)) which.simulation = length(simu) - 1
-  simu <- simu[[which.simulation]]}
+    if (is.null(which.simulation)) which.simulation = length(simu$Output) 
+    simu <- simu$Output[[which.simulation]]}
   
   matrix <- simu$specMat
   

@@ -10,8 +10,8 @@
 getAverageTraits <- function(simu,which.simulation =NULL,orderPhylo = T){
   
   if("Phylosim" %in% class(simu)==T){
-    if (is.null(which.simulation)) which.simulation = length(simu) - 1
-    simu <- simu[[which.simulation]]}
+    if (is.null(which.simulation)) which.simulation = length(simu$Output) 
+    simu <- simu$Output[[which.simulation]]}
   
   if(orderPhylo == T){
     extantPhylogeny <- drop.fossil(simu$phylogeny)
