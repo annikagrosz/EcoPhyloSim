@@ -7,24 +7,35 @@
 #' @param phylogeny if no simu object is ginve, an object of the class 'phylo' can be given here to describe the communites phylogeny
 #' @examples  
 #' 
+#' #Load data
+#' data(simu.neutral.global)
+#' data(simu.neutral.local)
+#' data(simu.envcom.local)
+#' 
+#'  --------------------------------------------------------
+#' 
 #' #Plot clades for neutral model with global dispersal with three subplots
 #' par(mfrow=c(1,3))
 #' plotclades(simu.neutral.global, size = 50, n = 3) 
+#' 
+#'  --------------------------------------------------------
 #'
 #' #Plot clades for neutral model with local dispersal with three subplots
 #' par(mfrow=c(1,3))
 #' plotclades(simu.neutral.local, size = 50, n = 3) 
+#' 
+#'  --------------------------------------------------------
 #'
 #'#Plot clades for environment and competition model with global dispersal with three subplots
 #' par(mfrow=c(1,3))
 #' plotclades(simu.envcom.global, size = 50, n = 3) 
+#' 
+#'  --------------------------------------------------------
 #'
 #'#increasing plot size
 #'par(mfrow=c(2,2))
 #'plotclades(simu.envcom.global, size = 50, n =2)
 #'plotclades(simu.envcom.global, size = 1000, n =2)
-#' @details a
-
 #' @export
 plotclades <- function(simu,which.simulation=NULL, size, n, subplot = NULL, phylogeny=NULL){
   

@@ -6,15 +6,26 @@
 #' @return A dataframe containing the ranked abundances, sorted by ascending rank.
 #' @examples 
 #' 
+#' #Load data
+#' data(simu.neutral.global)
+#' data(simu.neutral.local)
+#' data(simu.envcom.local)
+#' 
+#'  --------------------------------------------------------
+#' 
 #' #Plot RAC curve for neutral model and global dispersion
 #' simu <- simu.neutral.global
 #' rac(simu = simu)
 #' rac(simu = simu, plot ="bar")
 #' 
+#'  --------------------------------------------------------
+#' 
 #' #Plot RAC curve for neutral model and local dispersion
 #' simu <- simu.neutral.local
 #' rac(simu = simu)
 #' rac(simu = simu, plot ="bar")
+#' 
+#'  --------------------------------------------------------
 #' 
 #' #Plot RAC curve for environment and competition model and local dispersion
 #' simu <- simu.envcom.local

@@ -9,22 +9,37 @@
 #' @return A list containing the mean species richness for each size and the respective standard deviation
 #' @examples 
 #' 
+#' #Load data
+#' data(simu.neutral.global)
+#' data(simu.neutral.local)
+#' data(simu.envcom.local)
+#' 
+#'  --------------------------------------------------------
+#'   
 #' #Plot SAC curve for neutral model and global dispersion
 #' simu <- simu.neutral.global
 #' sac(simu = simu)
 #' 
+#'  -------------------------------------------------------- 
+#'  
 #' #Plot SAC curve for neutral model and local dispersion
 #' simu <- simu.neutral.local
 #' sac(simu = simu)
 #' 
+#'  --------------------------------------------------------
+#'  
 #' #Plot SAC curve for environment and competition model and local dispersion
 #' simu <- simu.envcom.local
 #' sac(simu = simu)
 #' 
+#'  --------------------------------------------------------
+#'  
 #' #Plot SAC curve with random plotsize 
 #' simu <- simu.envcom.local
 #' sac(simu=simu, area = sort(sample(c(10:1000), size = 10)))
 #' 
+#'  -------------------------------------------------------- 
+#'  
 #' #Plot SAC curve with different repititions
 #' simu <- simu.envcom.local
 #' par(mfrow=c(3,1))

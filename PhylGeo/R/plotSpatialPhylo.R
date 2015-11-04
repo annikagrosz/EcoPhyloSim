@@ -7,6 +7,11 @@
 #' @param which.simulation defines which simulation run to choose in case you defined to save at multiple time steps. The default is the last one.
 #' @examples 
 #' 
+#' #Load data
+#' data(simu.neutral.global)
+#' data(simu.neutral.local)
+#' data(simu.envcom.local)
+#' 
 #' #neutral model with global dispersal
 #' simu <- simu.neutral.global
 #'    #phylogeny and traits
