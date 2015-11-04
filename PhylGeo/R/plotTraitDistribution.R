@@ -7,38 +7,61 @@
 plotTraitDistribution <- function (simu, type = "hist", which.simulation = NULL){
   
   if (is.null(which.simulation)) which.simulation = length(simu$Output) 
- 
   dat <- simu$Output[[which.simulation]]
   
-  if (type == "hist"){
-    par(mfrow = c(3,3))
+  names <- unique(as.numeric(dat$specMat))
+  names <- unique(as.numeric(dat$specMat))
+  p   <- seq(from = 0, to = 1 ,length.out = length(names))
+  red <- sample(p, size = length(names))
+  green <- sample(p, size = length(names))
+  blue <- sample(p, size = length(names))
+  for(i in 1:length(names)){
+      cols[i] <- rgb(red[i],green[i],blue[i],0.5)}
+  colmat <- dat$specMat
+  for(i in 1:length(names)){
+    colmat[colmat==names[i]] <- cols[i]}
+  
+  if(type == "all"){
+    par(mfrow=c(3,3))
     par(mar = c(5, 4, 2, 2))
-    hist(dat$traitMat, breaks = 100,xlab="Environmenttrait", main = "Environmenttrait", ylab = "Frequency")
-    hist(dat$compMat, breaks = 100,xlab = "Competitiontrait",main = "Competitiontrait", ylab="" )
-    hist(dat$neutMat, breaks = 100,xlab="Neutraltrait", main = "Neutraltrait", ylab="")
     
-    plot(dat$traitMat~dat$envMat, col = dat$specMat, ylab="Trait", xlab="Environment"  )
-    plot(dat$compMat~dat$envMat, col = dat$specMat, ylab= "", xlab="Environment")
-    plot(dat$neutMat~dat$envMat, col = dat$specMat, ylab= "", xlab="Environment")
+    plot(dat$traitMat~dat$envMat, col = colmat, ylab="Trait", xlab="Environment"  )
+    plot(dat$compMat~dat$envMat, col = colmat, ylab= "", xlab="Environment")
+    plot(dat$neutMat~dat$envMat, col = colmat, ylab= "", xlab="Environment")
     
     
-    image(dat$traitMat, xaxt="n", yaxt="n", ylab="Spatial Distribution")
-    image(dat$compMat, xaxt="n", yaxt="n")
-    image(dat$neutMat, xaxt="n", yaxt="n")
-  }else if(type == "phylo"){
-    require(phytools)
+    image(dat$traitMat, xaxt="n", yaxt="n", ylab="Spatial Distribution",useRaster =T,col = grey(seq(0, 1, length = 256)))
+    image(dat$compMat, xaxt="n", yaxt="n",useRaster =T,col = grey(seq(0, 1, length = 256)))
+    image(dat$neutMat, xaxt="n", yaxt="n",useRaster =T,col = grey(seq(0, 1, length = 256)))
+  }else{par(mfrow=c(1,3))}
+  
+  
     
-    #     contMap(simu$phylogeny, x, res=100, fsize=NULL, ftype=NULL, lwd=4, legend=NULL,
-    #             lims=NULL, outline=TRUE, sig=3, type="phylogram", direction="rightwards", 
-    #             plot=TRUE, ...)
-    #     
-    #     x<-data.frame(species = paste("s", as.vector(simu$specMat)) , )
-    #     
-    #     trait.plot(tree, dat, cols, lab=names(cols), str=0:1, class=NULL,
-    #                type="f", w=1/50, legend=length(cols) > 1, cex.lab=.5,
-    #                font.lab=3, cex.legend=.75, margin=1/4,
-    #                check=TRUE, quiet=FALSE)
-    #     
+   
+    
+    ymax <- max(hist(dat$traitMat,breaks=100, plot =F)$counts)
+    xmax <- max(dat$traitMat) 
+    xmin <- min(dat$traitMat)
+    hist(dat$traitMat[dat$specMat==names[1]], xlim=c(xmin,xmax), ylim =c(0,ymax))
+    for(i in 2:length(names)){
+      hist(dat$traitMat[dat$specMat==names[i]], add =T, col = cols[i])}    
+    
+    ymax <- max(hist(dat$compMat,breaks=100, plot =F)$counts)
+    xmax <- max(dat$compMat) 
+    xmin <- min(dat$compMat)
+    hist(dat$compMat[dat$specMat==names[1]], xlim=c(xmin,xmax), ylim =c(0,ymax))
+    for(i in 2:length(names)){
+      hist(dat$compMat[dat$specMat==names[i]], add =T, col = cols[i])} 
+    
+    ymax <- max(hist(dat$neutMat,breaks=100, plot =F)$counts)
+    xmax <- max(dat$neutMat) 
+    xmin <- min(dat$neutMat)
+    hist(dat$neutMat[dat$specMat==names[1]], xlim=c(xmin,xmax), ylim =c(0,ymax))
+    for(i in 2:length(names)){
+      hist(dat$neutMat[dat$specMat==names[i]], add =T, col = cols[i])} 
+    
   }
-}
+  
+  
+
 
