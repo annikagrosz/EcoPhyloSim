@@ -1,15 +1,18 @@
+## Code needs to be cleaned!
+
 
 # Version that accepts multiple types
-calculatePhylogeneticDispersion <- function(simu, plotlengths = 10,  plots = 200, replicates = 500, types = "PhylMeta", fun = mpd, reduce = T, times = "last"){
-  
+calculatePhylogeneticDispersion <- function(simu, plotlengths = 10,  plots = 200, replicates = 500, types = "PhylMeta", dist = "mpd", reduce = T, which.simulation = NULL){
+  o
   if ("Phylosim" %in% simu ==T) simu = list(simu)
   
   ## TODO implement function for only 1 scenario
   
   nScenarios = length(simu) 
-  nRuns = length(simu[[1]]) - 1
+  nRuns = length(simu[[1]]$Output)
   parIndex = simu[[1]] 
-  if (times == "last") times = nRuns
+  times <- which.simulation
+  if (is.null(times)) times = nRuns
   
   # type / scenario / plotlength / repetition
   
@@ -32,20 +35,20 @@ calculatePhylogeneticDispersion <- function(simu, plotlengths = 10,  plots = 200
           
           timeindex = times[i]
           
-          s <- simu[[k]][[timeindex]]$specMat
-          phyl <- simu[[k]][[timeindex]]$phylogeny
+          s <- simu[[k]]$Output[[timeindex]]$specMat
+          phyl <- simu[[k]]$Output[[timeindex]]$phylogeny
           extantPhylo <- drop.fossil(phy = phyl)
           extantPhyloDis <- cophenetic(extantPhylo)
           
           if (type == "PhylMeta"){
-            pval[[l]] <- nullModel(speciesMatrix = s, localPlotSize = plotsize, phylogeny = extantPhylo, numberOfPlots = plots, repetitions = replicates, fun = mpd)
+            pval[[l]] <- nullModel(simu[[k]], localPlotSize = plotsize, numberOfPlots = plots, repetitions = replicates, dist = "mpd")
           }else if (type == "PhylSample"){
-            pval[[l]] <- nullModelSample(speciesMatrix = s, localPlotSize = plotsize, phylogeny = extantPhylo, numberOfPlots = plots,repetitions = replicates)    
+            pval[[l]] <- nullModel(simu[[k]], localPlotSize = plotsize, abundance = TRUE, numberOfPlots = plots, repetitions = replicates)    
           }else if (type == "PhylPool"){
-            comMat <- localPlots(size = plotsize, n = plots, matrix = s, community = T)$communityTable
+            comMat <- localPlots(simu[[k]],size = plotsize, n = plots, community = T)$communityTable
             pval[[l]] <- ses.mpd(samp = comMat, dis = extantPhyloDis, null.model = "phylogeny.pool", abundance.weighted = TRUE, runs = replicates)$mpd.obs.p      
           }else if (type == "SamplePool"){
-            comMat <- localPlots(size = plotsize, n = plots, matrix = s, community = T)$communityTable
+            comMat <- localPlots(simu[[k]], size = plotsize, n = plots, community = T)$communityTable
             pval[[l]] <- ses.mpd(samp = comMat, dis = extantPhyloDis, null.model = "sample.pool", abundance.weighted = TRUE, runs = replicates)$mpd.obs.p
             
           }
