@@ -7,7 +7,7 @@
 runSimulationBatch(pars, parallel = F, backup = FALSE)
 }
 \arguments{
-\item{pars}{A single set of parameters as created by \code{\link{createCompletePar}} or a list of parameter sets}
+\item{pars}{A list of parameter sets as created by \code{\link{createCompletePar}}}
 
 \item{parallel}{Logical, determining whether parallel computing should be executed.}
 
@@ -34,7 +34,7 @@ par2 <- createCompletePar(x = 50, y = 50, dispersal = 0 , runs = c(500,1000),
 par <- list(par1,par2)
 
 ## Run the model
-simu <- runSimulationBatch(par, parallel=T)
+simu <- runSimulationBatch(par, parallel = "auto")
 
 ## Compare the results, here the SAC is shown exemplarily.
 par(mfrow=c(1,2))

@@ -30,7 +30,7 @@ simu <- runSimulation(par)
 require(ape)
 
 # Get the phylogeny of the last run. In this example this is after 1000 runs.
-phylogeny <- simu[[2]]$phylogeny
+phylogeny <- simu$Output[[2]]$phylogeny
 
 # Only extant taxa
 extantPhylogeny <- drop.fossil(phylogeny)

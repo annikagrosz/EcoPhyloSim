@@ -45,7 +45,7 @@ opts_knit$set(tidy = T, fig=TRUE, fig.height = 4, fig.width=4, fig.align='center
 render_listings()
 @
 
-\title{PhyloSim Package\\Vignette}
+\title{PhyloSim Package\\ \Huge{Vignette}}
 
 \author{}
 \begin{document}
@@ -81,21 +81,26 @@ In each generation the simulation consists of three consecutive steps.\\
 First the individuals reproduce and spread over the grid. All cells are sequentially chosen at random and the individuals are replaced by the offspring of other individuals.\\
 The individual which produces its offspring and disperses into an empty cell is chosen by an multinomial distribution which consists of all cells within the dispersion kernel.
 The dispersion kernel represents the distance to the cell to be populated and is defined as:
-TODO Formula
-Wd represents the weight weight derived from the euclidean distance (delta s) between the
+\begin{equation}
+w_d = exp\frac{1}{-\Delta_s/2}
+\end{equation}
+$w_d$ represents the weight weight derived from the euclidean distance $\Delta_s$ between the
 cell to be populated and the potential parent. An increasing distance to the cell leads to an exponential decline in reproductive fitness. The dispersal kernel can be cut at a certain radius.\\
 The density dependence is based on the competition traits of the indivuduals. The closer the values of the competition traits of two individuals, the stronger they compete. Numerically it can be written as the sum of all absolute competition trait differences in a certain area around the individual. The normalized value is now included in the multinomial distribution as follows:
-TODO Formula
-\\
+\begin{equation}
+r_i = \frac{\sum_{j=1}^{n}{\parallel(c_i-c_j)}\parallel}{n}
+\end{equation}
 The second step in the simulation of one generation is the trait evolution. This step represents genetic recombination in the real world.
 The trait is modelled as the mean of a Gaussian Distribution (see above). In each generation this value is slightly changed. The new trait is influenced by the parent's value, a weighted random value and the attraction of the specie's value. The parent value has the highest influence whereas the other two traits have only slight influence.
 The trait values during trait evolution are calculated as follows:
-TODO Formula
-\\
-The last step in a generation is speciation. Here it describes the introduction of a new species via point mutations. These mutations can either become more abundand or go extinct (Hubbell, 1997).The frequency of these events is controlled by the speciation rate in the parameter settings. Each generation a number of new species is introduced in the system replacing randomly chosen individuals. The traits of these individuals are calculated from the parent's traits and a randomly generated value as follows:
-TODO Formula
-\\
+\begin{equation}
+newtrait = (1-w_s \cdot p) + (w_s \cdot s) + (w_r \cdot r)
+\end{equation}
 
+The last step in a generation is speciation. Here it describes the introduction of a new species via point mutations. These mutations can either become more abundand or go extinct (Hubbell, 1997).The frequency of these events is controlled by the speciation rate in the parameter settings. Each generation a number of new species is introduced in the system replacing randomly chosen individuals. The traits of these individuals are calculated from the parent's traits and a randomly generated value as follows:
+\begin{equation}
+newtrait = (w_p \cdot p) + (w_r \cdot r)
+\end{equation}
 
 
 \chapter{Basic functionality}
@@ -232,11 +237,20 @@ subPlots <- localPlots(simu = simu, size=100, n=10)
 @
 
 These subplots are now tested against randomly collected plots.\\
-You can choose, wheather the null model should be based on the abundance distribution of the 
-sample plots or not.
+You can choose, wheather the null model should be based on the abundance distribution of the sample plots or not.\\
+If the model is not based on the abundance distribution, there are two possible measures of the phylogeny that are used to compare the observed results to the null model. These are the Mean Pairwise Distance (mpd) or Fait's Phylogenetic Diversity (pd)\marginnote{Both have their origin in the picante package}.
 
 <<>>=
-pValues <- nullModel(simu = simu, abundance = FALSE, localPlotSize = 100, numberOfPlots = 10, repetitions = 100)
+pValues <- nullModel(simu = simu, abundance = FALSE, localPlotSize = 100, numberOfPlots = 10, repetitions = 100, fun="mpd")
 @
+
+To calculate null models for the output of the runSimulationBatch function the calculatePhylogeneticDispersion function is used. It can be seen as an extension to the nullModel function, that deals with lists of Phylosim objects and can also calculate two external null models.
+
+<<>>=
+pValuesBatch <- calculatePhylogeneticDispersion(simuBatch, plotlength=20, plots=20, replicates=20, types="PhylMeta")
+@
+
+
+
 
 \end{document}

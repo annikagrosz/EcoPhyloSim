@@ -7,8 +7,7 @@
 createCompletePar(x = 50, y = 50, dispersal = "global", runs = 100,
   specRate = 1, density = 0, environment = 0,
   fitnessActsOn = "mortality", fitnessBaseMortalityRatio = 10,
-  densityCut = 1, seed = NULL, type = "base", modes = NULL,
-  scenario = NULL)
+  densityCut = 1, seed = NULL, type = "base", scenario = NULL)
 }
 \arguments{
 \item{x}{Integer, Dimension of the model landscape in x-direction}
@@ -34,6 +33,8 @@ createCompletePar(x = 50, y = 50, dispersal = "global", runs = 100,
 \item{seed}{numerical, sets the random seed}
 
 \item{type}{Character, determining which model should be used. "base" is running the default model. Other possibilities are "Leipzig" and "Rneutral" which will run a neutral model purely in R.}
+
+\item{scenario}{String, further information you want to add to the parameter set in order to refer to a model run more conveniently.}
 }
 \value{
 A List with parameters

@@ -21,15 +21,26 @@ Plots the Rank Abundance Curve for a given community.
 The highest abundance is assigned rank "1" while the lowest is assigned the rank corresponding with species richness.
 }
 \examples{
+#Load data
+data(simu.neutral.global)
+data(simu.neutral.local)
+data(simu.envcom.local)
+
+ --------------------------------------------------------
+
 #Plot RAC curve for neutral model and global dispersion
 simu <- simu.neutral.global
 rac(simu = simu)
 rac(simu = simu, plot ="bar")
 
+ --------------------------------------------------------
+
 #Plot RAC curve for neutral model and local dispersion
 simu <- simu.neutral.local
 rac(simu = simu)
 rac(simu = simu, plot ="bar")
+
+ --------------------------------------------------------
 
 #Plot RAC curve for environment and competition model and local dispersion
 simu <- simu.envcom.local

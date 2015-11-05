@@ -5,7 +5,7 @@
 \title{Null Model}
 \usage{
 nullModel(simu, which.simulation = NULL, abundance = FALSE, localPlotSize,
-  numberOfPlots, repetitions, dist = "mpd")
+  numberOfPlots, repetitions, fun = "mpd")
 }
 \arguments{
 \item{simu}{an object of class "phylosim" as created by \code{\link{runSimulation}} or \code{\link{runSimulationBatch}}}
@@ -20,7 +20,7 @@ nullModel(simu, which.simulation = NULL, abundance = FALSE, localPlotSize,
 
 \item{repetitions}{number of generated null model plots}
 
-\item{dist}{TODO}
+\item{fun}{String, phylogenetic measure that is used. Possible inputs are "mpd" (\code{\link[picante]{mpd}}) and "pd" (\code{\link[picante]{pd}}). Only used if abundance = FALSE.}
 }
 \value{
 A numeric vector with pValues for each plot in the observed metacommunity

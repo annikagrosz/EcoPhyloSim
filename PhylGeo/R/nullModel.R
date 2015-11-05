@@ -6,7 +6,7 @@
 #' @param localPlotSize number of grid cells of the plots drawn within the metacommunity
 #' @param numberOfPlots number of plots drawn within the metacommunity
 #' @param repetitions number of generated null model plots
-#' @param dist TODO
+#' @param fun String, phylogenetic measure that is used. Possible inputs are "mpd" (\code{\link[picante]{mpd}}) and "pd" (\code{\link[picante]{pd}}). Only used if abundance = FALSE.  
 #' @return A numeric vector with pValues for each plot in the observed metacommunity
 #' @examples 
 #' 
@@ -39,7 +39,7 @@
 #' nullModel(simubatch[[2]],localPlotSize = 100, numberOfPlots = 10, repetitions = 10)
 #' 
 #' @export
-nullModel <- function(simu, which.simulation=NULL, abundance = FALSE, localPlotSize, numberOfPlots, repetitions, dist="mpd"){
+nullModel <- function(simu, which.simulation=NULL, abundance = FALSE, localPlotSize, numberOfPlots, repetitions, fun="mpd"){
   
   comMat <- localPlots(simu=simu, which.simulation=which.simulation, size = localPlotSize, n = numberOfPlots, community = T)$communityTable # create community matrix from local communities (requires PhylGeo)
   
@@ -52,8 +52,8 @@ nullModel <- function(simu, which.simulation=NULL, abundance = FALSE, localPlotS
   extantPhyloCophen <- stats::cophenetic(phylogeny) # create distance matrix from phylogeny (requires picante)
   
   # calculate fun for "real matrix"
-  ifelse (dist == "mpd", observedMPD <- picante::mpd(samp = comMat, dis = extantPhyloCophen, abundance.weighted = T),
-          ifelse(dist == "pd", observedMPD <- picante::pd(samp = comMat, phylogeny), stop("wrong dist argument")))
+  ifelse (fun == "mpd", observedMPD <- picante::mpd(samp = comMat, dis = extantPhyloCophen, abundance.weighted = T),
+          ifelse(fun == "pd", observedMPD <- picante::pd(samp = comMat, phylogeny)$PD, stop("wrong dist argument")))
   
   
   # calculate abundances of species in metacommunity
@@ -67,9 +67,13 @@ nullModel <- function(simu, which.simulation=NULL, abundance = FALSE, localPlotS
   
   distribution <- rmultinom(n = repetitions, size=localPlotSize,  prob=metaabundance) # create multinomial distributed matrix
   
-  
+  if(fun == "mpd"){
   NullDistribution <- picante::mpd(samp = t(distribution), dis = extantPhyloCophen, abundance.weighted = T) # calculate mpd for null matrix
-  
+  }
+  else{
+   NullDistribution<- picante::pd(samp=t(distribution), tree= phylogeny)$PD
+  }
+   
   observedMPD[which(is.na(observedMPD))] <- 0
   
   CummulativeDensityFunction <- ecdf(NullDistribution) # create cumulative density function from null matrix

@@ -22,6 +22,11 @@ plotSpatialPhylo(simu, plot = "both", plotTraits = T,
 Provided with an output of a phylogeny-simulation this function can plot the phylogeny tree ,the spatially abundance of the evolved species and their traits.
 }
 \examples{
+#Load data
+data(simu.neutral.global)
+data(simu.neutral.local)
+data(simu.envcom.local)
+
 #neutral model with global dispersal
 simu <- simu.neutral.global
    #phylogeny and traits
