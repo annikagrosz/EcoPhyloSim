@@ -41,6 +41,7 @@ plotTraitDistribution <- function (simu, type = "hist", which.simulation = NULL)
   red <- sample(p, size = length(names))
   green <- sample(p, size = length(names))
   blue <- sample(p, size = length(names))
+  cols <- vector()
   for(i in 1:length(names)){
       cols[i] <- rgb(red[i],green[i],blue[i],0.5)}
   colmat <- dat$specMat
