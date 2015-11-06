@@ -2,7 +2,7 @@
 #' @description Plots trait-histograms, trait ~ Environment relationship and the spatial distribution of the different traits
 #' @param simu Simulation output of the class "Phylosim", usually consisting out of several lists. Needs to contain at least the three trait matrices ($traitMat;$compMat;$neutMat) and the environment matrix ($envMat) 
 #' @param which.simulation defines which simulation run to choose in case more than one simulation is saved within the simu object. The default is the last one.
-#' @param type defines wether the histogram only should be plotted standalone or with the trait ~ Environment relationship and the spatial distribution. Latter is done by type = "all". Default is "hist"
+#' @param type defines wether the histogram should be plotted standalone or with the trait ~ Environment relationship and the spatial distribution. Latter is done by type = "all". Default is "hist"
 #' @examples 
 #' 
 #'#Load data 
@@ -41,6 +41,7 @@ plotTraitDistribution <- function (simu, type = "hist", which.simulation = NULL)
   red <- sample(p, size = length(names))
   green <- sample(p, size = length(names))
   blue <- sample(p, size = length(names))
+  cols <- numeric(length(names))
   for(i in 1:length(names)){
       cols[i] <- rgb(red[i],green[i],blue[i],0.5)}
   colmat <- dat$specMat
@@ -52,9 +53,11 @@ plotTraitDistribution <- function (simu, type = "hist", which.simulation = NULL)
     par(mar = c(5, 4, 2, 2))
     
     plot(dat$traitMat~dat$envMat, col = colmat, ylab="Trait", xlab="Environment"  )
+    title("Trait")
     plot(dat$compMat~dat$envMat, col = colmat, ylab= "", xlab="Environment")
+    title("Competition")
     plot(dat$neutMat~dat$envMat, col = colmat, ylab= "", xlab="Environment")
-    
+    title("Neutral")
     
     image(dat$traitMat, xaxt="n", yaxt="n", ylab="Spatial Distribution",useRaster =T,col = grey(seq(0, 1, length = 256)))
     image(dat$compMat, xaxt="n", yaxt="n",useRaster =T,col = grey(seq(0, 1, length = 256)))
@@ -68,21 +71,21 @@ plotTraitDistribution <- function (simu, type = "hist", which.simulation = NULL)
     ymax <- max(hist(dat$traitMat,breaks=100, plot =F)$counts)
     xmax <- max(dat$traitMat) 
     xmin <- min(dat$traitMat)
-    hist(dat$traitMat[dat$specMat==names[1]], xlim=c(xmin,xmax), ylim =c(0,ymax))
+    hist(dat$traitMat[dat$specMat==names[1]], xlim=c(xmin,xmax), ylim =c(0,ymax), main = "Trait Histogram", xlab="Value")
     for(i in 2:length(names)){
       hist(dat$traitMat[dat$specMat==names[i]], add =T, col = cols[i])}    
     
     ymax <- max(hist(dat$compMat,breaks=100, plot =F)$counts)
     xmax <- max(dat$compMat) 
     xmin <- min(dat$compMat)
-    hist(dat$compMat[dat$specMat==names[1]], xlim=c(xmin,xmax), ylim =c(0,ymax))
+    hist(dat$compMat[dat$specMat==names[1]], xlim=c(xmin,xmax), ylim =c(0,ymax), main = "Competitiontrait Histogram", xlab="Value")
     for(i in 2:length(names)){
       hist(dat$compMat[dat$specMat==names[i]], add =T, col = cols[i])} 
     
     ymax <- max(hist(dat$neutMat,breaks=100, plot =F)$counts)
     xmax <- max(dat$neutMat) 
     xmin <- min(dat$neutMat)
-    hist(dat$neutMat[dat$specMat==names[1]], xlim=c(xmin,xmax), ylim =c(0,ymax))
+    hist(dat$neutMat[dat$specMat==names[1]], xlim=c(xmin,xmax), ylim =c(0,ymax), main = "Neutraltrait Histogram", xlab="Value")
     for(i in 2:length(names)){
       hist(dat$neutMat[dat$specMat==names[i]], add =T, col = cols[i])} 
     

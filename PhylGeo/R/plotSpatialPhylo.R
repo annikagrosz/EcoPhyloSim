@@ -1,10 +1,10 @@
 #' @title Phylogeny And Spatial Abundance Plot
-#' @description Provided with an output of a phylogeny-simulation this function can plot the phylogeny tree ,the spatially abundance of the evolved species and their traits.
+#' @description Plots the phylogeny tree ,the spatially abundance of the evolved species and their traits.
 #' @param simu Simulation output of the class "Phylosim", usually consisting out of several lists. Needs to contain at least the spatial species matrix ($specMat) and the phylogeny ($phylogeny)   
-#' @param phylogeny the corresponding (extant) phylogeny
 #' @param plot defines what to plot."spatial" plots the spatial abundance, "phylogeny" the phylogeny tree. "both" plots both of them side by side 
 #' @param plotTraits logical, defines if the traits should be plotted 
 #' @param which.simulation defines which simulation run to choose in case you defined to save at multiple time steps. The default is the last one.
+#' @details The tiplabels of the phylogeny tree are colored in correspondency to the spatial abundance plot
 #' @examples 
 #' 
 #' #Load data
@@ -15,37 +15,37 @@
 #' #neutral model with global dispersal
 #' simu <- simu.neutral.global
 #'    #phylogeny and traits
-#'    plotspatialphylo(simu, plot = "phylogeny")    
+#'    plotSpatialPhylo(simu, plot = "phylogeny")    
 #'
 #'    #phylogeny and spatial distribution
-#'    plotspatialphylo(simu, plot = "both", plotTraits=F)
+#'    plotSpatialPhylo(simu, plot = "both", plotTraits=F)
 #'    
 #'    #all three
-#'    plotspatialphylo(simu, plot = "both", plotTraits=F)
+#'    plotSpatialPhylo(simu, plot = "both", plotTraits=T)
 #' 
 #'  --------------------------------------------------------
 #'  #neutral model with local dispersal
 #'  simu <- simu.neutral.local
 #'    #phylogeny and traits
-#'    plotspatialphylo(simu, plot = "phylogeny")    
+#'    plotSpatialPhylo(simu, plot = "phylogeny")    
 #'
 #'    #phylogeny and spatial distribution
-#'    plotspatialphylo(simu, plot = "both", plotTraits=F)
+#'    plotSpatialPhylo(simu, plot = "both", plotTraits=F)
 #'    
 #'    #all three
-#'    plotspatialphylo(simu, plot = "both", plotTraits=F)
+#'    plotSpatialPhylo(simu, plot = "both", plotTraits=T)
 #'    
 #'  ---------------------------------------------------------
 #'  #evironment and competition model with local dispersal
 #'  simu <- simu.envcom.local
 #'    #phylogeny and traits
-#'    plotspatialphylo(simu, plot = "phylogeny")    
+#'    plotSpatialPhylo(simu, plot = "phylogeny")    
 #'
 #'    #phylogeny and spatial distribution
-#'    plotspatialphylo(simu, plot = "both", plotTraits=F)
+#'    plotSpatialPhylo(simu, plot = "both", plotTraits=F)
 #'    
 #'    #all three
-#'    plotspatialphylo(simu, plot = "both", plotTraits=F)
+#'    plotSpatialPhylo(simu, plot = "both", plotTraits=T)
 #' --------------------------------------------------------
 #' #Set simulation run with which.simulation
 #' #Here, two simulation runs are stored in simu (one with 500 timesteps, one with 1000)
@@ -53,7 +53,7 @@
 #' simu <- runSimulation(par)
 #' 
 #' #Choose to take the first simulation run (default is the last)
-#' plotspatialphylo(simu. which.simulation = 1)
+#' plotSpatialPhylo(simu, which.simulation = 1)
 #' 
 #' 
 #' @import ape

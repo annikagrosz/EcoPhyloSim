@@ -3,9 +3,10 @@
 #' @description Plots the species area curve for a given community. 
 #' @param simu Simulation output of the class "Phylosim", usually consisting out of several lists. Needs at least the spatial distribution of the species stored in a matrix ($specMat)
 #' @param which.simulation Integer, determines which simulation should be used. Only useful if your Phylosim object contains more than one result.
-#' @param area a single value or a vector determining the size(s) of the subplots that for which areas are calculated. If not provided, 10 sizes logarithmically will be chosen
+#' @param area a single value or a vector determining the size(s) of the subplots. If not provided, 10 logarithmic plotsizes will be used.
 #' @param rep The number of repetitions per size to calculate the mean 
 #' @param plot Logical determining whether to plot the SAC or not
+#' @details displays the accumulated species richness as a function of plot size or the amount of equally sized plots. It serves as an indicator for the clustering of a species community. A positively bent curve usually indicates clustering since an increase in plot size or number leads to an increase in species richness while a negatively bent curve indicates a more neutral distribution of species within the community.
 #' @return A list containing the mean species richness for each size and the respective standard deviation
 #' @examples 
 #' 
@@ -17,35 +18,35 @@
 #'  --------------------------------------------------------
 #'   
 #' #Plot SAC curve for neutral model and global dispersion
-#' simu <- simu.neutral.global
-#' sac(simu = simu)
+#' 
+#' sac(simu = simu.neutral.global)
 #' 
 #'  -------------------------------------------------------- 
 #'  
 #' #Plot SAC curve for neutral model and local dispersion
-#' simu <- simu.neutral.local
-#' sac(simu = simu)
+#' 
+#' sac(simu = simu.neutral.local)
 #' 
 #'  --------------------------------------------------------
 #'  
 #' #Plot SAC curve for environment and competition model and local dispersion
-#' simu <- simu.envcom.local
-#' sac(simu = simu)
+#'
+#' sac(simu = simu.envcom.local)
 #' 
 #'  --------------------------------------------------------
 #'  
 #' #Plot SAC curve with random plotsize 
-#' simu <- simu.envcom.local
-#' sac(simu=simu, area = sort(sample(c(10:1000), size = 10)))
+#' 
+#' sac(simu=simu.envcom.local, area = sort(sample(c(10:1000), size = 10)))
 #' 
 #'  -------------------------------------------------------- 
 #'  
 #' #Plot SAC curve with different repititions
 #' simu <- simu.envcom.local
 #' par(mfrow=c(3,1))
-#' sac(simu=simu, rep = 3)
-#' sac(simu=simu, rep = 30)
-#' sac(simu=simu, rep = 30)
+#' sac(simu=simu.envcom.local, rep = 3)
+#' sac(simu=simu.envcom.local, rep = 30)
+#' sac(simu=simu.envcom.local, rep = 30)
 #' 
 #' @export
 #' 

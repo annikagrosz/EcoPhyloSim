@@ -1,8 +1,8 @@
 #' @title Rank Abundance Curve
 #' @description Plots the Rank Abundance Curve for a given community. 
-#' @param simu Simulation output of the class "Phylosim", usually consisting out of several lists. Needs at least the spatial distribution of the species stored in a matrix ($)
+#' @param simu Simulation output of the class "Phylosim", usually consisting out of several lists. Needs at least the spatial distribution of the species stored in a matrix ($specMat)
 #' @param plot determining whether to plot the RAC as "line"(default) or "bar".
-#' @details The highest abundance is assigned rank "1" while the lowest is assigned the rank corresponding with species richness.
+#' @details Each species is given a rank according to their abundance (highest = rank 1). Then the the species' abundance is plotted in dependency of their rank. It can be used as an indicator for the ammount of equally abundant species a community can support.
 #' @return A dataframe containing the ranked abundances, sorted by ascending rank.
 #' @examples 
 #' 
@@ -14,23 +14,23 @@
 #'  --------------------------------------------------------
 #' 
 #' #Plot RAC curve for neutral model and global dispersion
-#' simu <- simu.neutral.global
-#' rac(simu = simu)
-#' rac(simu = simu, plot ="bar")
+#' 
+#' rac(simu = simu.neutral.global)
+#' rac(simu = simu.neutral.global, plot ="bar")
 #' 
 #'  --------------------------------------------------------
 #' 
 #' #Plot RAC curve for neutral model and local dispersion
-#' simu <- simu.neutral.local
-#' rac(simu = simu)
-#' rac(simu = simu, plot ="bar")
+#' 
+#' rac(simu = simu.neutral.local)
+#' rac(simu = simu.neutral.local, plot ="bar")
 #' 
 #'  --------------------------------------------------------
 #' 
 #' #Plot RAC curve for environment and competition model and local dispersion
-#' simu <- simu.envcom.local
-#' rac(simu = simu)
-#' rac(simu = simu, plot ="bar")
+#' 
+#' rac(simu = simu.envcom.local)
+#' rac(simu = simu.envcom.local, plot ="bar")
 #' 
 #'  
 #' 

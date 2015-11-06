@@ -1,10 +1,11 @@
 #' @title Phylogenetic clades
 #' @description Visualises the phylogenetic clades of a local community within a metacommunity. 
-#' @param simu Simulation output of the class "Phylosim", usually consisting out of several lists. Needs to contain at least the phylogeny ($phylogeny) and species matrix ($specMat)
+#' @param simu Simulation output of the class "Phylosim", usually consisting out of several lists. Needs to contain at least the phylogeny ($phylogeny) and species matrix ($specMat). The species matrix is used as metacommunity
 #' @param which.simulation defines which simulation run to choose in case you defined to save at multiple time steps. The default is the last one.
 #' @param n The number of local communities. For each community a new plot is created. Needs to be greater than 1
 #' @param subplot if no simu object is given, a communitytable of a local community can be given here
 #' @param phylogeny if no simu object is ginve, an object of the class 'phylo' can be given here to describe the communites phylogeny
+#' @details This function works with a single simu object (class "phylosim"). If no simu object is given, it is also possible to calculate the clades from a given phylogeny and localc plots. Here the phylogeny represents the metacommunity wihtin which the local plots create the clades
 #' @examples  
 #' 
 #' #Load data
@@ -28,14 +29,14 @@
 #'
 #'#Plot clades for environment and competition model with global dispersal with three subplots
 #' par(mfrow=c(1,3))
-#' plotclades(simu.envcom.global, size = 50, n = 3) 
+#' plotclades(simu.envcom.local, size = 50, n = 3) 
 #' 
 #'  --------------------------------------------------------
 #'
 #'#increasing plot size
 #'par(mfrow=c(2,2))
-#'plotclades(simu.envcom.global, size = 50, n =2)
-#'plotclades(simu.envcom.global, size = 1000, n =2)
+#'plotclades(simu.envcom.local, size = 50, n =2)
+#'plotclades(simu.envcom.local, size = 1000, n =2)
 #' @export
 plotclades <- function(simu,which.simulation=NULL, size, n, subplot = NULL, phylogeny=NULL){
   
