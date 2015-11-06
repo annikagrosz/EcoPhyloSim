@@ -61,16 +61,16 @@ Among the central model the package comprises a set of functions to illustrate a
 
 \chapter{The model}
 \section{The grid}
-The basis for the simualtion is a grid consiting of spatially discrete cells.
+The basis for the simualtion is a grid of spatially discrete cells.
 Each cell is inhabited by one individual at any time. Additionally an environmental gradient can be included. To avoid boundary effects the boundaries of the grid are warped.
 
 \section{The indivuduals}
-TODO Formulas
 Each individual belongs to a species. The properties of the individual are represented in two traits ranging between zero and one.
 The competition trait represents the individual's preferences apart from the environment. The more similar the traits of two individuals, the stronger they compete with each other.\\
 The environmental trait simulates the individual's interaction with the environment. 
 It is defined as the mean of a Gaussian Distribution with $\sigma$ set to 0.047. This represents a niche width covering ten percent of the total space of the
-respective resource (approch see: Ackermann and Doebeli, 2004).\\
+respective resource (approch see: Ackermann and Doebeli, 2004).\\ Further ech individual
+possesses a neutral trait. This trait evolves over time but is influencing the individual's properties.\\
 Apart from the individual's traits each species has trait values. These traits are not independent but defined as the mean of the respective traits of all individuals of the species. 
 The species traits serve as an attractor in the individual trait evolution proces.
 Further, each species contains information about its parent species and the species that emerged from it. 
@@ -130,9 +130,7 @@ For further explanations and more settings see:
 @
 
 <<>>=
-par <- createCompletePar(x = 50, y = 50, 
-                         dispersal = "global" , runs = c(500,1000), density = 1,
-                         environment = 0.5, specRate = 1, type="base")
+par <- createCompletePar(x = 50, y = 50, dispersal = "global" , runs = c(500,1000), density = 1, environment = 0.5, specRate = 1, type="base")
 @
 
 
@@ -146,7 +144,7 @@ simu <- runSimulation(par)
 The output is saved as an object of type "Phylosim".
 Each Phylosim object consists of two lists, \$Output and \$Model.
 All model results are saved in the Output list. In this example the
-Outpuit consists of two results, the simulation after 500 and 1000 generations.
+Output consists of two results, the simulation after 500 and 1000 generations.
 To acces them the easiest way is to use indexes.
 <<>>=
 Output1 <- simu$Output[[1]]
@@ -155,8 +153,8 @@ There are several objects in this list.
 <<>>=
 str(Output1)
 @
-These are the species matrix, the trait matrix, the environmental matrix, the competition matrix and the neutral matrix as well as the phlogeny.\\
-The parameter settings are only saved once. Additionaly, the run time is save with these settings.
+These are the species matrix, the (environmental) trait matrix, the environmental matrix (representing the environment), the competition matrix and the neutral matrix as well as the phlogeny in two formats.\\
+The parameter settings are only saved once. Additionaly, the run time is saved with these settings.
 <<>>=
 str(simu$Model)
 @
@@ -164,24 +162,20 @@ str(simu$Model)
 
 In the package, the Phylosim object serves as the basis of all further analysis.
 It can directly be passed to all other funktions.
-If the Phylsim object contains multiple results, they can in all functions be accessed by the which.simulation argument. By default always the end result is used.\\
+If the Phylsim object contains multiple results, they can be accessed by the which.simulation argument. By default always the last result is used.\\
 Because the simulations have a high computational cost, the package comprises a funktion to make use of parallel computing. This function can be seen as an extension to the
 runSimulation funktion in order to accelerate the simulation of multiple scenarios.\\
 As input serves a list of parameter settings as created by createCompletePar, whereas the output is a list of Phylosim objects.\\
 In the following example two slightly different parameter sets are created and processed using parallel computing.
 
 <<results='hide'>>=
-par1 <- createCompletePar(x = 50, y = 50, dispersal = "global" ,
-                          runs = 1000, density = 1, environment = 0.5, 
-                          specRate = 1, type="base")
+par1 <- createCompletePar(x = 50, y = 50, dispersal = "global", runs = 1000, density = 1, environment = 0.5, specRate = 1, type="base")
 
-par2 <- createCompletePar(x = 50, y = 50, dispersal = "global",
-                          runs = 1000, density = 1, environment = 2,
-                          specRate = 1, type="base")
+par2 <- createCompletePar(x = 50, y = 50, dispersal = "global", runs = 1000, density = 1, environment = 2, specRate = 1, type="base")
 
 parmBatch <- list(par1, par2)
 
-simuBatch <- runSimulationBatch(parmBatch, parallel = TRUE)
+simuBatch <- runSimulationBatch(parmBatch, parallel = "auto")
 @
 
 The simuBatch object contains two Phylosim objects saved in a list. You can easily access them seperately by indexing. For example:
@@ -195,7 +189,7 @@ simu1 <- simuBatch[[1]]
 
 \section{Plots and summary statistics}
 The phylosim package contaions multiple functions to visualize the results of the simulation.
-The plotSpatialPhylo plot consist out of three different figures. The phylogeny tree that shows the phylogeny of the modeled community with colored tip labels. A traitplot that shows the magnitude of different traits for each of the species within the community. A plot that shows the spatial abundance of the species within the community. Here the species have the same color as the tip labels for recognition. Which of these figures are plotted can be triggered with the arguments "plot" and "plotTraits" (see help).\\
+The plotSpatialPhylo plot consist of three different figures. The phylogeny tree that shows the phylogeny of the modeled community with colored tip labels. A traitplot that shows the magnitude of different traits for each of the species within the community. And a plot that shows the spatial abundance of the species within the community. Here the species have the same color as the tip labels for recognition. Which of these figures are plotted can be triggered with the arguments "plot" and "plotTraits" (see help).\\
 
 <<>>=
 plotSpatialPhylo(simu, plot = "both", plotTraits = T, 
@@ -203,31 +197,33 @@ plotSpatialPhylo(simu, plot = "both", plotTraits = T,
 @
 
 
-The plotTraitDistribution plot consists out of three different figures for the three traits in the model (Environmenttrait, Competitiontrait, Neutraltrait). Figure one shows a histogram of the given trait. Figure two illustrates the trait's magnitude in dependency of the environment for different species. Figure two illustrates the spatial distribution of the given trait.
+The plotTraitDistribution plot consists of three different figures for the three traits in the model (environmental trait, competition trait, neutral trait). Figure one shows a histogram of the given trait. Figure two illustrates the trait's magnitude in dependency of the environment for different species. Figure two illustrates the spatial distribution of the given trait.
 
 <<>>=
-plotTraitDistribution(simu = simu, which.simulation = NULL)
+plotTraitDistribution(simu = simu, which.simulation = NULL, type ="all")
 @
 
 The package contains two functions to analyze the spatial patterns of the results.
 The species-area curve (SAC) and the rank-abundace curve (RAC).
 The SAC shows the accumulated species richness as a function of the plot size. 
 A positively bent curve indicates clustering of a species community. An increase in plot size leads to an increase in specis richness. A negatively bent curve indicates a more neutral distribution of species within the community.\\
+\begin{center}
+<< results='hide', out.width='6cm', out.height='6cm', fig.show='hold'>>=
+sac(simu, which.simulation = NULL)
+@
+\end{center}
 RACs display the amount of equally abundand species that the community can support. A linear curve indicates a less stable or neutral community supporting only a few highly abundand species, whereas an S-shaped curve indicates a more stable community. In the latter case several species of the same abundance can be supported.\\
-
-Here the results are shown for the same simulation after 1000 runs.
 
 \begin{center}
 << results='hide', out.width='6cm', out.height='6cm', fig.show='hold'>>=
 rac(simu, which.simulation = NULL)
-sac(simu, which.simulation = NULL)
 @
 \end{center}
 
 
 \chapter{Null Models}
 
-To tackle the question, wheather there are pattern in the results of the 
+To tackle the question, whether there are pattern in the results of the 
 simualtions, the package comprises a set of null models to test the observed results
 against. These models are brought together in the nullModel function.\\
 In the function subplots of the results are created based on a Phylosim object.
@@ -237,18 +233,32 @@ subPlots <- localPlots(simu = simu, size=100, n=10)
 @
 
 These subplots are now tested against randomly collected plots.\\
-You can choose, wheather the null model should be based on the abundance distribution of the sample plots or not.\\
-If the model is not based on the abundance distribution, there are two possible measures of the phylogeny that are used to compare the observed results to the null model. These are the Mean Pairwise Distance (mpd) or Fait's Phylogenetic Diversity (pd)\marginnote{Both have their origin in the picante package}.
+You can choose, whether the null model should be based on the abundance distribution of the sample plots or not.\\
+If the model is not based on the abundance distribution, there are two possible measures of the phylogeny that are used to compare the observed results to the null model. These are the Mean Pairwise Distance (mpd) or Fait's Phylogenetic Diversity (pd)\marginnote{the Mean Pairwise Distance and Fait's Phylogenetic Diversity have their origin in the picante package. For more information see the help pages in the picante package.}.
 
 <<>>=
 pValues <- nullModel(simu = simu, abundance = FALSE, localPlotSize = 100, numberOfPlots = 10, repetitions = 100, fun="mpd")
 @
 
-To calculate null models for the output of the runSimulationBatch function the calculatePhylogeneticDispersion function is used. It can be seen as an extension to the nullModel function, that deals with lists of Phylosim objects and can also calculate two external null models.
+To analyze large outputs as created by runSimulationBatch the calculatePhylogeneticDispersion function can be useful. It can be seen as an extension to the nullModel function that deals with lists of Phylosim objects and can also calculate two external null models. Which null model is used is determined by the types argument with the following options.
+\begin{itemize}
+\item "PhylMeta" equivalent to the nullModell function with abundace = FALSE
+\item "PhylSample"  equivalent to the nullModell function with abundace = TRUE
+\item "PhylPool" uses picante::ses.mpd with null.model = "phylogeny.pool"
+\item "SamplePool" uses picante::ses.mpd with null.model = "sample.pool"
+\end{itemize}
 
 <<>>=
 pValuesBatch <- calculatePhylogeneticDispersion(simuBatch, plotlength=20, plots=20, replicates=20, types="PhylMeta")
 @
+
+\newpage
+
+
+\bibliographystyle{chicago} 
+
+
+\bibliography{Vignette_bib}
 
 
 
