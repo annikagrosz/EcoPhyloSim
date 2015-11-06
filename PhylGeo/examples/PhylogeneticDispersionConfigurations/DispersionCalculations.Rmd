@@ -26,7 +26,7 @@ This first impression leads to the assumption, that there is some signal in the 
 
 ```{r, cache=T}
 
-nullMeta <- calculatePhylogeneticDispersion(simulationOut, plotlengths = c(2,3,4,5,6,7,8,9,10), reduce = T, times = 40)
+nullMeta <- calculatePhylogeneticDispersion(simulationOut, plotlengths = c(2,3,4,5,6,7,8,9,10), reduce = T)
 ```
 
 ```{r, cache=T}
@@ -67,27 +67,35 @@ name =   name <- paste("./",outfolder, "/NullMeta.pdf", sep = "")
 dev.copy(pdf, name , width=8, height=6)
 dev.off()
 
-plotPhylogeneticDispersion(nullSample, pars, "Null Sample", multiple = T) 
+plotPhylogeneticDispersion(nullSample, positions, "Null Sample", multiple = T) 
 
 dev.copy(pdf,"./plots/NullSample.pdf", width=8, height=8)
 dev.off()
 
-plotPhylogeneticDispersion(samplePool, pars, "Null Sample Pool (picante)", multiple = T) 
+plotPhylogeneticDispersion(samplePool, positions, "Null Sample Pool (picante)", multiple = T) 
 
 dev.copy(pdf,"./plots/NullPicanteSample.pdf", width=8, height=8)
 dev.off()
 
-plotPhylogeneticDispersion(phylPool, pars, "Null Phyl Pool (picante)", multiple = T) 
+plotPhylogeneticDispersion(phylPool, positions, "Null Phyl Pool (picante)", multiple = T) 
 
 dev.copy(pdf,"./plots/NullPicantePhylo.pdf", width=8, height=8)
 dev.off()
 ```
 
+
+
+##### The following code is only useful if your simulationOut object is
+## in the old format.
 #### Adaptions to the new format
 ######################################
+
+##load the data
 load("results100x100-2.RData")
 
 ## Make data compatible to new format
+## speed the process only the last time step is transferred (can easily be changed to all)
+
 output<-list()
 output[[1]]<-list("Output"=list(simulationOut[[1]][[50]]),"Model"=simulationOut[[1]][[51]])
 class(output[[1]])<-c(class(output),"Phylosim")
@@ -100,14 +108,18 @@ for(i in 2:28){
 
 
 
-simulationOut<- output
-
-
-
 
 ### Do the calculations
 
 nullMeta <- calculatePhylogeneticDispersion(output, plotlengths = c(2,3,4,5,6,7,8,9,10), reduce = T)
+
+nullSample <- calculatePhylogeneticDispersion(output, type = "PhylSample", plotlengths = c(2,3,4,5,6,7,8,9,10), reduce = T)
+
+samplePool <- calculatePhylogeneticDispersion(output, type = "SamplePool", plotlengths = c(2,3,4,5,6,7,8,9,10), reduce = T)
+
+phylPool <- calculatePhylogeneticDispersion(output, type = "PhylPool", plotlengths = c(2,3,4,5,6,7,8,9,10), reduce = T)
+```
+
 
 ## Plot the results
 positions <- list(x= c(1, seq(2.5,6.5,1), 8),

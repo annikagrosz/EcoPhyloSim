@@ -38,6 +38,8 @@ xrightmargin=3.4pt,
 numbers=none
 }
 
+%\VignetteIndexEntry{PhyloSim}
+%\VignetteEngine{knitr::knitr}
 
 <<setup, cache=FALSE, include=FALSE>>=
 library(knitr)
@@ -104,7 +106,14 @@ newtrait = (w_p \cdot p) + (w_r \cdot r)
 
 
 \chapter{Basic functionality}
-The following section descibes how the model is applied and shows some of the most important funktions to illustrate and analyze the results of the simulations.
+
+\section{Summary}
+The following section descibes how the model is applied and shows some of the most important funktions to illustrate and analyze the results of the simulations.\\
+The basic structure of how the model is applied is shown in figure XX
+TODO flowchart
+
+
+
 
 \section{Loading the package}
 

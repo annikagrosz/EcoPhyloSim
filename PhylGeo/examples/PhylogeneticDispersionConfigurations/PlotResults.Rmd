@@ -22,9 +22,9 @@ for(i in 1:length(simulationOut)){
   
   data <- simulationOut[[i]]
   
-  lastTime <- length(data) - 1
+  lastTime <- length(data$Output)
   
-  scen = paste(data$par$scenario, "dispersal =", data$par$dispersal)
+  scen = paste(data$Model$scenario, "dispersal =", data$par$dispersal)
 
 
   plotSpatialPhylo(data, plot = "both")
@@ -36,8 +36,8 @@ for(i in 1:length(simulationOut)){
   
   
   oldpar <- par(mfrow = c(1,2))
-  rac(data[[lastTime]]$specMat)
-  sac(data[[lastTime]]$specMat)
+  rac(data)
+  sac(data)
   mtext(scen, outer = TRUE, cex = 1.5)
   
   name <- paste("./",outfolder, "/racSac", i, ".pdf", sep = "")
