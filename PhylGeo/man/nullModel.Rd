@@ -42,16 +42,16 @@ nullModel(simu, abundance= FALSE, localPlotSize = 100, numberOfPlots = 10, repet
 ## Usage with runSimulationBatch
 ## Define two (or multiple) parameter sets
 par1 <- createCompletePar(x = 50, y = 50, dispersal = 0 , runs = c(500,1000),
-        density = 0, environment = 0.5, specRate = 1)
-par2 <- createCompletePar(x = 50, y = 50, dispersal = 0 , runs = c(500,1000),
         density = 1, environment = 0.5, specRate = 1)
+par2 <- createCompletePar(x = 50, y = 50, dispersal = 0 , runs = c(500,1000),
+        density = 2, environment = 0.5, specRate = 1)
 
 ## Merge the parameter sets. It is important to note, that the funktion
 ## needs a list of parameter sets.
 par <- list(par1,par2)
 
 ## Run the model
-simubatch <- runSimulationBatch(par, parallel=T)
+simubatch <- runSimulationBatch(par, parallel="auto")
 
 ## Compare results to null model
 nullModel(simubatch[[1]],localPlotSize = 100, numberOfPlots = 10, repetitions = 10)

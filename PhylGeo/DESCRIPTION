@@ -14,20 +14,16 @@ Description: This package is designed to simulate and analyse species community
     exclusively correlated with a certain mechanism or combination of mechanisms.
 License: GPL (>= 2)
 Depends:
-    foreach,
-    Rcpp,
-    ape,
-    kulife,
-    doParallel,
-    picante,
-    adephylo
+    foreach
 Imports:
     Rcpp (>= 0.11.4),
     ape,
     kulife,
     doParallel,
     picante,
-    adephylo
+    adephylo,
+    fields,
+    shape
 Suggests:
     knitr
 VignetteBuilder:

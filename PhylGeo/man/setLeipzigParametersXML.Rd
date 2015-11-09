@@ -38,31 +38,31 @@ Creates a .xml file of the desired model parameters to be loaded into the model.
 }
 \examples{
 # Define parameter values
-scenarios = c("globalDens", "globalNoDens",
-              "localDens", "localNoDens")
-x = rep(50,4)
-y = rep(50,4)
-runs = rep(3000,4)
-dispersal = c(1,1,2,2)
-nSpec = rep(1,4)
-specRate = rep(2,4)
-density = c(T,F,T,F)
-densityStrength =  rep(0.4,4)
-path <- "C:/"
-filename <- "test.xml"
+#scenarios = c("globalDens", "globalNoDens",
+#              "localDens", "localNoDens")
+#x = rep(50,4)
+#y = rep(50,4)
+#runs = rep(3000,4)
+#dispersal = c(1,1,2,2)
+#nSpec = rep(1,4)
+#specRate = rep(2,4)
+#density = c(T,F,T,F)
+#densityStrength =  rep(0.4,4)
+#path <- "C:/"
+#filename <- "test.xml"
 
 # Set parameters for the model
-setLeipzigParametersXML(scenarios = scenarios, x = x, y = y, runs = runs,
-                dispersal = dispersal, nSpec = nSpec,
-                specRate = specRate,
-                density = density, densityStrength = densityStrength,
-                location = path,
-                fileName = filename)
+#setLeipzigParametersXML(scenarios = scenarios, x = x, y = y, runs = runs,
+#                 dispersal = dispersal, nSpec = nSpec,
+#                 specRate = specRate,
+#                 density = density, densityStrength = densityStrength,
+#                 location = path,
+#                 fileName = filename)
 
 # Display model parameters in data frame
 
-dat <- paste(path, filename, collapse = "", sep = "")
-parameters <- getParametersXML(dat)
-parameters
+#dat <- paste(path, filename, collapse = "", sep = "")
+#parameters <- getParametersXML(dat)
+#parameters
 }
 

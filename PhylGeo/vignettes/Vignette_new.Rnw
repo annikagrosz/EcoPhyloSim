@@ -201,8 +201,7 @@ The phylosim package contaions multiple functions to visualize the results of th
 The plotSpatialPhylo plot consist of three different figures. The phylogeny tree that shows the phylogeny of the modeled community with colored tip labels. A traitplot that shows the magnitude of different traits for each of the species within the community. And a plot that shows the spatial abundance of the species within the community. Here the species have the same color as the tip labels for recognition. Which of these figures are plotted can be triggered with the arguments "plot" and "plotTraits" (see help).\\
 
 <<>>=
-plotSpatialPhylo(simu, plot = "both", plotTraits = T, 
-                 which.simulation = NULL)
+plotSpatialPhylo(simu, plot = "both", plotTraits = T, which.simulation = NULL)
 @
 
 
@@ -264,10 +263,6 @@ pValuesBatch <- calculatePhylogeneticDispersion(simuBatch, plotlength=20, plots=
 \newpage
 
 
-\bibliographystyle{chicago} 
-
-
-\bibliography{Vignette_bib}
 
 
 

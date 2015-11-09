@@ -4,12 +4,12 @@
 #' @return A dataframe with the model parameters
 #' @examples
 #' # Set the model parameters
-#' path <- "C:/test.xml"
-#' setParametersXML(x = 50, y = 50, runs = 3000, dispersal = 1, nSpec = 1, specRate = 2, density = T, densityStrength = 0.4, location = path)
+#' #path <- "C:/test.xml"
+#' #setParametersXML(x = 50, y = 50, runs = 3000, dispersal = 1, nSpec = 1, specRate = 2, density = T, densityStrength = 0.4, location = path)
 #'
 #' # Retrive the model parameters
-#' modelParameters <- getParametersXML(path)
-#' modelParameters
+#' #modelParameters <- getParametersXML(path)
+#' #modelParameters
 getParametersXML <- function(file){
   load(file)
   #parameters <- XML::xmlToDataFrame(file)
@@ -35,32 +35,32 @@ getParametersXML <- function(file){
 #' @return Creates a .xml file at the specified location
 #' @examples
 #' # Define parameter values
-#' scenarios = c("globalDens", "globalNoDens", 
-#'               "localDens", "localNoDens")
-#'x = rep(50,4)
-#'y = rep(50,4)
-#'runs = rep(3000,4)
-#'dispersal = c(1,1,2,2)
-#'nSpec = rep(1,4)
-#'specRate = rep(2,4)
-#'density = c(T,F,T,F)
-#'densityStrength =  rep(0.4,4)
-#'path <- "C:/"
-#'filename <- "test.xml"
+#' #scenarios = c("globalDens", "globalNoDens", 
+#' #              "localDens", "localNoDens")
+#' #x = rep(50,4)
+#' #y = rep(50,4)
+#' #runs = rep(3000,4)
+#' #dispersal = c(1,1,2,2)
+#' #nSpec = rep(1,4)
+#' #specRate = rep(2,4)
+#' #density = c(T,F,T,F)
+#' #densityStrength =  rep(0.4,4)
+#' #path <- "C:/"
+#' #filename <- "test.xml"
 #'
-#'# Set parameters for the model 
-#'setLeipzigParametersXML(scenarios = scenarios, x = x, y = y, runs = runs, 
-#'                 dispersal = dispersal, nSpec = nSpec, 
-#'                 specRate = specRate, 
-#'                 density = density, densityStrength = densityStrength, 
-#'                 location = path,
-#'                 fileName = filename)
+#' # Set parameters for the model 
+#' #setLeipzigParametersXML(scenarios = scenarios, x = x, y = y, runs = runs, 
+#' #                 dispersal = dispersal, nSpec = nSpec, 
+#' #                 specRate = specRate, 
+#' #                 density = density, densityStrength = densityStrength, 
+#' #                 location = path,
+#' #                 fileName = filename)
 #'                 
 #' # Display model parameters in data frame
 #' 
-#' dat <- paste(path, filename, collapse = "", sep = "")
-#' parameters <- getParametersXML(dat)
-#' parameters
+#' #dat <- paste(path, filename, collapse = "", sep = "")
+#' #parameters <- getParametersXML(dat)
+#' #parameters
 setLeipzigParametersXML <- function(scenarios, x, y, runs, dispersal, nSpec, specRate, density, densityStrength, location, fileName)
 {
   parameters <- data.frame(scenarios = scenarios, x = x, y = y, runs = runs, dispersal = dispersal, nSpec = nSpec, specRate = specRate, density = as.integer(density), densityStrength = densityStrength)

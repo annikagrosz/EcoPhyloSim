@@ -38,7 +38,7 @@ simu <- runSimulationBatch(par, parallel = "auto")
 
 ## Compare the results, here the SAC is shown exemplarily.
 par(mfrow=c(1,2))
-sac(simu[[1]][[2]]$specMat)
-sac(simu[[2]][[2]]$specMat)
+sac(simu[[1]])
+sac(simu[[2]])
 }
 

@@ -25,13 +25,11 @@
 #' ## Calculate null model and compare the observed results against
 #' pValues <- calculatePhylogeneticDispersion(simu, plotlength=20, plots=20, replicates=20, types="PhylMeta")
 #' 
-#' ## Plot the results
-#' plotPhylogeneticDispersion(pValues)
 #' 
 #' @export
 
 # Version that accepts multiple types
-calculatePhylogeneticDispersion <- function(simu, plotlengths = 10,  plots = 200, replicates = 500, types = "PhylMeta", fun = "mpd", reduce = T, which.simulation = NULL){
+calculatePhylogeneticDispersion <- function(simu, plotlengths = 10,  plots = 200, replicates = 500, types = "PhylMeta",  which.simulation = NULL, reduce= FALSE, fun="mpd"){
   
   if ("Phylosim" %in% simu ==T) simu = list(simu)
   

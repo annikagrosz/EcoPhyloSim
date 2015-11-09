@@ -17,11 +17,11 @@ Displays the model parameters from an .xml file as set by \code{\link{setModelPa
 }
 \examples{
 # Set the model parameters
-path <- "C:/test.xml"
-setParametersXML(x = 50, y = 50, runs = 3000, dispersal = 1, nSpec = 1, specRate = 2, density = T, densityStrength = 0.4, location = path)
+#path <- "C:/test.xml"
+#setParametersXML(x = 50, y = 50, runs = 3000, dispersal = 1, nSpec = 1, specRate = 2, density = T, densityStrength = 0.4, location = path)
 
 # Retrive the model parameters
-modelParameters <- getParametersXML(path)
-modelParameters
+#modelParameters <- getParametersXML(path)
+#modelParameters
 }
 

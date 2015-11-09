@@ -18,35 +18,35 @@
 #'    plotSpatialPhylo(simu, plot = "phylogeny")    
 #'
 #'    #phylogeny and spatial distribution
-#'    plotSpatialPhylo(simu, plot = "both", plotTraits=F)
+#'    plotSpatialPhylo(simu, plot = "both", plotTraits = FALSE)
 #'    
 #'    #all three
-#'    plotSpatialPhylo(simu, plot = "both", plotTraits=T)
+#'    plotSpatialPhylo(simu, plot = "both", plotTraits = TRUE)
 #' 
-#'  --------------------------------------------------------
+#'  
 #'  #neutral model with local dispersal
 #'  simu <- simu.neutral.local
 #'    #phylogeny and traits
 #'    plotSpatialPhylo(simu, plot = "phylogeny")    
 #'
 #'    #phylogeny and spatial distribution
-#'    plotSpatialPhylo(simu, plot = "both", plotTraits=F)
+#'    plotSpatialPhylo(simu, plot = "both", plotTraits = FALSE)
 #'    
 #'    #all three
-#'    plotSpatialPhylo(simu, plot = "both", plotTraits=T)
+#'    plotSpatialPhylo(simu, plot = "both", plotTraits = TRUE)
 #'    
-#'  ---------------------------------------------------------
+#' 
 #'  #evironment and competition model with local dispersal
 #'  simu <- simu.envcom.local
 #'    #phylogeny and traits
 #'    plotSpatialPhylo(simu, plot = "phylogeny")    
 #'
 #'    #phylogeny and spatial distribution
-#'    plotSpatialPhylo(simu, plot = "both", plotTraits=F)
+#'    plotSpatialPhylo(simu, plot = "both", plotTraits = FALSE)
 #'    
 #'    #all three
-#'    plotSpatialPhylo(simu, plot = "both", plotTraits=T)
-#' --------------------------------------------------------
+#'    plotSpatialPhylo(simu, plot = "both", plotTraits = TRUE)
+#' 
 #' #Set simulation run with which.simulation
 #' #Here, two simulation runs are stored in simu (one with 500 timesteps, one with 1000)
 #' par <- createCompletePar(x = 50, y = 50, dispersal = 1, runs = c(500,1000), density = 1, environment = 0.5, specRate = 1)

@@ -31,8 +31,8 @@ image(metaCom)
 
 # Usually the function is called by the runSimualtion function
 # Define a parameter set
-parNeut <- createCompletePar(x = 50, y = 50, dispersal = F , runs = 500,
-        density = T, environment = 0.5, specRate = 1, type="Rneutral")
+parNeut <- createCompletePar(x = 50, y = 50, dispersal = FALSE , runs = 500,
+        density = 1, environment = 0.5, specRate = 1, type="Rneutral")
 
 # Run the model
 simuNeut <- runSimulation(parNeut)

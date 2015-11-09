@@ -25,7 +25,7 @@
 #' plot(extantPhylogeny)
 #'  
 #' #Look at the species area relation
-#' sac(area = c(1,10,100,1000), matrix = simu[[2]]$specMat, rep = 100, plot= T)
+#' sac(simu, area = c(1,10,100,1000), rep = 100, plot= TRUE)
 #' @export
 
 runSimulation <- function(par)
