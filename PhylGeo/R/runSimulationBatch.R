@@ -25,6 +25,7 @@
 #' sac(simu[[1]])
 #' sac(simu[[2]])
 
+#' @useDynLib PhylGeo
 #' @export
 runSimulationBatch <- function(pars, parallel = F, backup = FALSE){
   #start timing

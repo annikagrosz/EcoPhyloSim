@@ -4,7 +4,6 @@
 #' @param which.simulation defines which simulation run to choose in case you defined to save at multiple time steps. The default is the last one.
 #' @param orderPhylo defines if the mean traits shall be calculated for extinct species as well. default is yes (TRUE) 
 #' @return A matrix containing the means of env trait, comp trait, neutral trait, and the environment for each species
-#' @import 
 #' @export
 
 getAverageTraits <- function(simu,which.simulation =NULL,orderPhylo = T){
