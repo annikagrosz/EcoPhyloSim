@@ -67,30 +67,48 @@ plotTraitDistribution <- function (simu, type = "hist", which.simulation = NULL)
   
     
    
- 
-    ymax <- max(hist(dat$traitMat,breaks=100, plot =F)$counts)
-    xmax <- max(dat$traitMat) 
-    xmin <- min(dat$traitMat)
-    hist(dat$traitMat[dat$specMat==names[1]], xlim=c(xmin,xmax), ylim =c(0,ymax), main = "Trait Histogram", xlab="Value")
-    for(i in 2:length(names)){
-      hist(dat$traitMat[dat$specMat==names[i]], add =T, col = cols[i])}    
-    
-    ymax <- max(hist(dat$compMat,breaks=100, plot =F)$counts)
-    xmax <- max(dat$compMat) 
-    xmin <- min(dat$compMat)
-    hist(dat$compMat[dat$specMat==names[1]], xlim=c(xmin,xmax), ylim =c(0,ymax), main = "Competitiontrait Histogram", xlab="Value")
-    for(i in 2:length(names)){
-      hist(dat$compMat[dat$specMat==names[i]], add =T, col = cols[i])} 
-    
-    ymax <- max(hist(dat$neutMat,breaks=100, plot =F)$counts)
-    xmax <- max(dat$neutMat) 
-    xmin <- min(dat$neutMat)
-    hist(dat$neutMat[dat$specMat==names[1]], xlim=c(xmin,xmax), ylim =c(0,ymax), main = "Neutraltrait Histogram", xlab="Value")
-    for(i in 2:length(names)){
-      hist(dat$neutMat[dat$specMat==names[i]], add =T, col = cols[i])} 
-    
+  xmax <- max(dat$traitMat) 
+  xmin <- min(dat$traitMat)
+  
+  f <- hist(dat$traitMat[dat$specMat==names[1]], plot=F)
+  f$counts <- log(f$counts)
+  plot(f,ylim =c(0,7), xlim=c(xmin,xmax), col =cols[1], ylab="log(Frequency)" , xlab="Value", main = "Trait Histogram")
+  
+  for(i in 2:length(names)){
+    f <- hist(dat$traitMat[dat$specMat==names[i]], plot=F)
+    f$counts <- log(f$counts)
+    plot(f, add=T, col =cols[i])
   }
   
   
+  xmax <- max(dat$compMat) 
+  xmin <- min(dat$compMat)
+  
+  f <- hist(dat$compMat[dat$specMat==names[1]], plot=F)
+  f$counts <- log(f$counts)
+  plot(f,ylim =c(0,7), xlim=c(xmin,xmax), col =cols[1], ylab="log(Frequency)" , xlab="Value", main = "Competition Histogram")
+  
+  for(i in 2:length(names)){
+    f <- hist(dat$compMat[dat$specMat==names[i]], plot=F)
+    f$counts <- log(f$counts)
+    plot(f, add=T, col =cols[i])
+  }
+  
+  
+  xmax <- max(dat$neutMat) 
+  xmin <- min(dat$neutMat)
+  
+  f <- hist(dat$neutMat[dat$specMat==names[1]], plot=F)
+  f$counts <- log(f$counts)
+  plot(f,ylim =c(0,7), xlim=c(xmin,xmax), col =cols[1], ylab="log(Frequency)" , xlab="Value", main = "Neutral Histogram")
+  
+  for(i in 2:length(names)){
+    f <- hist(dat$neutMat[dat$specMat==names[i]], plot=F)
+    f$counts <- log(f$counts)
+    plot(f, add=T, col =cols[i])
+    
+  }
+  
+}
 
 
