@@ -1,5 +1,5 @@
 
-\documentclass [a4paper,twoside]{tufte-book}
+\documentclass [a4paper]{tufte-book}
 \usepackage{color}
 \usepackage{xcolor}
 \usepackage{framed}
@@ -38,7 +38,7 @@ xrightmargin=3.4pt,
 numbers=none
 }
 
-%\VignetteIndexEntry{PhyloSim}
+%\VignetteIndexEntry{PhylGeo}
 %\VignetteEngine{knitr::knitr}
 
 <<setup, cache=FALSE, include=FALSE>>=
@@ -47,7 +47,7 @@ opts_knit$set(tidy = T, fig=TRUE, fig.height = 4, fig.width=4, fig.align='center
 render_listings()
 @
 
-\title{PhyloSim Package\\ \Huge{Vignette}}
+\title{PhyloSim Package\\ Vignette}
 
 \author{}
 \begin{document}
@@ -71,7 +71,7 @@ Each individual belongs to a species. The properties of the individual are repre
 The competition trait represents the individual's preferences apart from the environment. The more similar the traits of two individuals, the stronger they compete with each other.\\
 The environmental trait simulates the individual's interaction with the environment. 
 It is defined as the mean of a Gaussian Distribution with $\sigma$ set to 0.047. This represents a niche width covering ten percent of the total space of the
-respective resource (approch see: Ackermann and Doebeli, 2004).\\ Further ech individual
+respective resource (approch see: \citep{ackermann2004}).\\ Further ech individual
 possesses a neutral trait. This trait evolves over time but is influencing the individual's properties.\\
 Apart from the individual's traits each species has trait values. These traits are not independent but defined as the mean of the respective traits of all individuals of the species. 
 The species traits serve as an attractor in the individual trait evolution proces.
@@ -99,7 +99,7 @@ The trait values during trait evolution are calculated as follows:
 newtrait = (1-w_s \cdot p) + (w_s \cdot s) + (w_r \cdot r)
 \end{equation}
 
-The last step in a generation is speciation. Here it describes the introduction of a new species via point mutations. These mutations can either become more abundand or go extinct (Hubbell, 1997).The frequency of these events is controlled by the speciation rate in the parameter settings. Each generation a number of new species is introduced in the system replacing randomly chosen individuals. The traits of these individuals are calculated from the parent's traits and a randomly generated value as follows:
+The last step in a generation is speciation. Here it describes the introduction of a new species via point mutations. These mutations can either become more abundand or go extinct \citep{hubbell1997}.The frequency of these events is controlled by the speciation rate in the parameter settings. Each generation a number of new species is introduced in the system replacing randomly chosen individuals. The traits of these individuals are calculated from the parent's traits and a randomly generated value as follows:
 \begin{equation}
 newtrait = (w_p \cdot p) + (w_r \cdot r)
 \end{equation}
@@ -109,8 +109,13 @@ newtrait = (w_p \cdot p) + (w_r \cdot r)
 
 \section{Summary}
 The following section descibes how the model is applied and shows some of the most important funktions to illustrate and analyze the results of the simulations.\\
-The basic structure of how the model is applied is shown in figure XX
-TODO flowchart
+The basic structure of how the model is applied is shown in figure \ref{fig: func}.
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=12cm]{flowchart} % without file extension
+	\caption{Overview about the basic functions in the Phylosim package}\label{fig: func}
+\end{figure} 
+\FloatBarrier
 
 
 
@@ -197,6 +202,12 @@ simu1 <- simuBatch[[1]]
 
 
 \section{Plots and summary statistics}
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=12cm]{flowchart_plots} % without file extension
+	\caption{Overview about the plotting functions in the Phylosim package}\label{fig: plots}
+\end{figure} 
+\FloatBarrier
 The phylosim package contaions multiple functions to visualize the results of the simulation.
 The plotSpatialPhylo plot consist of three different figures. The phylogeny tree that shows the phylogeny of the modeled community with colored tip labels. A traitplot that shows the magnitude of different traits for each of the species within the community. And a plot that shows the spatial abundance of the species within the community. Here the species have the same color as the tip labels for recognition. Which of these figures are plotted can be triggered with the arguments "plot" and "plotTraits" (see help).\\
 
@@ -227,6 +238,17 @@ RACs display the amount of equally abundand species that the community can suppo
 rac(simu, which.simulation = NULL)
 @
 \end{center}
+
+As mentioned above each individual has a neutral trait. This trait evolved over time but is not influencing the individual's fitness.\\
+However, these traits can be used to construct a phylogeny for a given community.
+In the package this is implemented in the phlyoReconstruct function. \\
+These phylogenies can now be compared to the real phylogeny of the community.
+<<>>=
+rePhyl <- phyloReconstruct(simu)
+par(mfrow=c(1,2))
+plot(rePhyl, main="reconstructed Phylogeny")
+plot(simu$Output[[2]]$phylogeny, main="real Phylogeny")
+@
 
 
 \chapter{Null Models}
@@ -262,7 +284,9 @@ pValuesBatch <- calculatePhylogeneticDispersion(simuBatch, plotlength=20, plots=
 
 \newpage
 
+\bibliographystyle{chicago} 
 
+\bibliography{Vignette_bib}
 
 
 

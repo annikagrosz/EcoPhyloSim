@@ -36,6 +36,7 @@ par <- list(par1,par2)
 ## Run the model
 simu <- runSimulationBatch(par, parallel = "auto")
 
+
 ## Compare the results, here the SAC is shown exemplarily.
 par(mfrow=c(1,2))
 sac(simu[[1]])
