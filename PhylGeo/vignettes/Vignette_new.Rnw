@@ -205,7 +205,7 @@ plotSpatialPhylo(simu, plot = "both", plotTraits = T, which.simulation = NULL)
 @
 
 
-The plotTraitDistribution plot consists of three different figures for the three traits in the model (environmental trait, competition trait, neutral trait). Figure one shows a histogram of the given trait. Figure two illustrates the trait's magnitude in dependency of the environment for different species. Figure two illustrates the spatial distribution of the given trait.
+The plotTraitDistribution plot consists of three different figures for the three traits in the model (environmental trait, competition trait, neutral trait). Figure one illustrates the trait's magnitude in dependency of the environment for different species. Figure two illustrates the spatial distribution of the given trait. Figure three shows a histogram of the given trait.
 
 <<>>=
 plotTraitDistribution(simu = simu, which.simulation = NULL, type ="all")
@@ -262,7 +262,9 @@ pValuesBatch <- calculatePhylogeneticDispersion(simuBatch, plotlength=20, plots=
 
 \newpage
 
+Sys.getenv(“PATH”)
 
+Sys.which(“pdflatex”)
 
 
 
