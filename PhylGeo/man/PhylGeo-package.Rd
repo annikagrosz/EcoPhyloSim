@@ -16,7 +16,20 @@ Version: \tab 1.0\cr
 Date: \tab 2015-02-12\cr
 License: \tab GPL (>= 2)\cr
 }
-~~ An overview of how to use the package, including the most important functions ~~
+
+The core of this package is basically a community assembly model, which can be run with runSimulation or runSimulationBatch. All other functions help analize and visualize the model outcome. For visualization the following functions can be useful:
+\tabular{ll}{
+\code{\link{plotSpatialPhylo}} \tab Plots the phylogeny tree ,the spatially abundance of the evolved species and their traits.\cr
+\code{\link{rac}} \tab Plots the Rank Abundance Curve for a given community\cr
+\code{\link{sac}} \tab Plots the species area curve for a given community\cr
+\code{\link{plotclades}} \tab Visualises the phylogenetic clades of a local community within a metacommunity.\cr
+\code{\link{plotTraitDistribution}} \tab Plots trait-histograms, trait ~ Environment relationship and the spatial distribution of the different traits\cr
+}
+
+The function \code{\link{phyloReconstruct}} creates a phylogeny from given neutral traits of a community in order to compare them with the existing phylogeny. The observed patterns in the simulation output can be tested against null models using the function \code{\link{nullModel}}.
+}
+
+
 }
 \author{
 Paul Bauche
@@ -33,5 +46,7 @@ Maintainer: Paul Bauche <your@email.com>
 ~~ \code{\link[<pkg>:<pkg>-package]{<pkg>}} ~~
 }
 \examples{
-%% ~~ simple examples of the most important functions ~~
+# data(simu.envcom.local)
+# plotSpatialPhylo(simu.envcom.local)
+# nullModel(simu)
 }
