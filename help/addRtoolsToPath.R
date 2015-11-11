@@ -18,4 +18,3 @@ system.time(simu <- runSimulation(par))
 
 simu <- runSimulationBatch(par)
 
-install.packages("knitr")

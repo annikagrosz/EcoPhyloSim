@@ -48,5 +48,5 @@ Maintainer: Paul Bauche <your@email.com>
 \examples{
 # data(simu.envcom.local)
 # plotSpatialPhylo(simu.envcom.local)
-# nullModel(simu)
+
 }
