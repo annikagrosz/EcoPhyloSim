@@ -239,6 +239,12 @@ rac(simu, which.simulation = NULL)
 @
 \end{center}
 
+Further, the package comprises a plot function to highlight the clade of a local community within a metacommunity. The local community can be given to the function directly or is derived from the simu object via localPlots.
+
+<<>>=
+plotclades(simu, size = 50, n = 3) 
+@
+
 As mentioned above each individual has a neutral trait. This trait evolved over time but is not influencing the individual's fitness.\\
 However, these traits can be used to construct a phylogeny for a given community.
 In the package this is implemented in the phlyoReconstruct function. \\
