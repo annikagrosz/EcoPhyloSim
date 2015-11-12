@@ -30,7 +30,7 @@ The function \code{\link{phyloReconstruct}} creates a phylogeny from given neutr
 }
 
 
-}
+
 \author{
 Paul Bauche
 
