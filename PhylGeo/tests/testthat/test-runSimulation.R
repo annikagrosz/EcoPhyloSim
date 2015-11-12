@@ -23,3 +23,42 @@ test_that("SimulationBatch is running correctly",{
   expect_is(simuBatch[[2]], "Phylosim")
   
 })
+
+
+
+
+
+test_that("Neutral Model is working as expected",{
+  testthat::skip("Not working")
+  
+  sacVal<-matrix(0,10,100)
+  #racVal<-matrix(NA,20,100)
+  richness<-numeric()
+  par<-createCompletePar(x=50,y=50,dispersal = "global",
+                         density=0, environment=0, runs=1000)
+  for(i in 1:100){
+  simu<-runSimulation(par)
+  sacVal[,i]<- sac(simu, plot=FALSE)$sr.Mean
+ # racVal[,i]<-rac(simu, plot=FALSE)$Abundance
+  richness[i]<-specRich(simu)
+  }
+  
+  parRNeutral<-createCompletePar(x=50,y=50,dispersal = "global",
+                                 density=0, environment=0, type="Rneutral",runs=1000)
+  
+  sacR<-matrix(0,10,10)
+  richness<-numeric()
+  for(i in 1:10){
+  simuRNeutral<-runSimulation(parRNeutral)
+  sacR[,i]<-sac(simuRNeutral, plot=FALSE)$sr.Mean
+ # racR<-rac(simuRNeutral, plot=FALSE)$Abundance
+  richnessR[i]<-specRich(simuRNeutral)
+  }
+  
+  for(i in 1:10){
+    expect_true(sacR[i]<=quantile(sacVal[i,],probs=0.975)& sacR[i]>=quantile(sacVal[i,],probs=0.025))
+   # expect_true(racR[i]<=quantile(racVal[i,],probs=0.975)& racR[i]>=quantile(racVal[i,],probs=0.025))
+    expect_true(richnessR<=quantile(richness, probs=0.975) & richnessR>=quantile(richness,probs=0.025))
+  }
+  })
+

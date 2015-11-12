@@ -2,7 +2,7 @@
 #' @description A model of species community assembly under different assembly mechanisms.  
 #' @param par, a list of parameters created with \link{createCompletePar}
 #' @return An object of class "Phylosim". This objet contains the species matrix, the trait matrix, the environmental matrix, the competition matrix and the neutral matrix, as well as the phlogeny and the parameter settings of the simulation. 
-#' @details If your parameterset contains more than one runs argument, each interim step is saved in the Phylosim object. \cr\cr For larger simularions consider \link{runSimulationBatch} to make use of parallel computing.
+#' @details If your parameterset contains more than one runs argument, each interim step is saved in the Phylosim object. \cr\cr For larger simularions consider \link{runSimulationBatch} to make use of parallel computing. \cr\cr If you are using type="Rneutral" only one runs argument can be processed.
 #' @examples 
 #'  
 #' # Define a parameter set
@@ -133,7 +133,7 @@ runSimulation <- function(par)
     result = NeutralMod(xdim = par$x, ydim=par$y, specRate = par$specRate,  seed = par$seed, runs = par$runs)
     runtime <- as.numeric((proc.time() - ptm)[3])
     par$runtime <- runtime
-    out = list(specMat = result, Model = par)
+    out = list(Output = list(list("specMat"=result)), Model = par)
     class(out) <- append(class(out),"Phylosim")
     return(out)
   }

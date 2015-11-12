@@ -71,9 +71,9 @@ Each individual belongs to a species. The properties of the individual are repre
 The competition trait represents the individual's preferences apart from the environment. The more similar the traits of two individuals, the stronger they compete with each other.\\
 The environmental trait simulates the individual's interaction with the environment. 
 It is defined as the mean of a Gaussian Distribution with $\sigma$ set to 0.047. This represents a niche width covering ten percent of the total space of the
-respective resource (approch see: \citep{ackermann2004}).\\ Further ech individual
-possesses a neutral trait. This trait evolves over time but is influencing the individual's properties.\\
-Apart from the individual's traits each species has trait values. These traits are not independent but defined as the mean of the respective traits of all individuals of the species. 
+respective resource (approch see: \citep{ackermann2004}).\\ Further each individual
+possesses a neutral trait. This trait evolves over time but not is influencing the individual's properties.\\
+Apart from the individual's traits each species has trait values. These are not independent but defined as the mean of the respective traits of all individuals of the species. 
 The species traits serve as an attractor in the individual trait evolution proces.
 Further, each species contains information about its parent species and the species that emerged from it. 
 
@@ -82,18 +82,18 @@ The simulation runs over a defined number of generations.
 In each generation the simulation consists of three consecutive steps.\\
 First the individuals reproduce and spread over the grid. All cells are sequentially chosen at random and the individuals are replaced by the offspring of other individuals.\\
 The individual which produces its offspring and disperses into an empty cell is chosen by an multinomial distribution which consists of all cells within the dispersion kernel.
-The dispersion kernel represents the distance to the cell to be populated and is defined as:
+This kernel represents the distance to the cell to be populated and is defined as:
 \begin{equation}
 w_d = exp\frac{1}{-\Delta_s/2}
 \end{equation}
-$w_d$ represents the weight weight derived from the euclidean distance $\Delta_s$ between the
+$w_d$ represents the weight derived from the euclidean distance $\Delta_s$ between the
 cell to be populated and the potential parent. An increasing distance to the cell leads to an exponential decline in reproductive fitness. The dispersal kernel can be cut at a certain radius.\\
 The density dependence is based on the competition traits of the indivuduals. The closer the values of the competition traits of two individuals, the stronger they compete. Numerically it can be written as the sum of all absolute competition trait differences in a certain area around the individual. The normalized value is now included in the multinomial distribution as follows:
 \begin{equation}
 r_i = \frac{\sum_{j=1}^{n}{\parallel(c_i-c_j)}\parallel}{n}
 \end{equation}
 The second step in the simulation of one generation is the trait evolution. This step represents genetic recombination in the real world.
-The trait is modelled as the mean of a Gaussian Distribution (see above). In each generation this value is slightly changed. The new trait is influenced by the parent's value, a weighted random value and the attraction of the specie's value. The parent value has the highest influence whereas the other two traits have only slight influence.
+The trait is modelled as the mean of a Gaussian Distribution (see above). In each generation this value is slightly changed. The new trait is mosty influenced by the parent's value. Further, a weighted random value and the attraction of the specie's value have an influence on the new trait. 
 The trait values during trait evolution are calculated as follows:
 \begin{equation}
 newtrait = (1-w_s \cdot p) + (w_s \cdot s) + (w_r \cdot r)
@@ -176,10 +176,10 @@ str(simu$Model)
 
 In the package, the Phylosim object serves as the basis of all further analysis.
 It can directly be passed to all other funktions.
-If the Phylsim object contains multiple results, they can be accessed by the which.simulation argument. By default always the last result is used.\\
+If the Phylsim object contains multiple results, they can be accessed by the which.simulation argument in most functions. By default always the last result is used.\\
 Because the simulations have a high computational cost, the package comprises a funktion to make use of parallel computing. This function can be seen as an extension to the
 runSimulation funktion in order to accelerate the simulation of multiple scenarios.\\
-As input serves a list of parameter settings as created by createCompletePar, whereas the output is a list of Phylosim objects.\\
+As input serves a list of parameter settings as created by createCompletePar, whereas the output is an object of tyoe PhyloBatch. Basically this object is a list of Phylosim objects.\\
 In the following example two slightly different parameter sets are created and processed using parallel computing.
 
 <<results='hide'>>=
@@ -208,20 +208,45 @@ simu1 <- simuBatch[[1]]
 	\caption{Overview about the plotting functions in the Phylosim package}\label{fig: plots}
 \end{figure} 
 \FloatBarrier
-The phylosim package contaions multiple functions to visualize the results of the simulation.
-The plotSpatialPhylo plot consist of three different figures. The phylogeny tree that shows the phylogeny of the modeled community with colored tip labels. A traitplot that shows the magnitude of different traits for each of the species within the community. And a plot that shows the spatial abundance of the species within the community. Here the species have the same color as the tip labels for recognition. Which of these figures are plotted can be triggered with the arguments "plot" and "plotTraits" (see help).\\
+The phylosim package contaions multiple functions to visualize the results of the simulation.\\
+The easiest way to get an overview of the results of one simulation is the plotSpatialPhylo function.
 
 <<>>=
 plotSpatialPhylo(simu, plot = "both", plotTraits = T, which.simulation = NULL)
 @
 
+The plotSpatialPhylo plot consist of three different figures. The phylogeny tree that shows the phylogeny of the modeled community with colored tip labels. A traitplot that shows the magnitude of different traits for each of the species within the community. And a plot that shows the spatial abundance of the species within the community. Here the species have the same color as the tip labels for recognition. Which of these figures are plotted can be triggered with the arguments "plot" and "plotTraits" (see help).\\
 
-The plotTraitDistribution plot consists of three different figures for the three traits in the model (environmental trait, competition trait, neutral trait). Figure one illustrates the trait's magnitude in dependency of the environment for different species. Figure two illustrates the spatial distribution of the given trait. Figure three shows a histogram of the given trait.
+\subsection{Trait plots}
+For a closer look at the traits you can visualize them using the plotTraitDistribution function.
 
 <<>>=
 plotTraitDistribution(simu = simu, which.simulation = NULL, type ="all")
 @
 
+The plotTraitDistribution plot consists of three different figures for the three traits in the model (environmental trait, competition trait, neutral trait). Figure one illustrates the trait's magnitude in dependency of the environment for different species. Figure two illustrates the spatial distribution of the given trait. Figure three shows a histogram of the given trait.\\
+As mentioned above each individual has a neutral trait. This trait evolved over time but is not influencing the individual's fitness.\\
+However, these traits can be used to construct a phylogeny for a given community.
+In the package this is implemented in the phlyoReconstruct function. \\
+These phylogenies can now be compared to the real phylogeny of the community.\\
+<<>>=
+rePhyl <- phyloReconstruct(simu)
+par(mfrow=c(1,2))
+plot(rePhyl, main="reconstructed Phylogeny")
+plot(simu$Output[[2]]$phylogeny, main="real Phylogeny")
+@
+
+Further, the package comprises a plot function to highlight the clade of a local community within a metacommunity. The local community can be given to the function directly or is derived from the simu object via localPlots.
+
+<<>>=
+plotclades(simu, size = 50, n = 3) 
+@
+
+
+
+
+
+\subsection{Spatial Patterns}
 The package contains two functions to analyze the spatial patterns of the results.
 The species-area curve (SAC) and the rank-abundace curve (RAC).
 The SAC shows the accumulated species richness as a function of the plot size. 
@@ -239,29 +264,13 @@ rac(simu, which.simulation = NULL)
 @
 \end{center}
 
-Further, the package comprises a plot function to highlight the clade of a local community within a metacommunity. The local community can be given to the function directly or is derived from the simu object via localPlots.
-
-<<>>=
-plotclades(simu, size = 50, n = 3) 
-@
-
-As mentioned above each individual has a neutral trait. This trait evolved over time but is not influencing the individual's fitness.\\
-However, these traits can be used to construct a phylogeny for a given community.
-In the package this is implemented in the phlyoReconstruct function. \\
-These phylogenies can now be compared to the real phylogeny of the community.
-<<>>=
-rePhyl <- phyloReconstruct(simu)
-par(mfrow=c(1,2))
-plot(rePhyl, main="reconstructed Phylogeny")
-plot(simu$Output[[2]]$phylogeny, main="real Phylogeny")
-@
 
 
 \chapter{Null Models}
 
 To tackle the question, whether there are pattern in the results of the 
 simualtions, the package comprises a set of null models to test the observed results
-against. These models are brought together in the nullModel function.\\
+against. For objects of type Phylosim these models are brought together in the nullModel function.\\
 In the function subplots of the results are created based on a Phylosim object.
 These subplots can also be created seperately for different purposes.
 <<>>=
@@ -270,13 +279,12 @@ subPlots <- localPlots(simu = simu, size=100, n=10)
 
 These subplots are now tested against randomly collected plots.\\
 You can choose, whether the null model should be based on the abundance distribution of the sample plots or not.\\
-If the model is not based on the abundance distribution, there are two possible measures of the phylogeny that are used to compare the observed results to the null model. These are the Mean Pairwise Distance (mpd) or Fait's Phylogenetic Diversity (pd)\marginnote{the Mean Pairwise Distance and Fait's Phylogenetic Diversity have their origin in the picante package. For more information see the help pages in the picante package.}.
+If the model is not based on the abundance distribution, there are two possible measures of the phylogeny that are used to compare the observed results to the null model. These are the Mean Pairwise Distance (mpd) or Fait's Phylogenetic Diversity (pd)\marginnote{The Mean Pairwise Distance and Fait's Phylogenetic Diversity have their origin in the picante package. For more information see the help pages in the picante package.}.
 
 <<>>=
 pValues <- nullModel(simu = simu, abundance = FALSE, localPlotSize = 100, numberOfPlots = 10, repetitions = 100, fun="mpd")
 @
-
-To analyze large outputs as created by runSimulationBatch the calculatePhylogeneticDispersion function can be useful. It can be seen as an extension to the nullModel function that deals with lists of Phylosim objects and can also calculate two external null models. Which null model is used is determined by the types argument with the following options.
+If you want to analyze larger datasets in an PhyloBatch object the calculatePhylogeneticDispersion function is used. It can be seen as an extension to the nullModel function that deals with lists of Phylosim objects and can also calculate two external null models. Which null model is used is determined by the types argument with the following options.
 \begin{itemize}
 \item "PhylMeta" equivalent to the nullModell function with abundace = FALSE
 \item "PhylSample"  equivalent to the nullModell function with abundace = TRUE

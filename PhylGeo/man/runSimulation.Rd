@@ -16,7 +16,7 @@ An object of class "Phylosim". This objet contains the species matrix, the trait
 A model of species community assembly under different assembly mechanisms.
 }
 \details{
-If your parameterset contains more than one runs argument, each interim step is saved in the Phylosim object. \cr\cr For larger simularions consider \link{runSimulationBatch} to make use of parallel computing.
+If your parameterset contains more than one runs argument, each interim step is saved in the Phylosim object. \cr\cr For larger simularions consider \link{runSimulationBatch} to make use of parallel computing. \cr\cr If you are using type="Rneutral" only one runs argument can be processed.
 }
 \examples{
  
