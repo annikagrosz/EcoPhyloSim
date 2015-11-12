@@ -41,7 +41,7 @@ for (i in 1:length(scenarios)){pars[[i]] = createCompletePar(x = 20,y = 20, runs
 simulationOut <- runSimulationBatch(pars, parallel = "auto")
 
 ## Calculate null models
-nullMeta <- calculatePhylogeneticDispersion(simulationOut, plotlengths = c(2,3,4,5,6,7,8,9,10), reduce = T)
+nullMeta <- calculatePhylogeneticDispersion(simulationOut, plotlengths = c(2,3,4,5,6,7,8,9,10), reduce = TRUE)
 
 ## Define the positions where the plots should be drawn
 positions <- list(x= c(1, seq(2.5,6.5,1), 8),
@@ -50,6 +50,6 @@ positions <- list(x= c(1, seq(2.5,6.5,1), 8),
    yname = c("global", "0.5", "2", "4" ))
 
 ## Plot the results
-plotPhylogeneticDispersion(nullMeta, positions, "Null Meta", multiple = T)
+plotPhylogeneticDispersion(pvalues = nullMeta, positions = positions, title = "Null Meta", multiple = TRUE)
 }
 

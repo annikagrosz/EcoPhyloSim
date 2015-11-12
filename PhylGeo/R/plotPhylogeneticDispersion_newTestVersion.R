@@ -31,7 +31,7 @@
 #' simulationOut <- runSimulationBatch(pars, parallel = "auto")
 #' 
 #' ## Calculate null models
-#' nullMeta <- calculatePhylogeneticDispersion(simulationOut, plotlengths = c(2,3,4,5,6,7,8,9,10), reduce = T)
+#' nullMeta <- calculatePhylogeneticDispersion(simulationOut, plotlengths = c(2,3,4,5,6,7,8,9,10), reduce = TRUE)
 #' 
 #' ## Now we can define the positions and labels of the plots.
 #' ## Note that here the 28 simulations need to be covered in the right order. 

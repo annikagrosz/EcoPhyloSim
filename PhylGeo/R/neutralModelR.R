@@ -20,7 +20,7 @@
 #' simuNeut <- runSimulation(parNeut)
 #' 
 #' # Visualize the grid
-#' image(simuNeut$specMat)
+#' image(simuNeut$Output[[1]]$specMat)
 #' 
 #' 
 #' @export
