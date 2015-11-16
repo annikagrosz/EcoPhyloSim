@@ -17,7 +17,7 @@ Date: \tab 2015-02-12\cr
 License: \tab GPL (>= 2)\cr
 }
 
-The core of this package is basically a community assembly model, which can be run with runSimulation or runSimulationBatch. All other functions help analize and visualize the model outcome. For visualization the following functions can be useful:
+The core of this package is basically a community assembly model, which can be run with \code{\link{runSimulation}} or \code{\link{runSimulationBatch}}. All other functions help analize and visualize the model outcome. For visualization the following functions can be useful:
 \tabular{ll}{
 \code{\link{plotSpatialPhylo}} \tab Plots the phylogeny tree ,the spatially abundance of the evolved species and their traits.\cr
 \code{\link{rac}} \tab Plots the Rank Abundance Curve for a given community\cr
@@ -32,9 +32,9 @@ The function \code{\link{phyloReconstruct}} creates a phylogeny from given neutr
 
 
 \author{
-Paul Bauche
+Paul Bauche, Florian Hartig
 
-Maintainer: Paul Bauche <your@email.com>
+Maintainer: Paul Bauche <paul@mbauche.de>
 }
 \references{
 ~~ Literature or other references for background information ~~
@@ -42,11 +42,13 @@ Maintainer: Paul Bauche <your@email.com>
 
 \keyword{ package }
 \seealso{
-~~ Optional links to other man pages, e.g. ~~
-~~ \code{\link[<pkg>:<pkg>-package]{<pkg>}} ~~
+~~ link to vignette ~~
 }
 \examples{
 # data(simu.envcom.local)
 # plotSpatialPhylo(simu.envcom.local)
-
+#
+# par <- createCompletePar(x = 50, y = 50, dispersal = "global" , runs = c(500,1000),density = 1, environment =0.5, specRate = 1)
+# new.simulation <- runSimulation(par)
+# plotSpatialPhylo(new.simulation)
 }
