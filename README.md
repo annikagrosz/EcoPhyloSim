@@ -9,10 +9,11 @@ R package for simulation of biogeographical and phylogenetic data
 You can install directly from gh, using the 'devtools' package:
 
 ```{r}
-install.packages("devtools")
+install.packages(c("devtools","Rcpp"))
 library(devtools)
+library(Rcpp)
 
-install_github("biometry/phylosim", subdir = "PhylGeo", auth_token ="fb17360869e0bb3518677936611776687b48e17a")
+install_github("biometry/phylosim", subdir = "PhylGeo", auth_token ="fb17360869e0bb3518677936611776687b48e17a", dependencies = TRUE)
 ```
 
 For the moment this uses a private key that grants access to the repo, don't forward or copy this code elsewhere!
