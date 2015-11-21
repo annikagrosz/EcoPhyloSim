@@ -4,8 +4,8 @@
 #' @param pars A list of parameter sets as created by \code{\link{createCompletePar}} 
 #' @param parallel Logical, determining whether parallel computing should be executed.
 #' @param backup Logical, determining whether the results of the individual scenario runs should be saved as a workspace image (advised if the simulation takes a long time, or if the individual scenarios vary greatly in runtime. Default is FALSE)
-#' @return A list of Phylosim-Objects as created by \code{\link{runSimulation}}
-#' @details This function uses the \code{\link{foreach}} and \code{\link{doParallel}} package to compute the model scenarios parallel on several cores. If parallel = TRUE, n-1 cores are used.\cr \cr The phylogeny is passed to R in the newick format and parsed to an object of class "phylo" with the function \code{\link[ape]{read.tree}} from the \code{\link{ape}} package. 
+#' @return An object of class "PhylosimList".
+#' @details The "PhylosimList" object is a list of "Phylosim" objects. They can be accessed by indexin (see Example).\cr\cr This function uses the \code{\link{foreach}} and \code{\link{doParallel}} package to compute the model scenarios parallel on several cores. If parallel = TRUE, n-1 cores are used.\cr \cr The phylogeny is passed to R in the newick format and parsed to an object of class "phylo" with the function \code{\link[ape]{read.tree}} from the \code{\link{ape}} package. 
 #' @examples 
 #' ## Define two parameter sets
 #' par1 <- createCompletePar(x = 50, y = 50, dispersal = 0 , runs = c(500,1000),
@@ -70,7 +70,7 @@ runSimulationBatch <- function(pars, parallel = F, backup = FALSE){
   }
   
   for (i in 1:length(pars)) names(out)[i] <- pars[i]$scenario
-  class(out) <- append(class(out),"PhylosimBatch")
+  class(out) <- append(class(out),"PhylosimList")
   #Stop cluster and timing
   time <- proc.time() - ptm
   print (paste("Finished after",floor(((proc.time() - ptm)[3])/60), "minute(s) and", ((proc.time() - ptm)[3])%%60, "second(s)."))

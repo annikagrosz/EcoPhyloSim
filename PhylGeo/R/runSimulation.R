@@ -74,7 +74,7 @@ runSimulation <- function(par)
     }
     
     
-    if(par$density == FALSE & par$environment == FALSE)
+    if(par$density == 0 & par$environment == 0)
     {
       neutral = TRUE
     }else{

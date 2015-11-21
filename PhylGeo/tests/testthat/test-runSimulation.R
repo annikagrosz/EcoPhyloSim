@@ -18,7 +18,7 @@ test_that("SimulationBatch is running correctly",{
   parlist<-list(par1,par2)
   simuBatch<-runSimulationBatch(parlist)
 
-  expect_is(simuBatch, "PhylosimBatch")
+  expect_is(simuBatch, "PhylosimList")
   expect_is(simuBatch[[1]], "Phylosim")
   expect_is(simuBatch[[2]], "Phylosim")
   
@@ -29,16 +29,17 @@ test_that("SimulationBatch is running correctly",{
 
 
 test_that("Neutral Model is working as expected",{
-  testthat::skip("Not working")
+ # testthat::skip("Not working")
   
   sacVal<-matrix(0,10,100)
   #racVal<-matrix(NA,20,100)
   richness<-numeric()
-  par<-createCompletePar(x=50,y=50,dispersal = "global",
-                         density=0, environment=0, runs=1000)
+
   for(i in 1:100){
+  par<-createCompletePar(x=50,y=50,dispersal = "global",
+                           density=0, environment=0, runs=5e+05, seed = i)
   simu<-runSimulation(par)
-  sacVal[,i]<- sac(simu, plot=FALSE)$sr.Mean
+  sacVal[,i]<- sac(simu,area=c(4,8,16,32,64,128,256,512,1024,2048), plot=FALSE)$sr.Mean
  # racVal[,i]<-rac(simu, plot=FALSE)$Abundance
   richness[i]<-specRich(simu)
   }
@@ -46,19 +47,19 @@ test_that("Neutral Model is working as expected",{
   parRNeutral<-createCompletePar(x=50,y=50,dispersal = "global",
                                  density=0, environment=0, type="Rneutral",runs=1000)
   
-  sacR<-matrix(0,10,10)
-  richness<-numeric()
-  for(i in 1:10){
+ #sacR<-matrix(0,10,10)
+ # richness<-numeric()
+#  for(i in 1:10){
   simuRNeutral<-runSimulation(parRNeutral)
-  sacR[,i]<-sac(simuRNeutral, plot=FALSE)$sr.Mean
+  sacR<-sac(simuRNeutral,area=c(4,8,16,32,64,128,256,512,1024,2048), plot=FALSE)$sr.Mean
  # racR<-rac(simuRNeutral, plot=FALSE)$Abundance
-  richnessR[i]<-specRich(simuRNeutral)
-  }
-  
+ richnessR<-specRich(simuRNeutral)
+ # }
+ expect_true(richnessR<=quantile(richness, probs=0.975) & richnessR>=quantile(richness,probs=0.025))
   for(i in 1:10){
     expect_true(sacR[i]<=quantile(sacVal[i,],probs=0.975)& sacR[i]>=quantile(sacVal[i,],probs=0.025))
    # expect_true(racR[i]<=quantile(racVal[i,],probs=0.975)& racR[i]>=quantile(racVal[i,],probs=0.025))
-    expect_true(richnessR<=quantile(richness, probs=0.975) & richnessR>=quantile(richness,probs=0.025))
+    
   }
   })
 
