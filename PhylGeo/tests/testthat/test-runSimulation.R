@@ -29,37 +29,29 @@ test_that("SimulationBatch is running correctly",{
 
 
 test_that("Neutral Model is working as expected",{
- # testthat::skip("Not working")
+  testthat::skip_on_cran("Too slow")
   
   sacVal<-matrix(0,10,100)
-  #racVal<-matrix(NA,20,100)
+
   richness<-numeric()
 
   for(i in 1:100){
-  par<-createCompletePar(x=50,y=50,dispersal = "global",
+    par<-createCompletePar(x=50,y=50,dispersal = "global",
                            density=0, environment=0, runs=5e+05, seed = i)
-  simu<-runSimulation(par)
-  sacVal[,i]<- sac(simu,area=c(4,8,16,32,64,128,256,512,1024,2048), plot=FALSE)$sr.Mean
- # racVal[,i]<-rac(simu, plot=FALSE)$Abundance
-  richness[i]<-specRich(simu)
+    simu<-runSimulation(par)
+    sacVal[,i]<- sac(simu,area=c(4,8,16,32,64,128,256,512,1024,2048), plot=FALSE)$sr.Mean
+    richness[i]<-specRich(simu)
   }
   
   parRNeutral<-createCompletePar(x=50,y=50,dispersal = "global",
                                  density=0, environment=0, type="Rneutral",runs=1000)
-  
- #sacR<-matrix(0,10,10)
- # richness<-numeric()
-#  for(i in 1:10){
   simuRNeutral<-runSimulation(parRNeutral)
   sacR<-sac(simuRNeutral,area=c(4,8,16,32,64,128,256,512,1024,2048), plot=FALSE)$sr.Mean
- # racR<-rac(simuRNeutral, plot=FALSE)$Abundance
- richnessR<-specRich(simuRNeutral)
- # }
+  richnessR<-specRich(simuRNeutral)
+
  expect_true(richnessR<=quantile(richness, probs=0.975) & richnessR>=quantile(richness,probs=0.025))
   for(i in 1:10){
     expect_true(sacR[i]<=quantile(sacVal[i,],probs=0.975)& sacR[i]>=quantile(sacVal[i,],probs=0.025))
-   # expect_true(racR[i]<=quantile(racVal[i,],probs=0.975)& racR[i]>=quantile(racVal[i,],probs=0.025))
-    
   }
   })
 
