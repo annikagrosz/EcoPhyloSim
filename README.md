@@ -1,4 +1,4 @@
-# phylosim
+# PhyloSim
 R package for simulation of biogeographical and phylogenetic data 
 
 ### Installation 
