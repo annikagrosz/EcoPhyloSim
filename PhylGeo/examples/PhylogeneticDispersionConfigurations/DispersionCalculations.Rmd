@@ -6,7 +6,7 @@ output: html_document
 ---
 
 ```{r}
-require(PhylGeo)
+require(PhyloSim)
 require(ape)
 require(picante)
 library(shape)

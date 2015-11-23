@@ -1,6 +1,6 @@
 
 
-library(PhylGeo)
+library(PhyloSim)
 
 # Run the model
 

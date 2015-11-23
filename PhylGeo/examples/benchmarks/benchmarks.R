@@ -1,4 +1,4 @@
-library(PhylGeo)
+library(PhyloSim)
 
 runs = 3
 

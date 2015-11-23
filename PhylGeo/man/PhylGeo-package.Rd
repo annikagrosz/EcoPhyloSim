@@ -1,6 +1,6 @@
-\name{PhylGeo-package}
-\alias{PhylGeo-package}
-\alias{PhylGeo}
+\name{PhyloSim-package}
+\alias{PhyloSim-package}
+\alias{PhyloSim}
 \docType{package}
 \title{
 Analysing phylogenetic and biogeographic patterns and inferring species community assembly 
@@ -10,7 +10,7 @@ This package is designed to simulate and analyse species community assembly proc
 }
 \details{
 \tabular{ll}{
-Package: \tab PhylGeo\cr
+Package: \tab PhyloSim\cr
 Type: \tab Package\cr
 Version: \tab 1.0\cr
 Date: \tab 2015-02-12\cr

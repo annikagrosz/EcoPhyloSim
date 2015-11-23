@@ -41,7 +41,7 @@
 #' @export
 nullModel <- function(simu, which.simulation=NULL, abundance = FALSE, localPlotSize, numberOfPlots, repetitions, fun="mpd"){
   
-  comMat <- localPlots(simu=simu, which.simulation=which.simulation, size = localPlotSize, n = numberOfPlots, community = T)$communityTable # create community matrix from local communities (requires PhylGeo)
+  comMat <- localPlots(simu=simu, which.simulation=which.simulation, size = localPlotSize, n = numberOfPlots, community = T)$communityTable # create community matrix from local communities (requires PhyloSim)
   
   
   if (is.null(which.simulation)) which.simulation = length(simu$Output) 

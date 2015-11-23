@@ -1,4 +1,4 @@
-require(PhylGeo)
+require(PhyloSim)
 
 # SET WD TO SOURCE FILE LOCATION !!!!
 

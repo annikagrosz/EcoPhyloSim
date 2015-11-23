@@ -1,2 +1,2 @@
 library(testthat)
-test_check("PhylGeo")
+test_check("PhyloSim")

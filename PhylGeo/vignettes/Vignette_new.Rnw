@@ -38,7 +38,7 @@ xrightmargin=3.4pt,
 numbers=none
 }
 
-%\VignetteIndexEntry{PhylGeo}
+%\VignetteIndexEntry{PhyloSim}
 %\VignetteEngine{knitr::knitr}
 
 <<setup, cache=FALSE, include=FALSE>>=
@@ -125,7 +125,7 @@ The basic structure of how the model is applied is shown in figure \ref{fig: fun
 Loading the package via
 
 <<message=FALSE>>=
-library(PhylGeo)
+library(PhyloSim)
 @
 
 

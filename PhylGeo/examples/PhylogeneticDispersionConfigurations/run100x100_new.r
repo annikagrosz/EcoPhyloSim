@@ -1,10 +1,10 @@
-require(PhylGeo)
+require(PhyloSim)
 
 # SET WD TO SOURCE FILE LOCATION !!!!
 
 #old settings:
 #runs = seq(25000, 50000, len = 50)
-#setwd("C:/Users/fhartig/Desktop/phylosim/PhylGeo/examples/PhylogeneticDispersionConfigurations")
+#setwd("C:/Users/fhartig/Desktop/phylosim/PhyloSim/examples/PhylogeneticDispersionConfigurations")
 
 
 setwd("C:/Users/Stefan/Desktop/HIWI/nullModel tests")

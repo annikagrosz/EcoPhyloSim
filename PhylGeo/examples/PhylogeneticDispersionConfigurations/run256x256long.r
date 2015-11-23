@@ -1,8 +1,8 @@
-require(PhylGeo)
+require(PhyloSim)
 
 # SET WD TO SOURCE FILE LOCATION !!!!
 
-setwd("C:/Users/fhartig/Desktop/phylosim/PhylGeo/examples/PhylogeneticDispersionConfigurations")
+setwd("C:/Users/fhartig/Desktop/phylosim/PhyloSim/examples/PhylogeneticDispersionConfigurations")
 
 runs = seq(75000, 100000, len = 50)
 

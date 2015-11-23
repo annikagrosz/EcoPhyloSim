@@ -26,7 +26,7 @@
 #' sac(simu[[1]])
 #' sac(simu[[2]])
 
-#' @useDynLib PhylGeo
+#' @useDynLib PhyloSim
 #' @export
 runSimulationBatch <- function(pars, parallel = F, backup = FALSE){
   #start timing
@@ -42,7 +42,7 @@ runSimulationBatch <- function(pars, parallel = F, backup = FALSE){
     cl <- parallel::makeCluster(cores)
     doParallel::registerDoParallel(cl)
     
-    out <- foreach(i=1:length(pars), .packages = c("PhylGeo")) %dopar%{
+    out <- foreach(i=1:length(pars), .packages = c("PhyloSim")) %dopar%{
       
       OUT <- runSimulation(pars[[i]])
       
@@ -55,7 +55,7 @@ runSimulationBatch <- function(pars, parallel = F, backup = FALSE){
    parallel::stopCluster(cl)
   }else{
     cat("running ",nrow(pars), " batch simualations without parallelization", "\n")
-    out <- foreach(i=1:length(pars), .packages = c("PhylGeo")) %do%{
+    out <- foreach(i=1:length(pars), .packages = c("PhyloSim")) %do%{
       
       cat("running parameter", i , "\n")
       

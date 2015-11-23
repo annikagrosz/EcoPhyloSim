@@ -26,7 +26,7 @@
 #'  
 #' #Look at the species area relation
 #' sac(simu, area = c(1,10,100,1000), rep = 100, plot= TRUE)
-#' @useDynLib PhylGeo
+#' @useDynLib PhyloSim
 #' @export
 
 runSimulation <- function(par)
