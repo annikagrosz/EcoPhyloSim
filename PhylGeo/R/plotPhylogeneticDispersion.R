@@ -7,18 +7,22 @@
 #' @param ymax Float, determines the plot limit (max) of the y axis.
 #' @param xmin Float, determines the plot limit (min) of the x axis.
 #' @param ymin Float, determines the plot limit (min) of the y axis.
-#' @details To give meningful results, the function needs the results of a full factorial experimental design realized by \code{\link{calculatePhylogeneticDispersion}}. It is recommended to use different plot sizes in the null models to get more accurate confidence intervalls in the plots. \cr\cr For an further explanation please see the Examples section. 
+#' @details To give meningful results, the function needs the results of a factorial experimental design realized by \code{\link{calculatePhylogeneticDispersion}}. It is recommended to use different plot sizes in the null models to get more accurate confidence intervalls in the plots. \cr\cr For an further explanation please see the Examples section. 
 #' @examples 
 #' ## First the experimental design has to be defined.
-#' ## As stated above you need to implement a full factorial design.
+#' ## As stated above you need to implement a factorial design.
 #' ## The design here will lead to 28 experiments.
-#' dispOptions = 4
-#' fitOptions = 7
+#'   
+#' dispOptions <- 4
+#' fitOptions <- 7
 #'
 #' # These are the parameters that are tested.  
-#' dispersal =  rep(c(0,0.5, 2,4), each = fitOptions)
-#' density = rep(c(0,seq(0,1,len = fitOptions-2),1),dispOptions)
-#' environment = rep(c(0,seq(1,0,len = fitOptions-2),1),dispOptions)
+#' # We are testing seven combinations of the parameters 'density' and 'environment'...
+#' density <- rep(c(0,seq(0,1,len = fitOptions-2),1),dispOptions)
+#' environment <- rep(c(0,seq(1,0,len = fitOptions-2),1),dispOptions)
+#' 
+#' # ... for four different dispersal ranges.
+#' #' dispersal <-  rep(c(0,0.5, 2,4), each = fitOptions)
 #' 
 #' ## The modes and scenarios are only defined to label the plots. They have no influence on the 
 #' ## calculations.
@@ -41,8 +45,9 @@
 #' ## In this example there will be 7 rows and 4 collumns to represent the 28 cases.
 #' positions <- list(x= c(1:7),
 #'    y = c(4, 1:3), # this is beacause dispersal = "global" is equal to dispersal = "0"
-#'    xname = c("neutral", "1", "0.75", "0.5", "0.25", "0", "both"),
-#'    yname = c("global", "0.5", "2", "4"))
+#'    xname = c("neutral", "1", "0.75", "0.5", "0.25", "0", "both"), # = environment
+#'    yname = c("global", "0.5", "2", "4"),  # = dispersal
+#'    zname=c("neutral", "0", "0.25", "0.5","0.75","1","both")) # = density
 #' 
 #' ## Now you can plot the results.
 #' plotPhylogeneticDispersion(pvalues = nullMeta, positions = positions, title = "Null Meta")
@@ -113,6 +118,7 @@ plotPhylogeneticDispersion <- function(pvalues, positions=NULL, title = "P-value
   
   text(x = -0.26*min(positions$x), y = positions$y/2, labels = positions$yname , pos = 4) 
   text(x = positions$x/2, y = 1.2*ycol/2, labels =  positions$xname ) 
+  text(x = positions$x/2, y = 0,  labels= positions$zname)
   
   barx <- max(positions$x)/2+ min(positions$x)/2
   bary <- mean(positions$y)/2
