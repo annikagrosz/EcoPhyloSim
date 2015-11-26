@@ -26,7 +26,7 @@ plotPhylogeneticDispersion(pvalues, positions = NULL, title = "P-values",
 Plotting function for the results of \code{\link{calculatePhylogeneticDispersion}}. Usefull for plotting different scenarios.
 }
 \details{
-To give meningful results, the function needs the results of a factorial experimental design realized by \code{\link{calculatePhylogeneticDispersion}}. It is recommended to use different plot sizes in the null models to get more accurate confidence intervalls in the plots. \cr\cr For an further explanation please see the Examples section.
+To give meningful results, the function needs the results of a factorial experimental design realized by \code{\link{calculatePhylogeneticDispersion}}. It is recommended to use different plot sizes in the null models to get meaningfull plots. Consider that for each subplot the x-axis represents the size of the plot size used in the null model. \cr\cr For an further explanation please see the Examples section.
 }
 \examples{
 ## First the experimental design has to be defined.

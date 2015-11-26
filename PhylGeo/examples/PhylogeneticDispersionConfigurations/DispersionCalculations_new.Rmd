@@ -1,0 +1,69 @@
+---
+title: "Null Models Test"
+author: "Stefan"
+date: "25. November 2015"
+output: html_document
+---
+This document describes the which simulations have been conducted and how they have been analyzed.
+You'll find the following steps:
+- Loading the package
+- Defining the parameter sets
+- Running the simulations
+- Calculation of the null models
+- Plotting the results
+
+Loading the package
+--------------------------------
+
+
+```{r}
+library(PhyloSim)
+```
+
+Defining the parameter sets
+------------------------------
+The simulation will run on a grid of 100*100 cells for 10000 generations.
+In this setup there will be 28 simulations. They consist of seven combinations of the parameters 'density' and 'environment' wich will be simulated for four different dispersal distances.
+To control wheter the results are stable the results are recorded every 1000 generations.
+
+```{r}
+# runs = seq(5000,10000, len=10)
+# 
+# dispOptions = 4
+# fitOptions = 7
+# 
+# dispersal =  rep(c(0,0.5, 2,4), each = fitOptions)
+# density = rep(c(0,seq(0,1,len = fitOptions-2),1),dispOptions)
+# environment = rep(c(0,seq(1,0,len = fitOptions-2),1),dispOptions)
+# 
+# modes <- ifelse(dispersal == 0, "global", "local")
+# scenarios <- paste(modes, " dens=", density, " env=", environment, sep = "")
+# 
+# pars <- list()
+# 
+# for (i in 1:length(scenarios)){pars[[i]] = createCompletePar(x = 100 ,y = 100, runs = runs,
+#                                                              scenario = = scenarios[i],
+#                                                              dispersal = dispersal[i],
+#                                                              specRate = 2,
+#                                                              density = density[i],
+#                                                              environment = environment[i],
+#                                                              fitnessBaseMortalityRatio = 5,
+#                                                              densityCut = 1, seed = 1000)}
+```
+
+Running the simulations
+------------------------
+```{r}
+# system.time(simulationOut <- runSimulationBatch(pars, parallel = "auto"))
+# 
+# save(simulationOut, pars, file = "results100x100.Rdata" )
+```
+
+Calculation of the null models
+-----------------------------------
+
+```{r, cache=T}
+load("results100x100.Rdata")
+
+nullMeta <- calculatePhylogeneticDispersion(simulationOut, plotlengths = c(2,3,4,5,6,7,8,9,10), reduce = T)
+```

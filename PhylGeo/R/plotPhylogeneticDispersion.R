@@ -7,7 +7,7 @@
 #' @param ymax Float, determines the plot limit (max) of the y axis.
 #' @param xmin Float, determines the plot limit (min) of the x axis.
 #' @param ymin Float, determines the plot limit (min) of the y axis.
-#' @details To give meningful results, the function needs the results of a factorial experimental design realized by \code{\link{calculatePhylogeneticDispersion}}. It is recommended to use different plot sizes in the null models to get more accurate confidence intervalls in the plots. \cr\cr For an further explanation please see the Examples section. 
+#' @details To give meningful results, the function needs the results of a factorial experimental design realized by \code{\link{calculatePhylogeneticDispersion}}. It is recommended to use different plot sizes in the null models. Consider that for each subplot the x-axis represents the size of the plot size used in the null model. \cr\cr For an further explanation please see the Examples section. 
 #' @examples 
 #' ## First the experimental design has to be defined.
 #' ## As stated above you need to implement a factorial design.
