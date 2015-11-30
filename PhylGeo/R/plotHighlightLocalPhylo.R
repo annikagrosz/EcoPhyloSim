@@ -18,28 +18,28 @@
 #' 
 #' #Plot clades for neutral model with global dispersal with three subplots
 #' par(mfrow=c(1,3))
-#' plotclades(simu.neutral.global, size = 50, n = 3) 
+#' highlightLocalPhylo(simu.neutral.global, size = 50, n = 3) 
 #' 
 #'  
 #'
 #' #Plot clades for neutral model with local dispersal with three subplots
 #' par(mfrow=c(1,3))
-#' plotclades(simu.neutral.local, size = 50, n = 3) 
+#' highlightLocalPhylo(simu.neutral.local, size = 50, n = 3) 
 #' 
 #'  
 #'
 #'#Plot clades for environment and competition model with global dispersal with three subplots
 #' par(mfrow=c(1,3))
-#' plotclades(simu.envcom.local, size = 50, n = 3) 
+#' highlightLocalPhylo(simu.envcom.local, size = 50, n = 3) 
 #' 
 #'  
 #'
 #'#increasing plot size
 #'par(mfrow=c(2,2))
-#'plotclades(simu.envcom.local, size = 50, n =2)
-#'plotclades(simu.envcom.local, size = 1000, n =2)
+#'highlightLocalPhylo(simu.envcom.local, size = 50, n =2)
+#'highlightLocalPhylo(simu.envcom.local, size = 1000, n =2)
 #' @export
-plotclades <- function(simu,which.simulation=NULL, size, n, subplot = NULL, phylogeny=NULL){
+highlightLocalPhylo <- function(simu,which.simulation=NULL, size, n, subplot = NULL, phylogeny=NULL){
   
   
   if(is.null(subplot)){
@@ -51,7 +51,7 @@ plotclades <- function(simu,which.simulation=NULL, size, n, subplot = NULL, phyl
     simu <- simu$Output[[which.simulation]]
   
   phylo <- simu$phylogeny} else phylo <- phylogeny
-  
+  phylo <- ape::drop.fossil(phylo)
   
   for( i in 1:n){
     x <- phylo$tip.label[is.element(phylo$tip.label,names(community[which(community[i,] > 0)]))]
@@ -66,7 +66,7 @@ plotclades <- function(simu,which.simulation=NULL, size, n, subplot = NULL, phyl
     cladewidth<-rep(1, dim(phylo$edge)[1])
     cladewidth[group]<-2
     
-    title <- paste("Phylogenetic Clade Plots \n Clade", i)
+    title <- paste("Local Plots Within Metacommunity \n Local Community", i)
     plot(phylo,  direction="downwards", show.tip.label=F, show.node.label=F, edge.color=cladecolor, edge.width=cladewidth, main = title)
     
     place<- numeric(length(x))

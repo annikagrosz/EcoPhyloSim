@@ -2,7 +2,7 @@
 #' @description Plots trait-histograms, trait ~ Environment relationship and the spatial distribution of the different traits
 #' @param simu Simulation output of the class "Phylosim", usually consisting out of several lists. Needs to contain at least the three trait matrices ($traitMat;$compMat;$neutMat) and the environment matrix ($envMat) 
 #' @param which.simulation defines which simulation run to choose in case more than one simulation is saved within the simu object. The default is the last one.
-#' @param type defines what should be plotted. By default ("hist") only the histogram is shown. If type = "all" also the trait ~ Environment relationship and the spatial distribution will be plotted.
+#' @param type defines wether the histogram should be plotted standalone or with the trait ~ Environment relationship and the spatial distribution. Latter is done by type = "all". Default is "hist"
 #' @examples 
 #' 
 #'#Load data 
@@ -53,11 +53,11 @@ plotTraitDistribution <- function (simu, type = "hist", which.simulation = NULL)
     par(mar = c(5, 4, 2, 2))
     
     plot(dat$traitMat~dat$envMat, col = colmat, ylab="Trait", xlab="Environment"  )
-    title("Trait")
+    title("Environmental Trait")
     plot(dat$compMat~dat$envMat, col = colmat, ylab= "", xlab="Environment")
-    title("Competition")
+    title("Competition Trait")
     plot(dat$neutMat~dat$envMat, col = colmat, ylab= "", xlab="Environment")
-    title("Neutral")
+    title("Neutral Trait")
     
     image(dat$traitMat, xaxt="n", yaxt="n", ylab="Spatial Distribution",useRaster =T,col = grey(seq(0, 1, length = 256)))
     image(dat$compMat, xaxt="n", yaxt="n",useRaster =T,col = grey(seq(0, 1, length = 256)))
@@ -72,12 +72,12 @@ plotTraitDistribution <- function (simu, type = "hist", which.simulation = NULL)
   
   f <- hist(dat$traitMat[dat$specMat==names[1]], plot=F)
   f$counts <- log(f$counts)
-  plot(f,ylim =c(0,7), xlim=c(xmin,xmax), col =cols[1], ylab="log(Frequency)" , xlab="Value", main = "Trait Histogram")
+  plot(f,ylim =c(0,7), xlim=c(xmin,xmax), col =cols[1], ylab="log(Frequency)" , xlab="Value", main = "Environment Histogram", border =0)
   
   for(i in 2:length(names)){
     f <- hist(dat$traitMat[dat$specMat==names[i]], plot=F)
     f$counts <- log(f$counts)
-    plot(f, add=T, col =cols[i])
+    plot(f, add=T, col =cols[i], border =0)
   }
   
   
@@ -86,12 +86,12 @@ plotTraitDistribution <- function (simu, type = "hist", which.simulation = NULL)
   
   f <- hist(dat$compMat[dat$specMat==names[1]], plot=F)
   f$counts <- log(f$counts)
-  plot(f,ylim =c(0,7), xlim=c(xmin,xmax), col =cols[1], ylab="log(Frequency)" , xlab="Value", main = "Competition Histogram")
+  plot(f,ylim =c(0,7), xlim=c(xmin,xmax), col =cols[1], ylab="log(Frequency)" , xlab="Value", main = "Competition Histogram", border =0)
   
   for(i in 2:length(names)){
     f <- hist(dat$compMat[dat$specMat==names[i]], plot=F)
     f$counts <- log(f$counts)
-    plot(f, add=T, col =cols[i])
+    plot(f, add=T, col =cols[i], border =0)
   }
   
   
@@ -100,12 +100,12 @@ plotTraitDistribution <- function (simu, type = "hist", which.simulation = NULL)
   
   f <- hist(dat$neutMat[dat$specMat==names[1]], plot=F)
   f$counts <- log(f$counts)
-  plot(f,ylim =c(0,7), xlim=c(xmin,xmax), col =cols[1], ylab="log(Frequency)" , xlab="Value", main = "Neutral Histogram")
+  plot(f,ylim =c(0,7), xlim=c(xmin,xmax), col =cols[1], ylab="log(Frequency)" , xlab="Value", main = "Neutral Histogram", border =0)
   
   for(i in 2:length(names)){
     f <- hist(dat$neutMat[dat$specMat==names[i]], plot=F)
     f$counts <- log(f$counts)
-    plot(f, add=T, col =cols[i])
+    plot(f, add=T, col =cols[i], border =0)
     
   }
   
