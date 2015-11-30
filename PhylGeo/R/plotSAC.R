@@ -6,7 +6,7 @@
 #' @param area a single value or a vector determining the size(s) of the subplots. If not provided, 10 logarithmic plotsizes will be used.
 #' @param rep The number of repetitions per size to calculate the mean 
 #' @param plot Logical determining whether to plot the SAC or not
-#' @details displays the accumulated species richness as a function of plot size or the amount of equally sized plots. It serves as an indicator for the clustering of a species community. A positively bent curve usually indicates clustering since an increase in plot size or number leads to an increase in species richness while a negatively bent curve indicates a more neutral distribution of species within the community.
+#' @details Displays the accumulated species richness as a function of plot size or the amount of equally sized plots. It serves as an indicator for the clustering of a species community. A positively bent curve usually indicates clustering since an increase in plot size or number leads to an increase in species richness while a negatively bent curve indicates a more neutral distribution of species within the community.
 #' @return A list containing the mean species richness for each size and the respective standard deviation
 #' @examples 
 #' 

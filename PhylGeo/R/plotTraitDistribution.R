@@ -2,7 +2,7 @@
 #' @description Plots trait-histograms, trait ~ Environment relationship and the spatial distribution of the different traits
 #' @param simu Simulation output of the class "Phylosim", usually consisting out of several lists. Needs to contain at least the three trait matrices ($traitMat;$compMat;$neutMat) and the environment matrix ($envMat) 
 #' @param which.simulation defines which simulation run to choose in case more than one simulation is saved within the simu object. The default is the last one.
-#' @param type defines wether the histogram should be plotted standalone or with the trait ~ Environment relationship and the spatial distribution. Latter is done by type = "all". Default is "hist"
+#' @param type defines what should be plotted. By default ("hist") only the histogram is shown. If type = "all" also the trait ~ Environment relationship and the spatial distribution will be plotted.
 #' @examples 
 #' 
 #'#Load data 

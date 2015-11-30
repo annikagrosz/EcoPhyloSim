@@ -7,7 +7,7 @@
 createPhylosimList(simu)
 }
 \arguments{
-\item{simu}{Multiple objects of type Phylosim as created by \code{\link{runSimulation}}}
+\item{simu}{List of objects of type Phylosim as created by \code{\link{runSimulation}}}
 }
 \value{
 An object of type PhylosimList

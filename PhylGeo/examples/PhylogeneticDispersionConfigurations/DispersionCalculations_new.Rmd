@@ -43,7 +43,7 @@ setwd("C:/Users/Stefan/Desktop/PhyloSim_Simulations")
 # pars <- list()
 # 
 # for (i in 1:length(scenarios)){pars[[i]] = createCompletePar(x = 100 ,y = 100, runs = runs,
-#                                                              scenario = = scenarios[i],
+#                                                              scenario = scenarios[i],
 #                                                              dispersal = dispersal[i],
 #                                                              specRate = 1,
 #                                                              density = density[i],

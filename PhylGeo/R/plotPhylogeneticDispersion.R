@@ -58,10 +58,10 @@
 #' 
 plotPhylogeneticDispersion <- function(pvalues, positions=NULL, title = "P-values", which.simulation = NULL, xmax = 5.5, ymax = 2.5, xmin = -0.2, ymin = 0.5){
   
-  if(is.null(which.simualtion)){
+  if(is.null(which.simulation)){
     pvalues<-pvalues[[length(pvalues)]]
     } else{
-    pvalues <- pvalues[[which.simualtion]]
+    pvalues <- pvalues[[which.simulation]]
     } 
   
   if (is.null(positions)){
