@@ -5,7 +5,7 @@
 \title{Null Model Batch Extension}
 \usage{
 calculatePhylogeneticDispersion(simu, plotlengths = 10, plots = 200,
-  replicates = 500, types = "PhylMeta", which.simulation = NULL,
+  replicates = 500, type = "PhylMeta", which.simulation = NULL,
   reduce = FALSE, fun = "mpd")
 }
 \arguments{
@@ -17,11 +17,11 @@ calculatePhylogeneticDispersion(simu, plotlengths = 10, plots = 200,
 
 \item{replicates}{Integer, number of replicate}
 
-\item{types}{String, determines which null model should be created. Possible inputs are "PhylMeta" (default), "PhylSample", "PhylPool", "SamplePool" (see details).}
-
 \item{which.simulation}{Integer, determines which result should be used. This argument is only usefull if interim steps are saved in the Phylosim object. By default (NULL), the end result is used.}
 
 \item{fun}{String, determines which function should be used to calculate the phylogenetic diversity in the sample plot. Possible inputs are "mpd" or "pd" (see details).}
+
+\item{types}{String, determines which null model should be created. Possible inputs are "PhylMeta" (default), "PhylSample", "PhylPool", "SamplePool" (see details).}
 }
 \value{
 A numeric vector with pValues for each plot in the observed metacommunity

@@ -12,14 +12,14 @@ testthat("Model outputs are  as expected",{
   
     #Other Model runs
   par3<-createCompletePar(x=100,y=100, dispersal="global", runs=1000,
-                         density=2, environment=2, seed=i)
+                         density=0.5, environment=0.5, seed=i)
   par4<-createCompletePar(x=100,y=100, dispersal=1, runs=1000,
-                         density=2, environment=2, seed=i) 
+                         density=0.5, environment=0.5, seed=i) 
   
   par5<-createCompletePar(x=100,y=100, dispersal="global", runs=1000,
-                         density=5, environment=5, seed=i)
+                         density=1, environment=1, seed=i)
   par6<-createCompletePar(x=100,y=100, dispersal=1, runs=1000,
-                         density=5, environment=5, seed=i) 
+                         density=1, environment=1, seed=i) 
   
   
   simu1<-runSimulation(par1)
