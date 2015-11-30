@@ -11,26 +11,26 @@ calculatePhylogeneticDispersion(simu, plotlengths = 10, plots = 200,
 \arguments{
 \item{simu}{A list of Phylosim objects}
 
-\item{plotlengths}{Integer, size of the sample plots}
+\item{plotlengths}{Integer or vectr of integers, size(s) of the sample plots used in the null models.}
 
 \item{plots}{Integer, number of sample plots}
 
 \item{replicates}{Integer, number of replicate}
 
-\item{which.simulation}{Integer, determines which result should be used. This argument is only usefull if interim steps are saved in the Phylosim object. By default (NULL), the end result is used.}
+\item{which.simulation}{Integer or vector of integers, determines which result should be used. This argument is only usefull if interim steps are saved in the Phylosim object. You can choose a particular time step, a vector of time steps, or use all timesteps with which.simulation = NULL (default).}
 
 \item{fun}{String, determines which function should be used to calculate the phylogenetic diversity in the sample plot. Possible inputs are "mpd" or "pd" (see details).}
 
 \item{types}{String, determines which null model should be created. Possible inputs are "PhylMeta" (default), "PhylSample", "PhylPool", "SamplePool" (see details).}
 }
 \value{
-A numeric vector with pValues for each plot in the observed metacommunity
+A list with pValues for each plot in the observed metacommunity. If you have calculated multiple scenarios, the results can be visualized by \code{\link{plotPhylogeneticDisperion}}.
 }
 \description{
 Generates a null models for a list of Phylosim objects as created by \code{\link{runSimulationBatch}} and compares the observed results against.
 }
 \details{
-In the types argument "PhylMeta" is equivalent to \code{\link{nullModel}} with abundance = FALSE, "PhylSample" is equivalent to the same function with abundance = TRUE, wheras the two other option use \code{\link[picante]{ses.mpd}}. "PhylPool" uses the argument null.model = "phylogeny.pool", "SamplePool" is setting null.model to "sample.pool". \cr\cr The fun argument is only used if types="PhylSample". For more information see \code{\link{nullModel}}.
+In the types argument "PhylMeta" is equivalent to \code{\link{nullModel}} with abundance = FALSE, "PhylSample" is equivalent to the same function with abundance = TRUE, wheras the two other option use \code{\link[picante]{ses.mpd}}. "PhylPool" uses the argument null.model = "phylogeny.pool", "SamplePool" is setting null.model to "sample.pool". \cr\cr The fun argument is only used if types="PhylSample". For more information see \code{\link{nullModel}}. \cr \cr If yu choose which.simulation = NULL (default), the length of the output corresponds to the length of the 'runs' argument in your parameter definition. Otherwise the length of the list corresponds to the length of your which.simulation argument.
 }
 \examples{
 ## Create a set of parameters
