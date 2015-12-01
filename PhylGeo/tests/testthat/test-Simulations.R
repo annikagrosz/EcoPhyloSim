@@ -22,7 +22,7 @@ testthat("Model outputs are  as expected",{
   
   parList<-list(par1,par2,par3,par4,par5,par6)
   
-  simu<-runSimulationBatch(parList, parallel = "auto")
+  simu<-runSimulationBatch(parList, parallel = 15)
   
   sacVal1[,i]<- sac(simu[[1]],area=c(4,8,16,32,64,128,256,512,1024,2048), plot=FALSE)$sr.Mean
   sacVal2[,i]<- sac(simu[[2]],area=c(4,8,16,32,64,128,256,512,1024,2048), plot=FALSE)$sr.Mean
@@ -40,25 +40,25 @@ testthat("Model outputs are  as expected",{
   ## Now the model is tested
   
   #Neutral Models
-  par1<-createCompletePar(x=100,y=100, dispersal="global", runs=1000, seed=i)
-  par2<-createCompletePar(x=100,y=100, dispersal=1, runs=1000, seed=i)
+  par1<-createCompletePar(x=100,y=100, dispersal="global", runs=1000)
+  par2<-createCompletePar(x=100,y=100, dispersal=1, runs=1000)
   
   #Other Model runs
   par3<-createCompletePar(x=100,y=100, dispersal="global", runs=1000,
-                          density=0.5, environment=0.5, seed=i)
+                          density=0.5, environment=0.5)
   par4<-createCompletePar(x=100,y=100, dispersal=1, runs=1000,
-                          density=0.5, environment=0.5, seed=i) 
+                          density=0.5, environment=0.5) 
   
   par5<-createCompletePar(x=100,y=100, dispersal="global", runs=1000,
-                          density=1, environment=1, seed=i)
+                          density=1, environment=1)
   par6<-createCompletePar(x=100,y=100, dispersal=1, runs=1000,
-                          density=1, environment=1, seed=i) 
+                          density=1, environment=1) 
   
   
   
   parList<-list(par1,par2,par3,par4,par5,par6)
   
-  simu<-runSimulationBatch(parList, parallel = "auto")
+  simu<-runSimulationBatch(parList, parallel = 15)
   
   sac1<-sac(simu[[1]],area=c(4,8,16,32,64,128,256,512,1024,2048), plot=FALSE)$sr.Mean
   sac2<-sac(simu[[2]],area=c(4,8,16,32,64,128,256,512,1024,2048), plot=FALSE)$sr.Mean
