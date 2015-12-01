@@ -24,7 +24,7 @@
 #' environment <- rep(c(0,seq(1,0,len = fitOptions-2),1),dispOptions)
 #' 
 #' # ... for four different dispersal ranges.
-#' #' dispersal <-  rep(c(0,0.5, 2,4), each = fitOptions)
+#' dispersal <-  rep(c(0,0.5, 2,4), each = fitOptions)
 #' 
 #' ## The modes and scenarios are only defined to label the plots. They have no influence on the 
 #' ## calculations.
@@ -36,7 +36,7 @@
 #' for (i in 1:length(scenarios)){pars[[i]] = createCompletePar(x = 20,y = 20, runs = 1000,scenario = scenarios[i], dispersal = dispersal[i],specRate = 2,density = density[i],environment = environment[i], fitnessBaseMortalityRatio = 5, densityCut = 1,seed = 1000)}
 #' 
 #' ## Run the simulations
-#' simulationOut <- runSimulationBatch(pars, parallel = "auto")
+#' simulationOut <- runSimulationBatch(pars, parallel = 2)
 #' 
 #' ## Calculate null models. For each model run 9 plot sizes are tested. In the plot they are 
 #' ## used to calculate the confidence interval for the results.

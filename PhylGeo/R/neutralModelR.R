@@ -22,7 +22,7 @@
 #' # Visualize the grid
 #' image(simuNeut$Output[[1]]$specMat)
 #' 
-#' 
+#' @export
 NeutralMod <- function(  xdim = 100, ydim=100, specRate = 2,  seed = NULL, runs = 500 ){
   
   ptm <- proc.time()

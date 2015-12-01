@@ -16,7 +16,7 @@
 #' 
 #' ## Compare to the real phylogeny (requires package 'ape')
 #' par(mfrow=c(1,2))
-#' plot(drop.fossil(simu$Output[[1]]$phylogeny)
+#' plot(ape::drop.fossil(simu$Output[[1]]$phylogeny))
 #' plot(rePhyl)
 #' @export
 #' 
@@ -54,3 +54,5 @@ phyloReconstruct <- function(simu, which.simulation = NULL, ...)
   phyloclust <- ape::as.phylo(stats::hclust(distMat, method = ...))
   return(phyloclust)
 }
+
+

@@ -186,7 +186,7 @@ par2 <- createCompletePar(x = 50, y = 50, dispersal = "global", runs = 1000, den
 
 parmBatch <- list(par1, par2)
 
-simuBatch <- runSimulationBatch(parmBatch, parallel = "auto")
+simuBatch <- runSimulationBatch(parmBatch, parallel = 2)
 @
 
 The simuBatch object contains two Phylosim objects saved in a list. You can easily access them seperately by indexing. For example:
@@ -313,8 +313,9 @@ If you want to analyze larger datasets in an PhyloBatch object the calculatePhyl
 \end{itemize}
 
 <<>>=
-pValuesBatch <- calculatePhylogeneticDispersion(simuBatch, plotlength=20, plots=20, replicates=20, types="PhylMeta")
+pValuesBatch <- calculatePhylogeneticDispersion(simuBatch, plotlength=20, plots=20, replicates=20, type="PhylMeta")
 @
+
 
 \newpage
 

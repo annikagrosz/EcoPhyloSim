@@ -18,7 +18,7 @@
 #' par <- list(par1,par2)
 #' 
 #' ## Run the model
-#' simu <- runSimulationBatch(par, parallel = "auto") 
+#' simu <- runSimulationBatch(par, parallel = 2) 
 #'
 #'
 #' ## Compare the results, here the SAC is shown exemplarily.

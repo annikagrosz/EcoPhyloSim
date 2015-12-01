@@ -34,7 +34,7 @@ par2 <- createCompletePar(x = 50, y = 50, dispersal = 0 , runs = c(500,1000),
 par <- list(par1,par2)
 
 ## Run the model
-simu <- runSimulationBatch(par, parallel = "auto") 
+simu <- runSimulationBatch(par, parallel = 2) 
 
 
 ## Compare the results, here the SAC is shown exemplarily.
