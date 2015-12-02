@@ -9,6 +9,9 @@
 #' @export
 localPlots <- function(simu,which.simulation=NULL,size, n, community=F){
   
+  if(n ==1){n <- 2 
+            single = T}else{single=F}
+  
   if("Phylosim" %in% class(simu)==T){
     if (is.null(which.simulation)) which.simulation = length(simu$Output) 
     simu <- simu$Output[[which.simulation]]}
@@ -62,5 +65,7 @@ localPlots <- function(simu,which.simulation=NULL,size, n, community=F){
     communityTable <- as.data.frame(sapply(communityTable, as.numeric), row.names=row.names(communityTable))
   }
   
+  if(single ==T){communityTable <- communityTable[-2,]}
   return(list(subPlots=subPlots, communityTable=communityTable))
+  
   }

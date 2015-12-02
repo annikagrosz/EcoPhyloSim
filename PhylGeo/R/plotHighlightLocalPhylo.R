@@ -66,7 +66,7 @@ highlightLocalPhylo <- function(simu,which.simulation=NULL, size, n, subplot = N
     cladewidth<-rep(1, dim(phylo$edge)[1])
     cladewidth[group]<-2
     
-    title <- paste("Local Plots Within Metacommunity \n Local Community", i)
+    title <- paste("Local Plots (size =",size,")","Within Metacommunity \n Local Community", i,"/",n)
     plot(phylo,  direction="downwards", show.tip.label=F, show.node.label=F, edge.color=cladecolor, edge.width=cladewidth, main = title)
     
     place<- numeric(length(x))
@@ -78,3 +78,6 @@ highlightLocalPhylo <- function(simu,which.simulation=NULL, size, n, subplot = N
     ape::add.scale.bar()
   }
 }
+
+
+
