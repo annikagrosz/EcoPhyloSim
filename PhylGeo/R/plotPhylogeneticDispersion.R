@@ -126,7 +126,7 @@ plotPhylogeneticDispersion <- function(pvalues, positions=NULL, title = "P-value
   
   text(x = -0.26*min(positions$x), y = positions$y/2, labels = positions$yname , pos = 4) 
   text(x = positions$x/2, y = 1.2*ycol/2, labels =  positions$zname ) 
-  text(x = positions$x/2, y = 0,  labels= positions$zname)
+  text(x = positions$x/2, y = 0,  labels= positions$xname)
   
   barx <- max(positions$x)/2+ min(positions$x)/2
   bary <- mean(positions$y)/2

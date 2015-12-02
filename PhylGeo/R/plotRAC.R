@@ -1,10 +1,11 @@
 #' @title Rank Abundance Curve
 #' @description Plots the Rank Abundance Curve for a given community. 
 #' @param simu Simulation output of the class "Phylosim", usually consisting out of several lists. Needs at least the spatial distribution of the species stored in a matrix ($specMat)
-#' @param which.simulation Integer, determines which result should be used. This argument is only usefull if interim steps are saved in the Phylosim object. By default (NULL), the end result is used.
+#' @param which.simulation Integer, determines which result should be used. This argument is only usefull if interim steps are saved in the Phylosim object. By default (NULL) the end result is plotted. If you choose "all" all results are shown in one plot (see 'Details).
 #' @param plot determining whether to plot the RAC as "line"(default) or "bar".
-#' @details Each species is given a rank according to their abundance (highest = rank 1). Then the the species' abundance is plotted in dependency of their rank. It can be used as an indicator for the ammount of equally abundant species a community can support.
-#' @return A dataframe containing the ranked abundances, sorted by ascending rank.
+#' @param tile String, determining the title of the plot.
+#' @details Each species is given a rank according to their abundance (highest = rank 1). Then the the species' abundance is plotted in dependency of their rank. It can be used as an indicator for the ammount of equally abundant species a community can support. \cr\cr If which.simulation = "all" all intermediate results are shown in one plot. The colors of the lines are plotted as a gradient from blue (first results) to red (end result).
+#' @return A dataframe containing the ranked abundances, sorted by ascending rank. If which.simulation = "all" only the plot will be returned.
 #' @examples 
 #' 
 #' #Load data
@@ -37,24 +38,60 @@
 #' 
 #' @export
 
-rac <- function(simu,which.simulation=NULL, plot="line"){
+rac <- function(simu,which.simulation=NULL, plot="line", title="RAC"){
   
-  if (is.null(which.simulation)) which.simulation = length(simu$Output) 
-  simu <- simu$Output[[which.simulation]]
-  matrix <- simu$specMat
+  if(is.null(which.simulation)) which.simulation = length(simu$Output) 
   
-  Abundances <- as.data.frame(table(matrix))
-  sel <- order(Abundances$Freq, decreasing=T)
-  RAC <- data.frame(Rank = seq(1,length(Abundances$Freq),1), Abundance = Abundances$Freq[sel], Species = Abundances$matrix[sel])
+  if(is.null(which.simulation) == FALSE){
+    if(which.simulation == "all"){
+      if(plot=="bar")stop("Argument 'bar' not possible for which.simulation='all'")
+      simulations <- c(1:length(simu$Output))
+    }else{
+      simulations<-which.simulation
+    } 
+  }
+  
+  colfunc <- colorRampPalette(c("blue", "red"))
+  cols<-colfunc(length(simulations))
+  
+  RAC<-list()
+  
+  for(i in simulations){
+    simu_t <- simu$Output[[i]]
+    matrix <- simu_t$specMat
+    
+    Abundances <- as.data.frame(table(matrix))
+    sel <- order(Abundances$Freq, decreasing=T)
+    RAC[[i]] <- data.frame(Rank = seq(1,length(Abundances$Freq),1), Abundance = Abundances$Freq[sel], Species = Abundances$matrix[sel])
+  }
+  
   if(plot=="bar"){
-    barplot(RAC$Abundance, log="y",ylab="Log Abundance", xlab="Rank", main="RAC", names.arg = RAC$Rank)
+    barplot(RAC[[i]]$Abundance, log="y",ylab="Log Abundance", xlab="Rank", main="RAC", names.arg = RAC$Rank)
   }
   if(plot=="line"){
-    plot(RAC$Rank, RAC$Abundance, type="l",log="y",ylab="Log Abundance", xlab="Rank", main="RAC", lwd=2)
+    if(length(simulations) == 1){
+      plot(RAC[[i]]$Rank, RAC[[i]]$Abundance, type="l",log="y",ylab="Log Abundance", xlab="Rank", main=title, lwd=2)
+    }else{
+      max_abundance<-0
+      max_rank<-0
+      for(i in simulations){
+        if(max(RAC[[i]]$Abundance)>max_abundance) max_abundance<-max(RAC[[i]]$Abundance)
+        if(max(RAC[[i]]$Rank)>max_rank) max_rank<-max(RAC[[i]]$Rank)
+      }
+      
+      for(i in simulations){  
+        if(i ==1){
+          plot(RAC[[i]]$Rank, RAC[[i]]$Abundance, type="l", log="y", ylab="Log Abundance", xlab="Rank", main=title, col=cols[i],xlim=c(0, max_rank), ylim=c(1, max_abundance)) 
+        }else{
+          lines(RAC[[i]]$Rank, RAC[[i]]$Abundance, type="l", main=title, col=cols[i])
+        }
+      }
+    }
   }
   
-  return(RAC) 
+  if(length(simulations)==1) return(RAC[[simulations]]) 
 }
+
 
 
 
