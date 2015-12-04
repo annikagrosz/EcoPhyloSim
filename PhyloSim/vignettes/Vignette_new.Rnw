@@ -290,7 +290,7 @@ rac(simu, which.simulation = NULL)
 \FloatBarrier
 
 
-To tackle the question, whether there are pattern in the results of the 
+To tackle the question, whether there are patterns in the results of the 
 simualtions, the package comprises a set of null models to test the observed results
 against. For objects of type Phylosim these models are brought together in the nullModel function.\\
 In the function subplots of the results are created based on a Phylosim object.
@@ -299,13 +299,15 @@ These subplots can also be created seperately for different purposes.
 subPlots <- localPlots(simu = simu, size=100, n=10)
 @
 
-These subplots are now tested against randomly collected plots.\\
+These subplots can now tested against randomly collected plots.\\
+\section{nullModel function}
 You can choose, whether the null model should be based on the abundance distribution of the sample plots or not.\\
 If the model is not based on the abundance distribution, there are two possible measures of the phylogeny that are used to compare the observed results to the null model. These are the Mean Pairwise Distance (mpd) or Fait's Phylogenetic Diversity (pd)\marginnote{The Mean Pairwise Distance and Fait's Phylogenetic Diversity have their origin in the picante package. For more information see the help pages in the picante package.}.
 
 <<>>=
 pValues <- nullModel(simu = simu, abundance = FALSE, localPlotSize = 100, numberOfPlots = 10, repetitions = 100, fun="mpd")
 @
+\section{Several model runs testet against null models}
 If you want to analyze larger datasets in an PhyloBatch object the calculatePhylogeneticDispersion function is used. It can be seen as an extension to the nullModel function that deals with lists of Phylosim objects and can also calculate two external null models. Which null model is used is determined by the types argument with the following options.
 \begin{itemize}
 \item "PhylMeta" equivalent to the nullModell function with abundace = FALSE
@@ -317,6 +319,17 @@ If you want to analyze larger datasets in an PhyloBatch object the calculatePhyl
 <<>>=
 pValuesBatch <- calculatePhylogeneticDispersion(simuBatch, plotlength=20, plots=20, replicates=20, type="PhylMeta")
 @
+\newpage
+\section{Illustrate and compare different scenarios}
+With the function plotPhylogeneticDispersion it is possible to illustrate and compare different scenarios of community assembly that have different dispersal-, environmental trait- and density dependence attributes. For that, the calculated pvalues of the null models (pvaluesBatch) are used. Because our simuBatch object here only contains two model runs it is more descriptive to just load some pre made data for the plotPhylogeneticDisperion function.\marginnote{ For the exact explanation how to use this function check the plotPhylogeneticDispersion help file.} 
+<<>>=
+data("pPD.pvalues")
+data("pPD.positions")
+
+plotPhylogeneticDispersion(pvalues = pPD.pvalues, positions = pPD.positions, title = "Null Meta")
+@
+The figure shows different combinations of dispersal limitation (y-axis), environmental trait(uppe x-axis) and density dependnce (lower x-axis). The respective colour shows the phylogenetic pattern (over- or underdispersed). 
+
 
 
 \newpage
