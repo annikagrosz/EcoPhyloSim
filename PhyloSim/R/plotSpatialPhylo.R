@@ -103,7 +103,7 @@ plotSpatialPhylo <- function (simu, plot = "both", plotTraits = T, which.simulat
       par(mfrow=c(1,1),mar = c(1,1,1,1))
     }
     if(plot=="spatial"){
-      image(landscape, col = cols, yaxt='n', xaxt='n')
+      image(landscape, col = cols, yaxt='n', xaxt='n', asp=1, bty="n")
       mtext(outer =T ,"Spatial distribution", cex=1.2, at =at)
       
     }
@@ -129,7 +129,7 @@ plotSpatialPhylo <- function (simu, plot = "both", plotTraits = T, which.simulat
       size = dev.size()[2]/3
       plot(rep(1:4, each = nSpecies), rep(1:nSpecies, 4), cex = size*traits, pch = 16, frame = F, yaxt='n', xaxt='n', ann=FALSE, xlim = c(0,7))
       par(mar = c(1,1,1,1))
-      image(landscape, col = cols, yaxt='n', xaxt='n')
+      image(landscape, col = cols, yaxt='n', xaxt='n', bty="n", asp=1)
       mtext("Traits", at=0.48, outer=T, cex=1.2)
       mtext(outer =T ,"Spatial distribution",at =0.8, cex=1.2)
       mtext(outer =T ,"Phylogeny",at =0.2, cex=1.2)

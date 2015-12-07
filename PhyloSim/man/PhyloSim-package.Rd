@@ -42,7 +42,7 @@ Maintainer: Paul Bauche <paul@mbauche.de>
 
 \keyword{ package }
 \seealso{
-To see vignette execute : PhyloSim_vignette()
+\code{\link{../doc/PhyloSimManual.pdf}}
 }
 \examples{
 # data(simu.envcom.local)

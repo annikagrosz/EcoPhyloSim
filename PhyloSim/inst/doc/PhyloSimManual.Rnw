@@ -210,30 +210,30 @@ simu1 <- simuBatch[[1]]
 \section{plotSpatialPhylo}
 The phylosim package contaions multiple functions to visualize the results of the simulation.\\
 The easiest way to get an overview of the results of one simulation is the plotSpatialPhylo function.
-\marginnote{The plotSpatialPhylo plot consist of three different figures. The phylogeny tree that shows the phylogeny of the modeled community with colored tip labels. A traitplot that shows the magnitude of different traits for each of the species within the community. And a plot that shows the spatial abundance of the species within the community. Here the species have the same color as the tip labels for recognition. Which of these figures are plotted can be triggered with the arguments "plot" and "plotTraits" (see help)}
-<<>>=
+
+<<fig.cap = "Shows the plot created by plotSpatialPhylo with all three possibilites (phylogeny tree, traits, and spatial distribution)">>=
+
 plotSpatialPhylo(simu, plot = "both", plotTraits = T, which.simulation = NULL)
 @
-
+The plotSpatialPhylo plot consist of three different figures. The phylogeny tree that shows the phylogeny of the modeled community with colored tip labels. A traitplot that shows the magnitude of different traits for each of the species within the community. And a plot that shows the spatial abundance of the species within the community. Here the species have the same color as the tip labels for recognition. Which of these figures are plotted can be triggered with the arguments "plot" and "plotTraits" (see help)
 
 \newpage
 \section{Trait plots}
 For a closer look at the traits you can visualize them using the plotTraitDistribution function.
-\marginnote{The plotTraitDistribution plot consists of three different figures for the three traits in the model (environmental trait, competition trait, neutral trait). Figure one illustrates the trait's magnitude in dependency of the environment for different species. Figure two illustrates the spatial distribution of the given trait. Figure three shows a histogram of the given trait.\\
-As mentioned above each individual has a neutral trait. This trait evolved over time but is not influencing the individual's fitness}
-<<>>=
+<<fig.cap= "Shows the different traits in dependency to the environment (upper), their spatial distribution (middle) and the frequency of the traits' values per species.">>=
 plotTraitDistribution(simu = simu, which.simulation = NULL, type ="all")
 @
+The plotTraitDistribution plot consists of three different figures for the three traits in the model (environmental trait, competition trait, neutral trait). The first illustrates the trait's magnitude in dependency of the environment for different species. The second illustrates the spatial distribution of the given trait. The third shows a histogram of the given trait. As mentioned above each individual has a neutral trait. This trait evolved over time but is not influencing the individual's fitness
 
 
 \newpage
 \section{Phylogeny Trees}
+When it comes to analizing the phylogenies of species, it is often useful to look at their phylogeny trees to get an idea how the community evolved. Despite the plotSpatialPhylo function (which includes a phylogeny tree to get an overview rather than for analization) there are two more functions that create phylogeny trees. These are called phyloReconstruct and hihglightLocalPhylo. 
 \subsection{Reconstructed Phylogenies}
-The species' traits can be used to construct a phylogeny for a given community.
-In the package this is deone with the phlyoReconstruct function. \\
-These phylogenies can now be compared to the real phylogeny of the community:\\
+The function phyloReconstruct uses the species' traits to construct a phylogeny for the given community.
+These phylogenies can then be compared to the real phylogeny of the community:\\
 
-<<>>=
+<<fig.cap="Shows the reconstructed as well as the real phylogeny. It is visible that there are differences in the speces that make up the resulting communities as well as in their evolution / assembly">>=
 Phyl   <- ape::drop.fossil(simu$Output[[2]]$phylogeny)
 rePhyl <- phyloReconstruct(simu)
 
@@ -243,16 +243,15 @@ plot(Phyl, main="real Phylogeny")
 @
 
 \subsection{Highlight Local Communities}
-Further, the package comprises a plot function to highlight the phylogeny of a local community within a metacommunity. The local community can be given to the function directly or is derived from the simu object via localPlots.
-
-<<>>=
+Further, the package comprises a plot function to highlight the phylogeny of a local community within a metacommunity. This function is called hihglightLocalPhylo.
+\newpage
+<<fig.cap="Highlights a relatively large local community",fig.height=5.4>>=
 highlightLocalPhylo(simu, size = 50, n = 1)
 @
-\marginnote{Both phylogeny trees show the same metacommunity. But their local communites differ in plotsize (5 and 50). Theiy are highlighted  in black. It is obvious that the local community with larger plotsize includes more species than the smaller local community}
-<<>>=
+<<fig.cap="Highlights a relatively small local community",fig.height=5.4>>=
 highlightLocalPhylo(simu, size = 5, n = 1)
 @
-
+Both figures show the phylogeny of the same metacommunity. But they highlight different local plots with different plotsizes (50 and 5). Obviously the larger plot is richer in species than the smaller one.  
 
 
 
@@ -260,20 +259,19 @@ highlightLocalPhylo(simu, size = 5, n = 1)
 \section{Spatial Patterns}
 The package contains two functions to analyze the spatial patterns of the results.
 The species-area curve (SAC) and the rank-abundace curve (RAC).
-The SAC shows the accumulated species richness as a function of the plot size.
+The SAC shows the accumulated species richness as a function of the plot size while the RAC is an indicator for the stability of a community.
 
-\subsection{SAC-Curve}
-\marginnote{A positively bent curve indicates clustering of a species community. An increase in plot size leads to an increase in specis richness. A negatively bent curve indicates a more neutral distribution of species within the community.}
+\subsection{SAC}
+
 \begin{center}
-<< results='hide', out.width='6cm', out.height='6cm', fig.show='hold'>>=
+<< results='hide', out.width='6cm', out.height='6cm', fig.show='hold', fig.cap="Shows the species richness in dependency to the plotsize of a local community. A positively bent curve indicates clustering of a species community. An increase in plot size leads to an increase in specis richness. A negatively bent curve indicates a more neutral distribution of species within the community.">>=
 sac(simu, which.simulation = NULL)
 @
 \end{center}
-\subsection{RAC-Curve}
-\marginnote{RACs display the amount of equally abundand species that the community can support. A linear curve indicates a less stable or neutral community supporting only a few highly abundand species, whereas an S-shaped curve indicates a more stable community. In the latter case several species of the same abundance can be supported.}
+\subsection{RAC}
 
 \begin{center}
-<< results='hide', out.width='6cm', out.height='6cm', fig.show='hold'>>=
+<< results='hide', out.width='6cm', out.height='6cm', fig.show='hold', fig.cap="Shows the rank-abundance curve (RAC). For that, each species is given a rank according to its abundance (highest abundance = rank 1). Then the abundance is plotted in dependency to the species' rank. RACs display the amount of equally abundand species that the community can support. A linear curve indicates a less stable or neutral community supporting only a few highly abundand species, whereas an S-shaped curve indicates a more stable community. In the latter case several species of the same abundance can be supported.">>=
 rac(simu, which.simulation = NULL)
 @
 \end{center}
@@ -290,7 +288,7 @@ rac(simu, which.simulation = NULL)
 \FloatBarrier
 
 
-To tackle the question, whether there are pattern in the results of the 
+To tackle the question, whether there are patterns in the results of the 
 simualtions, the package comprises a set of null models to test the observed results
 against. For objects of type Phylosim these models are brought together in the nullModel function.\\
 In the function subplots of the results are created based on a Phylosim object.
@@ -299,13 +297,15 @@ These subplots can also be created seperately for different purposes.
 subPlots <- localPlots(simu = simu, size=100, n=10)
 @
 
-These subplots are now tested against randomly collected plots.\\
+These subplots can now be tested against randomly collected plots.\\
+\section{nullModel function}
 You can choose, whether the null model should be based on the abundance distribution of the sample plots or not.\\
 If the model is not based on the abundance distribution, there are two possible measures of the phylogeny that are used to compare the observed results to the null model. These are the Mean Pairwise Distance (mpd) or Fait's Phylogenetic Diversity (pd)\marginnote{The Mean Pairwise Distance and Fait's Phylogenetic Diversity have their origin in the picante package. For more information see the help pages in the picante package.}.
 
 <<>>=
 pValues <- nullModel(simu = simu, abundance = FALSE, localPlotSize = 100, numberOfPlots = 10, repetitions = 100, fun="mpd")
 @
+\section{Several model runs testet against null models}
 If you want to analyze larger datasets in an PhyloBatch object the calculatePhylogeneticDispersion function is used. It can be seen as an extension to the nullModel function that deals with lists of Phylosim objects and can also calculate two external null models. Which null model is used is determined by the types argument with the following options.
 \begin{itemize}
 \item "PhylMeta" equivalent to the nullModell function with abundace = FALSE
@@ -317,10 +317,22 @@ If you want to analyze larger datasets in an PhyloBatch object the calculatePhyl
 <<>>=
 pValuesBatch <- calculatePhylogeneticDispersion(simuBatch, plotlength=20, plots=20, replicates=20, type="PhylMeta")
 @
+\newpage
+\section{Illustrate and compare different scenarios}
+With the function plotPhylogeneticDispersion it is possible to illustrate and compare different scenarios of community assembly that have different dispersal-, environmental trait- and density dependence attributes. For that, the calculated pvalues of the null models (pvaluesBatch) are used. Because our simuBatch object here only contains two model runs it is more descriptive to just load some pre made data for the plotPhylogeneticDisperion function.\marginnote{ For the exact explanation how to use this function check the plotPhylogeneticDispersion help file.} 
+<<fig.cap = "Shows different combinations of dispersal limitation (y-axis), environmental trait(upper x-axis) and density dependnce (lower x-axis). The respective colour shows the phylogenetic pattern (over- or underdispersed).">>=
+data("pPD.pvalues")
+data("pPD.positions")
+
+plotPhylogeneticDispersion(pvalues = pPD.pvalues, positions = pPD.positions, title = "Null Meta")
+@
+
+\newpage
+\chapter{Appendix}
+
 
 
 \newpage
-
 \bibliographystyle{chicago} 
 
 \bibliography{Vignette_bib}
