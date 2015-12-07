@@ -31,6 +31,7 @@
 runSimulationBatch <- function(pars, parallel = FALSE, backup = FALSE){
   #start timing
   ptm <- proc.time() 
+  library(foreach)
   
   # TODO getParametersXML(XMLfile)
   
