@@ -332,15 +332,15 @@ plotPhylogeneticDispersion(pvalues = pPD.pvalues, positions = pPD.positions, tit
 \section{How to compile the package in r}
 
 1. Download the "PhyloSim" package from github
-\\
-\\
+
+
 2. Open the PhyloSim R project file
-\\
-\\
+
+
 3. In case devtools is not installed, execute:\\
     install.packages("devtools")\\
     require("devtools")\\
-\\
+
 4. Build the package with :\\
    devtools::build\\   
     
