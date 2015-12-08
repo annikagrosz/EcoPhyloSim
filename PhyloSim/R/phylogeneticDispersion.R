@@ -5,7 +5,7 @@
 #' @param plots Integer, number of sample plots
 #' @param replicates Integer, number of replicate
 #' @param types String, determines which null model should be created. Possible inputs are "PhylMeta" (default), "PhylSample", "PhylPool", "SamplePool" (see details). 
-#' @param which.simulation Integer or vector of integers, determines which result should be used. This argument is only usefull if interim steps are saved in the Phylosim object. You can choose a particular time step, a vector of time steps, or use all timesteps with which.simulation = NULL (default).
+#' @param which.simulation Integer or vector of integers, determines which result should be used. This argument is only usefull if interim steps are saved in the Phylosim object. You can choose a particular time step, a vector of time steps, or use all timesteps with which.simulation = "all". By default (NULL) the last time step is used.
 #' @param fun String, determines which function should be used to calculate the phylogenetic diversity in the sample plot. Possible inputs are "mpd" or "pd" (see details).
 #' @details In the types argument "PhylMeta" is equivalent to \code{\link{nullModel}} with abundance = FALSE, "PhylSample" is equivalent to the same function with abundance = TRUE, wheras the two other option use \code{\link[picante]{ses.mpd}}. "PhylPool" uses the argument null.model = "phylogeny.pool", "SamplePool" is setting null.model to "sample.pool". \cr\cr The fun argument is only used if types="PhylSample". For more information see \code{\link{nullModel}}. \cr \cr If yu choose which.simulation = NULL (default), the length of the output corresponds to the length of the 'runs' argument in your parameter definition. Otherwise the length of the list corresponds to the length of your which.simulation argument. \cr\cr The structure of the output is organitzed as follows with output[[n]] you will get the results for the scenario 'n'. With output[[n]][[t]] you will get the results for 'n' at timestep 't'. output[[n]][[t]] is a list that contains one vector with p values for each element in the plotlengths argument.
 #' @return A list with pValues for each plot in the observed metacommunity. If you have calculated multiple scenarios, the results can be visualized by \code{\link{plotPhylogeneticDisperion}}.
@@ -40,7 +40,13 @@ calculatePhylogeneticDispersion <- function(simu, plotlengths = 10,  plots = 200
   parIndex = simu[[1]] 
   times <- which.simulation
   if(is.null(times)){
-    times = c(1:nRuns)
+    times = nRuns
+  }
+  
+  if(is.null(times) == FALSE){
+    if(times == "all"){
+      times = c(1:nRuns)     
+    }
   }
   # type / scenario / plotlength / repetition
   
@@ -68,23 +74,37 @@ calculatePhylogeneticDispersion <- function(simu, plotlengths = 10,  plots = 200
         
         
         if (type == "PhylMeta"){
-          pval[[j]] <- nullModel(simu[[k]], localPlotSize = plotsize, numberOfPlots = plots, which.simulation = timeindex, repetitions = replicates, fun = "mpd")
-        }else if (type == "PhylSample"){
-          pval[[j]] <- nullModel(simu[[k]], localPlotSize = plotsize, abundance = TRUE, numberOfPlots = plots, which.simulation = timeindex, repetitions = replicates)    
-        }else if (type == "PhylPool"){
-          comMat <- localPlots(simu[[k]],size = plotsize, n = plots, which.simulation = timeindex, community = T)$communityTable
-          pval[[j]] <- picante::ses.mpd(samp = comMat, dis = extantPhyloDis, null.model = "phylogeny.pool", abundance.weighted = TRUE, runs = replicates)$mpd.obs.p      
-        }else if (type == "SamplePool"){
-          comMat <- localPlots(simu[[k]], size = plotsize, n = plots, which.simulation = timeindex, community = T)$communityTable
-          pval[[j]] <- picante::ses.mpd(samp = comMat, dis = extantPhyloDis, null.model = "sample.pool", abundance.weighted = TRUE, runs = replicates)$mpd.obs.p
+          pval[[j]] <- nullModel(simu[[k]], localPlotSize = plotsize, numberOfPlots = plots,
+                                 which.simulation = timeindex, repetitions = replicates,
+                                 fun = "mpd")
+        
+          }else if (type == "PhylSample"){
+          pval[[j]] <- nullModel(simu[[k]], localPlotSize = plotsize, abundance = TRUE,
+                                 numberOfPlots = plots, which.simulation = timeindex, 
+                                 repetitions = replicates)    
+        
+          }else if (type == "PhylPool"){
+          comMat <- localPlots(simu[[k]],size = plotsize, n = plots, 
+                               which.simulation = timeindex, community = T)$communityTable
+          
+          pval[[j]] <- picante::ses.mpd(samp = comMat, dis = extantPhyloDis, 
+                                        null.model = "phylogeny.pool", abundance.weighted = TRUE,
+                                        runs = replicates)$mpd.obs.p      
+        
+          }else if (type == "SamplePool"){
+          comMat <- localPlots(simu[[k]], size = plotsize, n = plots, 
+                               which.simulation = timeindex, community = T)$communityTable
+         
+          pval[[j]] <- picante::ses.mpd(samp = comMat, dis = extantPhyloDis, 
+                                        null.model = "sample.pool", abundance.weighted = TRUE, 
+                                        runs = replicates)$mpd.obs.p
         }
         
       }
       names(pval)<-plotlengths
       
-      pValues[[i]][[k]] = pval
-      
-     # names(pValues[[i]][[k]]) = c(1: length(pValues[[i]][[k]]))
+      pValues[[i]][[k]] <- pval
+   
     }
     
   }

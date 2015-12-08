@@ -55,6 +55,8 @@ rac <- function(simu,which.simulation=NULL, plot="line", title="RAC"){
   cols<-colfunc(length(simulations))
   
   RAC<-list()
+  max_abundance<-0
+  max_rank<-0
   
   for(i in simulations){
     simu_t <- simu$Output[[i]]
@@ -62,33 +64,33 @@ rac <- function(simu,which.simulation=NULL, plot="line", title="RAC"){
     
     Abundances <- as.data.frame(table(matrix))
     sel <- order(Abundances$Freq, decreasing=T)
-    RAC[[i]] <- data.frame(Rank = seq(1,length(Abundances$Freq),1), Abundance = Abundances$Freq[sel], Species = Abundances$matrix[sel])
+    RAC[[i]] <- data.frame(Rank = seq(1,length(Abundances$Freq),1), 
+                  Abundance = Abundances$Freq[sel], Species = Abundances$matrix[sel])
+
+    if(max(RAC[[i]]$Abundance)>max_abundance) max_abundance<-max(RAC[[i]]$Abundance)
+    if(max(RAC[[i]]$Rank)>max_rank) max_rank<-max(RAC[[i]]$Rank)
+    
   }
   
   if(plot=="bar"){
-    barplot(RAC[[i]]$Abundance, log="y",ylab="Log Abundance", xlab="Rank", main="RAC", names.arg = RAC$Rank)
+    barplot(RAC[[i]]$Abundance, log="y",ylab="Log Abundance", xlab="Rank", 
+             main=title, names.arg = RAC$Rank)
   }
   if(plot=="line"){
     if(length(simulations) == 1){
-      plot(RAC[[i]]$Rank, RAC[[i]]$Abundance, type="l",log="y",ylab="Log Abundance", xlab="Rank", main=title, lwd=2)
+      plot(RAC[[i]]$Rank, RAC[[i]]$Abundance, type="l",log="y",ylab="Log Abundance",
+            xlab="Rank", main=title, lwd=2)
     }else{
-      max_abundance<-0
-      max_rank<-0
-      for(i in simulations){
-        if(max(RAC[[i]]$Abundance)>max_abundance) max_abundance<-max(RAC[[i]]$Abundance)
-        if(max(RAC[[i]]$Rank)>max_rank) max_rank<-max(RAC[[i]]$Rank)
-      }
-      
       for(i in simulations){  
         if(i ==1){
-          plot(RAC[[i]]$Rank, RAC[[i]]$Abundance, type="l", log="y", ylab="Log Abundance", xlab="Rank", main=title, col=cols[i],xlim=c(0, max_rank), ylim=c(1, max_abundance)) 
+          plot(RAC[[i]]$Rank, RAC[[i]]$Abundance, type="l", log="y", ylab="Log Abundance", 
+                xlab="Rank", main=title, col=cols[i],xlim=c(0, max_rank), ylim=c(1, max_abundance)) 
         }else{
           lines(RAC[[i]]$Rank, RAC[[i]]$Abundance, type="l", main=title, col=cols[i])
         }
       }
     }
   }
-  
   if(length(simulations)==1) return(RAC[[simulations]]) 
 }
 

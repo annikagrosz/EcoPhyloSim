@@ -58,6 +58,8 @@
 #' 
 plotPhylogeneticDispersion <- function(pvalues, positions=NULL, title = "P-values", which.simulation = NULL, xmax = 5.5, ymax = 2.5, xmin = -0.2, ymin = 0.5){
   
+  .pardefault <- par(no.readonly = T) 
+  
   if(is.null(which.simulation)){
     pvalues<-pvalues[[length(pvalues)]]
     } else{
@@ -73,7 +75,8 @@ plotPhylogeneticDispersion <- function(pvalues, positions=NULL, title = "P-value
   nlengths = length(lengths)
   lRange <- max(lengths) - min(lengths)
   
-  z <- matrix(nrow = nlengths, ncol = length(pvalues), dimnames = list(names(pvalues[[1]]), names(pvalues)))
+  z <- matrix(nrow = nlengths, ncol = length(pvalues), 
+              dimnames = list(names(pvalues[[1]]), names(pvalues)))
   zCILOW <- z
   zCIUP <- z
   for (i in 1:length(pvalues)){
@@ -82,17 +85,12 @@ plotPhylogeneticDispersion <- function(pvalues, positions=NULL, title = "P-value
     zCIUP[,i] <- sapply(pvalues[[i]], function(x)quantile(x,0.75, na.rm = T))
   }
   
-  
-  
-  
   ColPalet <- colorRampPalette(c("turquoise4", "white", "palevioletred"))
   Cols <- ColPalet(100)
   index <- seq(0,1,0.01)
-  par(mar=c(0, 2, 0, 0), xpd=TRUE)
+  par(mar=c(0, 3, 0, 0), xpd=TRUE)
   shape::emptyplot(xlim=c(0, xmax), ylim=c(0.5,ymax), asp=1, frame.plot = FALSE)
-  title(title, line=-2)
-  
-  
+  text(x = median(positions$x/2), y = 1.5*ycol/2 ,  labels= title, cex=1.3)
   
   for(i in 1:length(positions$y)){
     for(j in 1:length(positions$x)){
@@ -105,10 +103,9 @@ plotPhylogeneticDispersion <- function(pvalues, positions=NULL, title = "P-value
       
       k <- length(positions$x)*(i-1) + j
       
-      
-      
       mpv <- mean(z[,k])
-      shape::filledrectangle(wx = 0.3 ,wy = 0.3, col = Cols[which.max(index[index <= mpv])], mid = c(x, y), angle = 0, lcol = "darkgrey")
+      shape::filledrectangle(wx = 0.3 ,wy = 0.3, col = Cols[which.max(index[index <= mpv])],
+              mid = c(x, y), angle = 0, lcol = "darkgrey")
       
       xval <- (lengths - min(lengths)) / lRange *0.3 -0.15
       yval <- z[,k] * 0.3 - 0.15
@@ -119,8 +116,6 @@ plotPhylogeneticDispersion <- function(pvalues, positions=NULL, title = "P-value
       lines(x+xval, y+yval)
       lines(c(x-0.15,x-0.13) , c(y , y ))
       lines(c(x+0.13,x+0.15) , c(y , y ))
-
-      
     }
   }
   
@@ -131,10 +126,14 @@ plotPhylogeneticDispersion <- function(pvalues, positions=NULL, title = "P-value
   barx <- max(positions$x)/2+ min(positions$x)/2
   bary <- mean(positions$y)/2
   barl <- 0.3
-  fields::colorbar.plot(x = barx, y = bary, strip=seq(0,1,0.001), col=Cols, strip.length = barl, horizontal = F, strip.width = 0.04)
+  
+  fields::colorbar.plot(x = barx, y = bary, strip=seq(0,1,0.001), col=Cols, 
+                        strip.length = barl, horizontal = F, strip.width = 0.04)
   text(x = barx+0.1 , y = bary + 1.8* barl, labels = "overdispersed" , pos = 4) 
   text(x = barx+0.1 , y = bary, labels = "neutral" , pos = 4) 
   text(x = barx+0.1 , y = bary - 1.8* barl, labels = "underdispersed \n(clustered)", pos = 4) 
+  
+  par(.pardefault)
 }
 
 

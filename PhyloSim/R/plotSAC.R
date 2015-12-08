@@ -87,7 +87,6 @@ sac <- function(simu, which.simulation = NULL, area = NULL, rep=50, plot=T, titl
     
     meanSpeciesRichness <- numeric()
     
-    
     #Loop over all plot sizes
     for(i in 1:length(area))
     { 
@@ -101,34 +100,42 @@ sac <- function(simu, which.simulation = NULL, area = NULL, rep=50, plot=T, titl
         meanSpeciesRichnessLowerCI[i] <- quantile(speciesRichness, probs = 0.05, na.rm = T)
       } else{
         if(meanSpeciesRichnessUpperCI[i]< quantile(speciesRichness, probs = 0.95, na.rm = T)){
-          meanSpeciesRichnessUpperCI[i] <- quantile(speciesRichness, probs = 0.95, na.rm = T)
+           meanSpeciesRichnessUpperCI[i] <- quantile(speciesRichness, probs = 0.95, na.rm = T)
         }
         if(meanSpeciesRichnessLowerCI[i] > quantile(speciesRichness, probs = 0.05, na.rm = T)){
-          meanSpeciesRichnessLowerCI[i] <- quantile(speciesRichness, probs = 0.05, na.rm = T)
+           meanSpeciesRichnessLowerCI[i] <- quantile(speciesRichness, probs = 0.05, na.rm = T)
         }
       }
     }
     
-    
     if(plot == T){
       if(t == 1){
         if(length(simulations)==1){
-          plot(area,meanSpeciesRichness, log="xy", xlab="Area (n cells)", ylab="Number of Species", main=title, col=t, lwd=2, pch=4, type="b")
-          polygon(x=c(area,rev(area)), y=c(meanSpeciesRichnessUpperCI,rev(meanSpeciesRichnessLowerCI)), col="#00000030", border=NA)
+          plot(area,meanSpeciesRichness, log="xy", xlab="Area (n cells)",
+               ylab="Number of Species", main=title, col=t, lwd=2, pch=4, type="b")
+          
+          polygon(x=c(area,rev(area)), y=c(meanSpeciesRichnessUpperCI,
+                  rev(meanSpeciesRichnessLowerCI)), col="#00000030", border=NA)
+          
           lines(area, (meanSpeciesRichnessUpperCI), col="red", lty=2, lwd=2)
           lines(area, (meanSpeciesRichnessLowerCI), col="red", lty=2, lwd=2)
+          
         }else  plot(area,meanSpeciesRichness,type="l", log="xy", xlab="Area (n cells)", ylab="Number of Species", main=title, col=cols[t])
       } else{
         lines(area,meanSpeciesRichness,type="l", col=cols[t])
+        
         if(t == length(simu$Output)){
-          polygon(x=c(area,rev(area)), y=c(meanSpeciesRichnessUpperCI,rev(meanSpeciesRichnessLowerCI)), col="#00000030", border=NA)
+          polygon(x=c(area,rev(area)), y=c(meanSpeciesRichnessUpperCI,
+                  rev(meanSpeciesRichnessLowerCI)), col="#00000030", border=NA)
+          
           lines(area, (meanSpeciesRichnessUpperCI), col="red", lty=2, lwd=2)
           lines(area, (meanSpeciesRichnessLowerCI), col="red", lty=2, lwd=2)
         }
       }
-      
-    }}
-  if(length(simulations)==1) return(data.frame(area = area, sr.Mean = meanSpeciesRichness,sr.UpperCI = meanSpeciesRichnessUpperCI, sr.LowerCI = meanSpeciesRichnessLowerCI))
+    }
+  }
+  if(length(simulations)==1) return(data.frame(area = area, sr.Mean = meanSpeciesRichness,
+                                    sr.UpperCI = meanSpeciesRichnessUpperCI, sr.LowerCI = meanSpeciesRichnessLowerCI))
 }
 
 
