@@ -4,10 +4,12 @@
 \alias{collessImbalance}
 \title{Colless' imbalance}
 \usage{
-collessImbalance(phylo)
+collessImbalance(simu, which.simulation = NULL)
 }
 \arguments{
-\item{phylo}{An object of class 'phylo'}
+\item{simu}{An object of type "PhyloSim"}
+
+\item{which.simulation}{Integer, determines which simulation should be used. Only useful if your Phylosim object contains more than one result. By default the last result is chosen.}
 }
 \value{
 A numeric value for the Colless' Imbalance

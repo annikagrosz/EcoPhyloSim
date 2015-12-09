@@ -17,7 +17,7 @@ calculatePhylogeneticDispersion(simu, plotlengths = 10, plots = 200,
 
 \item{replicates}{Integer, number of replicate}
 
-\item{which.simulation}{Integer or vector of integers, determines which result should be used. This argument is only usefull if interim steps are saved in the Phylosim object. You can choose a particular time step, a vector of time steps, or use all timesteps with which.simulation = NULL (default).}
+\item{which.simulation}{Integer or vector of integers, determines which result should be used. This argument is only usefull if interim steps are saved in the Phylosim object. You can choose a particular time step, a vector of time steps, or use all timesteps with which.simulation = "all". By default (NULL) the last time step is used.}
 
 \item{fun}{String, determines which function should be used to calculate the phylogenetic diversity in the sample plot. Possible inputs are "mpd" or "pd" (see details).}
 

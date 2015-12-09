@@ -25,6 +25,7 @@ The tiplabels of the phylogeny tree are colored in correspondency to the spatial
 \examples{
 
 #Load data
+
 data(simu.neutral.global)
 data(simu.neutral.local)
 data(simu.envcom.local)
