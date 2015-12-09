@@ -25,14 +25,14 @@ plot.PhylosimList <- function(simu){
 
 print.PhylosimList <- function(simu){
   cat("Summary for class PhylosimList",  "\n")
-  cat("------------------------------------", "\n","------------------------------------", "\n")
-  cat("# Simu", "X", "Y", "Dispersal", "Density", "Environment", "#Species","#Runs","\n")
+  cat("------------------------------------", "\n","------------------------------------", "\n", sep="")
+  cat("# Simu", "X ", "Y", "Dispersal", "Density", "Environment", "#Species","#Runs","\n")
   cat("------------------------------------", "\n")
   cat()
   for(i in 1:length(simu)){
-    cat("#",i," ",simu[[i]]$Model$x, simu[[i]]$Model$y," ",simu[[i]]$Model$dispersal,"     ",
+    cat("#",i," ",simu[[i]]$Model$x,"", simu[[i]]$Model$y," ",simu[[i]]$Model$dispersal,"     ",
         as.numeric(simu[[i]]$Model$density),"      ", 
-        as.numeric(simu[[i]]$Model$environment),"      ", specRich(simu[[i]]), sum(simu[[i]]$Model$runs), "\n")
+        as.numeric(simu[[i]]$Model$environment),"      ", specRich(simu[[i]]),"   ", sum(simu[[i]]$Model$runs), "\n")
   }
 }
 

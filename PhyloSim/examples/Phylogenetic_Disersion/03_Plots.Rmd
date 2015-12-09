@@ -96,6 +96,12 @@ plot(1:9,z[,i,t], type="l", xlim=c(1,9), ylim=c(0, 0.8), col=cols[t], yaxt="n", 
   }
 }  
 
+
+  name <- paste("./",outfolder100, "/PhylogeneticDisersion_allRuns", 100, ".pdf", sep = "")
+  dev.copy(pdf,name, width=9, height=6)
+  dev.off()
+
+
 #### Same for nullMeta256
 pvalues<-nullMeta256
 pval<-pvalues[[1]]
@@ -125,6 +131,9 @@ plot(1:9,z[,i,t], type="l", xlim=c(1,9), ylim=c(0, 0.8), col=cols[t], yaxt="n", 
   }
 }  
 
+name <- paste("./",outfolder256, "/PhylogeneticDisersion_allRuns", 256, ".pdf", sep = "")
+  dev.copy(pdf,name, width=9, height=6)
+  dev.off()
   
 ```
 
@@ -148,7 +157,7 @@ for(i in 1:28){
   }else{
      ypos<-quantile(SpeciesRichness100,0.95)
     }
-  text(x=60000, y= ypos, labels=paste("mean = ",mean(SpeciesRichness100[i,])))
+  text(x=70000, y= ypos, labels=paste("m = ",mean(SpeciesRichness100[i,])),cex=0.9)
   
 }
 
@@ -188,8 +197,9 @@ for(i in 1:28){
   plot(seq(50000,100000,len=10), gammas100[i,], type="l", 
        xlab="", ylim=c(min(gammas100),max(gammas100)), 
        ylab="", yaxt='n', xaxt='n')
+  abline(h=mean(gammas100[i,]), lty=2)
 }
-
+  
   name <- paste("./",outfolder100, "/GammaStats", 100, ".pdf", sep = "")
   dev.copy(pdf,name, width=9, height=6)
   dev.off()
@@ -198,6 +208,7 @@ for(i in 1:28){
   plot(seq(50000,100000,len=10), gammas256[i,], type="l", 
        xlab="", ylim=c(min(gammas256),max(gammas256)), 
        ylab="", yaxt='n', xaxt='n')
+    abline(h=mean(gammas256[i,]), lty=2)
 }
 
   name <- paste("./",outfolder256, "/GammaStats", 256, ".pdf", sep = "")
@@ -219,6 +230,7 @@ for(i in 1:28){
   plot(seq(50000,100000,len=10), colless100[i,], type="b", 
        xlab="", ylim=c(min(colless100, na.rm=T),max(colless100, na.rm=T)), 
        ylab="", yaxt='n', xaxt='n')
+  abline(h=mean(colless100[i,], na.rm=TRUE), lty=2)
 }
 
   name <- paste("./",outfolder100, "/Colless", 100, ".pdf", sep = "")
@@ -250,7 +262,7 @@ for(i in 1:28){
 sac(simulationOut100[[i]], which.simulation = NULL, title="last Simulation")
 sac(simulationOut100[[i]], which.simulation = "all", title= "all Simulations")  
   
-  name <- paste("./",outfolder100, "/SAC100_", i, ".pdf", sep = "")
+  name <- paste("./",outfolder100, "/SAC100_Scenario_", i, ".pdf", sep = "")
   dev.copy(pdf,name, width=9, height=6)
   dev.off()
 
@@ -275,7 +287,7 @@ for(i in 1:28){
 rac(simulationOut100[[i]], which.simulation = NULL, title="last Simulation")
 rac(simulationOut100[[i]], which.simulation = "all", title= "all Simulations")  
   
-  name <- paste("./",outfolder100, "/RAC100_", i, ".pdf", sep = "")
+  name <- paste("./",outfolder100, "/RAC100_Scenario_", i, ".pdf", sep = "")
   dev.copy(pdf,name, width=9, height=6)
   dev.off()
 
