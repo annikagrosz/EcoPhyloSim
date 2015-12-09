@@ -8,6 +8,7 @@
 #' @examples 
 #' 
 #' #Load data
+#' 
 #' data(simu.neutral.global)
 #' data(simu.neutral.local)
 #' data(simu.envcom.local)

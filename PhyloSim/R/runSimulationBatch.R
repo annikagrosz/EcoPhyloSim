@@ -71,7 +71,7 @@ runSimulationBatch <- function(pars, parallel = FALSE, backup = FALSE){
   }
   
   for (i in 1:length(pars)) names(out)[i] <- pars[i]$scenario
-  class(out) <- append(class(out),"PhylosimList")
+  class(out) <- "PhylosimList"
   #Stop cluster and timing
   time <- proc.time() - ptm
   print (paste("Finished after",floor(((proc.time() - ptm)[3])/60), "minute(s) and", ((proc.time() - ptm)[3])%%60, "second(s)."))

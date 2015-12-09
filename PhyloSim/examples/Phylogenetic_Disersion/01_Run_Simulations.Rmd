@@ -25,7 +25,7 @@ We conduct 28 simulations consisting of seven combinations of the parameters 'de
 To control wheter the results are stable ten different time steps will be saved.
 
 ```{r}
- setwd("C:/Users/Stefan/Desktop/PhyloSim_Simulations")
+ setwd("C:/Users/Stefan/Desktop/PhyloSim_Simulations/100000runs")
 runs100 = seq(50000,100000, len=10)
 runs256 = seq(100000,500000, len=10)
 

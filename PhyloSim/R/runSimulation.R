@@ -113,7 +113,7 @@ runSimulation <- function(par)
     par$runtime <- runtime
     
     output$Model <- par
-    class(output) <- append(class(output),"Phylosim")
+    class(output) <- "PhyloSim"
     return(output)
     
     ##################################################################
@@ -134,7 +134,7 @@ runSimulation <- function(par)
     runtime <- as.numeric((proc.time() - ptm)[3])
     par$runtime <- runtime
     out = list(Output = list(list("specMat"=result)), Model = par)
-    class(out) <- append(class(out),"Phylosim")
+    class(out) <- "PhyloSim"
     return(out)
   }
 }
