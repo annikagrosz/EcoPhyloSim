@@ -748,8 +748,51 @@ void Landscape::speciation (unsigned int generation)
 
       // update relatedness values for density dependence / competition
       if(m_DD) densityUpdate(x,y);
-   }
-}
+      
+      
+      
+      // Implementation of fission:
+      // Getting the species which is randomly chosen
+      
+      // Now look where the individuals of these species are
+      // and save locations in xvec and yvec
+      
+      bool fission = false;
+      
+      if(fission == true){
+        std::vector<int> xvec(0);
+        std::vector<int> yvec(0);
+        
+        
+        for(int k = 0; k < m_Xdimensions; k++){
+          for(int j =0; j < m_Ydimensions; j++ ){
+            if(m_Individuals[k][j].m_Species == m_Individuals[x][y].m_Species){
+              xvec.push_back(k);
+              yvec.push_back(j);
+            }
+          }
+        }
+        
+        // Now every second Individual on the List will become the new Species
+        // TDOO: will they all evolve the same way or randomly? Here we use randomly so far...
+        for(int k =0; k< xvec.size(); k+=2){
+          m_Individuals[xvec[k]][yvec[k]].m_Species = m_Individuals[x][y].m_Species;
+          m_Individuals[xvec[k]][yvec[k]].reportDeath(generation);
+          m_Individuals[xvec[k]][yvec[k]].evolveDuringSpeciation();
+          
+          // Do you need the following?
+          // m_Phylogeny.updatePhylogeny(m_Individuals[xvec[k]][yvec[k]].m_Species);
+          if(m_DD) densityUpdate(xvec[k],yvec[k]);
+        }
+        
+        // Clear the vector
+        xvec.clear();
+        yvec.clear();
+        
+      };
+   };
+};
+
 
 
 
