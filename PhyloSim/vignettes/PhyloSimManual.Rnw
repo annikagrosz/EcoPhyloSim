@@ -173,7 +173,7 @@ str(simu$Model)
 
 In the package, the Phylosim object serves as the basis of all further analysis.
 It can directly be passed to all other funktions.
-If the Phylsim object contains multiple results, they can be accessed by the which.simulation argument in most functions. By default always the last result is used.\\
+If the Phylsim object contains multiple results, they can be accessed by the which.result argument in most functions. By default always the last result is used.\\
 Because the simulations have a high computational cost, the package comprises a funktion to make use of parallel computing. This function can be seen as an extension to the
 runSimulation funktion in order to accelerate the simulation of multiple scenarios.\\
 As input serves a list of parameter settings as created by createCompletePar, whereas the output is an object of tyoe PhyloBatch. Basically this object is a list of Phylosim objects.\\
@@ -213,7 +213,7 @@ The easiest way to get an overview of the results of one simulation is the plotS
 
 <<fig.cap = "Shows the plot created by plotSpatialPhylo with all three possibilites (phylogeny tree, traits, and spatial distribution)">>=
 
-plotSpatialPhylo(simu, plot = "both", plotTraits = T, which.simulation = NULL)
+plotSpatialPhylo(simu, plot = "both", plotTraits = T, which.result = NULL)
 @
 The plotSpatialPhylo plot consist of three different figures. The phylogeny tree that shows the phylogeny of the modeled community with colored tip labels. A traitplot that shows the magnitude of different traits for each of the species within the community. And a plot that shows the spatial abundance of the species within the community. Here the species have the same color as the tip labels for recognition. Which of these figures are plotted can be triggered with the arguments "plot" and "plotTraits" (see help)
 
@@ -221,7 +221,7 @@ The plotSpatialPhylo plot consist of three different figures. The phylogeny tree
 \section{Trait plots}
 For a closer look at the traits you can visualize them using the plotTraitDistribution function.
 <<fig.cap= "Shows the different traits in dependency to the environment (upper), their spatial distribution (middle) and the frequency of the traits' values per species.">>=
-plotTraitDistribution(simu = simu, which.simulation = NULL, type ="all")
+plotTraitDistribution(simu = simu, which.result = NULL, type ="all")
 @
 The plotTraitDistribution plot consists of three different figures for the three traits in the model (environmental trait, competition trait, neutral trait). The first illustrates the trait's magnitude in dependency of the environment for different species. The second illustrates the spatial distribution of the given trait. The third shows a histogram of the given trait. As mentioned above each individual has a neutral trait. This trait evolved over time but is not influencing the individual's fitness
 
@@ -265,14 +265,14 @@ The SAC shows the accumulated species richness as a function of the plot size wh
 
 \begin{center}
 << results='hide', out.width='6cm', out.height='6cm', fig.show='hold', fig.cap="Shows the species richness in dependency to the plotsize of a local community. A positively bent curve indicates clustering of a species community. An increase in plot size leads to an increase in specis richness. A negatively bent curve indicates a more neutral distribution of species within the community.">>=
-sac(simu, which.simulation = NULL)
+sac(simu, which.result = NULL)
 @
 \end{center}
 \subsection{RAC}
 
 \begin{center}
 << results='hide', out.width='6cm', out.height='6cm', fig.show='hold', fig.cap="Shows the rank-abundance curve (RAC). For that, each species is given a rank according to its abundance (highest abundance = rank 1). Then the abundance is plotted in dependency to the species' rank. RACs display the amount of equally abundand species that the community can support. A linear curve indicates a less stable or neutral community supporting only a few highly abundand species, whereas an S-shaped curve indicates a more stable community. In the latter case several species of the same abundance can be supported.">>=
-rac(simu, which.simulation = NULL)
+rac(simu, which.result = NULL)
 @
 \end{center}
 

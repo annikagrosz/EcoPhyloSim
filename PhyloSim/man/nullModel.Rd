@@ -4,13 +4,13 @@
 \alias{nullModel}
 \title{Null Model}
 \usage{
-nullModel(simu, which.simulation = NULL, abundance = FALSE, localPlotSize,
+nullModel(simu, which.result = NULL, abundance = FALSE, localPlotSize,
   numberOfPlots, repetitions, fun = "mpd")
 }
 \arguments{
 \item{simu}{an object of class "phylosim" as created by \code{\link{runSimulation}} or \code{\link{runSimulationBatch}}}
 
-\item{which.simulation}{Integer, determines which result should be used. This argument is only usefull if interim steps are saved in the Phylosim object. By default (NULL), the end result is used.}
+\item{which.result}{Integer, determines which result should be used. This argument is only usefull if your 'runs' argument in \code{\link{createCompletePar}} contains more than one element. By default (NULL), the last result is used.}
 
 \item{abundance}{Logical, determining wheather the null model should be based on the abundance distribution of the sample plots. Default is FALSE.}
 

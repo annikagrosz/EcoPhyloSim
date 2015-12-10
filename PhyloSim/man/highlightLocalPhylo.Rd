@@ -4,13 +4,13 @@
 \alias{highlightLocalPhylo}
 \title{Phylogenetic clades}
 \usage{
-highlightLocalPhylo(simu, which.simulation = NULL, size, n, subplot = NULL,
+highlightLocalPhylo(simu, which.result = NULL, size, n, subplot = NULL,
   phylogeny = NULL)
 }
 \arguments{
 \item{simu}{Simulation output of the class "Phylosim", usually consisting out of several lists. Needs to contain at least the phylogeny ($phylogeny) and species matrix ($specMat). The species matrix is used as metacommunity}
 
-\item{which.simulation}{defines which simulation run to choose in case you defined to save at multiple time steps. The default is the last one.}
+\item{which.result}{Integer, determines which result should be used. This argument is only usefull if your 'runs' argument in \code{\link{createCompletePar}} contains more than one element. By default (NULL), the last result is used.}
 
 \item{size, }{TODO}
 

@@ -1,7 +1,7 @@
 #' @title Phylogenetic clades
 #' @description Visualises the phylogenetic clades of a local community within a metacommunity. 
 #' @param simu Simulation output of the class "Phylosim", usually consisting out of several lists. Needs to contain at least the phylogeny ($phylogeny) and species matrix ($specMat). The species matrix is used as metacommunity
-#' @param which.simulation defines which simulation run to choose in case you defined to save at multiple time steps. The default is the last one.
+#' @param which.result Integer, determines which result should be used. This argument is only usefull if your 'runs' argument in \code{\link{createCompletePar}} contains more than one element. By default (NULL), the last result is used.
 #' @param size, TODO
 #' @param n The number of local communities. For each community a new plot is created. Needs to be greater than 1
 #' @param subplot if no simu object is given, a communitytable of a local community can be given here
@@ -39,16 +39,16 @@
 #'highlightLocalPhylo(simu.envcom.local, size = 50, n =2)
 #'highlightLocalPhylo(simu.envcom.local, size = 1000, n =2)
 #' @export
-highlightLocalPhylo <- function(simu,which.simulation=NULL, size, n, subplot = NULL, phylogeny=NULL){
+highlightLocalPhylo <- function(simu,which.result=NULL, size, n, subplot = NULL, phylogeny=NULL){
   
   
   if(is.null(subplot)){
-  lp <- localPlots(simu = simu,size = size, n=n,community=T , which.simulation =which.simulation)
+  lp <- localPlots(simu = simu,size = size, n=n,community=T , which.result =which.result)
   community <- lp$communityTable} else community <- subplot
   
   if(is.null(phylogeny)){
-    if (is.null(which.simulation)) which.simulation = length(simu$Output) 
-    simu <- simu$Output[[which.simulation]]
+    if (is.null(which.result)) which.result = length(simu$Output) 
+    simu <- simu$Output[[which.result]]
   
   phylo <- simu$phylogeny} else phylo <- phylogeny
   phylo <- ape::drop.fossil(phylo)

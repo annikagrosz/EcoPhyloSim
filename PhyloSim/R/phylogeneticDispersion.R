@@ -5,9 +5,9 @@
 #' @param plots Integer, number of sample plots
 #' @param replicates Integer, number of replicate
 #' @param types String, determines which null model should be created. Possible inputs are "PhylMeta" (default), "PhylSample", "PhylPool", "SamplePool" (see details). 
-#' @param which.simulation Integer or vector of integers, determines which result should be used. This argument is only usefull if interim steps are saved in the Phylosim object. You can choose a particular time step, a vector of time steps, or use all timesteps with which.simulation = "all". By default (NULL) the last time step is used.
+#' @param which.result Integer, determines which result should be used. This argument is only usefull if your 'runs' argument in \code{\link{createCompletePar}} contains more than one element. By default (NULL), the last result is used. You can choose a particular result, a vector of results, or use all result with which.result = "all".
 #' @param fun String, determines which function should be used to calculate the phylogenetic diversity in the sample plot. Possible inputs are "mpd" or "pd" (see details).
-#' @details In the types argument "PhylMeta" is equivalent to \code{\link{nullModel}} with abundance = FALSE, "PhylSample" is equivalent to the same function with abundance = TRUE, wheras the two other option use \code{\link[picante]{ses.mpd}}. "PhylPool" uses the argument null.model = "phylogeny.pool", "SamplePool" is setting null.model to "sample.pool". \cr\cr The fun argument is only used if types="PhylSample". For more information see \code{\link{nullModel}}. \cr \cr If yu choose which.simulation = NULL (default), the length of the output corresponds to the length of the 'runs' argument in your parameter definition. Otherwise the length of the list corresponds to the length of your which.simulation argument. \cr\cr The structure of the output is organitzed as follows with output[[n]] you will get the results for the scenario 'n'. With output[[n]][[t]] you will get the results for 'n' at timestep 't'. output[[n]][[t]] is a list that contains one vector with p values for each element in the plotlengths argument.
+#' @details In the types argument "PhylMeta" is equivalent to \code{\link{nullModel}} with abundance = FALSE, "PhylSample" is equivalent to the same function with abundance = TRUE, wheras the two other option use \code{\link[picante]{ses.mpd}}. "PhylPool" uses the argument null.model = "phylogeny.pool", "SamplePool" is setting null.model to "sample.pool". \cr\cr The fun argument is only used if types="PhylSample". For more information see \code{\link{nullModel}}. \cr \cr If yu choose which.result = NULL (default), the length of the output corresponds to the length of the 'runs' argument in your parameter definition. Otherwise the length of the list corresponds to the length of your which.result argument. \cr\cr The structure of the output is organitzed as follows with output[[n]] you will get the results for the scenario 'n'. With output[[n]][[t]] you will get the results for 'n' at timestep 't'. output[[n]][[t]] is a list that contains one vector with p values for each element in the plotlengths argument.
 #' @return A list with pValues for each plot in the observed metacommunity. If you have calculated multiple scenarios, the results can be visualized by \code{\link{plotPhylogeneticDisperion}}.
 #' @examples 
 #' ## Create a set of parameters
@@ -29,7 +29,7 @@
 #' @export
 
 # Version that accepts multiple types
-calculatePhylogeneticDispersion <- function(simu, plotlengths = 10,  plots = 200, replicates = 500, type = "PhylMeta",  which.simulation = NULL, reduce= FALSE, fun="mpd"){
+calculatePhylogeneticDispersion <- function(simu, plotlengths = 10,  plots = 200, replicates = 500, type = "PhylMeta",  which.result = NULL, reduce= FALSE, fun="mpd"){
   
   if ("PhyloSim" %in% class(simu) ==T) simu = list(simu)
   
@@ -38,7 +38,7 @@ calculatePhylogeneticDispersion <- function(simu, plotlengths = 10,  plots = 200
   nScenarios = length(simu) 
   nRuns = length(simu[[1]]$Output)
   parIndex = simu[[1]] 
-  times <- which.simulation
+  times <- which.result
   if(is.null(times)){
     times = nRuns
   }
@@ -75,17 +75,17 @@ calculatePhylogeneticDispersion <- function(simu, plotlengths = 10,  plots = 200
         
         if (type == "PhylMeta"){
           pval[[j]] <- nullModel(simu[[k]], localPlotSize = plotsize, numberOfPlots = plots,
-                                 which.simulation = timeindex, repetitions = replicates,
+                                 which.result = timeindex, repetitions = replicates,
                                  fun = "mpd")
         
           }else if (type == "PhylSample"){
           pval[[j]] <- nullModel(simu[[k]], localPlotSize = plotsize, abundance = TRUE,
-                                 numberOfPlots = plots, which.simulation = timeindex, 
+                                 numberOfPlots = plots, which.result = timeindex, 
                                  repetitions = replicates)    
         
           }else if (type == "PhylPool"){
           comMat <- localPlots(simu[[k]],size = plotsize, n = plots, 
-                               which.simulation = timeindex, community = T)$communityTable
+                               which.result = timeindex, community = T)$communityTable
           
           pval[[j]] <- picante::ses.mpd(samp = comMat, dis = extantPhyloDis, 
                                         null.model = "phylogeny.pool", abundance.weighted = TRUE,
@@ -93,7 +93,7 @@ calculatePhylogeneticDispersion <- function(simu, plotlengths = 10,  plots = 200
         
           }else if (type == "SamplePool"){
           comMat <- localPlots(simu[[k]], size = plotsize, n = plots, 
-                               which.simulation = timeindex, community = T)$communityTable
+                               which.result = timeindex, community = T)$communityTable
          
           pval[[j]] <- picante::ses.mpd(samp = comMat, dis = extantPhyloDis, 
                                         null.model = "sample.pool", abundance.weighted = TRUE, 

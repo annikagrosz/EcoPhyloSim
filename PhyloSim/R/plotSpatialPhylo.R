@@ -3,7 +3,7 @@
 #' @param simu Simulation output of the class "Phylosim", usually consisting out of several lists. Needs to contain at least the spatial species matrix ($specMat) and the phylogeny ($phylogeny)   
 #' @param plot defines what to plot."spatial" plots the spatial abundance, "phylogeny" the phylogeny tree. "both" plots both of them side by side 
 #' @param plotTraits logical, defines if the traits should be plotted 
-#' @param which.simulation defines which simulation run to choose in case you defined to save at multiple time steps. The default is the last one.
+#' @param which.result Integer, determines which result should be used. This argument is only usefull if your 'runs' argument in \code{\link{createCompletePar}} contains more than one element. By default (NULL), the last result is used.
 #' @details The tiplabels of the phylogeny tree are colored in correspondency to the spatial abundance plot
 #' @examples 
 #' 
@@ -48,22 +48,22 @@
 #'    #all three
 #'    plotSpatialPhylo(simu, plot = "both", plotTraits = TRUE)
 #' 
-#' #Set simulation run with which.simulation
+#' #Set simulation run with which.result
 #' #Here, two simulation runs are stored in simu (one with 500 timesteps, one with 1000)
 #' par <- createCompletePar(x = 50, y = 50, dispersal = 1, runs = c(500,1000), density = 1, environment = 0.5, specRate = 1)
 #' simu <- runSimulation(par)
 #' 
 #' #Choose to take the first simulation run (default is the last)
-#' plotSpatialPhylo(simu, which.simulation = 1)
+#' plotSpatialPhylo(simu, which.result = 1)
 #' 
 #' 
 #' @import ape
 #' @importFrom adephylo distTips
 #' @export
-plotSpatialPhylo <- function (simu, plot = "both", plotTraits = T, which.simulation = NULL){
+plotSpatialPhylo <- function (simu, plot = "both", plotTraits = T, which.result = NULL){
   
-  if (is.null(which.simulation)) which.simulation = length(simu$Output) 
-  simu <- simu$Output[[which.simulation]]
+  if (is.null(which.result)) which.result = length(simu$Output) 
+  simu <- simu$Output[[which.result]]
   
   phylogeny = simu$phylogeny
   

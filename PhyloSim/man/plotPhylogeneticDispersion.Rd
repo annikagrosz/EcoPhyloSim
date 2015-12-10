@@ -5,7 +5,7 @@
 \title{Plot Phylogenetic Dispersion}
 \usage{
 plotPhylogeneticDispersion(pvalues, positions = NULL, title = "P-values",
-  which.simulation = NULL, xmax = 5.5, ymax = 2.5, xmin = -0.2,
+  which.result = NULL, xmax = 5.5, ymax = 2.5, xmin = -0.2,
   ymin = 0.5)
 }
 \arguments{
@@ -15,7 +15,7 @@ plotPhylogeneticDispersion(pvalues, positions = NULL, title = "P-values",
 
 \item{title}{String, determines the title of the plot}
 
-\item{which.simulation}{Integer, determines which simulation should be plotted. By default the last one is used (see Details).}
+\item{which.result}{Integer, determines which result should be used. By default (NULL), the last result is used.}
 
 \item{xmax}{Float, determines the plot limit (max) of the x axis.}
 
@@ -29,7 +29,7 @@ plotPhylogeneticDispersion(pvalues, positions = NULL, title = "P-values",
 Plotting function for the results of \code{\link{calculatePhylogeneticDispersion}}. It is used to compare different scenarios.
 }
 \details{
-In every subplot the x-axis represents the size of the subplots used in the null models. Hence, it is recommended to use a vector of plot sizes in your \code{\link{calculatePhylogeneticDispersion}} setup. \cr\cr The which.simulation argument here is used on the input list of p-values. Hence, which.simulation = 1 plots the first list slice of the input here. This is not necessarily the first time step of of your parameter settings in \code{\link{runSimulationBatch}}. \cr\cr For an further explanation please see the Examples section.
+In every subplot the x-axis represents the size of the subplots used in the null models. Hence, it is recommended to use a vector of plot sizes in your \code{\link{calculatePhylogeneticDispersion}} setup. \cr\cr The which.result argument here is used on the input list of p-values. Hence, which.result = 1 plots the first list slice of the input here. This is not necessarily the first time step of of your parameter settings in \code{\link{runSimulationBatch}}. \cr\cr For an further explanation please see the Examples section.
 }
 \examples{
 ## First the experimental design has to be defined.

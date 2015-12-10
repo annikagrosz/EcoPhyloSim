@@ -4,12 +4,12 @@
 \alias{collessImbalance}
 \title{Colless' imbalance}
 \usage{
-collessImbalance(simu, which.simulation = NULL)
+collessImbalance(simu, which.result = NULL)
 }
 \arguments{
 \item{simu}{An object of type "PhyloSim"}
 
-\item{which.simulation}{Integer, determines which simulation should be used. Only useful if your Phylosim object contains more than one result. By default the last result is chosen.}
+\item{which.result}{Integer, determines which result should be used. This argument is only usefull if your 'runs' argument in \code{\link{createCompletePar}} contains more than one element. By default (NULL), the last result is used.}
 }
 \value{
 A numeric value for the Colless' Imbalance

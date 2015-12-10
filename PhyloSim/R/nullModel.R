@@ -1,7 +1,7 @@
 #' @title Null Model
 #' @description Generates a null model and compares the observed results against.
 #' @param simu an object of class "phylosim" as created by \code{\link{runSimulation}} or \code{\link{runSimulationBatch}}
-#' @param which.simulation Integer, determines which result should be used. This argument is only usefull if interim steps are saved in the Phylosim object. By default (NULL), the end result is used.
+#' @param which.result Integer, determines which result should be used. This argument is only usefull if your 'runs' argument in \code{\link{createCompletePar}} contains more than one element. By default (NULL), the last result is used.
 #' @param abundance Logical, determining wheather the null model should be based on the abundance distribution of the sample plots. Default is FALSE.
 #' @param localPlotSize number of grid cells of the plots drawn within the metacommunity
 #' @param numberOfPlots number of plots drawn within the metacommunity
@@ -39,13 +39,13 @@
 #' nullModel(simubatch[[2]],localPlotSize = 100, numberOfPlots = 10, repetitions = 10)
 #' 
 #' @export
-nullModel <- function(simu, which.simulation=NULL, abundance = FALSE, localPlotSize, numberOfPlots, repetitions, fun="mpd"){
+nullModel <- function(simu, which.result=NULL, abundance = FALSE, localPlotSize, numberOfPlots, repetitions, fun="mpd"){
   
-  comMat <- localPlots(simu=simu, which.simulation=which.simulation, size = localPlotSize, n = numberOfPlots, community = T)$communityTable # create community matrix from local communities (requires PhyloSim)
+  comMat <- localPlots(simu=simu, which.result=which.result, size = localPlotSize, n = numberOfPlots, community = T)$communityTable # create community matrix from local communities (requires PhyloSim)
   
   
-  if (is.null(which.simulation)) which.simulation = length(simu$Output) 
-  simu <- simu$Output[[which.simulation]]
+  if (is.null(which.result)) which.result = length(simu$Output) 
+  simu <- simu$Output[[which.result]]
   phylogeny <- simu$phylogeny
   speciesMatrix <- simu$specMat
   

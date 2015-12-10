@@ -259,15 +259,15 @@ for(i in 1:28){
 par(mfrow=c(1,2))
 
 for(i in 1:28){
-sac(simulationOut100[[i]], which.simulation = NULL, title="last Simulation")
-sac(simulationOut100[[i]], which.simulation = "all", title= "all Simulations")  
+sac(simulationOut100[[i]], which.result = NULL, title="last Simulation")
+sac(simulationOut100[[i]], which.result = "all", title= "all Simulations")  
   
   name <- paste("./",outfolder100, "/SAC100_Scenario_", i, ".pdf", sep = "")
   dev.copy(pdf,name, width=9, height=6)
   dev.off()
 
-sac(simulationOut256[[i]], which.simulation = NULL, title="last Simulation")
-sac(simulationOut256[[i]], which.simulation = "all", title= "all Simulations")  
+sac(simulationOut256[[i]], which.result = NULL, title="last Simulation")
+sac(simulationOut256[[i]], which.result = "all", title= "all Simulations")  
   
   name <- paste("./",outfolder256, "/SAC256_", i, ".pdf", sep = "")
   dev.copy(pdf,name, width=9, height=6)
@@ -284,15 +284,15 @@ sac(simulationOut256[[i]], which.simulation = "all", title= "all Simulations")
 par(mfrow=c(1,2))
 
 for(i in 1:28){
-rac(simulationOut100[[i]], which.simulation = NULL, title="last Simulation")
-rac(simulationOut100[[i]], which.simulation = "all", title= "all Simulations")  
+rac(simulationOut100[[i]], which.result = NULL, title="last Simulation")
+rac(simulationOut100[[i]], which.result = "all", title= "all Simulations")  
   
   name <- paste("./",outfolder100, "/RAC100_Scenario_", i, ".pdf", sep = "")
   dev.copy(pdf,name, width=9, height=6)
   dev.off()
 
-rac(simulationOut256[[i]], which.simulation = NULL, title="last Simulation")
-rac(simulationOut256[[i]], which.simulation = "all", title= "all Simulations")  
+rac(simulationOut256[[i]], which.result = NULL, title="last Simulation")
+rac(simulationOut256[[i]], which.result = "all", title= "all Simulations")  
   
   name <- paste("./",outfolder256, "/RAC256_", i, ".pdf", sep = "")
   dev.copy(pdf,name, width=9, height=6)

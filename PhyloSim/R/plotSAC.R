@@ -2,13 +2,13 @@
 #' @title Species Area Curve
 #' @description Plots the species area curve for a given community. 
 #' @param simu Simulation output of the class "Phylosim", usually consisting out of several lists. Needs at least the spatial distribution of the species stored in a matrix ($specMat)
-#' @param which.simulation Integer, determines which simulation should be used. Only useful if your Phylosim object contains more than one result. By default (NULL) the end result is plotted. If you choose "all" all results are shown in one plot (see 'Details).
+#' @param which.result Integer, determines which result should be used. This argument is only usefull if your 'runs' argument in \code{\link{createCompletePar}} contains more than one element. By default (NULL), the last result is used. If you choose "all" all results are shown in one plot (see 'Details).
 #' @param area a single value or a vector determining the size(s) of the subplots. If not provided, 10 logarithmic plotsizes will be used.
 #' @param rep The number of repetitions per size to calculate the mean 
 #' @param plot Logical determining whether to plot the SAC or not
 #' @param title String, determining the title of the plot
-#' @details Displays the accumulated species richness as a function of plot size or the amount of equally sized plots. It serves as an indicator for the clustering of a species community. A positively bent curve usually indicates clustering since an increase in plot size or number leads to an increase in species richness while a negatively bent curve indicates a more neutral distribution of species within the community. \cr\cr If which.simulation = "all" all intermediate results are shown in one plot. The colors of the lines are plotted as a gradient from blue (first results) to red (end result).
-#' @return A list containing the mean species richness for each size and the respective standard deviation. If which.simulation = "all" only the plot will be returned.
+#' @details Displays the accumulated species richness as a function of plot size or the amount of equally sized plots. It serves as an indicator for the clustering of a species community. A positively bent curve usually indicates clustering since an increase in plot size or number leads to an increase in species richness while a negatively bent curve indicates a more neutral distribution of species within the community. \cr\cr If which.result = "all" all intermediate results are shown in one plot. The colors of the lines are plotted as a gradient from blue (first results) to red (end result).
+#' @return A list containing the mean species richness for each size and the respective standard deviation. If which.result = "all" only the plot will be returned.
 #' @examples 
 #' 
 #' #Load data
@@ -52,18 +52,18 @@
 #' @export
 #' 
 ## Modification of the SAC function to plot all recorded time steps
-sac <- function(simu, which.simulation = NULL, area = NULL, rep=50, plot=T, title="SAC"){
+sac <- function(simu, which.result = NULL, area = NULL, rep=50, plot=T, title="SAC"){
   
   meanSpeciesRichnessUpperCI <- numeric()
   meanSpeciesRichnessLowerCI <- numeric()
   
-  if(is.null(which.simulation)) which.simulation = length(simu$Output) 
+  if(is.null(which.result)) which.result = length(simu$Output) 
   
-  if(is.null(which.simulation) == FALSE){
-    if(which.simulation == "all"){
+  if(is.null(which.result) == FALSE){
+    if(which.result == "all"){
       simulations <- c(1:length(simu$Output))
     }else{
-      simulations<-which.simulation
+      simulations<-which.result
     } 
   }
   
