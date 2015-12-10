@@ -13,6 +13,7 @@
 #include <stdexcept>
 #include <utility>
 #include <vector>
+#include <numeric>
 
 #include "Grid.h"
 #include "Individual.h"
@@ -723,31 +724,58 @@ void Landscape::densityUpdate(int x, int y){
 
 void Landscape::speciation (unsigned int generation)
 {
-   // std::cout << generation << '\n';
+  // std::cout << generation << '\n';
+  
+  bool fission = true;
+  int fissionType = 1;
+  
+  
+  int specRate = m_RandomGenerator.randomPoisson(m_Speciation_Rate);
+  
+  for (int i = 0; i < specRate; i++)
+  {
+    
+    int x = m_RandomGenerator.randomInt(0,m_Xdimensions-1); // rand() % xdimensions;
+    int y = m_RandomGenerator.randomInt(0,m_Ydimensions-1); // rand() % ydimensions;
+    
+    m_Global_Species_Counter+=1;
+    
+    if(fission == true){
+      std::vector<int> xvec;
+      std::vector<int> yvec;
+      
+      
+      for(int k = 0; k < m_Xdimensions; k++){
+        for(int j = 0; j < m_Ydimensions; j++){
+          if(m_Individuals[k][j].m_Species == m_Individuals[x][y].m_Species){
+            xvec.push_back(k);
+            yvec.push_back(j);
 
-   int specRate = m_RandomGenerator.randomPoisson(m_Speciation_Rate);
-
-   for (int i = 0; i < specRate; i++)
-   {
-      int x = m_RandomGenerator.randomInt(0,m_Xdimensions-1); // rand() % xdimensions;
-      int y = m_RandomGenerator.randomInt(0,m_Ydimensions-1); // rand() % ydimensions;
-
-      m_Global_Species_Counter+=1;
-
+          }
+        }
+      }
+      
+      std::cout <<"x: "<< xvec.size() << " y: " << yvec.size() << std::endl;
+      
+      
+      // These are the settings for the first individual that has been randomly chosen at the beginning of the speciation
+      
+      
+      
       m_Individuals[x][y].m_Species->m_Children.push_back(m_Global_Species_Counter);
-
+      
       m_Individuals[x][y].reportDeath(generation);
-
+      
       m_Individuals[x][y].m_Species = new Species(m_Global_Species_Counter, m_Individuals[x][y].m_Species->get_species_ID(), generation, std::make_pair(x, y), m_SimulationEnd);
       
       m_Individuals[x][y].evolveDuringSpeciation();
-
+      
       //			individuals[x][y].Species->date_of_extinction = runs;
       m_Phylogeny.updatePhylogeny(m_Individuals[x][y].m_Species);
-
-
+      
       // update relatedness values for density dependence / competition
       if(m_DD) densityUpdate(x,y);
+      
       
       
       
@@ -757,42 +785,63 @@ void Landscape::speciation (unsigned int generation)
       // Now look where the individuals of these species are
       // and save locations in xvec and yvec
       
-      bool fission = false;
       
+      
+      
+      // Now every second Individual on the List will become the new Species
+      // TDOO: will they all evolve the same way or randomly? Here we use randomly so far...
       if(fission == true){
-        std::vector<int> xvec(0);
-        std::vector<int> yvec(0);
-        
-        
-        for(int k = 0; k < m_Xdimensions; k++){
-          for(int j =0; j < m_Ydimensions; j++ ){
-            if(m_Individuals[k][j].m_Species == m_Individuals[x][y].m_Species){
-              xvec.push_back(k);
-              yvec.push_back(j);
-            }
-          }
-        }
-        
-        // Now every second Individual on the List will become the new Species
-        // TDOO: will they all evolve the same way or randomly? Here we use randomly so far...
-        for(int k =0; k< xvec.size(); k+=2){
+      if(fissionType == 1){
+        for(unsigned int k =0; k< xvec.size(); k+=2){
           m_Individuals[xvec[k]][yvec[k]].m_Species = m_Individuals[x][y].m_Species;
           m_Individuals[xvec[k]][yvec[k]].reportDeath(generation);
           m_Individuals[xvec[k]][yvec[k]].evolveDuringSpeciation();
           
+
+
           // Do you need the following?
           // m_Phylogeny.updatePhylogeny(m_Individuals[xvec[k]][yvec[k]].m_Species);
-          if(m_DD) densityUpdate(xvec[k],yvec[k]);
+         // if(m_DD) densityUpdate(xvec[k],yvec[k]);
         }
-        
-        // Clear the vector
-        xvec.clear();
-        yvec.clear();
-        
-      };
-   };
-};
+        std::cout << "F1" << std::endl;
+      }
+      std::cout << "End F1" << std::endl;
+      
 
+      if(fissionType ==2){
+        
+        // In this case the population is split in half in the
+        // mean of the x-coordinates.
+        // All Individuals with a larger x-coordinate become part of the new species.
+        // TODO: Random splitting, directions etc...
+        
+        int sum = std::accumulate(xvec.begin(), xvec.end(), 0);
+        int mean = sum / xvec.size();
+        
+        std::cout << "F2" << std::endl;
 
+        for(unsigned int k = 0; k< xvec.size(); k++){
+          if(xvec[k]> mean){
+            m_Individuals[xvec[k]][yvec[k]].m_Species = m_Individuals[x][y].m_Species;
+            m_Individuals[xvec[k]][yvec[k]].reportDeath(generation);
+            m_Individuals[xvec[k]][yvec[k]].evolveDuringSpeciation();
+            
+            // Do you need the following?
+            // m_Phylogeny.updatePhylogeny(m_Individuals[xvec[k]][yvec[k]].m_Species);
+            // if(m_DD) densityUpdate(xvec[k],yvec[k]);
+          }
+        }
+      }
+
+     std::cout << "Clear" << std::endl;
+      // Clear the vector
+      xvec.clear();
+      yvec.clear();
+    }
+  }
+  }
+
+std::cout << "End Speciation" << std::endl;
+}
 
 

@@ -32,7 +32,7 @@ int main(){
 	int densityCut = 2;
 	int dispersalCut = 2;
 	int mortalityStrength = 10;
-	std:: string saveLoc = "C:/Users/Paul/Documents/GitHub/phylogeography/results/saveLocation";
+	std:: string saveLoc = "C:/Users/Stefan/Documents/";
 	RandomGen ran;
 	ran.seedrand(1000);
   
