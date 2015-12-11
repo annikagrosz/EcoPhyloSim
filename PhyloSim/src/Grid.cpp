@@ -72,7 +72,7 @@
 Landscape::Landscape(int xsize, int ysize, int type, bool neutral, bool dd, bool env, 
 bool mort, bool repro, unsigned int runs, double specRate, int dispersalCutoff, 
 int DensityCutoff, unsigned int mortalityStrength, 
-double envStrength, double compStrength)
+double envStrength, double compStrength, bool fission)
 {
 
    m_Cutoff= dispersalCutoff;
@@ -92,6 +92,7 @@ double envStrength, double compStrength)
    m_mortalityStrength = mortalityStrength;
    m_envStrength = envStrength;
    m_compStrength = compStrength;
+   m_fission = fission;
 
    //	func.seedrand(1500);
 
@@ -217,8 +218,8 @@ void Landscape::moistChange(int sign, double magnitude)
 }
 
 
-GlobalEnvironment::GlobalEnvironment(int xsize, int ysize, int type, bool neutral, bool dd, bool env, bool mort, bool repro, unsigned int runs, double specRate, int dispersalCutoff, int densityCutoff, unsigned int mortalityStrength,double envStrength, double compStrength) :
-	                              Landscape(xsize,  ysize,  type,  neutral,  dd,  env, mort, repro,  runs, specRate, dispersalCutoff, densityCutoff, mortalityStrength, envStrength, compStrength)
+GlobalEnvironment::GlobalEnvironment(int xsize, int ysize, int type, bool neutral, bool dd, bool env, bool mort, bool repro, unsigned int runs, double specRate, int dispersalCutoff, int densityCutoff, unsigned int mortalityStrength,double envStrength, double compStrength, bool fission) :
+	                              Landscape(xsize,  ysize,  type,  neutral,  dd,  env, mort, repro,  runs, specRate, dispersalCutoff, densityCutoff, mortalityStrength, envStrength, compStrength, fission)
 {
 
 }
@@ -559,8 +560,8 @@ void GlobalEnvironment::reproduce(unsigned int generation)
 }
 
 
-LocalEnvironment::LocalEnvironment(int xsize, int ysize, int type, bool neutral, bool dd, bool env,bool mort, bool repro, unsigned int runs, double specRate, int dispersalCutoff, int densityCutoff, unsigned int mortalityStrength,double envStrength, double compStrength) :
-	                              Landscape(xsize,  ysize,  type,  neutral,  dd,  env, mort, repro,  runs, specRate, dispersalCutoff, densityCutoff, mortalityStrength, envStrength, compStrength)
+LocalEnvironment::LocalEnvironment(int xsize, int ysize, int type, bool neutral, bool dd, bool env,bool mort, bool repro, unsigned int runs, double specRate, int dispersalCutoff, int densityCutoff, unsigned int mortalityStrength,double envStrength, double compStrength, bool fission) :
+	                              Landscape(xsize,  ysize,  type,  neutral,  dd,  env, mort, repro,  runs, specRate, dispersalCutoff, densityCutoff, mortalityStrength, envStrength, compStrength, fission)
 {
 
 }
@@ -726,7 +727,9 @@ void Landscape::speciation (unsigned int generation)
 {
   // std::cout << generation << '\n';
   
-  bool fission = true;
+	std::cout << m_fission << std::endl;
+
+  //bool fission = true;
   int fissionType = 2;
   
   
@@ -741,7 +744,7 @@ void Landscape::speciation (unsigned int generation)
     m_Global_Species_Counter+=1;
     
 
-    if(fission == false){
+    if(m_fission == false){
     m_Individuals[x][y].m_Species->m_Children.push_back(m_Global_Species_Counter);
 
          m_Individuals[x][y].reportDeath(generation);
@@ -760,7 +763,7 @@ void Landscape::speciation (unsigned int generation)
 
 
 
-    if(fission == true){
+    if(m_fission == true){
       std::vector<int> xvec;
       std::vector<int> yvec;
       
@@ -810,7 +813,7 @@ void Landscape::speciation (unsigned int generation)
       
       // Now every second Individual on the List will become the new Species
       // TDOO: will they all evolve the same way or randomly? Here we use randomly so far...
-      if(fission == true){
+      if(m_fission == true){
       if(fissionType == 1){
 
         for(unsigned int k =0; k< xvec.size(); k+=2){
@@ -821,7 +824,7 @@ void Landscape::speciation (unsigned int generation)
 
 
           // Do you need the following?
-         // if(xvec[k] != x & yvec[k] !=y){
+         // if(xvec[k] != x && yvec[k] !=y){
          //  m_Phylogeny.updatePhylogeny(m_Individuals[xvec[k]][yvec[k]].m_Species);
          // if(m_DD) densityUpdate(xvec[k],yvec[k]);
           }
@@ -850,7 +853,7 @@ void Landscape::speciation (unsigned int generation)
             m_Individuals[xvec[k]][yvec[k]].evolveDuringSpeciation();
             
             // Do you need the following?
-           // if(xvec[k] != x & yvec[k] !=y){
+           // if(xvec[k] != x && yvec[k] !=y){
            //  m_Phylogeny.updatePhylogeny(m_Individuals[xvec[k]][yvec[k]].m_Species);
           //   if(m_DD) densityUpdate(xvec[k],yvec[k]);
             }

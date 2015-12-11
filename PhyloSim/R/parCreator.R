@@ -25,7 +25,7 @@
 #' 
 #' @export
 
-createCompletePar <- function(x = 50, y = 50, dispersal = "global", runs = 100, specRate = 1.0, density = 0, environment = 0, fitnessActsOn = "mortality" , fitnessBaseMortalityRatio = 10, densityCut = 1, seed=NULL,  type = "base", scenario = NULL){
+createCompletePar <- function(x = 50, y = 50, dispersal = "global", runs = 100, specRate = 1.0, density = 0, environment = 0, fitnessActsOn = "mortality" , fitnessBaseMortalityRatio = 10, densityCut = 1, seed=NULL,  type = "base", fission = TRUE, scenario = NULL){
     
   
   if (length(runs)>1){
@@ -37,7 +37,7 @@ createCompletePar <- function(x = 50, y = 50, dispersal = "global", runs = 100, 
   par = list(x=x,y=y,dispersal = dispersal, runs = runs, specRate = specRate, 
              density = density, environment = environment, fitnessActsOn=fitnessActsOn,
              fitnessBaseMortalityRatio=fitnessBaseMortalityRatio, densityCut = densityCut, 
-             seed = seed, type = type, scenario = scenario)
+             seed = seed, type = type, scenario = scenario, fission = fission)
   
 
   return(par)

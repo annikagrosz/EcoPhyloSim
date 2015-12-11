@@ -25,7 +25,7 @@ class PhylSimModel {
 
    PhylSimModel(int x, int y, int dispersal, int simulationEnd, double specRate, bool dens, 
                bool env, bool neutral, bool mort, int mortStrength, bool repro, int dispersalCutoff, 
-               int densityCutoff,std::string saveLocation, double envStrength, double compStrength);
+               int densityCutoff,std::string saveLocation, double envStrength, double compStrength, bool fission);
    ~PhylSimModel();
    void get_data();
    void getclimate();

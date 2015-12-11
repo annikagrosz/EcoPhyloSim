@@ -83,7 +83,7 @@ runSimulation <- function(par)
     
     ptm <- proc.time()
     
-    out <- callModel( par$x,  par$y,  dispersal,  round(par$runs),  par$specRate, par$density, par$environment, neutral, mortalityFitness, par$fitnessBaseMortalityRatio, reproductiveFitness, dispersalCut, par$densityCut, par$seed, par$envStrength, par$compStrength)  
+    out <- callModel( par$x,  par$y,  dispersal,  round(par$runs),  par$specRate, par$density, par$environment, neutral, mortalityFitness, par$fitnessBaseMortalityRatio, reproductiveFitness, dispersalCut, par$densityCut, par$seed, par$envStrength, par$compStrength, par$fission)  
     
     runtime <- as.numeric((proc.time() - ptm)[3])
     
