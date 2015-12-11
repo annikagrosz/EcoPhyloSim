@@ -727,7 +727,7 @@ void Landscape::speciation (unsigned int generation)
 {
   // std::cout << generation << '\n';
   
-	std::cout << m_fission << std::endl;
+	std::cout << "Fission: " << m_fission << std::endl;
 
   //bool fission = true;
   int fissionType = 2;
@@ -743,9 +743,12 @@ void Landscape::speciation (unsigned int generation)
     
     m_Global_Species_Counter+=1;
     
+    std::cout << "Here Fission= " << m_fission << std::endl;
 
     if(m_fission == false){
-    m_Individuals[x][y].m_Species->m_Children.push_back(m_Global_Species_Counter);
+
+        std::cout << "Fission's not runing" << std::endl;
+         m_Individuals[x][y].m_Species->m_Children.push_back(m_Global_Species_Counter);
 
          m_Individuals[x][y].reportDeath(generation);
 
@@ -767,6 +770,7 @@ void Landscape::speciation (unsigned int generation)
       std::vector<int> xvec;
       std::vector<int> yvec;
       
+      std::cout << "Fission's runing" << std::endl;
       
       for(int k = 0; k < m_Xdimensions; k++){
         for(int j = 0; j < m_Ydimensions; j++){
@@ -809,11 +813,6 @@ void Landscape::speciation (unsigned int generation)
       // and save locations in xvec and yvec
       
       
-      
-      
-      // Now every second Individual on the List will become the new Species
-      // TDOO: will they all evolve the same way or randomly? Here we use randomly so far...
-      if(m_fission == true){
       if(fissionType == 1){
 
         for(unsigned int k =0; k< xvec.size(); k+=2){
@@ -830,7 +829,7 @@ void Landscape::speciation (unsigned int generation)
           }
         }
         std::cout << "F1" << std::endl;
-      }
+
       std::cout << "End F1" << std::endl;
       
 
