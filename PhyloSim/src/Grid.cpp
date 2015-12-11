@@ -727,7 +727,7 @@ void Landscape::speciation (unsigned int generation)
   // std::cout << generation << '\n';
   
   bool fission = true;
-  int fissionType = 1;
+  int fissionType = 2;
   
   
   int specRate = m_RandomGenerator.randomPoisson(m_Speciation_Rate);
@@ -740,6 +740,26 @@ void Landscape::speciation (unsigned int generation)
     
     m_Global_Species_Counter+=1;
     
+
+    if(fission == false){
+    m_Individuals[x][y].m_Species->m_Children.push_back(m_Global_Species_Counter);
+
+         m_Individuals[x][y].reportDeath(generation);
+
+         m_Individuals[x][y].m_Species = new Species(m_Global_Species_Counter, m_Individuals[x][y].m_Species->get_species_ID(), generation, std::make_pair(x, y), m_SimulationEnd);
+
+         m_Individuals[x][y].evolveDuringSpeciation();
+
+         //			individuals[x][y].Species->date_of_extinction = runs;
+         m_Phylogeny.updatePhylogeny(m_Individuals[x][y].m_Species);
+
+         // update relatedness values for density dependence / competition
+         if(m_DD) densityUpdate(x,y);
+
+    }
+
+
+
     if(fission == true){
       std::vector<int> xvec;
       std::vector<int> yvec;
@@ -756,7 +776,7 @@ void Landscape::speciation (unsigned int generation)
       }
       
       std::cout <<"x: "<< xvec.size() << " y: " << yvec.size() << std::endl;
-      
+
       
       // These are the settings for the first individual that has been randomly chosen at the beginning of the speciation
       
@@ -792,16 +812,19 @@ void Landscape::speciation (unsigned int generation)
       // TDOO: will they all evolve the same way or randomly? Here we use randomly so far...
       if(fission == true){
       if(fissionType == 1){
+
         for(unsigned int k =0; k< xvec.size(); k+=2){
-          m_Individuals[xvec[k]][yvec[k]].m_Species = m_Individuals[x][y].m_Species;
           m_Individuals[xvec[k]][yvec[k]].reportDeath(generation);
+          m_Individuals[xvec[k]][yvec[k]].m_Species = m_Individuals[x][y].m_Species;
           m_Individuals[xvec[k]][yvec[k]].evolveDuringSpeciation();
           
 
 
           // Do you need the following?
-          // m_Phylogeny.updatePhylogeny(m_Individuals[xvec[k]][yvec[k]].m_Species);
+         // if(xvec[k] != x & yvec[k] !=y){
+         //  m_Phylogeny.updatePhylogeny(m_Individuals[xvec[k]][yvec[k]].m_Species);
          // if(m_DD) densityUpdate(xvec[k],yvec[k]);
+          }
         }
         std::cout << "F1" << std::endl;
       }
@@ -822,16 +845,18 @@ void Landscape::speciation (unsigned int generation)
 
         for(unsigned int k = 0; k< xvec.size(); k++){
           if(xvec[k]> mean){
+        	m_Individuals[xvec[k]][yvec[k]].reportDeath(generation);
             m_Individuals[xvec[k]][yvec[k]].m_Species = m_Individuals[x][y].m_Species;
-            m_Individuals[xvec[k]][yvec[k]].reportDeath(generation);
             m_Individuals[xvec[k]][yvec[k]].evolveDuringSpeciation();
             
             // Do you need the following?
-            // m_Phylogeny.updatePhylogeny(m_Individuals[xvec[k]][yvec[k]].m_Species);
-            // if(m_DD) densityUpdate(xvec[k],yvec[k]);
+           // if(xvec[k] != x & yvec[k] !=y){
+           //  m_Phylogeny.updatePhylogeny(m_Individuals[xvec[k]][yvec[k]].m_Species);
+          //   if(m_DD) densityUpdate(xvec[k],yvec[k]);
+            }
           }
         }
-      }
+
 
      std::cout << "Clear" << std::endl;
       // Clear the vector
@@ -839,7 +864,7 @@ void Landscape::speciation (unsigned int generation)
       yvec.clear();
     }
   }
-  }
+
 
 std::cout << "End Speciation" << std::endl;
 }

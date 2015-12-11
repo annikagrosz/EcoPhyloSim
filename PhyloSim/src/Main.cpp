@@ -18,7 +18,7 @@
 
 
 int main(){
-  unsigned int runs = 10000; // number of Generations
+  unsigned int runs = 200; // number of Generations
 	bool neutral = false; // neutral model or not
 	bool dd = true; // Density dependent or independent model
 	bool env = false; // environmentally dependent or independent model
@@ -53,11 +53,14 @@ int main(){
 	PhylSimModel Model(xDim,yDim,dispersal, runs, specrate, dd, env, neutral, mort, 
   mortalityStrength, repro, dispersalCut, densityCut, saveLoc, envStrength, compStrength);   
   Model.update(runs);
+
+  std::cout << "Made it through the runs" << std::endl;
 //	Model.get_data();
 //	Model.getclimate();
 //	Model.gettraits();
 	if(dispersal ==1)
 	{
+		std::cout << "Made it to Phylogeny global" << std::endl;
 	Model.m_Global->m_Phylogeny.prunePhylogeny(runs);
 	Model.m_Global->m_Phylogeny.writePhylogeny(1,  Model.m_Global->m_Phylogeny.m_PrunedPhylo,'P');
 	Model.m_Global->m_Phylogeny.writePhylogeny(1,  Model.m_Global->m_Phylogeny.m_FullPhylogeny,'F');
@@ -65,10 +68,12 @@ int main(){
 	}
 	else
 	{
-	Model.m_Local->m_Phylogeny.prunePhylogeny(runs);
-	Model.m_Local->m_Phylogeny.writePhylogeny(1, Model.m_Local->m_Phylogeny.m_PrunedPhylo,'P');
-	Model.m_Local->m_Phylogeny.writePhylogeny(1, Model.m_Local->m_Phylogeny.m_FullPhylogeny,'F');
-	Model.m_Local->m_Phylogeny.writeSpeciesData();
+		std::cout << "Made it to Phylogeny local" << std::endl;
+
+	 Model.m_Local->m_Phylogeny.prunePhylogeny(runs);
+	 Model.m_Local->m_Phylogeny.writePhylogeny(1, Model.m_Local->m_Phylogeny.m_PrunedPhylo,'P');
+	 Model.m_Local->m_Phylogeny.writePhylogeny(1, Model.m_Local->m_Phylogeny.m_FullPhylogeny,'F');
+	 Model.m_Local->m_Phylogeny.writeSpeciesData();
 	}
 
 	return 0;

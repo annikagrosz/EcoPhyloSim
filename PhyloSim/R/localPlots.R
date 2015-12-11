@@ -12,7 +12,7 @@ localPlots <- function(simu,which.simulation=NULL,size, n, community=F){
   if(n ==1){n <- 2 
             single = T}else{single=F}
   
-  if("Phylosim" %in% class(simu)==T){
+  if("PhyloSim" %in% class(simu)==T){
     if (is.null(which.simulation)) which.simulation = length(simu$Output) 
     simu <- simu$Output[[which.simulation]]}
   
