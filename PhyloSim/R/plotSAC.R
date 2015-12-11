@@ -91,7 +91,7 @@ sac <- function(simu, which.result = NULL, area = NULL, rep=50, plot=T, title="S
     for(i in 1:length(area))
     { 
       # Repetitions for each plot size
-      subPlots <- localPlots(size=area[i], n = rep, simu=simu)$subPlots
+      subPlots <- localPlots(size=area[i], n = rep, simu=simu, which.result = which.result)$subPlots
       speciesRichness <- sapply(subPlots, SR)
       meanSpeciesRichness[i] <- mean(speciesRichness)
       
