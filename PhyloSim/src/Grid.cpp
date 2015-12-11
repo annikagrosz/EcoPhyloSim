@@ -72,7 +72,7 @@
 Landscape::Landscape(int xsize, int ysize, int type, bool neutral, bool dd, bool env, 
 bool mort, bool repro, unsigned int runs, double specRate, int dispersalCutoff, 
 int DensityCutoff, unsigned int mortalityStrength, 
-double envStrength, double compStrength, bool fission)
+double envStrength, double compStrength, bool fission, int fissionType)
 {
 
    m_Cutoff= dispersalCutoff;
@@ -93,6 +93,7 @@ double envStrength, double compStrength, bool fission)
    m_envStrength = envStrength;
    m_compStrength = compStrength;
    m_fission = fission;
+   m_fissionType = fissionType;
 
    //	func.seedrand(1500);
 
@@ -218,8 +219,8 @@ void Landscape::moistChange(int sign, double magnitude)
 }
 
 
-GlobalEnvironment::GlobalEnvironment(int xsize, int ysize, int type, bool neutral, bool dd, bool env, bool mort, bool repro, unsigned int runs, double specRate, int dispersalCutoff, int densityCutoff, unsigned int mortalityStrength,double envStrength, double compStrength, bool fission) :
-	                              Landscape(xsize,  ysize,  type,  neutral,  dd,  env, mort, repro,  runs, specRate, dispersalCutoff, densityCutoff, mortalityStrength, envStrength, compStrength, fission)
+GlobalEnvironment::GlobalEnvironment(int xsize, int ysize, int type, bool neutral, bool dd, bool env, bool mort, bool repro, unsigned int runs, double specRate, int dispersalCutoff, int densityCutoff, unsigned int mortalityStrength,double envStrength, double compStrength, bool fission, int fissionType) :
+	                              Landscape(xsize,  ysize,  type,  neutral,  dd,  env, mort, repro,  runs, specRate, dispersalCutoff, densityCutoff, mortalityStrength, envStrength, compStrength, fission, fissionType)
 {
 
 }
@@ -560,8 +561,8 @@ void GlobalEnvironment::reproduce(unsigned int generation)
 }
 
 
-LocalEnvironment::LocalEnvironment(int xsize, int ysize, int type, bool neutral, bool dd, bool env,bool mort, bool repro, unsigned int runs, double specRate, int dispersalCutoff, int densityCutoff, unsigned int mortalityStrength,double envStrength, double compStrength, bool fission) :
-	                              Landscape(xsize,  ysize,  type,  neutral,  dd,  env, mort, repro,  runs, specRate, dispersalCutoff, densityCutoff, mortalityStrength, envStrength, compStrength, fission)
+LocalEnvironment::LocalEnvironment(int xsize, int ysize, int type, bool neutral, bool dd, bool env,bool mort, bool repro, unsigned int runs, double specRate, int dispersalCutoff, int densityCutoff, unsigned int mortalityStrength,double envStrength, double compStrength, bool fission, int fissionType) :
+	                              Landscape(xsize,  ysize,  type,  neutral,  dd,  env, mort, repro,  runs, specRate, dispersalCutoff, densityCutoff, mortalityStrength, envStrength, compStrength, fission, fissionType)
 {
 
 }
@@ -730,14 +731,15 @@ void Landscape::speciation (unsigned int generation)
 	std::cout << "Fission: " << m_fission << std::endl;
 
   //bool fission = true;
-  int fissionType = 2;
+  //int fissionType = 2;
   
   
   int specRate = m_RandomGenerator.randomPoisson(m_Speciation_Rate);
   
   for (int i = 0; i < specRate; i++)
   {
-    
+
+	std::cout << specRate << std::endl;
     int x = m_RandomGenerator.randomInt(0,m_Xdimensions-1); // rand() % xdimensions;
     int y = m_RandomGenerator.randomInt(0,m_Ydimensions-1); // rand() % ydimensions;
     
@@ -813,7 +815,9 @@ void Landscape::speciation (unsigned int generation)
       // and save locations in xvec and yvec
       
       
-      if(fissionType == 1){
+      if(m_fissionType == 1){
+
+    	  std::cout << "Size " << xvec.size() << std::endl;
 
         for(unsigned int k =0; k< xvec.size(); k+=2){
           m_Individuals[xvec[k]][yvec[k]].reportDeath(generation);
@@ -828,12 +832,9 @@ void Landscape::speciation (unsigned int generation)
          // if(m_DD) densityUpdate(xvec[k],yvec[k]);
           }
         }
-        std::cout << "F1" << std::endl;
 
-      std::cout << "End F1" << std::endl;
-      
 
-      if(fissionType ==2){
+      if(m_fissionType == 2){
         
         // In this case the population is split in half in the
         // mean of the x-coordinates.
@@ -843,10 +844,13 @@ void Landscape::speciation (unsigned int generation)
         int sum = std::accumulate(xvec.begin(), xvec.end(), 0);
         int mean = sum / xvec.size();
         
-        std::cout << "F2" << std::endl;
+        std::cout << "F2" << " Mean: " << mean << std::endl;
 
-        for(unsigned int k = 0; k< xvec.size(); k++){
-          if(xvec[k]> mean){
+        for(unsigned int k = 0; k < xvec.size(); k++){
+          if(xvec[k] < mean){
+
+        	std::cout << "Mean= " <<  mean << std::endl;
+        	std::cout << "X: " << xvec[k] << " Y: " << yvec[k] << std::endl;
         	m_Individuals[xvec[k]][yvec[k]].reportDeath(generation);
             m_Individuals[xvec[k]][yvec[k]].m_Species = m_Individuals[x][y].m_Species;
             m_Individuals[xvec[k]][yvec[k]].evolveDuringSpeciation();
@@ -855,7 +859,7 @@ void Landscape::speciation (unsigned int generation)
            // if(xvec[k] != x && yvec[k] !=y){
            //  m_Phylogeny.updatePhylogeny(m_Individuals[xvec[k]][yvec[k]].m_Species);
           //   if(m_DD) densityUpdate(xvec[k],yvec[k]);
-            }
+          }
           }
         }
 

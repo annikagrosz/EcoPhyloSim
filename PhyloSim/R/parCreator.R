@@ -10,6 +10,8 @@
 #' @param fitnessActsOn Character, determining how the fitness influences the individuals. Possible inputs are "mortality" (default), "reproduction" or "both"
 #' @param fitnessBaseMortalityRatio Integer, determines the fitness based mortality ratio
 #' @param densityCut Integer, defines the effective range of the competition (ignored if density = FALSE)
+#' @param fission, Logical, determining whether the fission speciation mechanism should be implemented.
+#' @param fissionType Integer, determining how fission should be implemeted. Possible choices are '1' (random) and '2' (spatial).
 #' @param seed numerical, sets the random seed
 #' @param type Character, determining which model should be used. "base" is running the default model. Other possibilities are "Leipzig" and "Rneutral" which will run a neutral model purely in R.
 #' @param scenario String, further information you want to add to the parameter set in order to refer to a model run more conveniently. 
@@ -25,7 +27,7 @@
 #' 
 #' @export
 
-createCompletePar <- function(x = 50, y = 50, dispersal = "global", runs = 100, specRate = 1.0, density = 0, environment = 0, fitnessActsOn = "mortality" , fitnessBaseMortalityRatio = 10, densityCut = 1, seed=NULL,  type = "base", fission = TRUE, scenario = NULL){
+createCompletePar <- function(x = 50, y = 50, dispersal = "global", runs = 100, specRate = 1.0, density = 0, environment = 0, fitnessActsOn = "mortality" , fitnessBaseMortalityRatio = 10, densityCut = 1, seed=NULL,  type = "base", fission = TRUE, fissionType = 1, scenario = NULL){
     
   
   if (length(runs)>1){
@@ -37,7 +39,7 @@ createCompletePar <- function(x = 50, y = 50, dispersal = "global", runs = 100, 
   par = list(x=x,y=y,dispersal = dispersal, runs = runs, specRate = specRate, 
              density = density, environment = environment, fitnessActsOn=fitnessActsOn,
              fitnessBaseMortalityRatio=fitnessBaseMortalityRatio, densityCut = densityCut, 
-             seed = seed, type = type, scenario = scenario, fission = fission)
+             seed = seed, type = type, scenario = scenario, fission = fission, fissionType = fissionType)
   
 
   return(par)
