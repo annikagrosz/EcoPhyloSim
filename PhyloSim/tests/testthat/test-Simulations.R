@@ -38,9 +38,9 @@ testthat("Model outputs are  as expected",{
 #   save(simulations, file="PhyloSimTestData.RData")
 
   ## Now the model is tested
-  sac1<-sac2<-sac3<-sac4<-sac5<-sac6<-matrix(0,10,3)
+  sac1<-sac2<-sac3<-sac4<-sac5<-sac6<-matrix(0,10,10)
   
-  for(i in 1:3){
+  for(i in 1:10){
     #Neutral Models
     par1<-createCompletePar(x=100,y=100, dispersal="global", runs=1000, seed=i)
     par2<-createCompletePar(x=100,y=100, dispersal=1, runs=1000, seed=i)
