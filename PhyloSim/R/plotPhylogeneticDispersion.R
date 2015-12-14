@@ -8,6 +8,7 @@
 #' @param ymax Float, determines the plot limit (max) of the y axis.
 #' @param xmin Float, determines the plot limit (min) of the x axis.
 #' @param ymin Float, determines the plot limit (min) of the y axis.
+#' @param means Integer, determines the number of results which are used to average the results.
 #' @details In every subplot the x-axis represents the size of the subplots used in the null models. Hence, it is recommended to use a vector of plot sizes in your \code{\link{calculatePhylogeneticDispersion}} setup. \cr\cr The which.result argument here is used on the input list of p-values. Hence, which.result = 1 plots the first list slice of the input here. This is not necessarily the first time step of of your parameter settings in \code{\link{runSimulationBatch}}. \cr\cr For an further explanation please see the Examples section. 
 #' @examples 
 #' ## First the experimental design has to be defined.
@@ -56,33 +57,67 @@
 #' 
 #' @export
 #' 
-plotPhylogeneticDispersion <- function(pvalues, positions=NULL, title = "P-values", which.result = NULL, xmax = 5.5, ymax = 2.5, xmin = -0.2, ymin = 0.5){
+plotPhylogeneticDispersion <- function(pvalues, positions=NULL, title = "P-values", which.result = NULL, xmax = 5.5, ymax = 2.5, xmin = -0.2, ymin = 0.5, means=1){
   
-  .pardefault <- par(no.readonly = T) 
-  
-  if(is.null(which.result)){
-    pvalues<-pvalues[[length(pvalues)]]
-    } else{
-    pvalues <- pvalues[[which.result]]
-    } 
+  if(means > length(pvalues)){
+    stop ("Error. Argument 'means' too large for dataset.")
+  }
   
   if (is.null(positions)){
     stop("Error. No positions defined.")
   }  
+  
+  .pardefault <- par(no.readonly = T) 
+  
   xcol <- length(positions$x)
   ycol <- length(positions$y)
-  lengths = as.numeric(names(pvalues[[1]]))
+  lengths = as.numeric(names(pvalues[[1]][[1]]))
   nlengths = length(lengths)
   lRange <- max(lengths) - min(lengths)
   
-  z <- matrix(nrow = nlengths, ncol = length(pvalues), 
-              dimnames = list(names(pvalues[[1]]), names(pvalues)))
+  MeanMatZ<-array(NA, dim=c(nlengths,length(pvalues[[1]]), means))
+  MeanMatZLow<-array(NA, dim=c(nlengths,length(pvalues[[1]]), means))
+  MeanMatZUp<-array(NA, dim=c(nlengths,length(pvalues[[1]]), means))
+  
+   for(m in 1:means){
+     
+  if(m == 1){
+   if(is.null(which.result)){
+     pvaluesT<-pvalues[[length(pvalues)]]
+     } else{
+       pvaluesT <- pvalues[[which.result]]
+     }
+     }
+    
+  if(m != 1){
+    if(is.null(which.result)) {
+      pvaluesT<-pvalues[[length(pvalues)-(m-1)]]
+      } else{
+        pvaluesT <- pvalues[[which.result-(m-1)]]
+      }
+      }
+    
+  z <- matrix(nrow = nlengths, ncol = length(pvaluesT), 
+              dimnames = list(names(pvaluesT[[1]]), names(pvaluesT)))
   zCILOW <- z
   zCIUP <- z
-  for (i in 1:length(pvalues)){
-    z[,i] <- sapply(pvalues[[i]], median, na.rm = T)
-    zCILOW[,i] <- sapply(pvalues[[i]], function(x)quantile(x,0.25, na.rm = T))   
-    zCIUP[,i] <- sapply(pvalues[[i]], function(x)quantile(x,0.75, na.rm = T))
+  for (i in 1:length(pvaluesT)){
+    z[,i] <- sapply(pvaluesT[[i]], median, na.rm = T)
+    zCILOW[,i] <- sapply(pvaluesT[[i]], function(x)quantile(x,0.25, na.rm = T))   
+    zCIUP[,i] <- sapply(pvaluesT[[i]], function(x)quantile(x,0.75, na.rm = T))
+  }
+  
+  MeanMatZ[,,m]<-z
+  MeanMatZLow[,,m]<-zCILOW
+  MeanMatZUp[,,m]<-zCIUP
+   }
+  
+  for(i in 1:nlengths){
+    for(k in 1:length(pvaluesT)){
+      z[i,k]<-mean(MeanMatZ[i,k,])
+      zCILOW[i,k]<-mean(MeanMatZLow[i,k,])
+      zCIUP[i,k]<-mean(MeanMatZUp[i,k,])
+    }
   }
   
   ColPalet <- colorRampPalette(c("turquoise4", "white", "palevioletred"))
