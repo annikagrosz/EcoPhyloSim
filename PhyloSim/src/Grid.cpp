@@ -194,9 +194,14 @@ void Landscape::increaseAge()
       {
          this->m_Individuals[rows][cols].m_Age += 1;
 
+         if(this->m_Individuals[rows][cols].m_Age == 1 && m_redQueen != 0){
+        	 this->m_Individuals[rows][cols].m_envStrength =  this->m_Individuals[rows][cols].m_envStrength*2;
+			 this->m_Individuals[rows][cols].m_compStrength = this->m_Individuals[rows][cols].m_compStrength*2;
+         }
+         else{
          this->m_Individuals[rows][cols].m_envStrength = this->m_Individuals[rows][cols].m_envStrength*(std::pow(2.718,-m_redQueen));
 		 this->m_Individuals[rows][cols].m_compStrength = this->m_Individuals[rows][cols].m_envStrength*(std::pow(2.718,-m_redQueen));
-
+         }
 
       }
    }
