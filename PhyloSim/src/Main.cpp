@@ -40,6 +40,7 @@ int main(){
   double compStrength = 1.0;
   bool fission = true;
   int fissionType = 1;
+  double redQueen = 0.0;
 	// Just to test
 	//Parameters* pa = new Parameters();
 	//std::cout << "Value of numberOfRuns: " << pa->getParameterValue<int>(std::string("numberOfRuns")) << std::endl;
@@ -53,7 +54,7 @@ int main(){
 	//Running the model
   
 	PhylSimModel Model(xDim,yDim,dispersal, runs, specrate, dd, env, neutral, mort, 
-  mortalityStrength, repro, dispersalCut, densityCut, saveLoc, envStrength, compStrength, fission, fissionType);
+  mortalityStrength, repro, dispersalCut, densityCut, saveLoc, envStrength, compStrength, fission, fissionType, redQueen);
   Model.update(runs);
 
   std::cout << "Made it through the runs" << std::endl;

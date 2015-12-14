@@ -14,6 +14,7 @@
 #include <utility>
 #include <vector>
 #include <numeric>
+#include <math.h>
 
 #include "Grid.h"
 #include "Individual.h"
@@ -72,7 +73,7 @@
 Landscape::Landscape(int xsize, int ysize, int type, bool neutral, bool dd, bool env, 
 bool mort, bool repro, unsigned int runs, double specRate, int dispersalCutoff, 
 int DensityCutoff, unsigned int mortalityStrength, 
-double envStrength, double compStrength, bool fission, int fissionType)
+double envStrength, double compStrength, bool fission, int fissionType, double redQueen)
 {
 
    m_Cutoff= dispersalCutoff;
@@ -94,7 +95,7 @@ double envStrength, double compStrength, bool fission, int fissionType)
    m_compStrength = compStrength;
    m_fission = fission;
    m_fissionType = fissionType;
-
+   m_redQueen = redQueen;
    //	func.seedrand(1500);
 
    // Construct grid of individuals
@@ -192,6 +193,11 @@ void Landscape::increaseAge()
       for (int cols =0; cols < this->m_Ydimensions; cols++)
       {
          this->m_Individuals[rows][cols].m_Age += 1;
+
+         this->m_Individuals[rows][cols].m_envStrength = this->m_Individuals[rows][cols].m_envStrength*(std::pow(2.718,-m_redQueen));
+		 this->m_Individuals[rows][cols].m_compStrength = this->m_Individuals[rows][cols].m_envStrength*(std::pow(2.718,-m_redQueen));
+
+
       }
    }
 }
@@ -219,8 +225,8 @@ void Landscape::moistChange(int sign, double magnitude)
 }
 
 
-GlobalEnvironment::GlobalEnvironment(int xsize, int ysize, int type, bool neutral, bool dd, bool env, bool mort, bool repro, unsigned int runs, double specRate, int dispersalCutoff, int densityCutoff, unsigned int mortalityStrength,double envStrength, double compStrength, bool fission, int fissionType) :
-	                              Landscape(xsize,  ysize,  type,  neutral,  dd,  env, mort, repro,  runs, specRate, dispersalCutoff, densityCutoff, mortalityStrength, envStrength, compStrength, fission, fissionType)
+GlobalEnvironment::GlobalEnvironment(int xsize, int ysize, int type, bool neutral, bool dd, bool env, bool mort, bool repro, unsigned int runs, double specRate, int dispersalCutoff, int densityCutoff, unsigned int mortalityStrength,double envStrength, double compStrength, bool fission, int fissionType, double redQueen) :
+	                              Landscape(xsize,  ysize,  type,  neutral,  dd,  env, mort, repro,  runs, specRate, dispersalCutoff, densityCutoff, mortalityStrength, envStrength, compStrength, fission, fissionType, redQueen)
 {
 
 }
@@ -561,8 +567,8 @@ void GlobalEnvironment::reproduce(unsigned int generation)
 }
 
 
-LocalEnvironment::LocalEnvironment(int xsize, int ysize, int type, bool neutral, bool dd, bool env,bool mort, bool repro, unsigned int runs, double specRate, int dispersalCutoff, int densityCutoff, unsigned int mortalityStrength,double envStrength, double compStrength, bool fission, int fissionType) :
-	                              Landscape(xsize,  ysize,  type,  neutral,  dd,  env, mort, repro,  runs, specRate, dispersalCutoff, densityCutoff, mortalityStrength, envStrength, compStrength, fission, fissionType)
+LocalEnvironment::LocalEnvironment(int xsize, int ysize, int type, bool neutral, bool dd, bool env,bool mort, bool repro, unsigned int runs, double specRate, int dispersalCutoff, int densityCutoff, unsigned int mortalityStrength,double envStrength, double compStrength, bool fission, int fissionType, double redQueen) :
+	                              Landscape(xsize,  ysize,  type,  neutral,  dd,  env, mort, repro,  runs, specRate, dispersalCutoff, densityCutoff, mortalityStrength, envStrength, compStrength, fission, fissionType, redQueen)
 {
 
 }
@@ -823,13 +829,8 @@ void Landscape::speciation (unsigned int generation)
           m_Individuals[xvec[k]][yvec[k]].reportDeath(generation);
           m_Individuals[xvec[k]][yvec[k]].m_Species = m_Individuals[x][y].m_Species;
           m_Individuals[xvec[k]][yvec[k]].evolveDuringSpeciation();
-          
 
-
-          // Do you need the following?
-         // if(xvec[k] != x && yvec[k] !=y){
-         //  m_Phylogeny.updatePhylogeny(m_Individuals[xvec[k]][yvec[k]].m_Species);
-         // if(m_DD) densityUpdate(xvec[k],yvec[k]);
+          if(m_DD) densityUpdate(xvec[k],yvec[k]);
           }
         }
 
@@ -854,15 +855,12 @@ void Landscape::speciation (unsigned int generation)
         	m_Individuals[xvec[k]][yvec[k]].reportDeath(generation);
             m_Individuals[xvec[k]][yvec[k]].m_Species = m_Individuals[x][y].m_Species;
             m_Individuals[xvec[k]][yvec[k]].evolveDuringSpeciation();
-            
-            // Do you need the following?
-           // if(xvec[k] != x && yvec[k] !=y){
-           //  m_Phylogeny.updatePhylogeny(m_Individuals[xvec[k]][yvec[k]].m_Species);
-          //   if(m_DD) densityUpdate(xvec[k],yvec[k]);
-          }
+
+            if(m_DD) densityUpdate(xvec[k],yvec[k]);
+
           }
         }
-
+      }
 
      std::cout << "Clear" << std::endl;
       // Clear the vector

@@ -48,7 +48,7 @@ Individual::Individual()
 Individual::Individual(const Individual &ind)
 {
   
-  std::cout << "CHEKC IF THIS WORKS";
+  std::cout << "CHEKC IF THIS WORKS" << std::endl;
 
 	this ->m_Species = ind.m_Species;
 	this -> m_X_coordinate = ind.m_X_coordinate;
