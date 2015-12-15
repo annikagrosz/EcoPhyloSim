@@ -57,6 +57,7 @@ class Landscape {
     double m_compStrength;
     int m_fission;
     double m_redQueen;
+    double m_redQueenStrength;
 
 
 		// Change the temperature in the environment by the given magnitude.
@@ -68,7 +69,7 @@ class Landscape {
 	Landscape(int xsize, int ysize, int type, bool neutral,
 	      bool dd, bool env, bool mort, bool repro, unsigned int simulationEnd, double specRate,
 	      int dispersalCutoff, int densityCutoff, unsigned int mortalityStrength, double envStrength,
-		  double compStrength, int fission, double redQueen);
+		  double compStrength, int fission, double redQueen, double redQueenStrength);
 	virtual ~Landscape();
 
 	// TODO(Betim): Should it really be public?
@@ -97,7 +98,7 @@ class GlobalEnvironment : public Landscape
 		GlobalEnvironment();
 		GlobalEnvironment(int xsize, int ysize, int type, bool neutral, bool dd, bool env,bool mort, bool repro,
 		      unsigned int runs, double specRate, int dispersalCutoff, int densityCutoff, unsigned int mortalityStrength,
-			  double envStrength, double compStrength, int fission,  double redQueen);
+			  double envStrength, double compStrength, int fission,  double redQueen, double redQueenStrength);
 
 		virtual ~GlobalEnvironment();
 
@@ -110,7 +111,7 @@ class LocalEnvironment : public Landscape
 	LocalEnvironment();
 	LocalEnvironment(int xsize, int ysize, int type, bool neutral, bool dd, bool env,bool mort, bool repro,
 	      unsigned int runs, double specRate, int dispersalCutoff, int densityCutoff, unsigned int mortalityStrength,
-		  double envStrength, double compStrength, int fission,  double redQueen);
+		  double envStrength, double compStrength, int fission,  double redQueen, double redQueenStrength);
 	virtual ~LocalEnvironment();
 
 	void reproduce(unsigned int generation);

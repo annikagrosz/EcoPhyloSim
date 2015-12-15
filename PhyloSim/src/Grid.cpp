@@ -73,7 +73,7 @@
 Landscape::Landscape(int xsize, int ysize, int type, bool neutral, bool dd, bool env, 
 bool mort, bool repro, unsigned int runs, double specRate, int dispersalCutoff, 
 int DensityCutoff, unsigned int mortalityStrength, 
-double envStrength, double compStrength, int fission, double redQueen)
+double envStrength, double compStrength, int fission, double redQueen, double redQueenStrength)
 {
 
    m_Cutoff= dispersalCutoff;
@@ -95,6 +95,7 @@ double envStrength, double compStrength, int fission, double redQueen)
    m_compStrength = compStrength;
    m_fission = fission;
    m_redQueen = redQueen;
+   m_redQueenStrength = redQueenStrength;
 
    //	func.seedrand(1500);
 
@@ -108,7 +109,7 @@ double envStrength, double compStrength, int fission, double redQueen)
    // Initialization
    
    // Create new species 
-   Species * spec = new Species(1, 1, 0, std::make_pair<int,int>(0,0), m_SimulationEnd);
+   Species * spec = new Species(1,0, 1,1, 0, std::make_pair<int,int>(0,0), m_SimulationEnd);
 
    // Add individuas of this new species across the grid
    for(int cols = 0; cols < m_Xdimensions; cols++)
@@ -194,12 +195,12 @@ void Landscape::increaseAge()
       {
          this->m_Individuals[rows][cols].m_Age += 1;
 
-         if(rows ==1 && cols == 1) std::cout << "Age here is: " <<  this->m_Individuals[rows][cols].m_Age << std::endl;
-         if(rows ==1 && cols == 1) std::cout << "Species here is: " <<  this->m_Individuals[rows][cols].m_Species << std::endl;
+      //   if(rows ==1 && cols == 1) std::cout << "Age here is: " <<  this->m_Individuals[rows][cols].m_Age << std::endl;
+      //   if(rows ==1 && cols == 1) std::cout << "Species here is: " <<  this->m_Individuals[rows][cols].m_Species << std::endl;
 
          if(this->m_Individuals[rows][cols].m_Age == 1 && m_redQueen != 0){
-        	 this->m_Individuals[rows][cols].m_envStrength =  this->m_Individuals[rows][cols].m_envStrength*2;
-			 this->m_Individuals[rows][cols].m_compStrength = this->m_Individuals[rows][cols].m_compStrength*2;
+        	 this->m_Individuals[rows][cols].m_envStrength =  this->m_Individuals[rows][cols].m_envStrength* m_redQueenStrength;
+			 this->m_Individuals[rows][cols].m_compStrength = this->m_Individuals[rows][cols].m_compStrength* m_redQueenStrength;
          }
          else{
          this->m_Individuals[rows][cols].m_envStrength = this->m_Individuals[rows][cols].m_envStrength*(std::pow(2.718,-m_redQueen));
@@ -233,8 +234,8 @@ void Landscape::moistChange(int sign, double magnitude)
 }
 
 
-GlobalEnvironment::GlobalEnvironment(int xsize, int ysize, int type, bool neutral, bool dd, bool env, bool mort, bool repro, unsigned int runs, double specRate, int dispersalCutoff, int densityCutoff, unsigned int mortalityStrength,double envStrength, double compStrength, int fission, double redQueen) :
-	                              Landscape(xsize,  ysize,  type,  neutral,  dd,  env, mort, repro,  runs, specRate, dispersalCutoff, densityCutoff, mortalityStrength, envStrength, compStrength, fission,  redQueen)
+GlobalEnvironment::GlobalEnvironment(int xsize, int ysize, int type, bool neutral, bool dd, bool env, bool mort, bool repro, unsigned int runs, double specRate, int dispersalCutoff, int densityCutoff, unsigned int mortalityStrength,double envStrength, double compStrength, int fission, double redQueen, double redQueenStrength) :
+	                              Landscape(xsize,  ysize,  type,  neutral,  dd,  env, mort, repro,  runs, specRate, dispersalCutoff, densityCutoff, mortalityStrength, envStrength, compStrength, fission,  redQueen, redQueenStrength)
 {
 
 }
@@ -575,8 +576,8 @@ void GlobalEnvironment::reproduce(unsigned int generation)
 }
 
 
-LocalEnvironment::LocalEnvironment(int xsize, int ysize, int type, bool neutral, bool dd, bool env,bool mort, bool repro, unsigned int runs, double specRate, int dispersalCutoff, int densityCutoff, unsigned int mortalityStrength,double envStrength, double compStrength, int fission, double redQueen) :
-	                              Landscape(xsize,  ysize,  type,  neutral,  dd,  env, mort, repro,  runs, specRate, dispersalCutoff, densityCutoff, mortalityStrength, envStrength, compStrength, fission, redQueen)
+LocalEnvironment::LocalEnvironment(int xsize, int ysize, int type, bool neutral, bool dd, bool env,bool mort, bool repro, unsigned int runs, double specRate, int dispersalCutoff, int densityCutoff, unsigned int mortalityStrength,double envStrength, double compStrength, int fission, double redQueen, double redQueenStrength) :
+	                              Landscape(xsize,  ysize,  type,  neutral,  dd,  env, mort, repro,  runs, specRate, dispersalCutoff, densityCutoff, mortalityStrength, envStrength, compStrength, fission, redQueen, redQueenStrength)
 {
 
 }
@@ -742,11 +743,8 @@ void Landscape::speciation (unsigned int generation)
 {
   // std::cout << generation << '\n';
   
-	std::cout << "Fission: " << m_fission << std::endl;
+	//std::cout << "Fission: " << m_fission << std::endl;
 
-
-  
-  
   int specRate = m_RandomGenerator.randomPoisson(m_Speciation_Rate);
   
   for (int i = 0; i < specRate; i++)
@@ -758,7 +756,7 @@ void Landscape::speciation (unsigned int generation)
     
     m_Global_Species_Counter+=1;
     
-    std::cout << "Here Fission= " << m_fission << std::endl;
+   // std::cout << "Here Fission= " << m_fission << std::endl;
 
     if(m_fission == 0){
 
@@ -767,11 +765,29 @@ void Landscape::speciation (unsigned int generation)
 
          m_Individuals[x][y].reportDeath(generation);
 
-         m_Individuals[x][y].m_Species = new Species(m_Global_Species_Counter, m_Individuals[x][y].m_Species->get_species_ID(), generation, std::make_pair(x, y), m_SimulationEnd);
+         int protracted = 5;
+
+         // real version
+         //m_Individuals[x][y].m_Species = new Species(m_Global_Species_Counter, protracted,  m_Individuals[x][y].m_Species->get_species_ID(), m_Individuals[x][y].m_Species->get_species_ID(), generation, std::make_pair(x, y), m_SimulationEnd);
+
+
+         //Testversion as long as protracted not fully implemented
+         m_Individuals[x][y].m_Species = new Species(m_Global_Species_Counter, protracted, m_Global_Species_Counter , m_Individuals[x][y].m_Species->get_species_ID(), generation, std::make_pair(x, y), m_SimulationEnd);
+
 
          m_Individuals[x][y].evolveDuringSpeciation();
 
+         if((m_Individuals[x][y].m_Species->m_Date_of_Emergence + protracted) == generation){
+        	 std::cout << "It happened" << std::endl;
+
+        	 m_Individuals[x][y].m_Species->m_ID =  m_Individuals[x][y].m_Species->m_incip_ID;
+         }
+
          //			individuals[x][y].Species->date_of_extinction = runs;
+
+
+
+         //// Should be in protracted
          m_Phylogeny.updatePhylogeny(m_Individuals[x][y].m_Species);
 
          // update relatedness values for density dependence / competition
@@ -797,23 +813,33 @@ void Landscape::speciation (unsigned int generation)
         }
       }
       
-      std::cout <<"x: "<< xvec.size() << " y: " << yvec.size() << std::endl;
+     // std::cout <<"x: "<< xvec.size() << " y: " << yvec.size() << std::endl;
 
       
       // These are the settings for the first individual that has been randomly chosen at the beginning of the speciation
       
-      
+      int protracted = 5;
       
       m_Individuals[x][y].m_Species->m_Children.push_back(m_Global_Species_Counter);
       
       m_Individuals[x][y].reportDeath(generation);
       
-      m_Individuals[x][y].m_Species = new Species(m_Global_Species_Counter, m_Individuals[x][y].m_Species->get_species_ID(), generation, std::make_pair(x, y), m_SimulationEnd);
+      // real version
+      //m_Individuals[x][y].m_Species = new Species(m_Global_Species_Counter, protracted,  m_Individuals[x][y].m_Species->get_species_ID(), m_Individuals[x][y].m_Species->get_species_ID(), generation, std::make_pair(x, y), m_SimulationEnd);
+
+
+       //Testversion as long as protracted not fully implemented
+      m_Individuals[x][y].m_Species = new Species(m_Global_Species_Counter, protracted, m_Global_Species_Counter , m_Individuals[x][y].m_Species->get_species_ID(), generation, std::make_pair(x, y), m_SimulationEnd);
+
       
       m_Individuals[x][y].evolveDuringSpeciation();
       
       //			individuals[x][y].Species->date_of_extinction = runs;
-      m_Phylogeny.updatePhylogeny(m_Individuals[x][y].m_Species);
+
+
+
+      // Should be in protracted
+       m_Phylogeny.updatePhylogeny(m_Individuals[x][y].m_Species);
       
       // update relatedness values for density dependence / competition
       if(m_DD) densityUpdate(x,y);
@@ -830,7 +856,7 @@ void Landscape::speciation (unsigned int generation)
       
       if(m_fission == 1){
 
-    	  std::cout << "Size " << xvec.size() << std::endl;
+    	  // std::cout << "Size " << xvec.size() << std::endl;
 
         for(unsigned int k =0; k< xvec.size(); k+=2){
           m_Individuals[xvec[k]][yvec[k]].reportDeath(generation);
@@ -847,18 +873,16 @@ void Landscape::speciation (unsigned int generation)
         // In this case the population is split in half in the
         // mean of the x-coordinates.
         // All Individuals with a larger x-coordinate become part of the new species.
-        // TODO: Random splitting, directions etc...
+        // TODO: Random splits, directions etc...
         
         int sum = std::accumulate(xvec.begin(), xvec.end(), 0);
         int mean = sum / xvec.size();
         
-        std::cout << "F2" << " Mean: " << mean << std::endl;
+       // std::cout << "F2" << " Mean: " << mean << std::endl;
 
         for(unsigned int k = 0; k < xvec.size(); k++){
           if(xvec[k] < mean){
 
-        	std::cout << "Mean= " <<  mean << std::endl;
-        	std::cout << "X: " << xvec[k] << " Y: " << yvec[k] << std::endl;
         	m_Individuals[xvec[k]][yvec[k]].reportDeath(generation);
             m_Individuals[xvec[k]][yvec[k]].m_Species = m_Individuals[x][y].m_Species;
             m_Individuals[xvec[k]][yvec[k]].evolveDuringSpeciation();
@@ -869,12 +893,37 @@ void Landscape::speciation (unsigned int generation)
         }
       }
 
-     std::cout << "Clear" << std::endl;
+   //  std::cout << "Clear" << std::endl;
       // Clear the vector
       xvec.clear();
       yvec.clear();
     }
   }
+
+
+ // Iterate through all species.
+
+
+  // real version
+ // m_Individuals[x][y].m_Species = new Species(m_Global_Species_Counter, protracted,  m_Individuals[x][y].m_Species->get_species_ID(), m_Individuals[x][y].m_Species->get_species_ID(), generation, std::make_pair(x, y), m_SimulationEnd);
+
+
+  //Testversion as long as protracted not fully implemented
+ // m_Individuals[x][y].m_Species = new Species(m_Global_Species_Counter, protracted, m_Global_Species_Counter , m_Individuals[x][y].m_Species->get_species_ID(), generation, std::make_pair(x, y), m_SimulationEnd);
+
+
+  /* int protracted=5;
+
+  for(int k = 0; k < m_Xdimensions; k++){
+          for(int j = 0; j < m_Ydimensions; j++){
+  if((m_Individuals[k][j].m_Species->m_Date_of_Emergence + protracted) == generation){
+       	 m_Individuals[k][j].m_Species->m_ID =  m_Individuals[k][j].m_Species->m_incip_ID;
+       	 m_Phylogeny.updatePhylogeny(m_Individuals[k][j].m_Species);
+
+        }
+          }}
+   */
+
 
 
 std::cout << "End Speciation" << std::endl;

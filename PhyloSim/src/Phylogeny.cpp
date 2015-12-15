@@ -90,7 +90,7 @@ void Phylogeny::prunePhylogeny(int current)
 void Phylogeny::writePhylogeny(unsigned long long start, std::multimap<unsigned long long, Species*> *phylogenyMap, char suffix)
 {
 	Species * parent = phylogenyMap->find(start)->second;
-	Species * ancestorSpecies = new Species(0,0,0,std::make_pair(0,0),0);
+	Species * ancestorSpecies = new Species(0,0,0,0,0,std::make_pair(0,0),0);
 	phylogenyMap->insert(std::make_pair(ancestorSpecies->m_ID, ancestorSpecies));
 	parent->m_Ancestor = 0;
 	//std::map<unsigned long long, int> position; // Initialisieren ??
@@ -221,7 +221,7 @@ void Phylogeny::writePhylogeny(unsigned long long start, std::multimap<unsigned 
 std::string Phylogeny::writePhylogenyR(unsigned long long start, std::multimap<unsigned long long, Species*> * phylogenyMap)
 {
 	Species * parent = phylogenyMap->find(start)->second;
-	Species * ancestorSpecies = new Species(0,0,0,std::make_pair(0,0),0);
+	Species * ancestorSpecies = new Species(0,0,0,0,0,std::make_pair(0,0),0);
 	phylogenyMap->insert(std::make_pair(ancestorSpecies->m_ID, ancestorSpecies));
 	parent->m_Ancestor = 0;
 
