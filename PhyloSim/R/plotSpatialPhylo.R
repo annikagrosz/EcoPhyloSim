@@ -58,7 +58,7 @@
 #' 
 #' 
 #' @import ape
-#' @importFrom adephylo distTips
+#' 
 #' @export
 plotSpatialPhylo <- function (simu, plot = "both", plotTraits = T, which.result = NULL){
   
@@ -78,7 +78,7 @@ plotSpatialPhylo <- function (simu, plot = "both", plotTraits = T, which.result 
   if (plotTraits == T){
     #library(shape)
     traits = getAverageTraits(simu)  
-    #rootDist <- distRoot(extantPhylogeny, 1)
+    #rootDist <- adephylo::distRoot(extantPhylogeny, 1)
   }
   
   cols <- rainbow(nSpecies,start=0)

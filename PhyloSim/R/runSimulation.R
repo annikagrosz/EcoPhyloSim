@@ -3,6 +3,7 @@
 #' @param par, a list of parameters created with \link{createCompletePar}
 #' @return An object of class "Phylosim". This objet contains the species matrix, the trait matrix, the environmental matrix, the competition matrix and the neutral matrix, as well as the phlogeny and the parameter settings of the simulation. 
 #' @details If your parameterset contains more than one runs argument, each interim step is saved in the Phylosim object. \cr\cr For larger simularions consider \link{runSimulationBatch} to make use of parallel computing. \cr\cr If you are using type="Rneutral" only one runs argument can be processed.
+#' @importFrom adephylo distTips
 #' @examples 
 #'  
 #' # Define a parameter set
