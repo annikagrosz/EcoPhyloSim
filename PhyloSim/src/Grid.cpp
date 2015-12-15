@@ -15,6 +15,7 @@
 #include <vector>
 #include <numeric>
 #include <math.h>
+#include<algorithm>
 
 #include "Grid.h"
 #include "Individual.h"
@@ -750,7 +751,7 @@ void Landscape::speciation (unsigned int generation)
   for (int i = 0; i < specRate; i++)
   {
 
-	std::cout << specRate << std::endl;
+	// std::cout << specRate << std::endl;
     int x = m_RandomGenerator.randomInt(0,m_Xdimensions-1); // rand() % xdimensions;
     int y = m_RandomGenerator.randomInt(0,m_Ydimensions-1); // rand() % ydimensions;
     
@@ -760,7 +761,7 @@ void Landscape::speciation (unsigned int generation)
 
     if(m_fission == 0){
 
-        std::cout << "Fission's not runing" << std::endl;
+       // std::cout << "Fission's not runing" << std::endl;
          m_Individuals[x][y].m_Species->m_Children.push_back(m_Global_Species_Counter);
 
          m_Individuals[x][y].reportDeath(generation);
@@ -796,7 +797,7 @@ void Landscape::speciation (unsigned int generation)
       std::vector<int> xvec;
       std::vector<int> yvec;
       
-      std::cout << "Fission's runing" << std::endl;
+     // std::cout << "Fission's runing" << std::endl;
       
       for(int k = 0; k < m_Xdimensions; k++){
         for(int j = 0; j < m_Ydimensions; j++){
@@ -907,21 +908,28 @@ void Landscape::speciation (unsigned int generation)
  // m_Individuals[x][y].m_Species = new Species(m_Global_Species_Counter, protracted, m_Global_Species_Counter , m_Individuals[x][y].m_Species->get_species_ID(), generation, std::make_pair(x, y), m_SimulationEnd);
 
 
-  int protracted=5;
+  int protracted=1;
+
+  std::vector<int> specvec;
 
   for(int k = 0; k < m_Xdimensions; k++){
           for(int j = 0; j < m_Ydimensions; j++){
-  if((m_Individuals[k][j].m_Species->m_Date_of_Emergence + protracted) == generation && (m_Individuals[k][j].m_Species->m_ID !=  m_Individuals[k][j].m_Species->m_incip_ID)){
+  if(((m_Individuals[k][j].m_Species->m_Date_of_Emergence + protracted) == generation) && (m_Individuals[k][j].m_Species->m_ID !=  m_Individuals[k][j].m_Species->m_incip_ID)){
+	  std::cout << "Generation: " << generation << " Date of emergence: " << m_Individuals[k][j].m_Species->m_Date_of_Emergence << std::endl;
        	 m_Individuals[k][j].m_Species->m_ID =  m_Individuals[k][j].m_Species->m_incip_ID;
-       	 m_Phylogeny.updatePhylogeny(m_Individuals[k][j].m_Species);
 
+       	if(std::find(specvec.begin(), specvec.end(), m_Individuals[k][j].m_Species->m_ID) != specvec.end()){
+       		continue;
+       	}
+       	else{
+       	 m_Phylogeny.updatePhylogeny(m_Individuals[k][j].m_Species);
+        specvec.push_back(m_Individuals[k][j].m_Species->m_ID);
+       	}
         }
           }}
 
-
-
-
-std::cout << "End Speciation" << std::endl;
+  specvec.clear();
+// std::cout << "End Speciation" << std::endl;
 }
 
 

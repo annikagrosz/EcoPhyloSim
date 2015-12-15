@@ -6,8 +6,8 @@
 #' @examples 
 #'  
 #' # Define a parameter set
-#' par <- createCompletePar(x = 50, y = 50, dispersal = 1 , runs = 1000,
-#'         density = 1, environment = 0.5, specRate = 0.01, fission = 2, redQueen=0.1)
+#' par <- createCompletePar(x = 50, y = 50, dispersal = "global" , runs = 1000,
+#'         density = 1, environment = 0.5, specRate = 0.1, fission = 2, redQueen=0.1, redQueenStrength=2)
 #'
 #' # Run the model
 #' simu <- runSimulation(par)
