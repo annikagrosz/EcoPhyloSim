@@ -38,8 +38,7 @@ int main(){
   
   double envStrength = 1.0;
   double compStrength = 1.0;
-  bool fission = true;
-  int fissionType = 1;
+  int fission = 1;
   double redQueen = 0.0;
 	// Just to test
 	//Parameters* pa = new Parameters();
@@ -54,10 +53,10 @@ int main(){
 	//Running the model
   
 	PhylSimModel Model(xDim,yDim,dispersal, runs, specrate, dd, env, neutral, mort, 
-  mortalityStrength, repro, dispersalCut, densityCut, saveLoc, envStrength, compStrength, fission, fissionType, redQueen);
+  mortalityStrength, repro, dispersalCut, densityCut, saveLoc, envStrength, compStrength, fission, redQueen);
   Model.update(runs);
 
-  std::cout << "Made it through the runs" << std::endl;
+
 //	Model.get_data();
 //	Model.getclimate();
 //	Model.gettraits();

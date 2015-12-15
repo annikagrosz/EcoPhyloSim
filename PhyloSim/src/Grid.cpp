@@ -73,7 +73,7 @@
 Landscape::Landscape(int xsize, int ysize, int type, bool neutral, bool dd, bool env, 
 bool mort, bool repro, unsigned int runs, double specRate, int dispersalCutoff, 
 int DensityCutoff, unsigned int mortalityStrength, 
-double envStrength, double compStrength, bool fission, int fissionType, double redQueen)
+double envStrength, double compStrength, int fission, double redQueen)
 {
 
    m_Cutoff= dispersalCutoff;
@@ -94,8 +94,8 @@ double envStrength, double compStrength, bool fission, int fissionType, double r
    m_envStrength = envStrength;
    m_compStrength = compStrength;
    m_fission = fission;
-   m_fissionType = fissionType;
    m_redQueen = redQueen;
+
    //	func.seedrand(1500);
 
    // Construct grid of individuals
@@ -194,6 +194,9 @@ void Landscape::increaseAge()
       {
          this->m_Individuals[rows][cols].m_Age += 1;
 
+         if(rows ==1 && cols == 1) std::cout << "Age here is: " <<  this->m_Individuals[rows][cols].m_Age << std::endl;
+         if(rows ==1 && cols == 1) std::cout << "Species here is: " <<  this->m_Individuals[rows][cols].m_Species << std::endl;
+
          if(this->m_Individuals[rows][cols].m_Age == 1 && m_redQueen != 0){
         	 this->m_Individuals[rows][cols].m_envStrength =  this->m_Individuals[rows][cols].m_envStrength*2;
 			 this->m_Individuals[rows][cols].m_compStrength = this->m_Individuals[rows][cols].m_compStrength*2;
@@ -230,8 +233,8 @@ void Landscape::moistChange(int sign, double magnitude)
 }
 
 
-GlobalEnvironment::GlobalEnvironment(int xsize, int ysize, int type, bool neutral, bool dd, bool env, bool mort, bool repro, unsigned int runs, double specRate, int dispersalCutoff, int densityCutoff, unsigned int mortalityStrength,double envStrength, double compStrength, bool fission, int fissionType, double redQueen) :
-	                              Landscape(xsize,  ysize,  type,  neutral,  dd,  env, mort, repro,  runs, specRate, dispersalCutoff, densityCutoff, mortalityStrength, envStrength, compStrength, fission, fissionType, redQueen)
+GlobalEnvironment::GlobalEnvironment(int xsize, int ysize, int type, bool neutral, bool dd, bool env, bool mort, bool repro, unsigned int runs, double specRate, int dispersalCutoff, int densityCutoff, unsigned int mortalityStrength,double envStrength, double compStrength, int fission, double redQueen) :
+	                              Landscape(xsize,  ysize,  type,  neutral,  dd,  env, mort, repro,  runs, specRate, dispersalCutoff, densityCutoff, mortalityStrength, envStrength, compStrength, fission,  redQueen)
 {
 
 }
@@ -572,8 +575,8 @@ void GlobalEnvironment::reproduce(unsigned int generation)
 }
 
 
-LocalEnvironment::LocalEnvironment(int xsize, int ysize, int type, bool neutral, bool dd, bool env,bool mort, bool repro, unsigned int runs, double specRate, int dispersalCutoff, int densityCutoff, unsigned int mortalityStrength,double envStrength, double compStrength, bool fission, int fissionType, double redQueen) :
-	                              Landscape(xsize,  ysize,  type,  neutral,  dd,  env, mort, repro,  runs, specRate, dispersalCutoff, densityCutoff, mortalityStrength, envStrength, compStrength, fission, fissionType, redQueen)
+LocalEnvironment::LocalEnvironment(int xsize, int ysize, int type, bool neutral, bool dd, bool env,bool mort, bool repro, unsigned int runs, double specRate, int dispersalCutoff, int densityCutoff, unsigned int mortalityStrength,double envStrength, double compStrength, int fission, double redQueen) :
+	                              Landscape(xsize,  ysize,  type,  neutral,  dd,  env, mort, repro,  runs, specRate, dispersalCutoff, densityCutoff, mortalityStrength, envStrength, compStrength, fission, redQueen)
 {
 
 }
@@ -741,8 +744,7 @@ void Landscape::speciation (unsigned int generation)
   
 	std::cout << "Fission: " << m_fission << std::endl;
 
-  //bool fission = true;
-  //int fissionType = 2;
+
   
   
   int specRate = m_RandomGenerator.randomPoisson(m_Speciation_Rate);
@@ -758,7 +760,7 @@ void Landscape::speciation (unsigned int generation)
     
     std::cout << "Here Fission= " << m_fission << std::endl;
 
-    if(m_fission == false){
+    if(m_fission == 0){
 
         std::cout << "Fission's not runing" << std::endl;
          m_Individuals[x][y].m_Species->m_Children.push_back(m_Global_Species_Counter);
@@ -779,7 +781,7 @@ void Landscape::speciation (unsigned int generation)
 
 
 
-    if(m_fission == true){
+    if(m_fission != 0){
       std::vector<int> xvec;
       std::vector<int> yvec;
       
@@ -826,7 +828,7 @@ void Landscape::speciation (unsigned int generation)
       // and save locations in xvec and yvec
       
       
-      if(m_fissionType == 1){
+      if(m_fission == 1){
 
     	  std::cout << "Size " << xvec.size() << std::endl;
 
@@ -840,7 +842,7 @@ void Landscape::speciation (unsigned int generation)
         }
 
 
-      if(m_fissionType == 2){
+      if(m_fission == 2){
         
         // In this case the population is split in half in the
         // mean of the x-coordinates.

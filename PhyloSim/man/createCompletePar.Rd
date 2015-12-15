@@ -7,7 +7,8 @@
 createCompletePar(x = 50, y = 50, dispersal = "global", runs = 100,
   specRate = 1, density = 0, environment = 0,
   fitnessActsOn = "mortality", fitnessBaseMortalityRatio = 10,
-  densityCut = 1, seed = NULL, type = "base", scenario = NULL)
+  densityCut = 1, seed = NULL, type = "base", fission = 1,
+  redQueen = 0, scenario = NULL)
 }
 \arguments{
 \item{x}{Integer, Dimension of the model landscape in x-direction}
@@ -34,7 +35,11 @@ createCompletePar(x = 50, y = 50, dispersal = "global", runs = 100,
 
 \item{type}{Character, determining which model should be used. "base" is running the default model. Other possibilities are "Leipzig" and "Rneutral" which will run a neutral model purely in R.}
 
+\item{fission, }{Logical, determining whether the fission speciation mechanism should be implemented.}
+
 \item{scenario}{String, further information you want to add to the parameter set in order to refer to a model run more conveniently.}
+
+\item{fissionType}{Integer, determining how fission should be implemeted. Possible choices are '1' (random) and '2' (spatial).}
 }
 \value{
 A List with parameters
