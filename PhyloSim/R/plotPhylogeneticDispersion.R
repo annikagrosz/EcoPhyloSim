@@ -67,7 +67,6 @@ plotPhylogeneticDispersion <- function(pvalues, positions=NULL, title = "P-value
     stop("Error. No positions defined.")
   }  
   
-  .pardefault <- par(no.readonly = T) 
   
   xcol <- length(positions$x)
   ycol <- length(positions$y)
@@ -123,6 +122,8 @@ plotPhylogeneticDispersion <- function(pvalues, positions=NULL, title = "P-value
   ColPalet <- colorRampPalette(c("turquoise4", "white", "palevioletred"))
   Cols <- ColPalet(100)
   index <- seq(0,1,0.01)
+  oldpar<-par()
+  
   par(mar=c(0, 3, 0, 0), xpd=TRUE)
   shape::emptyplot(xlim=c(0, xmax), ylim=c(0.5,ymax), asp=1, frame.plot = FALSE)
   text(x = median(positions$x/2), y = 1.5*ycol/2 ,  labels= title, cex=1.3)
@@ -167,8 +168,8 @@ plotPhylogeneticDispersion <- function(pvalues, positions=NULL, title = "P-value
   text(x = barx+0.1 , y = bary + 1.8* barl, labels = "overdispersed" , pos = 4) 
   text(x = barx+0.1 , y = bary, labels = "neutral" , pos = 4) 
   text(x = barx+0.1 , y = bary - 1.8* barl, labels = "underdispersed \n(clustered)", pos = 4) 
-  
-  par(.pardefault)
+
+  par(mar=oldpar$mar, xpd=oldpar$xpd)
 }
 
 

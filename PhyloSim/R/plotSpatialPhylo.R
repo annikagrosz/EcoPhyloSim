@@ -62,6 +62,8 @@
 #' @export
 plotSpatialPhylo <- function (simu, plot = "both", plotTraits = T, which.result = NULL){
   
+  oldpar<-par()
+  
   if (is.null(which.result)) which.result = length(simu$Output) 
   simu <- simu$Output[[which.result]]
   
@@ -143,6 +145,7 @@ plotSpatialPhylo <- function (simu, plot = "both", plotTraits = T, which.result 
       mtext(outer =T ,"Phylogeny",at =0.25, cex=1.2)
     }
   }
+  par(mfrow=oldpar$mfrow, mar=oldpar$mar, oma=oldpar$oma)
 }
 
 

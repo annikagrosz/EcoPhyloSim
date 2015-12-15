@@ -37,4 +37,20 @@ print.PhylosimList <- function(simu){
 }
 
 
-# TODO summary.PhylosimList
+#' @title Prints summary for objects of class PhyloSim
+#' @description Prints parameter settings, runtime and species Richness.
+#' @param simu Simulation output of \code{\link{runSimulation}}
+#' @export
+
+summary.PhylosimList <- function(simu){
+  cat("Summary for class PhylosimList",  "\n")
+  cat("------------------------------------", "\n","------------------------------------", "\n", sep="")
+  cat("# Simu", "X ", "Y", "Dispersal", "Density", "Environment", "#Species","#Runs","\n")
+  cat("------------------------------------", "\n")
+  cat()
+  for(i in 1:length(simu)){
+    cat("#",i," ",simu[[i]]$Model$x,"", simu[[i]]$Model$y," ",simu[[i]]$Model$dispersal,"     ",
+        as.numeric(simu[[i]]$Model$density),"      ", 
+        as.numeric(simu[[i]]$Model$environment),"      ", specRich(simu[[i]]),"   ", simu[[i]]$Model$runs[length(simu[[i]]$Model$runs)], "\n")
+  }
+}
