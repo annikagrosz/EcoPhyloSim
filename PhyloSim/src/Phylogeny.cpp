@@ -48,6 +48,7 @@ void Phylogeny::prunePhylogeny(int current)
 {
   
   m_PrunedPhylo->clear();
+ std::cout << "Prune" <<std::endl;
 
   // Create deep copy
   // TODO -> I tried the deep copy of multimap, but it doesn't work ... sort this out!!!
@@ -56,7 +57,6 @@ void Phylogeny::prunePhylogeny(int current)
     if (specp->m_Date_of_Extinction > current) specp->m_Date_of_Extinction = current;
     m_PrunedPhylo->insert( std::pair<unsigned long long, Species*>(specp->m_ID, specp));
   }
-  
   // TODO - I somehow don't understand 100% why this works .. we go through the phylogeny size, erase things inbetween, why don't we get into 
   // trouble for trying to access indices that have already been erase?
   
@@ -246,14 +246,18 @@ std::string Phylogeny::writePhylogenyR(unsigned long long start, std::multimap<u
 			{
 				if(position[parent->m_ID] != 0) throw std::runtime_error("unexpected value for position value in a leaf") ;
 				branchLength = parent->m_Date_of_Extinction - parent->m_Date_of_Emergence;
+
+				if(branchLength > 50){
 				tree.insert(0, to_string(branchLength) );
 				tree.insert(0, ":" );
 				tree.insert(0, to_string(parent->m_ID) );
 				tree.insert(0, "s" );
 				tree.insert(0, "," );
+				}
 				parent = phylogenyMap->find(parent->m_Ancestor)->second ;
 				position[parent->m_ID] += 1;
 			}
+
 
 			// if all children visited write down parent, close and go one up
 			else if(position[parent->m_ID] == parent->m_Children.size() )
@@ -318,6 +322,8 @@ std::string Phylogeny::writePhylogenyR(unsigned long long start, std::multimap<u
 			go = false ;
 		}
 	}
+	//std::cout << tree << std::endl;
+
 	tree.erase(tree.begin());
 	return tree;
 }

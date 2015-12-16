@@ -55,6 +55,7 @@ Rcpp::List callModel(int x, int y, int dispersal, IntegerVector runs, double spe
     int runNow = runs[step]-runcount;
     std::cout << "Run model for" <<  runNow << "steps \n";
     phylSimModel.update(runNow);
+
     runcount = runs[step];
     
     int indCounter = 0; 
@@ -76,6 +77,7 @@ Rcpp::List callModel(int x, int y, int dispersal, IntegerVector runs, double spe
         char * cstr = new char [phyloPass.length()+1];
         std::strcpy (cstr, phyloPass.c_str());
         phyloOut[0] = cstr;
+        phylSimModel.m_Global->updateGrid();
         
         } else {
         for (int i = 0; i < x; i++) {
@@ -93,6 +95,7 @@ Rcpp::List callModel(int x, int y, int dispersal, IntegerVector runs, double spe
         char * cstr = new char [phyloPass.length()+1];
         std::strcpy (cstr, phyloPass.c_str());
         phyloOut[0] = cstr;
+        phylSimModel.m_Local->updateGrid();
         }
         
         Rcpp::List listResults = Rcpp::List::create(Rcpp::Named("Species") = specOut,
