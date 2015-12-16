@@ -105,7 +105,7 @@ Species::Species(unsigned long long incip_id, int gamma, unsigned long long id, 
 	      unsigned long long date, std::pair<int, int> birthplace, unsigned int simulationEnd)
 {
 	this->m_incip_ID = incip_id;
-	this-> m_gamma = gamma;
+	this->m_gamma = gamma;
 	this->m_ID = id;
 	this->m_Ancestor = father;
 	this->m_Count = 0;
@@ -127,7 +127,6 @@ Species::Species(unsigned long long incip_id, int gamma, unsigned long long id, 
 
 
 Species::~Species(){
-
 }
 
 //	void species::increase_count()

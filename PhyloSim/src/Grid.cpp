@@ -769,11 +769,11 @@ void Landscape::speciation (unsigned int generation)
          int protracted = 5;
 
          // real version
-         m_Individuals[x][y].m_Species = new Species(m_Global_Species_Counter, protracted,  m_Individuals[x][y].m_Species->get_species_ID(), m_Individuals[x][y].m_Species->get_species_ID(), generation, std::make_pair(x, y), m_SimulationEnd);
+         // m_Individuals[x][y].m_Species = new Species(m_Global_Species_Counter, protracted,  m_Individuals[x][y].m_Species->m_ID , m_Individuals[x][y].m_Species->get_species_ID(), generation, std::make_pair(x, y), m_SimulationEnd);
 
 
          //Testversion as long as protracted not fully implemented
-         //m_Individuals[x][y].m_Species = new Species(m_Global_Species_Counter, protracted, m_Global_Species_Counter , m_Individuals[x][y].m_Species->get_species_ID(), generation, std::make_pair(x, y), m_SimulationEnd);
+         m_Individuals[x][y].m_Species = new Species(m_Global_Species_Counter, protracted, m_Global_Species_Counter , m_Individuals[x][y].m_Species->get_species_ID(), generation, std::make_pair(x, y), m_SimulationEnd);
 
 
          m_Individuals[x][y].evolveDuringSpeciation();
@@ -784,7 +784,7 @@ void Landscape::speciation (unsigned int generation)
 
 
          //// Should be in protracted
-         //m_Phylogeny.updatePhylogeny(m_Individuals[x][y].m_Species);
+         m_Phylogeny.updatePhylogeny(m_Individuals[x][y].m_Species);
 
          // update relatedness values for density dependence / competition
          if(m_DD) densityUpdate(x,y);
@@ -821,11 +821,13 @@ void Landscape::speciation (unsigned int generation)
       m_Individuals[x][y].reportDeath(generation);
       
       // real version
-      m_Individuals[x][y].m_Species = new Species(m_Global_Species_Counter, protracted,  m_Individuals[x][y].m_Species->get_species_ID(), m_Individuals[x][y].m_Species->get_species_ID(), generation, std::make_pair(x, y), m_SimulationEnd);
+     //m_Individuals[x][y].m_Species = new Species(m_Global_Species_Counter, protracted,  m_Individuals[x][y].m_Species->m_ID , m_Individuals[x][y].m_Species->get_species_ID(), generation, std::make_pair(x, y), m_SimulationEnd);
+
+
 
 
        //Testversion as long as protracted not fully implemented
-      //m_Individuals[x][y].m_Species = new Species(m_Global_Species_Counter, protracted, m_Global_Species_Counter , m_Individuals[x][y].m_Species->get_species_ID(), generation, std::make_pair(x, y), m_SimulationEnd);
+      m_Individuals[x][y].m_Species = new Species(m_Global_Species_Counter, protracted, m_Global_Species_Counter , m_Individuals[x][y].m_Species->get_species_ID(), generation, std::make_pair(x, y), m_SimulationEnd);
 
       
       m_Individuals[x][y].evolveDuringSpeciation();
@@ -835,7 +837,7 @@ void Landscape::speciation (unsigned int generation)
 
 
       // Should be in protracted
-      // m_Phylogeny.updatePhylogeny(m_Individuals[x][y].m_Species);
+       m_Phylogeny.updatePhylogeny(m_Individuals[x][y].m_Species);
       
       // update relatedness values for density dependence / competition
       if(m_DD) densityUpdate(x,y);
@@ -874,7 +876,6 @@ void Landscape::speciation (unsigned int generation)
         int sum = std::accumulate(xvec.begin(), xvec.end(), 0);
         int mean = sum / xvec.size();
         
-       // std::cout << "F2" << " Mean: " << mean << std::endl;
 
         for(unsigned int k = 0; k < xvec.size(); k++){
           if(xvec[k] < mean){
@@ -897,25 +898,16 @@ void Landscape::speciation (unsigned int generation)
   }
 
 
- // Iterate through all species.
 
+ // int protracted=0;
 
-  // real version
- // m_Individuals[x][y].m_Species = new Species(m_Global_Species_Counter, protracted,  m_Individuals[x][y].m_Species->get_species_ID(), m_Individuals[x][y].m_Species->get_species_ID(), generation, std::make_pair(x, y), m_SimulationEnd);
+ // std::vector<int> specvec;
 
-
-  //Testversion as long as protracted not fully implemented
- // m_Individuals[x][y].m_Species = new Species(m_Global_Species_Counter, protracted, m_Global_Species_Counter , m_Individuals[x][y].m_Species->get_species_ID(), generation, std::make_pair(x, y), m_SimulationEnd);
-
-
-  int protracted=1;
-
-  std::vector<int> specvec;
-
-  for(int k = 0; k < m_Xdimensions; k++){
+ /* for(int k = 0; k < m_Xdimensions; k++){
           for(int j = 0; j < m_Ydimensions; j++){
-  if(((m_Individuals[k][j].m_Species->m_Date_of_Emergence + protracted) == generation) && (m_Individuals[k][j].m_Species->m_ID !=  m_Individuals[k][j].m_Species->m_incip_ID)){
-	  std::cout << "Generation: " << generation << " Date of emergence: " << m_Individuals[k][j].m_Species->m_Date_of_Emergence << std::endl;
+ if((m_Individuals[k][j].m_Species->m_Date_of_Emergence + protracted) == generation){
+	 // std::cout << "Generation: " << generation << " Date of emergence: " << m_Individuals[k][j].m_Species->m_Date_of_Emergence << std::endl;
+
        	 m_Individuals[k][j].m_Species->m_ID =  m_Individuals[k][j].m_Species->m_incip_ID;
 
        	if(std::find(specvec.begin(), specvec.end(), m_Individuals[k][j].m_Species->m_ID) != specvec.end()){
@@ -925,11 +917,26 @@ void Landscape::speciation (unsigned int generation)
        	 m_Phylogeny.updatePhylogeny(m_Individuals[k][j].m_Species);
         specvec.push_back(m_Individuals[k][j].m_Species->m_ID);
        	}
-        }
-          }}
+    }
+         }}
 
   specvec.clear();
+*/
 // std::cout << "End Speciation" << std::endl;
+
+
+/*  if(generation == 1000){
+	  for(int k = 0; k < m_Xdimensions; k++){
+	            for(int j = 0; j < m_Ydimensions; j++){
+	            	if((m_Individuals[k][j].m_Species->m_Date_of_Emergence + protracted) > generation){
+	            		m_Individuals[k][j].m_Species->m_ID = m_Individuals[k][j].m_Species->m_incip_ID;
+
+	            		std::cout << "m_incip_ID= " <<   m_Individuals[k][j].m_Species->m_incip_ID << std::endl;
+
+	            	}}}
+	            	*/
+
+
 }
 
 

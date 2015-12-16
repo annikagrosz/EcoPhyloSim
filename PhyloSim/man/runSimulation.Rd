@@ -22,10 +22,12 @@ If your parameterset contains more than one runs argument, each interim step is 
  
 # Define a parameter set
 par <- createCompletePar(x = 50, y = 50, dispersal = 1 , runs = 1000,
-        density = 1, environment = 0.5, specRate = 0.05, fission = 2, redQueen=0.1, redQueenStrength=2)
+        density = 1, environment = 1, specRate = 1, fission = 0, redQueen=0, redQueenStrength=1)
 
 # Run the model
 simu <- runSimulation(par)
+
+plot(simu)
 
 # Look at the phylogeny (requires package 'ape')
 require(ape)
