@@ -17,4 +17,7 @@ A numeric value for the Colless' Imbalance
 \description{
 Calculates the Colless' imbalance for a Phylogeny.
 }
+\references{
+Colless, D. H. "Review of phylogenetics: the theory and practice of phylogenetic systematics." Syst. Zool 31 (1982): 100-104.
+}
 

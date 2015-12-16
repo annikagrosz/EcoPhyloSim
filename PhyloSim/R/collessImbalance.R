@@ -3,6 +3,7 @@
 #' @param simu An object of type "PhyloSim"
 #' @param which.result Integer, determines which result should be used. This argument is only usefull if your 'runs' argument in \code{\link{createCompletePar}} contains more than one element. By default (NULL), the last result is used.
 #' @return A numeric value for the Colless' Imbalance 
+#' @references Colless, D. H. "Review of phylogenetics: the theory and practice of phylogenetic systematics." Syst. Zool 31 (1982): 100-104.
 #' @export
 
 collessImbalance <- function(simu, which.result = NULL){ 
@@ -24,5 +25,6 @@ collessImbalance <- function(simu, which.result = NULL){
     }
     c.imbal <- 2*sum.diff/((sum(balance[1,])-1)*(sum(balance[1,])-2))
   }
+  if(is.element(NA, c.imbal)) warning("NA values were produced where phylogeny is not rooted and fully dichotomous")
   return(as.numeric(c.imbal))
 }
