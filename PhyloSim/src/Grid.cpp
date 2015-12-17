@@ -189,7 +189,7 @@ std::pair<int, int> Landscape::get_dimensions()
 }
 
 
-void Landscape::increaseAge()
+void Landscape::increaseAge(unsigned int generation)
 {
    for (int rows = 0; rows < this->m_Xdimensions; rows++)
    {
@@ -198,10 +198,7 @@ void Landscape::increaseAge()
          this->m_Individuals[rows][cols].m_Age += 1;
          this->m_Individuals[rows][cols].m_incip_Age += 1;
 
-      //   if(rows ==1 && cols == 1) std::cout << "Age here is: " <<  this->m_Individuals[rows][cols].m_Age << std::endl;
-      //   if(rows ==1 && cols == 1) std::cout << "Species here is: " <<  this->m_Individuals[rows][cols].m_Species << std::endl;
-
-         if(this->m_Individuals[rows][cols].m_Age == 1 && m_redQueen != 0){
+         if(this->m_Individuals[rows][cols].m_Species->m_Date_of_Emergence == (generation-1) && m_redQueen != 0){
         	 this->m_Individuals[rows][cols].m_envStrength =  this->m_Individuals[rows][cols].m_envStrength* m_redQueenStrength;
 			 this->m_Individuals[rows][cols].m_compStrength = this->m_Individuals[rows][cols].m_compStrength* m_redQueenStrength;
          }

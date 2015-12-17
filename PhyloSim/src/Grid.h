@@ -85,7 +85,7 @@ class Landscape {
 	// Start the reproduction of the species.
 	virtual void reproduce(unsigned int generation);
 	// Increase the age of each individual by 1.
-	void increaseAge();
+	void increaseAge(unsigned int generation);
 
 	void speciation(unsigned int generation);
   void densityUpdate(int x, int y);
