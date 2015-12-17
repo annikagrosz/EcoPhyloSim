@@ -48,7 +48,6 @@ void Phylogeny::prunePhylogeny(int current)
 {
   
   m_PrunedPhylo->clear();
- std::cout << "Prune" <<std::endl;
 
   // Create deep copy
   // TODO -> I tried the deep copy of multimap, but it doesn't work ... sort this out!!!
@@ -56,16 +55,16 @@ void Phylogeny::prunePhylogeny(int current)
     Species * specp = new Species(*m_FullPhylogeny->find(i)->second);
     if (specp->m_Date_of_Extinction > current) specp->m_Date_of_Extinction = current;
     m_PrunedPhylo->insert( std::pair<unsigned long long, Species*>(specp->m_ID, specp));
-    std::cout << "End Prune" <<std::endl;
+
   }
 
-  std::cout << "End Prune Loop" <<std::endl;
+
   // TODO - I somehow don't understand 100% why this works .. we go through the phylogeny size, erase things inbetween, why don't we get into 
   // trouble for trying to access indices that have already been erase?
   
 	for(unsigned long long i=1; i <= m_PrunedPhylo->size(); i++)
 	{
-		  std::cout << "Start second Loop" <<std::endl;
+
 
 		Species * father = m_PrunedPhylo->find(i)->second;
 

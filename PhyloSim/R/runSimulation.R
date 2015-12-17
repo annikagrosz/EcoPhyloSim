@@ -7,7 +7,8 @@
 #'  
 #' # Define a parameter set
 #' par <- createCompletePar(x = 50, y = 50, dispersal = 1 , runs = 1000,
-#'         density = 1, environment = 1, specRate = 0.01, fission = 0, redQueen=0, redQueenStrength=1)
+#'         density = 1, environment = 1, specRate = 1, fission = 0, redQueen=0, redQueenStrength=1,
+#'         protracted=4)
 #'
 #' # Run the model
 #' simu <- runSimulation(par)
@@ -89,7 +90,7 @@ runSimulation <- function(par)
     out <- callModel( par$x,  par$y,  dispersal,  round(par$runs),  par$specRate, par$density, 
                       par$environment, neutral, mortalityFitness, par$fitnessBaseMortalityRatio,
                       reproductiveFitness, dispersalCut, par$densityCut, par$seed, par$envStrength,
-                      par$compStrength, par$fission, par$redQueen, par$redQueenStrength)  
+                      par$compStrength, par$fission, par$redQueen, par$redQueenStrength, par$protracted)  
     
     runtime <- as.numeric((proc.time() - ptm)[3])
     

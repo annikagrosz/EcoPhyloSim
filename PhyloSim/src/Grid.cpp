@@ -74,7 +74,7 @@
 Landscape::Landscape(int xsize, int ysize, int type, bool neutral, bool dd, bool env, 
 bool mort, bool repro, unsigned int runs, double specRate, int dispersalCutoff, 
 int DensityCutoff, unsigned int mortalityStrength, 
-double envStrength, double compStrength, int fission, double redQueen, double redQueenStrength)
+double envStrength, double compStrength, int fission, double redQueen, double redQueenStrength, int protracted)
 {
 
    m_Cutoff= dispersalCutoff;
@@ -97,6 +97,7 @@ double envStrength, double compStrength, int fission, double redQueen, double re
    m_fission = fission;
    m_redQueen = redQueen;
    m_redQueenStrength = redQueenStrength;
+   m_protracted = protracted;
 
    //	func.seedrand(1500);
 
@@ -236,8 +237,8 @@ void Landscape::moistChange(int sign, double magnitude)
 }
 
 
-GlobalEnvironment::GlobalEnvironment(int xsize, int ysize, int type, bool neutral, bool dd, bool env, bool mort, bool repro, unsigned int runs, double specRate, int dispersalCutoff, int densityCutoff, unsigned int mortalityStrength,double envStrength, double compStrength, int fission, double redQueen, double redQueenStrength) :
-	                              Landscape(xsize,  ysize,  type,  neutral,  dd,  env, mort, repro,  runs, specRate, dispersalCutoff, densityCutoff, mortalityStrength, envStrength, compStrength, fission,  redQueen, redQueenStrength)
+GlobalEnvironment::GlobalEnvironment(int xsize, int ysize, int type, bool neutral, bool dd, bool env, bool mort, bool repro, unsigned int runs, double specRate, int dispersalCutoff, int densityCutoff, unsigned int mortalityStrength,double envStrength, double compStrength, int fission, double redQueen, double redQueenStrength, int protracted) :
+	                              Landscape(xsize,  ysize,  type,  neutral,  dd,  env, mort, repro,  runs, specRate, dispersalCutoff, densityCutoff, mortalityStrength, envStrength, compStrength, fission,  redQueen, redQueenStrength, protracted)
 {
 
 }
@@ -578,8 +579,8 @@ void GlobalEnvironment::reproduce(unsigned int generation)
 }
 
 
-LocalEnvironment::LocalEnvironment(int xsize, int ysize, int type, bool neutral, bool dd, bool env,bool mort, bool repro, unsigned int runs, double specRate, int dispersalCutoff, int densityCutoff, unsigned int mortalityStrength,double envStrength, double compStrength, int fission, double redQueen, double redQueenStrength) :
-	                              Landscape(xsize,  ysize,  type,  neutral,  dd,  env, mort, repro,  runs, specRate, dispersalCutoff, densityCutoff, mortalityStrength, envStrength, compStrength, fission, redQueen, redQueenStrength)
+LocalEnvironment::LocalEnvironment(int xsize, int ysize, int type, bool neutral, bool dd, bool env,bool mort, bool repro, unsigned int runs, double specRate, int dispersalCutoff, int densityCutoff, unsigned int mortalityStrength,double envStrength, double compStrength, int fission, double redQueen, double redQueenStrength, int protracted) :
+	                              Landscape(xsize,  ysize,  type,  neutral,  dd,  env, mort, repro,  runs, specRate, dispersalCutoff, densityCutoff, mortalityStrength, envStrength, compStrength, fission, redQueen, redQueenStrength, protracted)
 {
 
 }
@@ -747,10 +748,11 @@ void Landscape::speciation (unsigned int generation)
   
 	//std::cout << "Fission: " << m_fission << std::endl;
 
+if(m_protracted != 0){
 	if(m_fission == 0){
 		for(int k = 0; k < m_Xdimensions; k++){
 	           for(int j = 0; j < m_Ydimensions; j++){
-	        	if(m_Individuals[k][j].m_incip_Age == 5){
+	        	if(m_Individuals[k][j].m_incip_Age == m_protracted){
 	        		m_Global_Species_Counter+=1;
 	        		std::cout << "A new species" << std::endl;
 
@@ -858,5 +860,142 @@ void Landscape::speciation (unsigned int generation)
         	  m_Individuals[k][j].m_incip_Age = 0;
           }}}}
           }
-  }
+
+}
+
+
+
+
+if(m_protracted == 0){
+     std::cout << "No protracted Spec" << std::endl;
+	  int specRate = m_RandomGenerator.randomPoisson(m_Speciation_Rate);
+
+	  for (int i = 0; i < specRate; i++)
+	  {
+
+		// std::cout << specRate << std::endl;
+	    int x = m_RandomGenerator.randomInt(0,m_Xdimensions-1); // rand() % xdimensions;
+	    int y = m_RandomGenerator.randomInt(0,m_Ydimensions-1); // rand() % ydimensions;
+
+	    m_Global_Species_Counter+=1;
+
+	   // std::cout << "Here Fission= " << m_fission << std::endl;
+
+	    if(m_fission == 0){
+
+	    	std::cout << "No fission" << std::endl;
+
+	       // std::cout << "Fission's not runing" << std::endl;
+	         m_Individuals[x][y].m_Species->m_Children.push_back(m_Global_Species_Counter);
+
+	         m_Individuals[x][y].reportDeath(generation);
+
+
+	         //Testversion as long as protracted not fully implemented
+	         m_Individuals[x][y].m_Species = new Species(m_Global_Species_Counter , m_Individuals[x][y].m_Species->get_species_ID(), generation, std::make_pair(x, y), m_SimulationEnd);
+
+
+	         m_Individuals[x][y].evolveDuringSpeciation();
+
+	         m_Phylogeny.updatePhylogeny(m_Individuals[x][y].m_Species);
+
+	         // update relatedness values for density dependence / competition
+	         if(m_DD) densityUpdate(x,y);
+
+	    }
+
+
+
+	    if(m_fission != 0){
+	      std::vector<int> xvec;
+	      std::vector<int> yvec;
+
+	     // std::cout << "Fission's runing" << std::endl;
+
+	      for(int k = 0; k < m_Xdimensions; k++){
+	        for(int j = 0; j < m_Ydimensions; j++){
+	          if(m_Individuals[k][j].m_Species == m_Individuals[x][y].m_Species){
+	            xvec.push_back(k);
+	            yvec.push_back(j);
+
+	          }
+	        }
+	      }
+
+	     // std::cout <<"x: "<< xvec.size() << " y: " << yvec.size() << std::endl;
+
+
+	      // These are the settings for the first individual that has been randomly chosen at the beginning of the speciation
+
+	      m_Individuals[x][y].m_Species->m_Children.push_back(m_Global_Species_Counter);
+
+	      m_Individuals[x][y].reportDeath(generation);
+
+	      m_Individuals[x][y].m_Species = new Species(m_Global_Species_Counter , m_Individuals[x][y].m_Species->get_species_ID(), generation, std::make_pair(x, y), m_SimulationEnd);
+
+
+	      m_Individuals[x][y].evolveDuringSpeciation();
+
+
+	       m_Phylogeny.updatePhylogeny(m_Individuals[x][y].m_Species);
+
+	      // update relatedness values for density dependence / competition
+	      if(m_DD) densityUpdate(x,y);
+
+
+
+
+	      // Implementation of fission:
+	      // Getting the species which is randomly chosen
+
+	      // Now look where the individuals of these species are
+	      // and save locations in xvec and yvec
+
+
+	      if(m_fission == 1){
+
+	    	  // std::cout << "Size " << xvec.size() << std::endl;
+
+	        for(unsigned int k =0; k< xvec.size(); k+=2){
+	          m_Individuals[xvec[k]][yvec[k]].reportDeath(generation);
+	          m_Individuals[xvec[k]][yvec[k]].m_Species = m_Individuals[x][y].m_Species;
+	          m_Individuals[xvec[k]][yvec[k]].evolveDuringSpeciation();
+
+	          if(m_DD) densityUpdate(xvec[k],yvec[k]);
+	          }
+	        }
+
+
+	      if(m_fission == 2){
+
+	        // In this case the population is split in half in the
+	        // mean of the x-coordinates.
+	        // All Individuals with a larger x-coordinate become part of the new species.
+	        // TODO: Random splits, directions etc...
+
+	        int sum = std::accumulate(xvec.begin(), xvec.end(), 0);
+	        int mean = sum / xvec.size();
+
+
+	        for(unsigned int k = 0; k < xvec.size(); k++){
+	          if(xvec[k] < mean){
+
+	        	m_Individuals[xvec[k]][yvec[k]].reportDeath(generation);
+	            m_Individuals[xvec[k]][yvec[k]].m_Species = m_Individuals[x][y].m_Species;
+	            m_Individuals[xvec[k]][yvec[k]].evolveDuringSpeciation();
+
+	            if(m_DD) densityUpdate(xvec[k],yvec[k]);
+
+	          }
+	        }
+	      }
+
+	      // Clear the vector
+	      xvec.clear();
+	      yvec.clear();
+	    }
+	  }
+
+}
+}
         
