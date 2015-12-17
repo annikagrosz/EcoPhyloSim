@@ -36,6 +36,7 @@ class Individual {
 
 	double m_LocalDensity;
 	unsigned long long m_Age;
+	int m_incip_Age;
   
 //	double m_DensityStrength;
 //	double m_FitnessWeight;

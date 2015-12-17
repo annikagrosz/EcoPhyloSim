@@ -110,7 +110,7 @@ double envStrength, double compStrength, int fission, double redQueen, double re
    // Initialization
    
    // Create new species 
-   Species * spec = new Species(1,0, 1,1, 0, std::make_pair<int,int>(0,0), m_SimulationEnd);
+   Species * spec = new Species(1,1, 0, std::make_pair<int,int>(0,0), m_SimulationEnd);
 
    // Add individuas of this new species across the grid
    for(int cols = 0; cols < m_Xdimensions; cols++)
@@ -195,6 +195,7 @@ void Landscape::increaseAge()
       for (int cols =0; cols < this->m_Ydimensions; cols++)
       {
          this->m_Individuals[rows][cols].m_Age += 1;
+         this->m_Individuals[rows][cols].m_incip_Age += 1;
 
       //   if(rows ==1 && cols == 1) std::cout << "Age here is: " <<  this->m_Individuals[rows][cols].m_Age << std::endl;
       //   if(rows ==1 && cols == 1) std::cout << "Species here is: " <<  this->m_Individuals[rows][cols].m_Species << std::endl;
@@ -746,6 +747,97 @@ void Landscape::speciation (unsigned int generation)
   
 	//std::cout << "Fission: " << m_fission << std::endl;
 
+	if(m_fission == 0){
+		for(int k = 0; k < m_Xdimensions; k++){
+	           for(int j = 0; j < m_Ydimensions; j++){
+	        	if(m_Individuals[k][j].m_incip_Age == 5){
+	        		m_Global_Species_Counter+=1;
+	        		std::cout << "A new species" << std::endl;
+
+	        		  m_Individuals[k][j].m_Species->m_Children.push_back(m_Global_Species_Counter);
+	        		  m_Individuals[k][j].reportDeath(generation);
+                      m_Individuals[k][j].m_Species = new Species(m_Global_Species_Counter , m_Individuals[k][j].m_Species->get_species_ID(),
+                    		  generation, std::make_pair(k, j), m_SimulationEnd);
+                      m_Individuals[k][j].evolveDuringSpeciation();
+	        	      m_Phylogeny.updatePhylogeny(m_Individuals[k][j].m_Species);
+
+	        	      if(m_DD) densityUpdate(k,j);
+	        	}
+	          }
+	         }
+	       }
+
+	if(m_fission != 0){
+
+		 std::vector<int> xvec;
+		 std::vector<int> yvec;
+		 int refspec;
+
+		 for(int k = 0; k < m_Xdimensions; k++){
+		 	           for(int j = 0; j < m_Ydimensions; j++){
+
+		 	        	  if(m_Individuals[k][j].m_incip_Age == 5){
+		 	        		  refspec = m_Individuals[k][j].m_Species->m_ID;
+		 	        		  xvec.push_back(k);
+		 	        		  yvec.push_back(j);
+		 	        		   m_Individuals[k][j].m_incip_Age = -999999999999999999;
+
+
+		 	        		  for(int p = 0; p < m_Xdimensions; p++){
+		 	        				 for(int z = 0; z < m_Ydimensions; z++){
+		 	        				 	if(m_Individuals[p][z].m_Species->m_ID == refspec){
+		 	        				         xvec.push_back(p);
+		 	        				 		 yvec.push_back(z);
+		 	        			 	         m_Individuals[p][z].m_incip_Age = -999999999999999999;
+		 	        				 	}}}
+
+		 	        			 m_Global_Species_Counter+=1;
+		 	        			 std::cout << "A new species" << std::endl;
+                                 m_Individuals[xvec[1]][yvec[1]].m_Species->m_Children.push_back(m_Global_Species_Counter);
+                                 m_Individuals[xvec[1]][yvec[1]].reportDeath(generation);
+                                 m_Individuals[xvec[1]][yvec[1]].m_Species = new Species(m_Global_Species_Counter ,
+                                		 m_Individuals[xvec[1]][yvec[1]].m_Species->get_species_ID(), generation, std::make_pair(xvec[1], yvec[1]),
+										 m_SimulationEnd);
+                                 m_Individuals[xvec[1]][yvec[1]].evolveDuringSpeciation();
+                                 m_Phylogeny.updatePhylogeny(m_Individuals[xvec[1]][yvec[1]].m_Species);
+                                 if(m_DD) densityUpdate(xvec[1], yvec[1]);
+
+                                 if(m_fission == 1){
+		 	        			  for(unsigned int u =2; u< xvec.size(); u+=2){
+		 	        			          m_Individuals[xvec[u]][yvec[u]].reportDeath(generation);
+		 	        			          m_Individuals[xvec[u]][yvec[u]].m_Species = m_Individuals[xvec[1]][yvec[1]].m_Species;
+		 	        			          m_Individuals[xvec[u]][yvec[u]].evolveDuringSpeciation();
+
+		 	        			          if(m_DD) densityUpdate(xvec[u],yvec[u]);
+		 	        			          }
+		 	        			        }
+                                 if(m_fission == 2){
+                                	 int sum = std::accumulate(xvec.begin(), xvec.end(), 0);
+                                	 int mean = sum / xvec.size();
+                                	         for(unsigned int u = 0; u < xvec.size();u++){
+                                	           if(xvec[u] < mean){
+
+                                	         	m_Individuals[xvec[u]][yvec[u]].reportDeath(generation);
+                                	             m_Individuals[xvec[u]][yvec[u]].m_Species = m_Individuals[xvec[1]][yvec[1]].m_Species;
+                                	             m_Individuals[xvec[u]][yvec[u]].evolveDuringSpeciation();
+
+                                	             if(m_DD) densityUpdate(xvec[u],yvec[u]);
+
+                                	           }
+                                	         }
+                                 }
+		 	        		 }
+		 	             xvec.clear();
+		 	             yvec.clear();
+
+		 	        	  }
+		 	            }
+		 	          }
+
+
+
+
+
   int specRate = m_RandomGenerator.randomPoisson(m_Speciation_Rate);
   
   for (int i = 0; i < specRate; i++)
@@ -755,206 +847,16 @@ void Landscape::speciation (unsigned int generation)
     int x = m_RandomGenerator.randomInt(0,m_Xdimensions-1); // rand() % xdimensions;
     int y = m_RandomGenerator.randomInt(0,m_Ydimensions-1); // rand() % ydimensions;
     
-    m_Global_Species_Counter+=1;
-    
-   // std::cout << "Here Fission= " << m_fission << std::endl;
-
-    if(m_fission == 0){
-
-       // std::cout << "Fission's not runing" << std::endl;
-         m_Individuals[x][y].m_Species->m_Children.push_back(m_Global_Species_Counter);
-
-         m_Individuals[x][y].reportDeath(generation);
-
-         int protracted = 5;
-
-         // real version
-         // m_Individuals[x][y].m_Species = new Species(m_Global_Species_Counter, protracted,  m_Individuals[x][y].m_Species->m_ID , m_Individuals[x][y].m_Species->get_species_ID(), generation, std::make_pair(x, y), m_SimulationEnd);
-
-
-         //Testversion as long as protracted not fully implemented
-         m_Individuals[x][y].m_Species = new Species(m_Individuals[x][y].m_Species->m_ID, protracted, m_Global_Species_Counter , m_Individuals[x][y].m_Species->get_species_ID(), generation, std::make_pair(x, y), m_SimulationEnd);
-
-
-         m_Individuals[x][y].evolveDuringSpeciation();
-
-
-         //			individuals[x][y].Species->date_of_extinction = runs;
-
-
-
-         //// Should be in protracted
-         m_Phylogeny.updatePhylogeny(m_Individuals[x][y].m_Species);
-
-         // update relatedness values for density dependence / competition
-         if(m_DD) densityUpdate(x,y);
-
+    if(m_fission ==0){
+       m_Individuals[x][y].m_incip_Age = 0;
     }
 
-
-
     if(m_fission != 0){
-      std::vector<int> xvec;
-      std::vector<int> yvec;
-      
-     // std::cout << "Fission's runing" << std::endl;
-      
       for(int k = 0; k < m_Xdimensions; k++){
         for(int j = 0; j < m_Ydimensions; j++){
           if(m_Individuals[k][j].m_Species == m_Individuals[x][y].m_Species){
-            xvec.push_back(k);
-            yvec.push_back(j);
-
+        	  m_Individuals[k][j].m_incip_Age = 0;
+          }}}}
           }
-        }
-      }
-      
-     // std::cout <<"x: "<< xvec.size() << " y: " << yvec.size() << std::endl;
-
-      
-      // These are the settings for the first individual that has been randomly chosen at the beginning of the speciation
-      
-      int protracted = 5;
-      
-      m_Individuals[x][y].m_Species->m_Children.push_back(m_Global_Species_Counter);
-      
-      m_Individuals[x][y].reportDeath(generation);
-      
-      // real version
-     //m_Individuals[x][y].m_Species = new Species(m_Global_Species_Counter, protracted,  m_Individuals[x][y].m_Species->m_ID , m_Individuals[x][y].m_Species->get_species_ID(), generation, std::make_pair(x, y), m_SimulationEnd);
-
-
-
-
-       //Testversion as long as protracted not fully implemented
-      m_Individuals[x][y].m_Species = new Species(m_Individuals[x][y].m_Species->m_ID, protracted, m_Global_Species_Counter , m_Individuals[x][y].m_Species->get_species_ID(), generation, std::make_pair(x, y), m_SimulationEnd);
-
-      
-      m_Individuals[x][y].evolveDuringSpeciation();
-      
-      //			individuals[x][y].Species->date_of_extinction = runs;
-
-
-
-      // Should be in protracted
-       m_Phylogeny.updatePhylogeny(m_Individuals[x][y].m_Species);
-      
-      // update relatedness values for density dependence / competition
-      if(m_DD) densityUpdate(x,y);
-      
-      
-      
-      
-      // Implementation of fission:
-      // Getting the species which is randomly chosen
-      
-      // Now look where the individuals of these species are
-      // and save locations in xvec and yvec
-      
-      
-      if(m_fission == 1){
-
-    	  // std::cout << "Size " << xvec.size() << std::endl;
-
-        for(unsigned int k =0; k< xvec.size(); k+=2){
-          m_Individuals[xvec[k]][yvec[k]].reportDeath(generation);
-          m_Individuals[xvec[k]][yvec[k]].m_Species = m_Individuals[x][y].m_Species;
-          m_Individuals[xvec[k]][yvec[k]].evolveDuringSpeciation();
-
-          if(m_DD) densityUpdate(xvec[k],yvec[k]);
-          }
-        }
-
-
-      if(m_fission == 2){
-        
-        // In this case the population is split in half in the
-        // mean of the x-coordinates.
-        // All Individuals with a larger x-coordinate become part of the new species.
-        // TODO: Random splits, directions etc...
-        
-        int sum = std::accumulate(xvec.begin(), xvec.end(), 0);
-        int mean = sum / xvec.size();
-        
-
-        for(unsigned int k = 0; k < xvec.size(); k++){
-          if(xvec[k] < mean){
-
-        	m_Individuals[xvec[k]][yvec[k]].reportDeath(generation);
-            m_Individuals[xvec[k]][yvec[k]].m_Species = m_Individuals[x][y].m_Species;
-            m_Individuals[xvec[k]][yvec[k]].evolveDuringSpeciation();
-
-            if(m_DD) densityUpdate(xvec[k],yvec[k]);
-
-          }
-        }
-      }
-
-   //  std::cout << "Clear" << std::endl;
-      // Clear the vector
-      xvec.clear();
-      yvec.clear();
-    }
   }
-
-
-
- // int protracted=0;
-
- // std::vector<int> specvec;
-
- /* for(int k = 0; k < m_Xdimensions; k++){
-          for(int j = 0; j < m_Ydimensions; j++){
- if((m_Individuals[k][j].m_Species->m_Date_of_Emergence + protracted) == generation){
-	 // std::cout << "Generation: " << generation << " Date of emergence: " << m_Individuals[k][j].m_Species->m_Date_of_Emergence << std::endl;
-
-       	 m_Individuals[k][j].m_Species->m_ID =  m_Individuals[k][j].m_Species->m_incip_ID;
-
-       	if(std::find(specvec.begin(), specvec.end(), m_Individuals[k][j].m_Species->m_ID) != specvec.end()){
-       		continue;
-       	}
-       	else{
-       	 m_Phylogeny.updatePhylogeny(m_Individuals[k][j].m_Species);
-        specvec.push_back(m_Individuals[k][j].m_Species->m_ID);
-       	}
-    }
-         }}
-
-  specvec.clear();
-*/
-// std::cout << "End Speciation" << std::endl;
-
-
-/*  if(generation == 1000){
-	  for(int k = 0; k < m_Xdimensions; k++){
-	            for(int j = 0; j < m_Ydimensions; j++){
-	            	if((m_Individuals[k][j].m_Species->m_Date_of_Emergence + protracted) > generation){
-	            		m_Individuals[k][j].m_Species->m_ID = m_Individuals[k][j].m_Species->m_incip_ID;
-
-	            		std::cout << "m_incip_ID= " <<   m_Individuals[k][j].m_Species->m_incip_ID << std::endl;
-
-	            	}}}
-	            	*/
-
-
-}
-
-
-void Landscape::updateGrid (){
-	for(int k = 0; k < m_Xdimensions; k++){
-	          for(int j = 0; j < m_Ydimensions; j++){
-	        	  if((m_Individuals[k][j].m_Species->m_Date_of_Emergence + 50) > 1000){
-	        		  m_Individuals[k][j].m_Species->m_ID = m_Individuals[k][j].m_Species->m_incip_ID;
-
-	        	  }
-	        	  }
-
-
-	          }
-
-
-
-
-
-}
-
+        

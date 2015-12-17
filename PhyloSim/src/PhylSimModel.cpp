@@ -83,18 +83,8 @@ void PhylSimModel::update(unsigned int runs)
 }
 
 
-void PhylSimModel::updateGrid(){
-
-	if(m_Dispersal==1){
-	           m_Global->updateGrid();
-	      }
-	      else if(m_Dispersal == 3) {
-	           m_Local->updateGrid();
-
-	      }
 
 
-}
 
 //! Public class method to increase age of all individuals by one
 /*!

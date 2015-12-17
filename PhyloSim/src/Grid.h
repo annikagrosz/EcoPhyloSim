@@ -89,7 +89,7 @@ class Landscape {
 
 	void speciation(unsigned int generation);
   void densityUpdate(int x, int y);
-  void updateGrid();
+
 
 	std::pair<int, int> get_dimensions();
 };

@@ -56,12 +56,17 @@ void Phylogeny::prunePhylogeny(int current)
     Species * specp = new Species(*m_FullPhylogeny->find(i)->second);
     if (specp->m_Date_of_Extinction > current) specp->m_Date_of_Extinction = current;
     m_PrunedPhylo->insert( std::pair<unsigned long long, Species*>(specp->m_ID, specp));
+    std::cout << "End Prune" <<std::endl;
   }
+
+  std::cout << "End Prune Loop" <<std::endl;
   // TODO - I somehow don't understand 100% why this works .. we go through the phylogeny size, erase things inbetween, why don't we get into 
   // trouble for trying to access indices that have already been erase?
   
 	for(unsigned long long i=1; i <= m_PrunedPhylo->size(); i++)
 	{
+		  std::cout << "Start second Loop" <<std::endl;
+
 		Species * father = m_PrunedPhylo->find(i)->second;
 
 		for(int i = 0; i<10; i++){
@@ -82,15 +87,15 @@ void Phylogeny::prunePhylogeny(int current)
 				 }
 			}
 		}
-//		 std::cout << father->children.size() << '\n';
+		// std::cout << father->children.size() << '\n';
 	}
-//	std::cout <<"phylosize : " << prunedPhylo.size() << '\n';
+	// std::cout <<"phylosize : " << prunedPhylo.size() << '\n';
 }
 
 void Phylogeny::writePhylogeny(unsigned long long start, std::multimap<unsigned long long, Species*> *phylogenyMap, char suffix)
 {
 	Species * parent = phylogenyMap->find(start)->second;
-	Species * ancestorSpecies = new Species(0,0,0,0,0,std::make_pair(0,0),0);
+	Species * ancestorSpecies = new Species(0,0,0,std::make_pair(0,0),0);
 	phylogenyMap->insert(std::make_pair(ancestorSpecies->m_ID, ancestorSpecies));
 	parent->m_Ancestor = 0;
 	//std::map<unsigned long long, int> position; // Initialisieren ??
@@ -221,7 +226,7 @@ void Phylogeny::writePhylogeny(unsigned long long start, std::multimap<unsigned 
 std::string Phylogeny::writePhylogenyR(unsigned long long start, std::multimap<unsigned long long, Species*> * phylogenyMap)
 {
 	Species * parent = phylogenyMap->find(start)->second;
-	Species * ancestorSpecies = new Species(0,0,0,0,0,std::make_pair(0,0),0);
+	Species * ancestorSpecies = new Species(0,0,0,std::make_pair(0,0),0);
 	phylogenyMap->insert(std::make_pair(ancestorSpecies->m_ID, ancestorSpecies));
 	parent->m_Ancestor = 0;
 
@@ -246,14 +251,11 @@ std::string Phylogeny::writePhylogenyR(unsigned long long start, std::multimap<u
 			{
 				if(position[parent->m_ID] != 0) throw std::runtime_error("unexpected value for position value in a leaf") ;
 				branchLength = parent->m_Date_of_Extinction - parent->m_Date_of_Emergence;
-
-				if(branchLength > 50){
 				tree.insert(0, to_string(branchLength) );
 				tree.insert(0, ":" );
 				tree.insert(0, to_string(parent->m_ID) );
 				tree.insert(0, "s" );
 				tree.insert(0, "," );
-				}
 				parent = phylogenyMap->find(parent->m_Ancestor)->second ;
 				position[parent->m_ID] += 1;
 			}

@@ -14,8 +14,6 @@
 
 Species::Species()
 {
-	this->m_incip_ID = 0,
-	this->m_gamma = -999;
 	this->m_ID = 0;
 	this->m_Ancestor = 0;
 	this->m_Count = 0;
@@ -36,8 +34,6 @@ Species::Species()
 
 Species::Species(const Species & spec)
 {
-	this->m_incip_ID = spec.m_incip_ID;
-	this->m_gamma = spec.m_gamma;
 	this->m_ID = spec.m_ID;
 	this->m_Ancestor = spec.m_Ancestor;
 	this->m_Count = spec.m_Count;
@@ -59,8 +55,6 @@ Species::Species(const Species & spec)
 
 void Species::operator=(const Species & spec)
 {
-	this->m_incip_ID = spec.m_incip_ID;
-	this->m_gamma = spec.m_gamma;
 	this->m_ID = spec.m_ID;
 	this->m_Ancestor = spec.m_Ancestor;
 	this->m_Count = spec.m_Count;
@@ -101,11 +95,9 @@ void Species::operator=(const Species & spec)
 }*/
 
 
-Species::Species(unsigned long long incip_id, int gamma, unsigned long long id, unsigned long long  father,
+Species::Species(unsigned long long id, unsigned long long  father,
 	      unsigned long long date, std::pair<int, int> birthplace, unsigned int simulationEnd)
 {
-	this->m_incip_ID = incip_id;
-	this->m_gamma = gamma;
 	this->m_ID = id;
 	this->m_Ancestor = father;
 	this->m_Count = 0;

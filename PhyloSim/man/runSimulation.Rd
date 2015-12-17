@@ -21,8 +21,8 @@ If your parameterset contains more than one runs argument, each interim step is 
 \examples{
  
 # Define a parameter set
-par <- createCompletePar(x = 50, y = 50, dispersal = 1 , runs = c(1000,5000),
-        density = 1, environment = 1, specRate = 0.01, fission = 2, redQueen=0, redQueenStrength=1)
+par <- createCompletePar(x = 50, y = 50, dispersal = 1 , runs = 1000,
+        density = 1, environment = 1, specRate = 10, fission = 0, redQueen=0, redQueenStrength=1)
 
 # Run the model
 simu <- runSimulation(par)

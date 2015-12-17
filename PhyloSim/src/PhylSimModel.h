@@ -32,7 +32,7 @@ class PhylSimModel {
    void getclimate();
    void update(unsigned int runs);
    void gettraits();
-   void updateGrid();
+
 
 private:
 };

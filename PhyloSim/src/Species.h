@@ -40,8 +40,6 @@ class Species {
 	double m_CompetitionMean;
 	std::vector<unsigned long long> m_Children;
 
-	unsigned long long m_incip_ID;
-	int m_gamma;
 
 	/*Species(unsigned long long id, unsigned long long  father,
 	      unsigned long long date, std::pair<int, int> birthplace, unsigned int runs);
@@ -52,7 +50,7 @@ class Species {
 	void operator=(const Species & spec);
 
 
-	Species(unsigned long long incip_id, int gamma, unsigned long long id, unsigned long long  father,
+	Species(unsigned long long id, unsigned long long  father,
 	      unsigned long long date, std::pair<int, int> birthplace, unsigned int runs);
 
 	~Species();

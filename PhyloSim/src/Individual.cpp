@@ -24,6 +24,7 @@ Individual::Individual()
   
 	this ->m_LocalDensity = 0.0; // density experienced around itself, will be updated automatically 
 	this ->m_Age = 0;
+	this ->m_incip_Age = -999999999999999;
   
   // THESE SEEM OBSOLTE ???
 	//this ->m_FitnessWeight = 0.5;
@@ -55,6 +56,7 @@ Individual::Individual(const Individual &ind)
 	this -> m_Y_coordinate = ind.m_Y_coordinate;
 	this -> m_LocalDensity = ind.m_LocalDensity;
 	this -> m_Age = 0;
+	this -> m_incip_Age = -999999999999999;
 //	this -> m_FitnessWeight = ind.m_FitnessWeight;
 //	this -> m_DensityStrength = ind.m_DensityStrength;
 //	this -> m_Weight = ind.m_Weight;
@@ -84,6 +86,8 @@ void Individual::operator=(const Individual &ind)
 	this -> m_Y_coordinate = -999;
 	this -> m_LocalDensity = ind.m_LocalDensity;
 	this -> m_Age = 0;
+	this -> m_incip_Age = -999999999999999;
+
 //	this -> m_FitnessWeight = ind.m_FitnessWeight;
 //	this -> m_DensityStrength = ind.m_DensityStrength;
 //	this -> m_Weight = ind.m_Weight;
