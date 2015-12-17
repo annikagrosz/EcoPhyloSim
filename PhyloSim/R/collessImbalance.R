@@ -10,21 +10,44 @@ collessImbalance <- function(simu, which.result = NULL){
   if (is.null(which.result)) which.result = length(simu$Output) 
   phylo <- simu$Output[[which.result]]$phylogeny
   
-  # Check if Colless can be calculated
-  len_tip <- length(phylo$tip.label)
-  Nodes <- phylo$Nnode
-  if (Nodes != (len_tip - 1)){
-    c.imbal<-NA
-  }else{ 
   # Calculate Colless  
-  balance <- try(ape::balance(phylo))
+  balance <- balancefun(phylo)
     sum.diff <- 0
     for(i in 1:length(balance[,1])){
       diff <- abs(balance[i,1] - balance[i,2])
       sum.diff <- sum.diff + diff 
     }
     c.imbal <- 2*sum.diff/((sum(balance[1,])-1)*(sum(balance[1,])-2))
+    return(as.numeric(c.imbal))
+}
+
+
+#### The following function is largely ####
+## copied from the 'ape' package Version 3.4 ##
+#  Paradis E., Claude J. & Strimmer K. 2004. 
+#    APE: analyses of phylogenetics and evolution in R
+#    language. Bioinformatics 20: 289-290
+balancefun<-function(phy){
+  if (!inherits(phy, "phylo")) 
+    stop("object \"phy\" is not of class \"phylo\"")
+  phy <- reorder(phy)
+  N <- length(phy$tip.label)
+  nb.node <- phy$Nnode
+  
+  ans <- matrix(NA, nb.node, 2)
+  foo <- function(node, n) {
+    s <- which(phy$edge[, 1] == node)
+    desc <- phy$edge[s, 2]
+    ans[node - N, 1] <<- n1 <- (s[2] - s[1] + 1)/2
+    ans[node - N, 2] <<- n2 <- n - n1
+    if (desc[1] > N) 
+      foo(desc[1], n1)
+    if (desc[2] > N) 
+      foo(desc[2], n2)
   }
-  if(is.element(NA, c.imbal)) warning("NA values were produced where phylogeny is not rooted and fully dichotomous")
-  return(as.numeric(c.imbal))
+  foo(N + 1, N)
+  rownames(ans) <- if (is.null(phy$node.label)) 
+    N + 1:nb.node
+  else phy$node.label
+  ans
 }

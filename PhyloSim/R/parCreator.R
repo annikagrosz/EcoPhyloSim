@@ -38,7 +38,6 @@ createCompletePar <- function(x = 50, y = 50, dispersal = "global", runs = 100, 
              density = density, environment = environment, fitnessActsOn=fitnessActsOn,
              fitnessBaseMortalityRatio=fitnessBaseMortalityRatio, densityCut = densityCut, 
              seed = seed, type = type, scenario = scenario)
-  
 
   return(par)
   

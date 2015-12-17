@@ -12,7 +12,7 @@ highlightLocalPhylo(simu, which.result = NULL, size, n, subplot = NULL,
 
 \item{which.result}{Integer, determines which result should be used. This argument is only usefull if your 'runs' argument in \code{\link{createCompletePar}} contains more than one element. By default (NULL), the last result is used.}
 
-\item{size, }{TODO}
+\item{size, }{size of the local plots.}
 
 \item{n}{The number of local communities. For each community a new plot is created. Needs to be greater than 1}
 
