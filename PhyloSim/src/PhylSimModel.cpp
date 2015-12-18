@@ -67,13 +67,13 @@ void PhylSimModel::update(unsigned int runs)
        #endif
        
       if(m_Dispersal==1){
-           m_Global->increaseAge();
+           m_Global->increaseAge(timeStep + generation);
            m_Global->reproduce(timeStep + generation);
            m_Global->speciation(timeStep + generation);
            std::cout << "Disp generation :" <<  generation << '/' << runs << '\n';
       }
       else if(m_Dispersal == 3) {
-           m_Local->increaseAge();
+           m_Local->increaseAge(timeStep + generation);
            m_Local->reproduce(timeStep + generation);
            m_Local->speciation(timeStep + generation);
            std::cout << "Disp generation :" <<  generation << '/' << runs << '\n';
