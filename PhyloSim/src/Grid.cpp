@@ -198,15 +198,6 @@ void Landscape::increaseAge(unsigned int generation)
          this->m_Individuals[rows][cols].m_Age += 1;
          this->m_Individuals[rows][cols].m_incip_Age += 1;
 
-         if(this->m_Individuals[rows][cols].m_Species->m_Date_of_Emergence == (generation-1) && m_redQueen != 0){
-        	 this->m_Individuals[rows][cols].m_envStrength =  this->m_Individuals[rows][cols].m_envStrength* m_redQueenStrength;
-			 this->m_Individuals[rows][cols].m_compStrength = this->m_Individuals[rows][cols].m_compStrength* m_redQueenStrength;
-         }
-         else{
-         this->m_Individuals[rows][cols].m_envStrength = this->m_Individuals[rows][cols].m_envStrength*(std::pow(2.718,-m_redQueen));
-		 this->m_Individuals[rows][cols].m_compStrength = this->m_Individuals[rows][cols].m_envStrength*(std::pow(2.718,-m_redQueen));
-         }
-
       }
    }
 }
@@ -250,7 +241,7 @@ void GlobalEnvironment::reproduce(unsigned int generation)
   /////////////////////////////////////////////////////
   // NEUTRAL CASE
   
-   if(m_Neutral)
+   if(m_Neutral && (m_redQueen==0) && (m_redQueenStrength==1))
    {
       #ifdef DEBUG
       std::cout<<"In global neutral \n";
@@ -284,7 +275,7 @@ void GlobalEnvironment::reproduce(unsigned int generation)
    
    else // Density dependence and / or Environmental dependence
    {
-     
+	   std::cout<<"In global non-neutral \n";
       #ifdef DEBUG
       std::cout<<"In global non-neutral \n";
       #endif
@@ -329,7 +320,7 @@ void GlobalEnvironment::reproduce(unsigned int generation)
         {
            for(int kernel_y = 0 ; kernel_y <  m_Ydimensions ; kernel_y++)
            {
-              weights[array_length] = m_Individuals[kernel_x][kernel_y].getFitness(m_Environment[kernel_x * m_Ydimensions + kernel_y].first, m_Env, m_DD);
+              weights[array_length] = m_Individuals[kernel_x][kernel_y].getFitness(m_Environment[kernel_x * m_Ydimensions + kernel_y].first, m_Env, m_DD, generation, m_redQueenStrength, m_redQueen);
               seedSum += weights[array_length];
               array_length ++;
            }
@@ -365,7 +356,7 @@ void GlobalEnvironment::reproduce(unsigned int generation)
          int y_coordinate = m_RandomGenerator.randomInt(0,m_Ydimensions-1);
 
          if(event % m_mortalityStrength != 0 && m_mortality){
-            double weight = m_Individuals[x_coordinate][y_coordinate].getFitness(m_Environment[x_coordinate * m_Ydimensions + y_coordinate].first, m_Env, m_DD);         
+            double weight = m_Individuals[x_coordinate][y_coordinate].getFitness(m_Environment[x_coordinate * m_Ydimensions + y_coordinate].first, m_Env, m_DD,  generation, m_redQueenStrength, m_redQueen);
             // important!! the frequency in relation to the base mortality controls the intensity of the mechanisms
         	  double chanceOfDeath = m_RandomGenerator.randomDouble(0.0,1.0);
             //std::cout<<weight<<"\n"; // DEBUG
@@ -625,7 +616,7 @@ void LocalEnvironment::reproduce(unsigned int generation)
       // If fitness acts on mortality, break here with a chance ~ fitness
       
       if(m_mortality && event % m_mortalityStrength != 0){ // important!! the frequency in relation to the base mortality controls the intensity of the mechanisms
-    	  double weight = m_Individuals[x_coordinate][y_coordinate].getFitness(m_Environment[x_coordinate * m_Ydimensions + y_coordinate].first, m_Env, m_DD);
+    	  double weight = m_Individuals[x_coordinate][y_coordinate].getFitness(m_Environment[x_coordinate * m_Ydimensions + y_coordinate].first, m_Env, m_DD, generation, m_redQueenStrength, m_redQueen);
         double chanceOfDeath = m_RandomGenerator.randomDouble(0.0,1.0);
 		  if(weight > chanceOfDeath) continue;
 	    }
@@ -657,7 +648,7 @@ void LocalEnvironment::reproduce(unsigned int generation)
                parents[array_length].first = kernel_x;
                parents[array_length].second =  kernel_y;
                if(m_reproduction){
-                 weights[array_length] = m_Individuals[kernel_x][kernel_y].getSeedsTo(relativeX,relativeY, m_Dispersal_type, m_Environment[kernel_x * m_Ydimensions + kernel_y].first, m_Env, m_DD);
+                 weights[array_length] = m_Individuals[kernel_x][kernel_y].getSeedsTo(relativeX,relativeY, m_Dispersal_type, m_Environment[kernel_x * m_Ydimensions + kernel_y].first, m_Env, m_DD, generation, m_redQueenStrength, m_redQueen);
                }else if(m_mortality){
                  weights[array_length] = m_Individuals[kernel_x][kernel_y].dispersal(m_Dispersal_type, m_Individuals[kernel_x][kernel_y].euclidian_distance(relativeX, relativeY));
                }else throw 11;

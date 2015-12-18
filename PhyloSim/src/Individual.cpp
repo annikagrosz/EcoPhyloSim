@@ -132,13 +132,13 @@ void Individual::operator=(const Individual &ind)
 	}
 
 
-	double Individual::getSeedsTo(int rel_x, int rel_y, int dispersal_type, double temp, bool env, bool dd)
+	double Individual::getSeedsTo(int rel_x, int rel_y, int dispersal_type, double temp, bool env, bool dd, int generation, double redQueenStrength, double redQueen)
 	{
     double dispersal_weight = 0.0;
 		dispersal_weight = dispersal(dispersal_type, euclidian_distance(rel_x, rel_y)); // Kernel or NN
     
 		if(env || dd) {
-      double fitness_weight = getFitness(temp, env, dd);
+      double fitness_weight = getFitness(temp, env, dd, generation, redQueenStrength, redQueen );
       return(dispersal_weight * fitness_weight);
 		}else{
       return(dispersal_weight);
@@ -152,13 +152,21 @@ void Individual::operator=(const Individual &ind)
    * @param dd density acting 
    * @return Fitness
    */
-  double Individual::getFitness(double temp, bool env, bool dd)
+  double Individual::getFitness(double temp, bool env, bool dd, int generation, double redQueenStrength, double redQueen)
 	{
     double out = (DBL_MIN*100.0); 
 		if(env) out += m_envStrength * exp(-0.5 * pow((temp - m_Mean) / m_Variance, 2.0)) + 1-m_envStrength; // environmental niche
     if(dd) out += m_compStrength * m_LocalDensity + 1- m_compStrength + (DBL_MIN*100.0);
+
+    if((redQueenStrength != 1) || (redQueen != 0)){
+     if(m_Species->m_Date_of_Emergence == (generation-1)) out = out*redQueenStrength;
+     else{
+    	 out= out*redQueenStrength * std::pow(2.71828, (-redQueen*(generation-1-m_Species->m_Date_of_Emergence)));
+     }
+    }
     return out;
 	}
+
 
 
 	double Individual::euclidian_distance(int x, int y)

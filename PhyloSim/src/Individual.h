@@ -48,8 +48,8 @@ class Individual {
 	double m_NeutralMarker;
 	double m_dispersalDistance;
   
-  double m_envStrength;
-  double m_compStrength;
+    double m_envStrength;
+    double m_compStrength;
 
 	RandomGen m_RandomGenerator;
   
@@ -61,9 +61,11 @@ class Individual {
 
   void evolveDuringSpeciation();
 
-	double getSeedsTo(int rel_x, int rel_y, int dispersal_type, double temp, bool env, bool dd);
+	double getSeedsTo(int rel_x, int rel_y, int dispersal_type, double temp, bool env, bool dd, int generation, double redQueenStrength, double redQueen);
   
-  double getFitness(double temp, bool env, bool dd);
+    double getFitness(double temp, bool env, bool dd, int generation, double redQueenStrength, double redQueen);
+
+
 
 	double dispersal(int dispersal_type, double distance);  // 1 for kernel, 2 for nearest neighbor, 3 for global
 
