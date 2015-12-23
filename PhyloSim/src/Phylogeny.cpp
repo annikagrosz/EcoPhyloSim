@@ -46,7 +46,7 @@ void Phylogeny::writeSpeciesData()
 
 void Phylogeny::prunePhylogeny(int current)
 {
-  
+  std::cout << "Prune Phylogeny" << std::endl;
   m_PrunedPhylo->clear();
 
   // Create deep copy
@@ -93,6 +93,7 @@ void Phylogeny::prunePhylogeny(int current)
 
 void Phylogeny::writePhylogeny(unsigned long long start, std::multimap<unsigned long long, Species*> *phylogenyMap, char suffix)
 {
+	 std::cout << "write Phylogeny" << std::endl;
 	Species * parent = phylogenyMap->find(start)->second;
 	Species * ancestorSpecies = new Species(0,0,0,std::make_pair(0,0),0);
 	phylogenyMap->insert(std::make_pair(ancestorSpecies->m_ID, ancestorSpecies));
@@ -224,6 +225,8 @@ void Phylogeny::writePhylogeny(unsigned long long start, std::multimap<unsigned 
 
 std::string Phylogeny::writePhylogenyR(unsigned long long start, std::multimap<unsigned long long, Species*> * phylogenyMap)
 {
+
+	 std::cout << "Write Phylogeny" << std::endl;
 	Species * parent = phylogenyMap->find(start)->second;
 	Species * ancestorSpecies = new Species(0,0,0,std::make_pair(0,0),0);
 	phylogenyMap->insert(std::make_pair(ancestorSpecies->m_ID, ancestorSpecies));
@@ -232,9 +235,9 @@ std::string Phylogeny::writePhylogenyR(unsigned long long start, std::multimap<u
 	int branchLength = 0;
 
 	std::string tree = ";" ;
-
 	std::vector <size_t> position  (phylogenyMap->size(),0);
 	std::vector <size_t> paranthesis  (phylogenyMap->size(),0);
+	int counter = 1;
 
     bool go = true;
 	while(go )
@@ -248,6 +251,7 @@ std::string Phylogeny::writePhylogenyR(unsigned long long start, std::multimap<u
 			// If parent is leaf, write down leaf and length and go one up
 			if(parent->m_Children.empty())
 			{
+				std::cout << "Children empty" << std::endl;
 				if(position[parent->m_ID] != 0) throw std::runtime_error("unexpected value for position value in a leaf") ;
 				branchLength = parent->m_Date_of_Extinction - parent->m_Date_of_Emergence;
 				tree.insert(0, to_string(branchLength) );
@@ -257,12 +261,15 @@ std::string Phylogeny::writePhylogenyR(unsigned long long start, std::multimap<u
 				tree.insert(0, "," );
 				parent = phylogenyMap->find(parent->m_Ancestor)->second ;
 				position[parent->m_ID] += 1;
+				std::cout << "Children empty found ancestor" << std::endl;
 			}
 
 
 			// if all children visited write down parent, close and go one up
 			else if(position[parent->m_ID] == parent->m_Children.size() )
 			{
+
+				std::cout << "Children all visited" << std::endl;
 				branchLength = parent->m_Date_of_Extinction - phylogenyMap->find(parent->m_Children.back())->second->m_Date_of_Emergence;
 
 				tree.insert(0, to_string(branchLength));
@@ -272,8 +279,9 @@ std::string Phylogeny::writePhylogenyR(unsigned long long start, std::multimap<u
 				tree.insert(0, paranthesis[parent->m_ID],'(' );
 				tree.insert(0, "," );
 				parent = phylogenyMap->find(parent->m_Ancestor)->second;
-
 				position[parent->m_ID] +=1 ;
+
+				std::cout << "All children visited found ancestor" << std::endl;
 
 			}
 
@@ -281,28 +289,87 @@ std::string Phylogeny::writePhylogenyR(unsigned long long start, std::multimap<u
 			// then go to child
 			else if(position[parent->m_ID] < parent->m_Children.size() )
 			{
-
+				std::cout << "Children not all visited yet" << std::endl;
 				// if two siblings are born in the same generation
+				//if(position[parent->m_ID]==3) throw std::runtime_error("Cannot build phylogeny");
 
-				if ( position[parent->m_ID] > 1 &&
+				std::cout << "Position " << position[parent->m_ID] << std::endl;
+
+         // Original Verrsion
+				/*if ( position[parent->m_ID] > 1 &&
 					phylogenyMap->find(parent->m_Children[position[parent->m_ID]])->second->m_Date_of_Emergence == phylogenyMap->find(parent->m_Children[position[parent->m_ID]-1])->second->m_Date_of_Emergence &&
 					phylogenyMap->find(parent->m_Children[position[parent->m_ID]])->second->m_Date_of_Emergence == phylogenyMap->find(parent->m_Children[position[parent->m_ID]+1])->second->m_Date_of_Emergence){
-					if (!(phylogenyMap->find(parent->m_Children[position[parent->m_ID] - 1])->second->m_Children.empty()) && (phylogenyMap->find(parent->m_Children[position[parent->m_ID]])->second->m_Children.empty())){
 
+					std::cout << "IF" << std::endl;
+					if (!(phylogenyMap->find(parent->m_Children[position[parent->m_ID] - 1])->second->m_Children.empty()) && (phylogenyMap->find(parent->m_Children[position[parent->m_ID]])->second->m_Children.empty())){
+						std::cout << "Found parent3" << std::endl;
 						;
 //						tree.insert(0, "," );
 					}
+				}*/
+
+
+				// New version needed to find the bug.
+
+				if ( position[parent->m_ID] > 1){
+
+					 std::cout<<"Self: " << phylogenyMap->find(parent->m_Children[position[parent->m_ID]])->second->m_Date_of_Emergence  << std::endl;
+					 std::cout<<"Minus one: " << phylogenyMap->find(parent->m_Children[position[parent->m_ID]-1])->second->m_Date_of_Emergence  << std::endl;
+
+					 if(phylogenyMap->find(parent->m_Children[position[parent->m_ID]])->second->m_Date_of_Emergence == phylogenyMap->find(parent->m_Children[position[parent->m_ID]-1])->second->m_Date_of_Emergence){
+						std::cout << "Found first parent" << std::endl;
+						 std::cout<<"Self: " << phylogenyMap->find(parent->m_Children[position[parent->m_ID]])->second->m_Date_of_Emergence << std::endl;
+						 //std::cout<<"Plus one: " << phylogenyMap->find(parent->m_Children[position[parent->m_ID]+1])->second->m_Date_of_Emergence  << std::endl;
+
+						 std::cout<<"Children m_ID: " << phylogenyMap->find(parent->m_Children[position[parent->m_ID]])->second->m_ID  << std::endl;
+						 std::cout<<"Children2 m_ID: " << phylogenyMap->find(parent->m_Children[position[parent->m_ID]+1])->second->m_ID  << std::endl;
+
+
+						 std::cout<<"Position: " << position[parent->m_ID]  << std::endl;
+
+						 std::cout<<"Parent m_ID: " <<parent->m_ID << std::endl;
+						 std::cout<<"Length Position: " << position.size() << std::endl;
+
+
+
+
+
+						 // Here is the bug (or here shows the bug): The problem is, that plus one cannot be found.
+
+
+						if(phylogenyMap->find(parent->m_Children[position[parent->m_ID]])->second->m_Date_of_Emergence == phylogenyMap->find(parent->m_Children[position[parent->m_ID]+1])->second->m_Date_of_Emergence){
+							std::cout << "Found second parent" << std::endl;
+							if (!(phylogenyMap->find(parent->m_Children[position[parent->m_ID] - 1])->second->m_Children.empty()) && (phylogenyMap->find(parent->m_Children[position[parent->m_ID]])->second->m_Children.empty())){
+							std::cout << "Found parent3" << std::endl;
+								;
+	//						tree.insert(0, "," );
+					  }
+					}
 				}
+			}
+
+
+
+
+				//End new/test version
+
+
+
 				else{
+					std::cout << "ELSE" << std::endl;
 					// if first time going through this node branch lenght is distance to parent node
 					if(position[parent->m_ID] == 0)
 					{
 						branchLength = phylogenyMap->find(parent->m_Children[position[parent->m_ID]])->second->m_Date_of_Emergence - parent->m_Date_of_Emergence;
+						std::cout << "Found parent 1" << std::endl;
+
 					}
 					// else branch lenght is distance to previous sibling
 					else // ????? or position = children size
 					{
+						std::cout << "ELSE 2" << std::endl;
 						branchLength = phylogenyMap->find(parent->m_Children[position[parent->m_ID]])->second->m_Date_of_Emergence - phylogenyMap->find(parent->m_Children[position[parent->m_ID ]-1])->second->m_Date_of_Emergence;
+						std::cout << "Found parent 2" << std::endl;
 					}
 
 					tree.insert(0, to_string(branchLength));
@@ -314,9 +381,17 @@ std::string Phylogeny::writePhylogenyR(unsigned long long start, std::multimap<u
 				}
 
 				parent = phylogenyMap->find(parent->m_Children[position[parent->m_ID]])->second;
+				std::cout << "Found parent" << std::endl;
 			}
-			else throw std::runtime_error("Nope");
 
+			else break;
+			//else throw std::runtime_error("Nope");
+
+			counter +=1;
+			//std::cout << "Counter: " << counter << " Size: " << phylogenyMap->size() << std::endl;
+			//std::cout << "Position max: " << *std::max_element(position.begin(), position.end()) << std::endl;
+
+		if(counter > phylogenyMap->size()) break;
 
 		if (parent->m_ID == 0)
 		{

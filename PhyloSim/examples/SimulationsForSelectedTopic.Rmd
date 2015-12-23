@@ -1,0 +1,139 @@
+---
+title: "Simulations for new features"
+author: "Stefan"
+date: "18. Dezember 2015"
+output: html_document
+---
+This document contains the simulations conducted for the selected topic "TODO name".
+You will find the following sections.
+0. Load Package and reference runs
+1. Random and Geographic Fission
+2. Protracted Speciation
+3. Red Queen Hypothesis / Boost 
+
+
+
+0. Load Package
+-----------------
+First the package has to be loaded.
+```{r}
+library(PhyloSim)
+```
+
+Then I created a reference set of runs. This are five simulations under neutral conditions and point mutation.
+
+
+
+
+
+1. Random fission
+-----------------
+Create the parameter sets:
+
+```{r}
+pars_fission<-list()
+fission <-c(rep(1,5),rep(2,5))
+
+for (i in 1:length(fission)){
+  pars_fission[[i]] = createCompletePar(x = 50 ,y = 50, runs = 1000,
+                                       dispersal = "global",
+                                       specRate = 0.01,                                                                            density = 0,
+                                       environment = 0,
+                                       fitnessBaseMortalityRatio = 5,
+                                       densityCut = 1,
+                                       fission=fission[i],
+                                       redQueen = 0,
+                                       redQueenStrength = 1)
+
+}
+
+```
+
+Run the simulations:
+
+```{r}
+
+simu_fission <- runSimulationBatch(pars_fission) 
+
+```
+
+
+2. Protracted Speciation
+------------------------
+Create the parameter set:
+
+```{r}
+pars_protract<-list()
+protract <-c(rep(1,5),rep(2,5))
+
+for (i in 1:length(protract)){
+  pars_protract[[i]] = createCompletePar(x = 50 ,y = 50, runs = 1000,
+                                       dispersal = "global",
+                                       specRate = 5,                                                                               density = 0,
+                                       environment = 0,
+                                       fitnessBaseMortalityRatio = 5,
+                                       densityCut = 1,
+                                       protracted = protract[i],
+                                       fission=0,
+                                       redQueen = 0,
+                                       redQueenStrength = 1)
+
+}
+
+
+```
+
+Run the simulations:
+
+```{r}
+
+simu_protract <- runSimulationBatch(pars_protract) 
+
+```
+
+
+3. Red Queen
+-------------------------
+Create the parameter set:
+
+```{r}
+pars_redQueen<-list()
+redQueen <-c(rep(0.1,5),rep(0.01,5))
+
+for (i in 1:length(redQueen)){
+  pars_redQueen[[i]] = createCompletePar(x = 50 ,y = 50, runs = 1000,
+                                       dispersal = "global",
+                                       specRate = 1,                                                                               density = 0,
+                                       environment = 0,
+                                       fitnessBaseMortalityRatio = 5,
+                                       densityCut = 1,
+                                       protracted = 0,
+                                       fission=0,
+                                       redQueen = redQueen[i],
+                                       redQueenStrength = 2)
+
+}
+
+
+```
+
+Run the simulations:
+
+```{r}
+
+simu_redQueen <- runSimulationBatch(pars_redQueen) 
+
+```
+
+
+
+
+
+
+You can also embed plots, for example:
+
+```{r, echo=FALSE}
+plot(cars)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.

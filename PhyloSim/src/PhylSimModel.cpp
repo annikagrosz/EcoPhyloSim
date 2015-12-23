@@ -57,12 +57,12 @@ void PhylSimModel::update(unsigned int runs)
    for(unsigned int generation = 1; generation < runs+1; generation++)
    {
 
-       std::cout << "generation :" <<  generation << '/' << runs << '\n';
+      // std::cout << "generation :" <<  generation << '/' << runs << '\n';
 
        #ifdef DEBUG
         if(generation % 1000 == 0){
            //  	std::cout << '\n';
-           std::cout << "generation :" <<  generation << '/' << runs << '\n';
+          // std::cout << "generation :" <<  generation << '/' << runs << '\n';
         }
        #endif
        
@@ -70,13 +70,13 @@ void PhylSimModel::update(unsigned int runs)
            m_Global->increaseAge(timeStep + generation);
            m_Global->reproduce(timeStep + generation);
            m_Global->speciation(timeStep + generation);
-           std::cout << "Disp generation :" <<  generation << '/' << runs << '\n';
+         //  std::cout << "Disp generation :" <<  generation << '/' << runs << '\n';
       }
       else if(m_Dispersal == 3) {
            m_Local->increaseAge(timeStep + generation);
            m_Local->reproduce(timeStep + generation);
            m_Local->speciation(timeStep + generation);
-           std::cout << "Disp generation :" <<  generation << '/' << runs << '\n';
+        //   std::cout << "Disp generation :" <<  generation << '/' << runs << '\n';
       }
    }
    timeStep += runs; 

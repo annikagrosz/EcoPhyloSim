@@ -774,8 +774,8 @@ if(m_protracted != 0){
 					  if(m_DD) densityUpdate(k,j);
 					  m_Individuals[k][j].m_incip_Age = -99999999999999;
 
-					  for(int z = 1; z< m_Xdimensions; z++){
-						  for(int q=1; q< m_Ydimensions; q++){
+					  for(int z = 0; z< m_Xdimensions; z++){
+						  for(int q=0; q< m_Ydimensions; q++){
 							  if((m_Individuals[z][q].m_incip_Age == m_protracted) && (m_Individuals[z][q].m_Species->m_ID ==  oldspec)){
 								  m_Individuals[z][q].reportDeath(generation);
 								  m_Individuals[z][q].m_Species = m_Individuals[k][j].m_Species;
@@ -791,6 +791,7 @@ if(m_protracted != 0){
 
   int specRate = m_RandomGenerator.randomPoisson(m_Speciation_Rate);
   
+
   for (int i = 0; i < specRate; i++)
   {
 
@@ -798,6 +799,7 @@ if(m_protracted != 0){
     int x = m_RandomGenerator.randomInt(0,m_Xdimensions-1); // rand() % xdimensions;
     int y = m_RandomGenerator.randomInt(0,m_Ydimensions-1); // rand() % ydimensions;
     
+
     if(m_fission ==0){
        m_Individuals[x][y].m_incip_Age = 0;
     }
@@ -822,6 +824,7 @@ if(m_protracted != 0){
         	if(m_fission ==2){
     	        int sum = std::accumulate(xvec.begin(), xvec.end(), 0);
     	        int mean = sum / xvec.size();
+    	        if(sum == 0) mean=-1;
 
     	        for(unsigned int z = 0; z < xvec.size(); z++){
     	          if(xvec[z] < mean){
@@ -836,8 +839,12 @@ if(m_protracted != 0){
 
 
 if(m_protracted == 0){
-     std::cout << "No protracted Spec" << std::endl;
+    // std::cout << "No protracted Spec" << std::endl;
 	  int specRate = m_RandomGenerator.randomPoisson(m_Speciation_Rate);
+
+  	std::vector<int> xcoords;
+     std::vector<int> ycoords;
+
 
 	  for (int i = 0; i < specRate; i++)
 	  {
@@ -846,13 +853,35 @@ if(m_protracted == 0){
 	    int x = m_RandomGenerator.randomInt(0,m_Xdimensions-1); // rand() % xdimensions;
 	    int y = m_RandomGenerator.randomInt(0,m_Ydimensions-1); // rand() % ydimensions;
 
+	    /*   bool t = true;
+	    while(t){
+   		 x = m_RandomGenerator.randomInt(0,m_Xdimensions-1);
+   		 y = m_RandomGenerator.randomInt(0,m_Ydimensions-1);
+	    for(int c =0; c<xcoords.size(); c++){
+	    	if(xcoords[c]==x && ycoords[c]==y) break;
+	    	else t = false;
+	      }
+	    }
+
+	    xcoords.push_back(x);
+	    ycoords.push_back(y); */
+
+
+
+
+
+		  // Is this really necessary???????????????????????????????????????????????
+	    //if(m_Individuals[x][y].m_Species->m_Date_of_Emergence < (generation-1)){
+
+
 	    m_Global_Species_Counter+=1;
+       // std::cout << "Counter: " << m_Global_Species_Counter << " Generation: " << generation << std::endl;
 
 	   // std::cout << "Here Fission= " << m_fission << std::endl;
 
 	    if(m_fission == 0){
 
-	    	std::cout << "No fission" << std::endl;
+	    	//std::cout << "No fission" << std::endl;
 
 	       // std::cout << "Fission's not runing" << std::endl;
 	         m_Individuals[x][y].m_Species->m_Children.push_back(m_Global_Species_Counter);
@@ -862,7 +891,7 @@ if(m_protracted == 0){
 
 	         //Testversion as long as protracted not fully implemented
 	         m_Individuals[x][y].m_Species = new Species(m_Global_Species_Counter , m_Individuals[x][y].m_Species->get_species_ID(), generation, std::make_pair(x, y), m_SimulationEnd);
-
+	        // std::cout << " A new species " << std::endl;
 
 	         m_Individuals[x][y].evolveDuringSpeciation();
 
@@ -901,7 +930,7 @@ if(m_protracted == 0){
 	      m_Individuals[x][y].reportDeath(generation);
 
 	      m_Individuals[x][y].m_Species = new Species(m_Global_Species_Counter , m_Individuals[x][y].m_Species->get_species_ID(), generation, std::make_pair(x, y), m_SimulationEnd);
-
+	     // std::cout << " A new species " << std::endl;
 
 	      m_Individuals[x][y].evolveDuringSpeciation();
 
@@ -925,13 +954,16 @@ if(m_protracted == 0){
 
 	    	  // std::cout << "Size " << xvec.size() << std::endl;
 
-	        for(unsigned int k =0; k< xvec.size(); k+=2){
+	        for(int k =0; k< xvec.size(); k+=2){
+	        	if(xvec[k]==x && yvec[k]==y) continue;
 	          m_Individuals[xvec[k]][yvec[k]].reportDeath(generation);
 	          m_Individuals[xvec[k]][yvec[k]].m_Species = m_Individuals[x][y].m_Species;
 	          m_Individuals[xvec[k]][yvec[k]].evolveDuringSpeciation();
 
 	          if(m_DD) densityUpdate(xvec[k],yvec[k]);
 	          }
+		      xvec.clear();
+		      yvec.clear();
 	        }
 
 
@@ -939,16 +971,21 @@ if(m_protracted == 0){
 
 	        // In this case the population is split in half in the
 	        // mean of the x-coordinates.
-	        // All Individuals with a larger x-coordinate become part of the new species.
-	        // TODO: Random splits, directions etc...
 
 	        int sum = std::accumulate(xvec.begin(), xvec.end(), 0);
-	        int mean = sum / xvec.size();
+	        int mean= sum / (xvec.size());;
+             if(sum== 0) mean =-1;
+
+           // std::cout << "Sum= " << sum << " Mean= " << mean << std::endl;
 
 
-	        for(unsigned int k = 0; k < xvec.size(); k++){
+	        for(int k = 0; k < xvec.size(); k++){
+
 	          if(xvec[k] < mean){
+	        	//  std::cout << "K= " << k <<" Xvecsize= "<< xvec.size() <<std::endl;
 
+	        	//  if(xvec[k]==x && yvec[k]==y) std::cout << "Problem??" <<std::endl;
+	        	  if(xvec[k]==x && yvec[k]==y) continue;
 	        	m_Individuals[xvec[k]][yvec[k]].reportDeath(generation);
 	            m_Individuals[xvec[k]][yvec[k]].m_Species = m_Individuals[x][y].m_Species;
 	            m_Individuals[xvec[k]][yvec[k]].evolveDuringSpeciation();
@@ -957,14 +994,18 @@ if(m_protracted == 0){
 
 	          }
 	        }
+
+	       //  std::cout << "Clear" << std::endl;
+		      xvec.clear();
+		      yvec.clear();
 	      }
 
 	      // Clear the vector
-	      xvec.clear();
-	      yvec.clear();
-	    }
+
+	    //}
 	  }
 
-}
+}}
+//std::cout << "End fission" << std::endl;
 }
         
