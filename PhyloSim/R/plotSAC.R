@@ -62,6 +62,7 @@ sac <- function(simu, which.result = NULL, area = NULL, rep=50, plot=T, title="S
   if(is.null(which.result) == FALSE){
     if(which.result == "all"){
       simulations <- c(1:length(simu$Output))
+    
     }else{
       simulations<-which.result
     } 
@@ -91,7 +92,7 @@ sac <- function(simu, which.result = NULL, area = NULL, rep=50, plot=T, title="S
     for(i in 1:length(area))
     { 
       # Repetitions for each plot size
-      subPlots <- localPlots(size=area[i], n = rep, simu=simu, which.result = which.result)$subPlots
+      subPlots <- localPlots(size=area[i], n = rep, simu=simu, which.result = t)$subPlots
       speciesRichness <- sapply(subPlots, SR)
       meanSpeciesRichness[i] <- mean(speciesRichness)
       
@@ -111,7 +112,7 @@ sac <- function(simu, which.result = NULL, area = NULL, rep=50, plot=T, title="S
     if(plot == T){
       if(t == 1){
         if(length(simulations)==1){
-          plot(area,meanSpeciesRichness, log="xy", xlab="Area (n cells)",
+          plot(area, meanSpeciesRichness, log="xy", xlab="Area (n cells)",
                ylab="Number of Species", main=title, col=t, lwd=2, pch=4, type="b")
           
           polygon(x=c(area,rev(area)), y=c(meanSpeciesRichnessUpperCI,
