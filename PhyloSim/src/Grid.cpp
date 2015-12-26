@@ -800,6 +800,8 @@ if(m_protracted != 0){
     int y = m_RandomGenerator.randomInt(0,m_Ydimensions-1); // rand() % ydimensions;
     
 
+
+
     if(m_fission ==0){
        m_Individuals[x][y].m_incip_Age = 0;
     }
@@ -849,9 +851,15 @@ if(m_protracted == 0){
 	  for (int i = 0; i < specRate; i++)
 	  {
 
+
+
+
 		// std::cout << specRate << std::endl;
 	    int x = m_RandomGenerator.randomInt(0,m_Xdimensions-1); // rand() % xdimensions;
 	    int y = m_RandomGenerator.randomInt(0,m_Ydimensions-1); // rand() % ydimensions;
+
+
+		if(m_Individuals[x][y].m_Species->m_Date_of_Emergence < generation){
 
 	    /*   bool t = true;
 	    while(t){
@@ -910,6 +918,13 @@ if(m_protracted == 0){
 
 	     // std::cout << "Fission's runing" << std::endl;
 
+
+	      // Implementation of fission:
+	      // Getting the species which is randomly chosen
+
+	      // Now look where the individuals of these species are
+	      // and save locations in xvec and yvec
+
 	      for(int k = 0; k < m_Xdimensions; k++){
 	        for(int j = 0; j < m_Ydimensions; j++){
 	          if(m_Individuals[k][j].m_Species == m_Individuals[x][y].m_Species){
@@ -943,24 +958,22 @@ if(m_protracted == 0){
 
 
 
-	      // Implementation of fission:
-	      // Getting the species which is randomly chosen
-
-	      // Now look where the individuals of these species are
-	      // and save locations in xvec and yvec
 
 
 	      if(m_fission == 1){
 
-	    	  // std::cout << "Size " << xvec.size() << std::endl;
+	    	  std::cout << "Size " << xvec.size() << std::endl;
 
 	        for(int k =0; k< xvec.size(); k+=2){
-	        	if(xvec[k]==x && yvec[k]==y) continue;
-	          m_Individuals[xvec[k]][yvec[k]].reportDeath(generation);
-	          m_Individuals[xvec[k]][yvec[k]].m_Species = m_Individuals[x][y].m_Species;
-	          m_Individuals[xvec[k]][yvec[k]].evolveDuringSpeciation();
 
-	          if(m_DD) densityUpdate(xvec[k],yvec[k]);
+	        	//std::cout << "K: " << k << std::endl;
+	        	  if(xvec[k]==x && yvec[k]==y) continue;
+	        	m_Individuals[xvec[k]][yvec[k]].reportDeath(generation);
+	            m_Individuals[xvec[k]][yvec[k]].m_Species = m_Individuals[x][y].m_Species;
+	            m_Individuals[xvec[k]][yvec[k]].evolveDuringSpeciation();
+
+	            if(m_DD) densityUpdate(xvec[k],yvec[k]);
+
 	          }
 		      xvec.clear();
 		      yvec.clear();
@@ -999,13 +1012,13 @@ if(m_protracted == 0){
 		      xvec.clear();
 		      yvec.clear();
 	      }
-
+	    }
 	      // Clear the vector
 
 	    //}
-	  }
-
+		}
 }}
+
 //std::cout << "End fission" << std::endl;
 }
         

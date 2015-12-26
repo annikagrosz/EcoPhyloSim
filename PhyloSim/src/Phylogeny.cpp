@@ -296,7 +296,7 @@ std::string Phylogeny::writePhylogenyR(unsigned long long start, std::multimap<u
 				std::cout << "Position " << position[parent->m_ID] << std::endl;
 
          // Original Verrsion
-				/*if ( position[parent->m_ID] > 1 &&
+			if ( position[parent->m_ID] > 1 &&
 					phylogenyMap->find(parent->m_Children[position[parent->m_ID]])->second->m_Date_of_Emergence == phylogenyMap->find(parent->m_Children[position[parent->m_ID]-1])->second->m_Date_of_Emergence &&
 					phylogenyMap->find(parent->m_Children[position[parent->m_ID]])->second->m_Date_of_Emergence == phylogenyMap->find(parent->m_Children[position[parent->m_ID]+1])->second->m_Date_of_Emergence){
 
@@ -306,11 +306,12 @@ std::string Phylogeny::writePhylogenyR(unsigned long long start, std::multimap<u
 						;
 //						tree.insert(0, "," );
 					}
-				}*/
+				}
 
 
 				// New version needed to find the bug.
 
+				/*
 				if ( position[parent->m_ID] > 1){
 
 					 std::cout<<"Self: " << phylogenyMap->find(parent->m_Children[position[parent->m_ID]])->second->m_Date_of_Emergence  << std::endl;
@@ -349,7 +350,7 @@ std::string Phylogeny::writePhylogenyR(unsigned long long start, std::multimap<u
 			}
 
 
-
+    */
 
 				//End new/test version
 
