@@ -63,6 +63,24 @@ Now we can plot the results and save the plots as a pdf file.
 
 ```
 
+Previous runs have shown that in single time steps artefacts might show in the plots we also show the mean values for the runs.
+```{r}
+ plotPhylogeneticDispersion(pvalues = nullMeta100, positions = positions,  title = "Null Meta", means=10)
+
+  name <- paste("./",outfolder100, "/PhylogeneticDisersion", 100, ".pdf", sep = "")
+  dev.copy(pdf,name, width=9, height=6)
+  dev.off()
+
+  
+ plotPhylogeneticDispersion(pvalues = nullMeta256, positions = positions,  title = "Null Meta", means=10)
+
+  name <- paste("./",outfolder256, "/PhylogeneticDisersion", 256, ".pdf", sep = "")
+  dev.copy(pdf,name, width=9, height=6)
+  dev.off()
+
+
+
+```
 
 Now all the mean values of all recorded time steps are shown in the plots. This can give information about the robustness of the results.
 
@@ -88,13 +106,13 @@ lengths = as.numeric(names(pval[[1]]))
 nlengths = length(lengths)
 
 for (i in 1:length(pval)){
-  z[,i,t] <- sapply(pval[[i]], mean, na.rm = T)
+  z[,i,t] <- sapply(pval[[i]], median, na.rm = T)
 }
 }
 
 for(i in 1:28){
   t<-1
-plot(1:9,z[,i,t], type="l", xlim=c(1,9), ylim=c(0, 0.8), col=cols[t], yaxt="n", xaxt="n")
+plot(1:9,z[,i,t], type="l", xlim=c(1,9), ylim=c(0, 1), col=cols[t], yaxt="n", xaxt="n")
   for(t in 2:length(pvalues)){
   lines(1:9,z[,i,t], col=cols[t])
   }
@@ -123,13 +141,13 @@ lengths = as.numeric(names(pval[[1]]))
 nlengths = length(lengths)
 
 for (i in 1:length(pval)){
-  z[,i,t] <- sapply(pval[[i]], mean, na.rm = T)
+  z[,i,t] <- sapply(pval[[i]], median, na.rm = T)
 }
 }
 
 for(i in 1:28){
   t<-1
-plot(1:9,z[,i,t], type="l", xlim=c(1,9), ylim=c(0, 0.8), col=cols[t], yaxt="n", xaxt="n")
+plot(1:9,z[,i,t], type="l", xlim=c(1,9), ylim=c(0, 1), col=cols[t], yaxt="n", xaxt="n")
   for(t in 2:length(pvalues)){
   lines(1:9,z[,i,t], col=cols[t])
   }
