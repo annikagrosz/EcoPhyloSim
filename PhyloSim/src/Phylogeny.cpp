@@ -226,7 +226,7 @@ void Phylogeny::writePhylogeny(unsigned long long start, std::multimap<unsigned 
 std::string Phylogeny::writePhylogenyR(unsigned long long start, std::multimap<unsigned long long, Species*> * phylogenyMap)
 {
 
-	 std::cout << "Write Phylogeny" << std::endl;
+
 	Species * parent = phylogenyMap->find(start)->second;
 	Species * ancestorSpecies = new Species(0,0,0,std::make_pair(0,0),0);
 	phylogenyMap->insert(std::make_pair(ancestorSpecies->m_ID, ancestorSpecies));
@@ -251,7 +251,7 @@ std::string Phylogeny::writePhylogenyR(unsigned long long start, std::multimap<u
 			// If parent is leaf, write down leaf and length and go one up
 			if(parent->m_Children.empty())
 			{
-				std::cout << "Children empty" << std::endl;
+
 				if(position[parent->m_ID] != 0) throw std::runtime_error("unexpected value for position value in a leaf") ;
 				branchLength = parent->m_Date_of_Extinction - parent->m_Date_of_Emergence;
 				tree.insert(0, to_string(branchLength) );
@@ -261,7 +261,7 @@ std::string Phylogeny::writePhylogenyR(unsigned long long start, std::multimap<u
 				tree.insert(0, "," );
 				parent = phylogenyMap->find(parent->m_Ancestor)->second ;
 				position[parent->m_ID] += 1;
-				std::cout << "Children empty found ancestor" << std::endl;
+
 			}
 
 
@@ -269,7 +269,7 @@ std::string Phylogeny::writePhylogenyR(unsigned long long start, std::multimap<u
 			else if(position[parent->m_ID] == parent->m_Children.size() )
 			{
 
-				std::cout << "Children all visited" << std::endl;
+
 				branchLength = parent->m_Date_of_Extinction - phylogenyMap->find(parent->m_Children.back())->second->m_Date_of_Emergence;
 
 				tree.insert(0, to_string(branchLength));
@@ -281,7 +281,6 @@ std::string Phylogeny::writePhylogenyR(unsigned long long start, std::multimap<u
 				parent = phylogenyMap->find(parent->m_Ancestor)->second;
 				position[parent->m_ID] +=1 ;
 
-				std::cout << "All children visited found ancestor" << std::endl;
 
 			}
 
@@ -289,20 +288,20 @@ std::string Phylogeny::writePhylogenyR(unsigned long long start, std::multimap<u
 			// then go to child
 			else if(position[parent->m_ID] < parent->m_Children.size() )
 			{
-				std::cout << "Children not all visited yet" << std::endl;
+
 				// if two siblings are born in the same generation
 				//if(position[parent->m_ID]==3) throw std::runtime_error("Cannot build phylogeny");
 
-				std::cout << "Position " << position[parent->m_ID] << std::endl;
+
 
          // Original Verrsion
 			if ( position[parent->m_ID] > 1 &&
 					phylogenyMap->find(parent->m_Children[position[parent->m_ID]])->second->m_Date_of_Emergence == phylogenyMap->find(parent->m_Children[position[parent->m_ID]-1])->second->m_Date_of_Emergence &&
 					phylogenyMap->find(parent->m_Children[position[parent->m_ID]])->second->m_Date_of_Emergence == phylogenyMap->find(parent->m_Children[position[parent->m_ID]+1])->second->m_Date_of_Emergence){
 
-					std::cout << "IF" << std::endl;
+
 					if (!(phylogenyMap->find(parent->m_Children[position[parent->m_ID] - 1])->second->m_Children.empty()) && (phylogenyMap->find(parent->m_Children[position[parent->m_ID]])->second->m_Children.empty())){
-						std::cout << "Found parent3" << std::endl;
+
 						;
 //						tree.insert(0, "," );
 					}
@@ -357,20 +356,20 @@ std::string Phylogeny::writePhylogenyR(unsigned long long start, std::multimap<u
 
 
 				else{
-					std::cout << "ELSE" << std::endl;
+
 					// if first time going through this node branch lenght is distance to parent node
 					if(position[parent->m_ID] == 0)
 					{
 						branchLength = phylogenyMap->find(parent->m_Children[position[parent->m_ID]])->second->m_Date_of_Emergence - parent->m_Date_of_Emergence;
-						std::cout << "Found parent 1" << std::endl;
+
 
 					}
 					// else branch lenght is distance to previous sibling
 					else // ????? or position = children size
 					{
-						std::cout << "ELSE 2" << std::endl;
+
 						branchLength = phylogenyMap->find(parent->m_Children[position[parent->m_ID]])->second->m_Date_of_Emergence - phylogenyMap->find(parent->m_Children[position[parent->m_ID ]-1])->second->m_Date_of_Emergence;
-						std::cout << "Found parent 2" << std::endl;
+
 					}
 
 					tree.insert(0, to_string(branchLength));
@@ -382,7 +381,6 @@ std::string Phylogeny::writePhylogenyR(unsigned long long start, std::multimap<u
 				}
 
 				parent = phylogenyMap->find(parent->m_Children[position[parent->m_ID]])->second;
-				std::cout << "Found parent" << std::endl;
 			}
 
 			else break;

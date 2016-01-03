@@ -22,7 +22,7 @@ If your parameterset contains more than one runs argument, each interim step is 
  library(PhyloSim)
 # Define a parameter set
 par <- createCompletePar(x = 50, y = 50, dispersal = 1 , runs = 1000,
-        density = 0, environment = 0, specRate = 5, fission = 2, redQueen=0, redQueenStrength=1,
+        density = 0, environment = 0, specRate = 0.1, fission = 1, redQueen=0, redQueenStrength=1,
         protracted=0)
 
 # Run the model

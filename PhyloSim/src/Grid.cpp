@@ -736,13 +736,12 @@ void Landscape::speciation (unsigned int generation)
   
 	//std::cout << "Fission: " << m_fission << std::endl;
 
-if(m_protracted != 0){
+if(m_protracted){
 	if(m_fission == 0){
 		for(int k = 0; k < m_Xdimensions; k++){
 	           for(int j = 0; j < m_Ydimensions; j++){
 	        	if(m_Individuals[k][j].m_incip_Age == m_protracted){
 	        		m_Global_Species_Counter+=1;
-	        		std::cout << "A new species" << std::endl;
 
 	        		  m_Individuals[k][j].m_Species->m_Children.push_back(m_Global_Species_Counter);
 	        		  m_Individuals[k][j].reportDeath(generation);
@@ -769,6 +768,7 @@ if(m_protracted != 0){
 					  oldspec =  m_Individuals[k][j].m_Species->m_ID;
 					  m_Individuals[k][j].m_Species = new Species(m_Global_Species_Counter , m_Individuals[k][j].m_Species->get_species_ID(),
 					                    		  generation, std::make_pair(k, j), m_SimulationEnd);
+
 					  m_Individuals[k][j].evolveDuringSpeciation();
 				      m_Phylogeny.updatePhylogeny(m_Individuals[k][j].m_Species);
 					  if(m_DD) densityUpdate(k,j);
@@ -844,62 +844,28 @@ if(m_protracted == 0){
     // std::cout << "No protracted Spec" << std::endl;
 	  int specRate = m_RandomGenerator.randomPoisson(m_Speciation_Rate);
 
-  	std::vector<int> xcoords;
-     std::vector<int> ycoords;
-
 
 	  for (int i = 0; i < specRate; i++)
 	  {
 
-
-
-
-		// std::cout << specRate << std::endl;
 	    int x = m_RandomGenerator.randomInt(0,m_Xdimensions-1); // rand() % xdimensions;
 	    int y = m_RandomGenerator.randomInt(0,m_Ydimensions-1); // rand() % ydimensions;
 
-
-		if(m_Individuals[x][y].m_Species->m_Date_of_Emergence < generation){
-
-	    /*   bool t = true;
-	    while(t){
-   		 x = m_RandomGenerator.randomInt(0,m_Xdimensions-1);
-   		 y = m_RandomGenerator.randomInt(0,m_Ydimensions-1);
-	    for(int c =0; c<xcoords.size(); c++){
-	    	if(xcoords[c]==x && ycoords[c]==y) break;
-	    	else t = false;
-	      }
-	    }
-
-	    xcoords.push_back(x);
-	    ycoords.push_back(y); */
-
-
-
-
-
 		  // Is this really necessary???????????????????????????????????????????????
-	    //if(m_Individuals[x][y].m_Species->m_Date_of_Emergence < (generation-1)){
+	  //  if(m_Individuals[x][y].m_Species->m_Date_of_Emergence < (generation-1)){
 
 
-	    m_Global_Species_Counter+=1;
-       // std::cout << "Counter: " << m_Global_Species_Counter << " Generation: " << generation << std::endl;
+	         m_Global_Species_Counter+=1;
 
-	   // std::cout << "Here Fission= " << m_fission << std::endl;
-
-	    if(m_fission == 0){
-
-	    	//std::cout << "No fission" << std::endl;
-
-	       // std::cout << "Fission's not runing" << std::endl;
 	         m_Individuals[x][y].m_Species->m_Children.push_back(m_Global_Species_Counter);
 
 	         m_Individuals[x][y].reportDeath(generation);
 
+	         int oldspec =  m_Individuals[x][y].m_Species->m_ID;
 
-	         //Testversion as long as protracted not fully implemented
+
 	         m_Individuals[x][y].m_Species = new Species(m_Global_Species_Counter , m_Individuals[x][y].m_Species->get_species_ID(), generation, std::make_pair(x, y), m_SimulationEnd);
-	        // std::cout << " A new species " << std::endl;
+
 
 	         m_Individuals[x][y].evolveDuringSpeciation();
 
@@ -908,16 +874,11 @@ if(m_protracted == 0){
 	         // update relatedness values for density dependence / competition
 	         if(m_DD) densityUpdate(x,y);
 
-	    }
 
 
-
-	    if(m_fission != 0){
+	    if(m_fission){
 	      std::vector<int> xvec;
 	      std::vector<int> yvec;
-
-	     // std::cout << "Fission's runing" << std::endl;
-
 
 	      // Implementation of fission:
 	      // Getting the species which is randomly chosen
@@ -927,7 +888,7 @@ if(m_protracted == 0){
 
 	      for(int k = 0; k < m_Xdimensions; k++){
 	        for(int j = 0; j < m_Ydimensions; j++){
-	          if(m_Individuals[k][j].m_Species == m_Individuals[x][y].m_Species){
+	          if(m_Individuals[k][j].m_Species->m_ID == oldspec){
 	            xvec.push_back(k);
 	            yvec.push_back(j);
 
@@ -935,49 +896,17 @@ if(m_protracted == 0){
 	        }
 	      }
 
-	     // std::cout <<"x: "<< xvec.size() << " y: " << yvec.size() << std::endl;
-
-
-	      // These are the settings for the first individual that has been randomly chosen at the beginning of the speciation
-
-	      m_Individuals[x][y].m_Species->m_Children.push_back(m_Global_Species_Counter);
-
-	      m_Individuals[x][y].reportDeath(generation);
-
-	      m_Individuals[x][y].m_Species = new Species(m_Global_Species_Counter , m_Individuals[x][y].m_Species->get_species_ID(), generation, std::make_pair(x, y), m_SimulationEnd);
-	     // std::cout << " A new species " << std::endl;
-
-	      m_Individuals[x][y].evolveDuringSpeciation();
-
-
-	       m_Phylogeny.updatePhylogeny(m_Individuals[x][y].m_Species);
-
-	      // update relatedness values for density dependence / competition
-	      if(m_DD) densityUpdate(x,y);
-
-
-
-
-
 
 	      if(m_fission == 1){
 
-	    	  std::cout << "Size " << xvec.size() << std::endl;
+	      	        for(unsigned int k =0; k< xvec.size(); k+=2){
+	      	          m_Individuals[xvec[k]][yvec[k]].reportDeath(generation);
+	      	          m_Individuals[xvec[k]][yvec[k]].m_Species = m_Individuals[x][y].m_Species;
+	      	          m_Individuals[xvec[k]][yvec[k]].evolveDuringSpeciation();
 
-	        for(int k =0; k< xvec.size(); k+=2){
-
-	        	//std::cout << "K: " << k << std::endl;
-	        	  if(xvec[k]==x && yvec[k]==y) continue;
-	        	m_Individuals[xvec[k]][yvec[k]].reportDeath(generation);
-	            m_Individuals[xvec[k]][yvec[k]].m_Species = m_Individuals[x][y].m_Species;
-	            m_Individuals[xvec[k]][yvec[k]].evolveDuringSpeciation();
-
-	            if(m_DD) densityUpdate(xvec[k],yvec[k]);
-
-	          }
-		      xvec.clear();
-		      yvec.clear();
-	        }
+	      	          if(m_DD) densityUpdate(xvec[k],yvec[k]);
+	      	          }
+	      	        }
 
 
 	      if(m_fission == 2){
@@ -989,15 +918,12 @@ if(m_protracted == 0){
 	        int mean= sum / (xvec.size());;
              if(sum== 0) mean =-1;
 
-           // std::cout << "Sum= " << sum << " Mean= " << mean << std::endl;
 
 
 	        for(int k = 0; k < xvec.size(); k++){
 
 	          if(xvec[k] < mean){
-	        	//  std::cout << "K= " << k <<" Xvecsize= "<< xvec.size() <<std::endl;
 
-	        	//  if(xvec[k]==x && yvec[k]==y) std::cout << "Problem??" <<std::endl;
 	        	  if(xvec[k]==x && yvec[k]==y) continue;
 	        	m_Individuals[xvec[k]][yvec[k]].reportDeath(generation);
 	            m_Individuals[xvec[k]][yvec[k]].m_Species = m_Individuals[x][y].m_Species;
@@ -1008,17 +934,13 @@ if(m_protracted == 0){
 	          }
 	        }
 
-	       //  std::cout << "Clear" << std::endl;
-		      xvec.clear();
-		      yvec.clear();
 	      }
-	    }
-	      // Clear the vector
+	      xvec.clear();
+	      yvec.clear();
+	     }
+	  //  }
 
-	    //}
-		}
 }}
 
-//std::cout << "End fission" << std::endl;
 }
         
