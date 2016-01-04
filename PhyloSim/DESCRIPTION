@@ -2,7 +2,7 @@ Package: PhyloSim
 Type: Package
 Title: Analysis of Phylogenetic and Biogeographic patterns, inferring species
     community assembly
-Version: 1.0
+Version: 0.3
 Date: 2015-02-12
 Authors: c(person("Paul", "Bauche", role = c("aut","cre"),
                      email = "paul@mbauche.de"),
