@@ -51,3 +51,15 @@ PhylGeo/temp/*
 
 
 PhylGeo/src/PhyloSim.so
+PhyloSim.so
+PhyloSimManual-concordance.tex
+PhyloSimManual.bbl
+PhyloSim/vignettes/PhyloSimManual.blg
+PhyloSim/vignettes/PhyloSimManual.log
+PhyloSim/vignettes/PhyloSimManual.pdf
+PhyloSimManual.toc
+PhyloSim/vignettes/Sweave.sty
+PhyloSim/vignettes/Sweavel.sty
+PhyloSim/vignettes/figure
+
+PhyloSim/vignettes/PhyloSimManual.tex

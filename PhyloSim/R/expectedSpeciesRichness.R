@@ -8,7 +8,7 @@
 #' @export
 #' @examples
 #' es(2, 100)
-es2 <- function(specRate, dimensions){
+es <- function(specRate, dimensions){
   b <- specRate # Speciation rate
   theta <- 2 * b # Technically theta <- 2*J*nu ; nue is the speciation rate (b) per birth. This means nue=b/J. 
   y <- c(0:(dimensions^2-1)) # vector of length J
