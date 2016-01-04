@@ -736,7 +736,58 @@ void Landscape::speciation (unsigned int generation)
   
 	//std::cout << "Fission: " << m_fission << std::endl;
 
-if(m_protracted){
+//if(m_protracted){
+
+	  int specRate = m_RandomGenerator.randomPoisson(m_Speciation_Rate);
+
+
+	  for (int i = 0; i < specRate; i++)
+	  {
+
+		// std::cout << specRate << std::endl;
+	    int x = m_RandomGenerator.randomInt(0,m_Xdimensions-1); // rand() % xdimensions;
+	    int y = m_RandomGenerator.randomInt(0,m_Ydimensions-1); // rand() % ydimensions;
+
+
+
+
+	    if(m_fission ==0){
+	       m_Individuals[x][y].m_incip_Age = 0;
+	    }
+
+	    if(m_fission != 0){
+	    	std::vector<int> xvec;
+	        std::vector<int> yvec;
+	      for(int k = 0; k < m_Xdimensions; k++){
+	        for(int j = 0; j < m_Ydimensions; j++){
+	          if(m_Individuals[k][j].m_Species == m_Individuals[x][y].m_Species)
+	        	xvec.push_back(k);
+	            yvec.push_back(j);
+	        }}
+
+
+	        	if(m_fission == 1){
+	        		for(unsigned int z =0; z< xvec.size(); z+=2){
+	        			m_Individuals[xvec[z]][yvec[z]].m_incip_Age = 0;
+	        		}
+	        	}
+
+	        	if(m_fission ==2){
+	    	        int sum = std::accumulate(xvec.begin(), xvec.end(), 0);
+	    	        int mean = sum / xvec.size();
+	    	        if(sum == 0) mean=-1;
+
+	    	        for(unsigned int z = 0; z < xvec.size(); z++){
+	    	          if(xvec[z] < mean){
+	    	           m_Individuals[xvec[z]][yvec[z]].m_incip_Age = 0;
+	        	}
+	          }
+	          }
+
+	}}
+
+
+
 	if(m_fission == 0){
 		for(int k = 0; k < m_Xdimensions; k++){
 	           for(int j = 0; j < m_Ydimensions; j++){
@@ -789,56 +840,14 @@ if(m_protracted){
 		 	}}}
 
 
-  int specRate = m_RandomGenerator.randomPoisson(m_Speciation_Rate);
-  
-
-  for (int i = 0; i < specRate; i++)
-  {
-
-	// std::cout << specRate << std::endl;
-    int x = m_RandomGenerator.randomInt(0,m_Xdimensions-1); // rand() % xdimensions;
-    int y = m_RandomGenerator.randomInt(0,m_Ydimensions-1); // rand() % ydimensions;
-    
 
 
 
-    if(m_fission ==0){
-       m_Individuals[x][y].m_incip_Age = 0;
-    }
 
-    if(m_fission != 0){
-    	std::vector<int> xvec;
-        std::vector<int> yvec;
-      for(int k = 0; k < m_Xdimensions; k++){
-        for(int j = 0; j < m_Ydimensions; j++){
-          if(m_Individuals[k][j].m_Species == m_Individuals[x][y].m_Species)
-        	xvec.push_back(k);
-            yvec.push_back(j);
-        }}
+//}
 
 
-        	if(m_fission == 1){
-        		for(unsigned int z =0; z< xvec.size(); z+=2){
-        			m_Individuals[xvec[z]][yvec[z]].m_incip_Age = 0;
-        		}
-        	}
-
-        	if(m_fission ==2){
-    	        int sum = std::accumulate(xvec.begin(), xvec.end(), 0);
-    	        int mean = sum / xvec.size();
-    	        if(sum == 0) mean=-1;
-
-    	        for(unsigned int z = 0; z < xvec.size(); z++){
-    	          if(xvec[z] < mean){
-    	           m_Individuals[xvec[z]][yvec[z]].m_incip_Age = 0;
-        	}
-          }
-          }
-
-}}}
-
-
-
+/*
 
 if(m_protracted == 0){
     // std::cout << "No protracted Spec" << std::endl;
@@ -899,7 +908,7 @@ if(m_protracted == 0){
 
 	      if(m_fission == 1){
 
-	      	        for(unsigned int k =0; k< xvec.size(); k+=2){
+	      	        for(int k =0; k< xvec.size(); k+=2){
 	      	          m_Individuals[xvec[k]][yvec[k]].reportDeath(generation);
 	      	          m_Individuals[xvec[k]][yvec[k]].m_Species = m_Individuals[x][y].m_Species;
 	      	          m_Individuals[xvec[k]][yvec[k]].evolveDuringSpeciation();
@@ -942,5 +951,9 @@ if(m_protracted == 0){
 
 }}
 
+*/
 }
         
+
+
+
