@@ -275,7 +275,7 @@ void GlobalEnvironment::reproduce(unsigned int generation)
    
    else // Density dependence and / or Environmental dependence
    {
-	   std::cout<<"In global non-neutral \n";
+
       #ifdef DEBUG
       std::cout<<"In global non-neutral \n";
       #endif

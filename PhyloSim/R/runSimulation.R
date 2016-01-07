@@ -7,11 +7,11 @@
 #'  library(PhyloSim)
 #' # Define a parameter set
 #' par <- createCompletePar(x = 50, y = 50, dispersal = 1 , runs = 1000,
-#'         density = 0, environment = 0, specRate = 0.1, fission = 1, redQueen=0, redQueenStrength=1,
+#'         density = 0, environment = 0, specRate = 1, fission = 0, redQueen=0, redQueenStrength=0,
 #'         protracted=0)
 #'
 #' # Run the model
-#' simu <- runSimulation(par)
+#' simut <- runSimulation(par)
 #' 
 #' plot(simu)
 #' 
@@ -106,13 +106,22 @@ runSimulation <- function(par)
     output<-list()
     for (i in 1:length(par$runs)){
       
+       specMati = matrix(out[[i]]$Species,ncol=par$x, nrow=par$y)
+       if(length(unique(c(specMati)))==1){
+         phyloi <- 0
+         warning("Cannot build Phylogeny")
+       }else{
+         phyloi <- ape::read.tree(text= out[[i]]$Phylogeny)
+       }
+       
+       
       output$Output[[i]] = list(
         specMat = matrix(out[[i]]$Species,ncol=par$x, nrow=par$y), 
         traitMat= matrix(out[[i]]$EnvTrait,ncol=par$x, nrow=par$y), 
         envMat = matrix(out[[i]]$Environment,ncol=par$x, nrow=par$y), 
         compMat = matrix(out[[i]]$CompetitionTrait,ncol=par$x, nrow=par$y), 
         neutMat = matrix(out[[i]]$NeutralTrait,ncol=par$x, nrow=par$y), 
-        phylogeny = ape::read.tree(text= out[[i]]$Phylogeny), 
+        phylogeny =  phyloi, 
         phyloTXT = out[[i]]$Phylogeny)
     }
     cat("done! \n")

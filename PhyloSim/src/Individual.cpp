@@ -161,7 +161,7 @@ void Individual::operator=(const Individual &ind)
     if((redQueenStrength != 1) || (redQueen != 0)){
      if(m_Species->m_Date_of_Emergence == (generation-1)) out = out*redQueenStrength;
      else{
-    	 out= out*redQueenStrength * std::pow(2.71828, (-redQueen*(generation-1-m_Species->m_Date_of_Emergence)));
+    	 out= out+(out*redQueenStrength * std::pow(2.71828, (-redQueen*(generation-1-m_Species->m_Date_of_Emergence))));
      }
     }
     return out;

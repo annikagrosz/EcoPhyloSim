@@ -20,7 +20,570 @@ First the package has to be loaded.
 library(PhyloSim)
 ```
 
-Then I created a reference set of runs. This are five simulations under neutral conditions and point mutation.
+
+1. Find parameter values
+---------------------
+This section should give an impression about the strength of the effects of the different speciation mechanisms.
+First I get a reference value under point mutation with a speciation rate of 1.
+
+```{r}
+
+parlist <- list()
+
+for(i in 1:10){
+  parlist[[i]] <- createCompletePar(x = 50 ,y = 50, runs = 10000,
+                                       dispersal = "global",
+                                       specRate = 1,                                                                                           density = 0,
+                                       environment = 0,
+                                       fitnessBaseMortalityRatio = 5,
+                                       densityCut = 1,
+                                       fission=0,
+                                       redQueen = 0,
+                                       redQueenStrength = 1)
+  }
+
+
+
+simu_test <- runSimulationBatch(parlist)
+
+# Now get the values
+specRichPoint <- numeric()
+for(i in 1:10){
+  specRichPoint[i] <- specRich(simu_test[[i]])
+}
+specRichPoint <- mean(specRichPoint)
+
+```
+
+Then I compate this value to different speciation rates under fission.
+
+```{r}
+
+specRichF1 <- matrix(NA, 10,4)
+specRichF2 <- matrix(NA, 10,4)
+specRate <- c(0.005, 0.01, 0.05, 0.1)
+
+
+for(k in 1:10){
+parlistF1<- list()
+parlistF2<- list()
+
+for(i in 1:4){
+  parlistF1[[i]] <- createCompletePar(x = 50 ,y = 50, runs = 10000,
+                                       dispersal = "global",
+                                       specRate = specRate[i],                                                                                 density = 0,
+                                       environment = 0,
+                                       fitnessBaseMortalityRatio = 5,
+                                       densityCut = 1,
+                                       fission=1,
+                                       redQueen = 0,
+                                       redQueenStrength = 1)
+  parlistF2[[i]] <- createCompletePar(x = 50 ,y = 50, runs = 10000,
+                                       dispersal = "global",
+                                       specRate = specRate[i],                                                                                 density = 0,
+                                       environment = 0,
+                                       fitnessBaseMortalityRatio = 5,
+                                       densityCut = 1,
+                                       fission=2,
+                                       redQueen = 0,
+                                       redQueenStrength = 1)
+}
+
+simu_testF1 <- runSimulationBatch(parlistF1)
+simu_testF2 <- runSimulationBatch(parlistF2)
+
+# Now get the values
+
+for(i in 1:4){
+  specRichF1[k,i] <- specRich(simu_testF1[[i]])
+  specRichF2[k,i] <- specRich(simu_testF2[[i]])
+}
+}
+
+
+specRichF1m <- numeric()
+specRichF2m <- numeric()
+
+for(i in 1:4){
+specRichF1m[i] <- mean(specRichF1[,i])
+specRichF2m[i] <- mean(specRichF2[,i])
+}
+
+
+
+# And plot the results
+par(mar=c(5, 4.5, 4, 2))
+plot(specRate, specRichF1m, type="b", lwd=2, col="darkgreen",
+     ylab="Species Richness", xlab="Speciation Rate", cex.axis=1.3, cex.lab=1.3)
+abline(h=specRichPoint, lty=2)
+lines(specRate, specRichF2m, lwd=2, type="b", col="darkblue")
+legend(x=0.001, y=45, legend=c("Fission = 1", "Fission = 2"), lty=1, lwd=2,
+       col=c("darkgreen","darkblue" ), bty="n")
+
+
+```
+
+And under protracted speciation.
+
+```{r}
+
+sR5 <- sR10 <- matrix(NA, 10,4)
+
+for(k in 1:10){
+  
+pars5 <- list()
+pars10 <- list()
+
+for(i in 0:3){
+ pars5[[i+1]] <-  createCompletePar(x = 50 ,y = 50, runs = 10000,
+                                       dispersal = "global",
+                                       specRate = 5,                                                                               density = 0,
+                                       environment = 0,
+                                       fitnessBaseMortalityRatio = 5,
+                                       densityCut = 1,
+                                       protracted = i,
+                                       fission=0,
+                                       redQueen = 0,
+                                       redQueenStrength = 1)
+
+pars10[[i+1]] <-  createCompletePar(x = 50 ,y = 50, runs = 10000,
+                                       dispersal = "global",
+                                       specRate = 10,                                                                              density = 0,
+                                       environment = 0,
+                                       fitnessBaseMortalityRatio = 5,
+                                       densityCut = 1,
+                                       protracted = i,
+                                       fission=0,
+                                       redQueen = 0,
+                                       redQueenStrength = 1)
+
+}
+
+simu_pars5 <- runSimulationBatch(pars5)
+
+simu_pars10 <- runSimulationBatch(pars10)
+
+
+
+for(i in 1:4){
+  sR5[k,i]<-specRich(simu_pars5[[i]])
+  sR10[k,i]<-specRich(simu_pars10[[i]])
+}
+}
+
+sR5m <- numeric()
+sR10m <- numeric()
+for(i in 1:4){
+  sR5m[i]<- mean(sR5[,i])
+  sR10m[i]<-mean(sR10[,i])
+}
+
+
+# Plot the results
+par(mar=c(5, 4.5, 4, 2))
+plot(0:3, sR10m, type="b", ylim=c(0, max(sR10)), ylab="Species Richness",
+     lwd=2, col="darkblue", xlab="Protracted", xaxt="n", cex.axis=1.3, cex.lab=1.3)
+
+axis(side=1, at = c(0:3), cex.axis=1.3)
+lines(0:3,sR5m, lwd=2, col="forestgreen", type="b")
+abline(h=specRichPoint, lty=2)
+legend(x=1.5,y=80, legend=c("SpecRate = 10", "SpecRate = 5"), lty=1,lwd=2, col=c("darkblue", "forestgreen"), bty="n")
+
+``` 
+
+And under the Red Queen Mechanism.
+
+```{r}
+
+parsrQ <- list()
+
+redQueen <- seq(0,1, len=10)
+sRQ <- matrix(NA, 10,10)
+
+for(k in 1:10){
+for(i in 1:10){
+ parsrQ[[i]] <-  createCompletePar(x = 50 ,y = 50, runs = 10000,
+                                       dispersal = "global",
+                                       specRate = 1,                                                                               density = 0,
+                                       environment = 0,
+                                       fitnessBaseMortalityRatio = 5,
+                                       densityCut = 1,
+                                       protracted = 0,
+                                       fission=0,
+                                       redQueen = 0.01,
+                                       redQueenStrength = redQueen[i])
+}
+
+
+simurQ <- runSimulationBatch(parsrQ)
+
+
+
+for(i in 1:10){
+  sRQ[k,i]<-specRich(simurQ[[i]])
+}
+
+}
+
+srQmean <- numeric()
+for(i in 1:10){
+  srQmean[i] <- mean(sRQ[,i])
+}
+
+par(mar=c(5, 4.5, 4, 2))
+plot(redQueen, srQmean, type="l", col="darkblue", lwd=2, xlab="redQueenStrength", 
+    ylab="Species Richness", cex.axis=1.3, cex.lab=1.3)
+
+```
+
+2. Run the analysis
+-----------------------
+I use the best fitting parameter combinations from above and rerun the model for 10000 generations for each speciation mechanism.
+First this is being done under the purely neutral model.
+As above I have to run a reference model.
+
+```{r}
+par <- list()
+
+for(i in 1:10){
+par[[i]] <- createCompletePar(x = 50 ,y = 50, runs = 10000,
+                                       dispersal = "global",
+                                       specRate = 1,                                                                                           density = 0,
+                                       environment = 0,
+                                       fitnessBaseMortalityRatio = 5,
+                                       densityCut = 1,
+                                       fission=0,
+                                       redQueen = 0,
+                                       redQueenStrength = 1)
+}
+simu <- runSimulationBatch(par)
+
+```
+
+Than I can can run the model under the different speciation mechanisms.
+
+```{r}
+
+parF1 <- list()
+parF2 <- list()
+parP <- list()
+parRQ <- list()
+
+for(i in 1:10){
+# Fissio type 1
+parF1[[i]] <- createCompletePar(x = 50 ,y = 50, runs = 10000,
+                                       dispersal = "global",
+                                       specRate = 0.01,                                                                                        density = 0,
+                                       environment = 0,
+                                       fitnessBaseMortalityRatio = 5,
+                                       densityCut = 1,
+                                       fission=1,
+                                       redQueen = 0,
+                                       redQueenStrength = 0)
+
+
+
+# Fissio type 2
+parF2[[i]] <- createCompletePar(x = 50 ,y = 50, runs = 10000,
+                                       dispersal = "global",
+                                       specRate = 0.01,                                                                                        density = 0,
+                                       environment = 0,
+                                       fitnessBaseMortalityRatio = 5,
+                                       densityCut = 1,
+                                       fission=2,
+                                       redQueen = 0,
+                                       redQueenStrength = 0)
+
+
+
+# Protracted Speciation
+parP[[i]] <- createCompletePar(x = 50 ,y = 50, runs = 10000,
+                                       dispersal = "global",
+                                       specRate = 5,                                                                                           density = 0,
+                                       environment = 0,
+                                       fitnessBaseMortalityRatio = 5,
+                                       densityCut = 1,
+                                       fission=0,
+                                       redQueen = 0,
+                                       redQueenStrength = 0,
+                                       protracted = 2)
+
+
+
+# Red Queen
+parRQ[[i]] <- createCompletePar(x = 50 ,y = 50, runs = 10000,
+                                       dispersal = "global",
+                                       specRate = 1,                                                                                           density = 0,
+                                       environment = 0,
+                                       fitnessBaseMortalityRatio = 5,
+                                       densityCut = 1,
+                                       fission=0,
+                                       redQueen = 0.01,
+                                       redQueenStrength = 1,
+                                       protracted = 0)
+
+}
+
+simuF1 <- runSimulationBatch(parF1)
+simuF2 <- runSimulationBatch(parF2)
+simuP <- runSimulationBatch(parP)
+simuRQ <- runSimulationBatch(parRQ)
+
+```
+
+To get a first impression of the results:
+```{r}
+plot(simu)
+plot(simuF1)
+plot(simuF2)
+plot(simuP)
+plot(simuRQ)
+```
+
+
+The main focus of the analysis lies on the shape of the phylogenies.
+Gamma statistics:
+
+```{r}
+library(ape)
+gammaPoint <- gammaF1 <- gammaF2 <- gammaP <- gammaRQ <- numeric()
+
+for(i in 1:10){
+gammaPoint[[i]] <- gammaStat(drop.fossil(simu[[i]]$Output[[1]]$phylogeny))
+gammaF1[[i]] <- gammaStat(drop.fossil(simuF1[[i]]$Output[[1]]$phylogeny))
+gammaF2[[i]] <- gammaStat(drop.fossil(simuF2[[i]]$Output[[1]]$phylogeny))
+gammaP[[i]] <- gammaStat(drop.fossil(simuP[[i]]$Output[[1]]$phylogeny))
+gammaRQ[[i]] <- gammaStat(drop.fossil(simuRQ[[i]]$Output[[1]]$phylogeny))
+}
+
+
+barplot(c(mean(gammaPoint, na.rm = T), mean(gammaF1, na.rm = T), mean(gammaF2, na.rm = T), mean(gammaP, 
+        na.rm = T), mean(gammaRQ, na.rm = T)),
+        names.arg = c("Point", "F1", "F2", "Prot.", "RedQ"), col="lightslateblue",
+        ylab="Gamma", cex.axis = 1.3, cex.lab=1.3, cex.names = 1.3)
+
+data1 <- data.frame("Gamma"= c(gammaPoint, gammaF1, gammaF2, gammaP, gammaRQ), "SpecM"=
+                      c(rep("Point",10),rep("F1",10),rep("F2",10),rep("Prot.",10),rep("RedQ",10)))
+
+anova1 <- aov(Gamma~SpecM, data= data1)
+summary(anova1)
+boxplot(Gamma~SpecM, data=data1, col="lightsalmon", ylab="Gamma", xlab="Speciation Mechanism", cex.axis=1.3, cex.lab=1.3)
+
+```
+
+
+Colless Imbalance:
+
+```{r}
+collessPoint <- collessF1 <- collessF2 <- collessP <- collessRQ <- numeric()
+
+for(i in 1:10){
+collessPoint[[i]] <- collessImbalance(simu[[i]])
+collessF1[[i]] <- collessImbalance(simuF1[[i]])
+collessF2[[i]] <- collessImbalance(simuF2[[i]])
+collessP[[i]] <- collessImbalance(simuP[[i]])
+collessRQ[[i]] <- collessImbalance(simuRQ[[i]])
+}
+
+barplot(c(mean(collessPoint, na.rm = T), mean(collessF1, na.rm = T), mean(collessF2, na.rm = T),     
+        mean(collessP, na.rm = T), mean(collessRQ, na.rm = T)),
+        names.arg = c("Point", "F1", "F2", "Prot.", "RedQ"), col="lightslateblue",
+        ylab="Colless' Imbalance", cex.axis = 1.3, cex.lab=1.3, cex.names = 1.3)
+
+
+data2 <- data.frame("Colless"= c(collessPoint, collessF1, collessF2, collessP, collessRQ), "SpecM"=
+                      c(rep("Point",10),rep("F1",10),rep("F2",10),rep("Prot.",10),rep("RedQ",10)))
+
+anova2 <- aov(Colless~SpecM, data= data2)
+summary(anova2)
+Tukey2 <- TukeyHSD(anova2)
+# Export to LaTeX
+library(stargazer)
+stargazer(Tukey2$SpecM)
+
+boxplot(Colless~SpecM, data=data2, col="lightslateblue", ylab="Colless' Imbalance", xlab="Speciation Mechanism", cex.axis=1.3, cex.lab=1.3)
+
+```
+
+Now the same for non-neutral case. Here I chose density dependence.
+
+```{r}
+par <- list()
+
+for(i in 1:10){
+par[[i]] <- createCompletePar(x = 50 ,y = 50, runs = 10000,
+                                       dispersal = "global",
+                                       specRate = 1,                                                                                           density = 1,
+                                       environment = 0,
+                                       fitnessBaseMortalityRatio = 5,
+                                       densityCut = 1,
+                                       fission=0,
+                                       redQueen = 0,
+                                       redQueenStrength = 1)
+}
+simuC <- runSimulationBatch(par)
+
+```
+
+Than I can can run the model under the different speciation mechanisms.
+
+```{r}
+
+parF1 <- list()
+parF2 <- list()
+parP <- list()
+parRQ <- list()
+
+for(i in 1:10){
+# Fissio type 1
+parF1[[i]] <- createCompletePar(x = 50 ,y = 50, runs = 10000,
+                                       dispersal = "global",
+                                       specRate = 0.01,                                                                                        density = 1,
+                                       environment = 0,
+                                       fitnessBaseMortalityRatio = 5,
+                                       densityCut = 1,
+                                       fission=1,
+                                       redQueen = 0,
+                                       redQueenStrength = 1)
+
+
+
+# Fissio type 2
+parF2[[i]] <- createCompletePar(x = 50 ,y = 50, runs = 10000,
+                                       dispersal = "global",
+                                       specRate = 0.01,                                                                                        density = 1,
+                                       environment = 0,
+                                       fitnessBaseMortalityRatio = 5,
+                                       densityCut = 1,
+                                       fission=2,
+                                       redQueen = 0,
+                                       redQueenStrength = 1)
+
+
+
+# Protracted Speciation
+parP[[i]] <- createCompletePar(x = 50 ,y = 50, runs = 10000,
+                                       dispersal = "global",
+                                       specRate = 5,                                                                                           density = 1,
+                                       environment = 0,
+                                       fitnessBaseMortalityRatio = 5,
+                                       densityCut = 1,
+                                       fission=0,
+                                       redQueen = 0,
+                                       redQueenStrength = 1,
+                                       protracted = 2)
+
+
+
+# Red Queen
+parRQ[[i]] <- createCompletePar(x = 50 ,y = 50, runs = 10000,
+                                       dispersal = "global",
+                                       specRate = 1,                                                                                           density = 1,
+                                       environment = 0,
+                                       fitnessBaseMortalityRatio = 5,
+                                       densityCut = 1,
+                                       fission=0,
+                                       redQueen = 0.01,
+                                       redQueenStrength = 1,
+                                       protracted = 0)
+
+}
+
+simuF1C <- runSimulationBatch(parF1)
+simuF2C <- runSimulationBatch(parF2)
+simuPC <- runSimulationBatch(parP)
+simuRQC <- runSimulationBatch(parRQ)
+
+```
+
+To get a first impression of the results:
+```{r}
+plot(simuC)
+plot(simuF1C)
+plot(simuF2C)
+plot(simuPC)
+plot(simuRQC)
+```
+
+
+The main focus of the analysis lies on the shape of the phylogenies.
+Gamma statistics:
+
+```{r}
+library(ape)
+gammaPointC <- gammaF1C <- gammaF2C <- gammaPC <- gammaRQC <- numeric()
+
+for(i in 1:10){
+gammaPointC[[i]] <- gammaStat(drop.fossil(simuC[[i]]$Output[[1]]$phylogeny))
+gammaF1C[[i]] <- gammaStat(drop.fossil(simuF1C[[i]]$Output[[1]]$phylogeny))
+gammaF2C[[i]] <- gammaStat(drop.fossil(simuF2C[[i]]$Output[[1]]$phylogeny))
+gammaPC[[i]] <- gammaStat(drop.fossil(simuPC[[i]]$Output[[1]]$phylogeny))
+gammaRQC[[i]] <- gammaStat(drop.fossil(simuRQC[[i]]$Output[[1]]$phylogeny))
+}
+
+
+barplot(c(mean(gammaPointC), mean(gammaF1C), mean(gammaF2C), mean(gammaPC), mean(gammaRQC)),
+        names.arg = c("Point", "F1", "F2", "Prot.", "RedQ"), col="lightslateblue",
+        ylab="Gamma", cex.axis = 1.3, cex.lab=1.3, cex.names = 1.3)
+
+data1C <- data.frame("Gamma"= c(gammaPointC, gammaF1C, gammaF2C, gammaPC, gammaRQC), "SpecM"=
+                      c(rep("Point",10),rep("F1",10),rep("F2",10),rep("Prot.",10),rep("RedQ",10)))
+
+anova1C <- aov(Gamma~SpecM, data= data1C)
+summary(anova1C)
+boxplot(Gamma~SpecM, data=data1C, col="lightsalmon", ylab="Gamma", xlab="Speciation Mechanism", cex.axis=1.3, cex.lab=1.3)
+
+```
+
+
+Colless Imbalance:
+
+```{r}
+library(phyloTop)
+collessPointC <- collessF1C <- collessF2C <- collessPC <- collessRQC <- numeric()
+
+for(i in 1:10){
+collessPointC[[i]] <- colless(as(simuC[[i]]$Output[[1]]$phylogeny, "phylo4"))
+collessF1C[[i]] <- colless(as(simuF1C[[i]]$Output[[1]]$phylogeny, "phylo4"))
+collessF2C[[i]] <- colless(as(simuF2C[[i]]$Output[[1]]$phylogeny, "phylo4"))
+collessPC[[i]] <- colless(as(simuPC[[i]]$Output[[1]]$phylogeny, "phylo4"))
+collessRQC[[i]] <- colless(as(simuRQC[[i]]$Output[[1]]$phylogeny, "phylo4"))
+}
+
+barplot(c(mean(collessPointC, na.rm = T), mean(collessF1C, na.rm = T), mean(collessF2C, na.rm = T),     
+        mean(collessPC, na.rm = T), mean(collessRQC, na.rm = T)),
+        names.arg = c("Point", "F1", "F2", "Prot.", "RedQ"), col="lightslateblue",
+        ylab="Colless' Imbalance", cex.axis = 1.3, cex.lab=1.3, cex.names = 1.3)
+
+data2C <- data.frame("Colless"= c(collessPointC, collessF1C, collessF2C, collessPC, collessRQC), 
+                     "SpecM"=c(rep("Point",10),rep("F1",10),rep("F2",10),rep("Prot.",10),rep("RedQ",10)))
+
+anova2C <- aov(Colless~SpecM, data= data2C)
+summary(anova2C)
+
+Tukey2C<-TukeyHSD(anova2C)
+
+# Export to LaTeX
+#library(stargazer)
+stargazer(Tukey2C$SpecM)
+
+boxplot(Colless~SpecM, data=data2C, col="lightslateblue", ylab="Colless' Imbalance", xlab="Speciation Mechanism", cex.axis=1.3, cex.lab=1.3)
+
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -28,6 +591,104 @@ Then I created a reference set of runs. This are five simulations under neutral 
 
 1. Random fission
 -----------------
+
+```{r}
+
+# First get the values of the point mutation.
+parlist <- list()
+
+for(i in 1:10){
+  parlist[[i]] <- createCompletePar(x = 50 ,y = 50, runs = 10000,
+                                       dispersal = "global",
+                                       specRate = 1,                                                                                   density = 0,
+                                       environment = 0,
+                                       fitnessBaseMortalityRatio = 5,
+                                       densityCut = 1,
+                                       fission=0,
+                                       redQueen = 0,
+                                       redQueenStrength = 1)
+  }
+
+
+
+simu_test <- runSimulationBatch(parlist)
+
+# Now get the values
+specRichPoint <- numeric()
+for(i in 1:10){
+  specRichPoint[i] <- specRich(simu_test[[i]])
+}
+specRichPoint <- mean(specRichPoint)
+
+
+
+
+# Now for fission 1
+
+specRichF1 <- matrix(NA, 10,4)
+specRichF2 <- matrix(NA, 10,4)
+specRate <- c(0.005, 0.01, 0.05, 0.1)
+
+
+for(k in 1:10){
+parlistF1<- list()
+parlistF2<- list()
+
+for(i in 1:4){
+  parlistF1[[i]] <- createCompletePar(x = 50 ,y = 50, runs = 10000,
+                                       dispersal = "global",
+                                       specRate = specRate[i],                                                                         density = 0,
+                                       environment = 0,
+                                       fitnessBaseMortalityRatio = 5,
+                                       densityCut = 1,
+                                       fission=1,
+                                       redQueen = 0,
+                                       redQueenStrength = 1)
+  parlistF2[[i]] <- createCompletePar(x = 50 ,y = 50, runs = 10000,
+                                       dispersal = "global",
+                                       specRate = specRate[i],                                                                                 density = 0,
+                                       environment = 0,
+                                       fitnessBaseMortalityRatio = 5,
+                                       densityCut = 1,
+                                       fission=2,
+                                       redQueen = 0,
+                                       redQueenStrength = 1)
+}
+
+simu_testF1 <- runSimulationBatch(parlistF1)
+simu_testF2 <- runSimulationBatch(parlistF2)
+
+# Now get the values
+
+for(i in 1:4){
+  specRichF1[k,i] <- specRich(simu_testF1[[i]])
+  specRichF2[k,i] <- specRich(simu_testF2[[i]])
+}
+}
+
+
+specRichF1m <- numeric()
+specRichF2m <- numeric()
+
+for(i in 1:4){
+specRichF1m[i] <- mean(specRichF1[,i])
+specRichF2m[i] <- mean(specRichF2[,i])
+}
+
+par(mar=c(5, 4.5, 4, 2))
+plot(specRate, specRichF1m, type="b", lwd=2, col="darkgreen",
+     ylab="Species Richness", xlab="Speciation Rate", cex.axis=1.3, cex.lab=1.3)
+abline(h=specRichPoint, lty=2)
+lines(specRate, specRichF2m, lwd=2, type="b", col="darkblue")
+legend(x=0.001, y=45, legend=c("Fission = 1", "Fission = 2"), lty=1, lwd=2,
+       col=c("darkgreen","darkblue" ), bty="n")
+
+
+
+```
+
+
+But now to the real tests.
 Create the parameter sets:
 
 ```{r}
@@ -35,7 +696,7 @@ pars_fission<-list()
 fission <-c(rep(1,5),rep(2,5))
 
 for (i in 1:length(fission)){
-  pars_fission[[i]] = createCompletePar(x = 50 ,y = 50, runs = 1000,
+  pars_fission[[i]] = createCompletePar(x = 50 ,y = 50, runs = 100000,
                                        dispersal = "global",
                                        specRate = 0.01,                                                                            density = 0,
                                        environment = 0,
@@ -60,6 +721,74 @@ simu_fission <- runSimulationBatch(pars_fission)
 
 2. Protracted Speciation
 ------------------------
+Also here it would be interesting to know how stron the effect is.
+
+```{r}
+
+sR5 <- sR10 <- matrix(NA, 10,4)
+
+for(k in 1:10){
+  
+pars5 <- list()
+pars10 <- list()
+
+for(i in 0:3){
+ pars5[[i+1]] <-  createCompletePar(x = 50 ,y = 50, runs = 10000,
+                                       dispersal = "global",
+                                       specRate = 5,                                                                               density = 0,
+                                       environment = 0,
+                                       fitnessBaseMortalityRatio = 5,
+                                       densityCut = 1,
+                                       protracted = i,
+                                       fission=0,
+                                       redQueen = 0,
+                                       redQueenStrength = 1)
+
+pars10[[i+1]] <-  createCompletePar(x = 50 ,y = 50, runs = 10000,
+                                       dispersal = "global",
+                                       specRate = 10,                                                                              density = 0,
+                                       environment = 0,
+                                       fitnessBaseMortalityRatio = 5,
+                                       densityCut = 1,
+                                       protracted = i,
+                                       fission=0,
+                                       redQueen = 0,
+                                       redQueenStrength = 1)
+
+}
+
+simu_pars5 <- runSimulationBatch(pars5)
+
+simu_pars10 <- runSimulationBatch(pars10)
+
+
+
+for(i in 1:4){
+  sR5[k,i]<-specRich(simu_pars5[[i]])
+  sR10[k,i]<-specRich(simu_pars10[[i]])
+}
+}
+
+sR5m <- numeric()
+sR10m <- numeric()
+for(i in 1:4){
+  sR5m[i]<- mean(sR5[,i])
+  sR10m[i]<-mean(sR10[,i])
+}
+
+
+
+par(mar=c(5, 4.5, 4, 2))
+plot(0:3, sR10m, type="b", ylim=c(0, max(sR10)), ylab="Species Richness",
+     lwd=2, col="darkblue", xlab="Protracted", xaxt="n", cex.axis=1.3, cex.lab=1.3)
+
+axis(side=1, at = c(0:3), cex.axis=1.3)
+lines(0:3,sR5m, lwd=2, col="forestgreen", type="b")
+abline(h=specRichPoint, lty=2)
+legend(x=1.5,y=80, legend=c("SpecRate = 10", "SpecRate = 5"), lty=1,lwd=2, col=c("darkblue", "forestgreen"), bty="n")
+
+```
+
 Create the parameter set:
 
 ```{r}
@@ -67,7 +796,7 @@ pars_protract<-list()
 protract <-c(rep(1,5),rep(2,5))
 
 for (i in 1:length(protract)){
-  pars_protract[[i]] = createCompletePar(x = 50 ,y = 50, runs = 1000,
+  pars_protract[[i]] = createCompletePar(x = 50 ,y = 50, runs = 10000,
                                        dispersal = "global",
                                        specRate = 5,                                                                               density = 0,
                                        environment = 0,
@@ -94,6 +823,54 @@ simu_protract <- runSimulationBatch(pars_protract)
 
 3. Red Queen
 -------------------------
+Also here the strength of the effects is interesting.
+To keep it simple I set the value for redQueen 0.1 and vary the 
+redQueenStrength paramteter.
+
+```{r}
+
+parsrQ <- list()
+
+redQueen <- seq(1,2, len=10)
+sRQ <- matrix(NA, 10,10)
+
+for(k in 1:10){
+for(i in 1:10){
+ parsrQ[[i]] <-  createCompletePar(x = 50 ,y = 50, runs = 10000,
+                                       dispersal = "global",
+                                       specRate = 1,                                                                               density = 0,
+                                       environment = 0,
+                                       fitnessBaseMortalityRatio = 5,
+                                       densityCut = 1,
+                                       protracted = 0,
+                                       fission=0,
+                                       redQueen = 0.001,
+                                       redQueenStrength = redQueen[i])
+}
+
+
+simurQ <- runSimulationBatch(parsrQ)
+
+
+
+for(i in 1:10){
+  sRQ[k,i]<-specRich(simurQ[[i]])
+}
+
+}
+
+srQmean <- numeric()
+for(i in 1:10){
+  srQmean[i] <- mean(sRQ[,i])
+}
+
+par(mar=c(5, 4.5, 4, 2))
+plot(redQueen, srQmean, type="l", col="darkblue", lwd=2, xlab="redQueenStrength", 
+    ylab="Species Richness", cex.axis=1.3, cex.lab=1.3)
+
+```
+
+
 Create the parameter set:
 
 ```{r}
@@ -125,15 +902,34 @@ simu_redQueen <- runSimulationBatch(pars_redQueen)
 
 ```
 
+Plots in one figure:
+```{r}
+par(mfrow=c(1,3))
+par(mar=c(5, 4.5, 4, 1))
+
+plot(specRate, specRichF1m, type="b", lwd=2, col="darkgreen",
+     ylab="Speciation Rate", xlab="Species Richness", cex.axis=1.3, cex.lab=1.3)
+abline(h=specRichPoint, lty=2)
+lines(specRate, specRichF2m, lwd=2, type="b", col="darkblue")
+legend(x=0.001, y=45, legend=c("Fission = 1", "Fission = 2"), lty=1, lwd=2,
+       col=c("darkgreen","darkblue" ), bty="n")
 
 
+par(mar=c(5, 2, 4, 2))
+
+plot(0:3, sR10m, type="b", ylim=c(0, max(sR10)), ylab="",
+     lwd=2, col="darkblue", xlab="Protracted", xaxt="n", cex.axis=1.3, cex.lab=1.3)
+
+axis(side=1, at = c(0:3), cex.axis=1.3)
+lines(0:3,sR5m, lwd=2, col="forestgreen", type="b")
+abline(h=specRichPoint, lty=2)
+legend(x=1.5,y=80, legend=c("SpecRate = 10", "SpecRate = 5"), lty=1,lwd=2, col=c("darkblue", "forestgreen"), bty="n")
 
 
+plot(redQueen, srQmean, type="l", col="darkblue", lwd=2, xlab="redQueenStrength", 
+    ylab="", cex.axis=1.3, cex.lab=1.3)
 
-You can also embed plots, for example:
 
-```{r, echo=FALSE}
-plot(cars)
 ```
 
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+
