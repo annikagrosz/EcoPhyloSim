@@ -375,14 +375,15 @@ boxplot(Gamma~SpecM, data=data1, col="lightsalmon", ylab="Gamma", xlab="Speciati
 Colless Imbalance:
 
 ```{r}
-collessPoint <- collessF1 <- collessF2 <- collessP <- collessRQ <- numeric()
+library(phyloTop)
+collessPoint <- collessF1 <- collessF2 <- collessP <- collessRQ <- rep(NA, 10)
 
 for(i in 1:10){
-collessPoint[[i]] <- collessImbalance(simu[[i]])
-collessF1[[i]] <- collessImbalance(simuF1[[i]])
-collessF2[[i]] <- collessImbalance(simuF2[[i]])
-collessP[[i]] <- collessImbalance(simuP[[i]])
-collessRQ[[i]] <- collessImbalance(simuRQ[[i]])
+collessPoint[i] <- colless(as(simu[[i]]$Output[[1]]$phylogeny, "phylo4"))
+collessF1[i] <- colless(as(simuF1[[i]]$Output[[1]]$phylogeny, "phylo4"))
+collessF2[i] <- colless(as(simuF2[[i]]$Output[[1]]$phylogeny, "phylo4"))
+collessP[i] <- colless(as(simuP[[i]]$Output[[1]]$phylogeny, "phylo4"))
+collessRQ[i] <- colless(as(simuRQ[[i]]$Output[[1]]$phylogeny, "phylo4"))
 }
 
 barplot(c(mean(collessPoint, na.rm = T), mean(collessF1, na.rm = T), mean(collessF2, na.rm = T),     
@@ -531,6 +532,10 @@ data1C <- data.frame("Gamma"= c(gammaPointC, gammaF1C, gammaF2C, gammaPC, gammaR
 
 anova1C <- aov(Gamma~SpecM, data= data1C)
 summary(anova1C)
+
+Tukey1 <- TukeyHSD(anova1C)
+stargazer(Tukey1$SpecM)
+
 boxplot(Gamma~SpecM, data=data1C, col="lightsalmon", ylab="Gamma", xlab="Speciation Mechanism", cex.axis=1.3, cex.lab=1.3)
 
 ```
@@ -540,14 +545,14 @@ Colless Imbalance:
 
 ```{r}
 library(phyloTop)
-collessPointC <- collessF1C <- collessF2C <- collessPC <- collessRQC <- numeric()
+collessPointC <- collessF1C <- collessF2C <- collessPC <- collessRQC <- rep(NA, 10)
 
 for(i in 1:10){
-collessPointC[[i]] <- colless(as(simuC[[i]]$Output[[1]]$phylogeny, "phylo4"))
-collessF1C[[i]] <- colless(as(simuF1C[[i]]$Output[[1]]$phylogeny, "phylo4"))
-collessF2C[[i]] <- colless(as(simuF2C[[i]]$Output[[1]]$phylogeny, "phylo4"))
-collessPC[[i]] <- colless(as(simuPC[[i]]$Output[[1]]$phylogeny, "phylo4"))
-collessRQC[[i]] <- colless(as(simuRQC[[i]]$Output[[1]]$phylogeny, "phylo4"))
+collessPointC[i] <- colless(as(simuC[[i]]$Output[[1]]$phylogeny, "phylo4"))
+collessF1C[i] <- colless(as(simuF1C[[i]]$Output[[1]]$phylogeny, "phylo4"))
+collessF2C[i] <- colless(as(simuF2C[[i]]$Output[[1]]$phylogeny, "phylo4"))
+collessPC[i] <- colless(as(simuPC[[i]]$Output[[1]]$phylogeny, "phylo4"))
+collessRQC[i] <- colless(as(simuRQC[[i]]$Output[[1]]$phylogeny, "phylo4"))
 }
 
 barplot(c(mean(collessPointC, na.rm = T), mean(collessF1C, na.rm = T), mean(collessF2C, na.rm = T),     
@@ -555,8 +560,7 @@ barplot(c(mean(collessPointC, na.rm = T), mean(collessF1C, na.rm = T), mean(coll
         names.arg = c("Point", "F1", "F2", "Prot.", "RedQ"), col="lightslateblue",
         ylab="Colless' Imbalance", cex.axis = 1.3, cex.lab=1.3, cex.names = 1.3)
 
-data2C <- data.frame("Colless"= c(collessPointC, collessF1C, collessF2C, collessPC, collessRQC), 
-                     "SpecM"=c(rep("Point",10),rep("F1",10),rep("F2",10),rep("Prot.",10),rep("RedQ",10)))
+data2C <- data.frame("Colless"= c(collessPointC, collessF1C, collessF2C, collessPC, collessRQC), "SpecM"=c(rep("Point",10),rep("F1",10),rep("F2",10),rep("Prot.",10),rep("RedQ",10)))
 
 anova2C <- aov(Colless~SpecM, data= data2C)
 summary(anova2C)
