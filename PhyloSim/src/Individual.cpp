@@ -155,14 +155,20 @@ void Individual::operator=(const Individual &ind)
   double Individual::getFitness(double temp, bool env, bool dd, int generation, double redQueenStrength, double redQueen)
 	{
     double out = (DBL_MIN*100.0); 
-		if(env) out += m_envStrength * exp(-0.5 * pow((temp - m_Mean) / m_Variance, 2.0)) + 1-m_envStrength; // environmental niche
-    if(dd) out += m_compStrength * m_LocalDensity + 1- m_compStrength + (DBL_MIN*100.0);
+	 if(env) out += m_envStrength * exp(-0.5 * pow((temp - m_Mean) / m_Variance, 2.0)) + 1-m_envStrength; // environmental niche
+     if(dd) out += m_compStrength * m_LocalDensity + 1- m_compStrength + (DBL_MIN*100.0);
 
-    if((redQueenStrength != 1) || (redQueen != 0)){
-     if(m_Species->m_Date_of_Emergence == (generation-1)) out = out*redQueenStrength;
-     else{
+
+
+    // Implementation of the redQueen Mechanism
+    if((redQueenStrength != 0) || (redQueen != 0)){
+
+    	// Need to set a values to give the boost in case of the red Queen Speciation. The value here is randomly chosen.
+   	    if(!env && !dd) out = 0.01;
+
+   	    // The new fitness value is calculated as a function of the specie's age
     	 out= out+(out*redQueenStrength * std::pow(2.71828, (-redQueen*(generation-1-m_Species->m_Date_of_Emergence))));
-     }
+
     }
     return out;
 	}

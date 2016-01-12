@@ -295,6 +295,8 @@ std::string Phylogeny::writePhylogenyR(unsigned long long start, std::multimap<u
 
 
          // Original Verrsion
+
+				// Here the program can crash in case of high speciation rates.
 			if ( position[parent->m_ID] > 1 &&
 					phylogenyMap->find(parent->m_Children[position[parent->m_ID]])->second->m_Date_of_Emergence == phylogenyMap->find(parent->m_Children[position[parent->m_ID]-1])->second->m_Date_of_Emergence &&
 					phylogenyMap->find(parent->m_Children[position[parent->m_ID]])->second->m_Date_of_Emergence == phylogenyMap->find(parent->m_Children[position[parent->m_ID]+1])->second->m_Date_of_Emergence){
@@ -306,53 +308,6 @@ std::string Phylogeny::writePhylogenyR(unsigned long long start, std::multimap<u
 //						tree.insert(0, "," );
 					}
 				}
-
-
-				// New version needed to find the bug.
-
-				/*
-				if ( position[parent->m_ID] > 1){
-
-					 std::cout<<"Self: " << phylogenyMap->find(parent->m_Children[position[parent->m_ID]])->second->m_Date_of_Emergence  << std::endl;
-					 std::cout<<"Minus one: " << phylogenyMap->find(parent->m_Children[position[parent->m_ID]-1])->second->m_Date_of_Emergence  << std::endl;
-
-					 if(phylogenyMap->find(parent->m_Children[position[parent->m_ID]])->second->m_Date_of_Emergence == phylogenyMap->find(parent->m_Children[position[parent->m_ID]-1])->second->m_Date_of_Emergence){
-						std::cout << "Found first parent" << std::endl;
-						 std::cout<<"Self: " << phylogenyMap->find(parent->m_Children[position[parent->m_ID]])->second->m_Date_of_Emergence << std::endl;
-						 //std::cout<<"Plus one: " << phylogenyMap->find(parent->m_Children[position[parent->m_ID]+1])->second->m_Date_of_Emergence  << std::endl;
-
-						 std::cout<<"Children m_ID: " << phylogenyMap->find(parent->m_Children[position[parent->m_ID]])->second->m_ID  << std::endl;
-						 std::cout<<"Children2 m_ID: " << phylogenyMap->find(parent->m_Children[position[parent->m_ID]+1])->second->m_ID  << std::endl;
-
-
-						 std::cout<<"Position: " << position[parent->m_ID]  << std::endl;
-
-						 std::cout<<"Parent m_ID: " <<parent->m_ID << std::endl;
-						 std::cout<<"Length Position: " << position.size() << std::endl;
-
-
-
-
-
-						 // Here is the bug (or here shows the bug): The problem is, that plus one cannot be found.
-
-
-						if(phylogenyMap->find(parent->m_Children[position[parent->m_ID]])->second->m_Date_of_Emergence == phylogenyMap->find(parent->m_Children[position[parent->m_ID]+1])->second->m_Date_of_Emergence){
-							std::cout << "Found second parent" << std::endl;
-							if (!(phylogenyMap->find(parent->m_Children[position[parent->m_ID] - 1])->second->m_Children.empty()) && (phylogenyMap->find(parent->m_Children[position[parent->m_ID]])->second->m_Children.empty())){
-							std::cout << "Found parent3" << std::endl;
-								;
-	//						tree.insert(0, "," );
-					  }
-					}
-				}
-			}
-
-
-    */
-
-				//End new/test version
-
 
 
 				else{
