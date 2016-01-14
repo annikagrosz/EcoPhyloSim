@@ -34,7 +34,7 @@ The function \code{\link{phyloReconstruct}} creates a phylogeny from given neutr
 \author{
 Paul Bauche, Florian Hartig
 
-Maintainer: Paul Bauche <paul@mbauche.de>
+Maintainer: Florian Hartig
 }
 \references{
 ~~ Literature or other references for background information ~~
