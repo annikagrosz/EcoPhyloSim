@@ -1,0 +1,29 @@
+---
+title: "U"
+author: "Florian Hartig"
+date: "14 Jan 2016"
+output: html_document
+---
+
+```{r}
+
+
+library(PhyloSim)
+
+par <- createCompletePar(x = 50, y = 50, dispersal = 1, runs = 5000, density = 0, environment = 0.5, specRate = 1)
+
+system.time(simu <- runSimulation(par))
+
+plotSpatialPhylo(simu, plot = "both")
+
+plots <- localPlots(simu, size = 25, n = 100)
+
+
+library(fields)
+image.plot(simu$Output[[1]]$envMat)
+simu$Output[[1]]$specMat
+
+
+
+```
+

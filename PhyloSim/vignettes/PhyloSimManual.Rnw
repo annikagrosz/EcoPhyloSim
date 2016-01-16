@@ -80,8 +80,7 @@ Tutorial for the PhyloSim package. Comments and contact: \href{https://florianha
 library(devtools)
 library(Rcpp)
 
-install_github("biometry/phylosim", subdir = "PhyloSim", auth_token ="fb17360869e0bb3518677936611776687b48e17a", dependencies = TRUE,
-build_vignettes = TRUE)
+install_url("https://dl.dropboxusercontent.com/s/zkdof0b5b523qxt/PhyloSim_0.3.tar.gz")
 
 ?PhyloSim
 browseVignettes("PhyloSim")
