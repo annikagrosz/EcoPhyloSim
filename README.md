@@ -10,19 +10,19 @@ You can install directly from gh, using the 'devtools' package:
 
 ```{r}
 # install.packages(c("devtools","Rcpp")) # I case you don't have them installed
-library(devtools)
-library(Rcpp)
 
-install_github("biometry/phylosim", subdir = "PhyloSim", auth_token ="fb17360869e0bb3518677936611776687b48e17a", dependencies = TRUE,
-build_vignettes = TRUE)
+library(Rcpp)
+library(devtools)
+install_url("https://dl.dropboxusercontent.com/s/zkdof0b5b523qxt/PhyloSim_0.3.tar.gz")
 
 ?PhyloSim
 browseVignettes("PhyloSim")
 ```
 
-For the moment this uses a private key that grants access to the repo, don't forward or copy this code elsewhere!
-
 #### For developers
 
 Clone or fork the repo, and the follow the hints here http://biometry.github.io/APES/R/R70-PackageDevelopment.html if you don't know how to compile a package
+
+See also https://github.com/biometry/phylosim/wiki
+
 
