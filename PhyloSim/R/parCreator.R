@@ -45,6 +45,7 @@ createCompletePar <- function(x = 50, y = 50, dispersal = "global", runs = 100, 
              redQueen = redQueen, redQueenStrength = redQueenStrength, protracted = protracted)
   
 
+
   return(par)
   
 }

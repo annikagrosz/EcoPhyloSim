@@ -1,7 +1,7 @@
 #' @title Phylogeny Reconstruction
 #' @description reconstructs a phylogeny from a neutral trait matrix as returned by \code{\link{runSimulation}}
 #' @param simu A object of class Phylosim
-#' @param which.simulation Integer, determines which simulation should be used. Only useful if your Phylosim object contains more than one result. By default the last result is chosen.
+#' @param which.result Integer, determines which result should be used. This argument is only usefull if your 'runs' argument in \code{\link{createCompletePar}} contains more than one element. By default (NULL), the last result is used.
 #' @param ...  Additional arguments to be passed to function \code{\link{hclust}}
 #' @return An object of class 'phylo'
 #' @examples  
@@ -20,10 +20,10 @@
 #' plot(rePhyl)
 #' @export
 #' 
-phyloReconstruct <- function(simu, which.simulation = NULL, ...)
+phyloReconstruct <- function(simu, which.result = NULL, ...)
 {
-  if (is.null(which.simulation)) which.simulation = length(simu$Output) 
-  simu <- simu$Output[[which.simulation]]
+  if (is.null(which.result)) which.result = length(simu$Output) 
+  simu <- simu$Output[[which.result]]
   
   speciesTable <- table(simu$specMat)
   traitMatrix <- simu$neutMat

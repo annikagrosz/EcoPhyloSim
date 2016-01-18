@@ -37,8 +37,8 @@ SpeciesRichness256 <- matrix(NA, 28, 10)
 
 for(i in 1:28){
     for(k in 1:10){
-      SpeciesRichness100[i,k] <- specRich(simulationOut100[[i]], which.simulation = k)
-      SpeciesRichness256[i,k] <- specRich(simulationOut256[[i]], which.simulation = k)
+      SpeciesRichness100[i,k] <- specRich(simulationOut100[[i]], which.result = k)
+      SpeciesRichness256[i,k] <- specRich(simulationOut256[[i]], which.result = k)
     }
 }
 
@@ -98,8 +98,8 @@ colless256 <- matrix(NA, 28, 10)
 
 for(i in 1:28){
   for(k in 1:10){
-    colless100[i,k] <- collessImbalance(simulationOut100[[i]], which.simulation=k)
-    colless256[i,k] <- collessImbalance(simulationOut256[[i]], which.simulation=k)   
+    colless100[i,k] <- collessImbalance(simulationOut100[[i]], which.result=k)
+    colless256[i,k] <- collessImbalance(simulationOut256[[i]], which.result=k)   
   }
 }
 

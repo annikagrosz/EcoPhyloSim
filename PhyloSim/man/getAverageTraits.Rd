@@ -4,12 +4,12 @@
 \alias{getAverageTraits}
 \title{Get Average Traits}
 \usage{
-getAverageTraits(simu, which.simulation = NULL, orderPhylo = T)
+getAverageTraits(simu, which.result = NULL, orderPhylo = T)
 }
 \arguments{
 \item{simu}{Simulation output of the class "Phylosim", usually consisting out of several lists. Needs to contain at least the spatial species matrix ($specMat) the environment matrix ($envMat) and the three different trait matrizes ($traitMat,$compMat, $neutMat)}
 
-\item{which.simulation}{defines which simulation run to choose in case you defined to save at multiple time steps. The default is the last one.}
+\item{which.result}{Integer, determines which result should be used. This argument is only usefull if your 'runs' argument in \code{\link{createCompletePar}} contains more than one element. By default (NULL), the last result is used.}
 
 \item{orderPhylo}{defines if the mean traits shall be calculated for extinct species as well. default is yes (TRUE)}
 }

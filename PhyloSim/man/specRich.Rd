@@ -4,12 +4,12 @@
 \alias{specRich}
 \title{Species richness}
 \usage{
-specRich(simu, which.simulation = NULL)
+specRich(simu, which.result = NULL)
 }
 \arguments{
 \item{simu}{Object of class "Phylosim", usually consisting out of several lists. Needs at least the spatial distribution of the species stored in a matrix ($specMat)}
 
-\item{which.simulation}{Integer, determines which simulation should be used. Only useful if your Phylosim object contains more than one result.}
+\item{which.result}{Integer, determines which result should be used. This argument is only usefull if your 'runs' argument in \code{\link{createCompletePar}} contains more than one element. By default (NULL), the last result is used.}
 }
 \value{
 An integer value for the species richness

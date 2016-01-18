@@ -4,12 +4,12 @@
 \alias{localPlots}
 \title{Create Subplots}
 \usage{
-localPlots(simu, which.simulation = NULL, size, n, community = F)
+localPlots(simu, which.result = NULL, size, n, community = F)
 }
 \arguments{
 \item{simu}{Simulation output of the class "Phylosim", usually consisting out of several lists. Needs to contain at least a species matrix ($specMat)}
 
-\item{which.simulation}{defines which simulation run to choose in case you defined to save at multiple time steps. The default is the last one.}
+\item{which.result}{Integer, determines which result should be used. This argument is only usefull if your 'runs' argument in \code{\link{createCompletePar}} contains more than one element. By default (NULL), the last result is used.}
 
 \item{size}{A single value or a vector determining the size(s) of the generated subplots}
 

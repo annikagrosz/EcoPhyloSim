@@ -17,7 +17,6 @@ plot.PhyloSim <- function(simu){
 
 
 #summary.phylosim
-# TODO: This is still similar to print
 
 #' @title Summary for objects of class PhyloSim
 #' @description Gives summary about parameter settings, runtime and species Richness.
@@ -38,11 +37,13 @@ summary.PhyloSim <- function(simu){
   
   cat("Summary for class Phylosim",  "\n")
   cat("# Call: runSimulation(x = ", simu$Model$x, ", y = ", simu$Model$y, ", dispersal = '", 
-      simu$Model$dispersal,"'", ", runs =", runsarg, ", density = ", simu$Model$density, 
+      simu$Model$dispersal,"'", ", runs =", runsarg,"\n", ", density = ", simu$Model$density, 
       ", environment = ", simu$Model$environment, ", specRate = ",simu$Model$specRate,")", "\n", sep="")
   cat("------------------------------------", "\n", sep="")
+  cat("Number of Species in Metacommunity: ", specRich(simu), "\n", sep="")
+  cat("Colless' Imbalance: ", collessImbalance(simu), "\n", sep="")
+  cat("Gamma: ", suppressWarnings(ape::gammaStat(ape::drop.fossil(simu$Output[[length(simu$Output)]]$phylogeny))), "\n" )
   cat("Time elapsed: ", simu$Model$runtime,"seconds", "\n", sep="")
-  cat("Number of Species in Metacommunity: ", specRich(simu), sep="")
   }
 
 
@@ -71,7 +72,6 @@ print.PhyloSim <- function(simu){
       ", environment = ", simu$Model$environment, ", specRate = ",simu$Model$specRate,")", "\n", sep="")
   cat("------------------------------------", "\n", sep="")
   cat("Time elapsed: ", simu$Model$runtime,"seconds", "\n", sep="")
-  cat("Number of Species in Metacommunity: ", specRich(simu), sep="")
   
 }
 

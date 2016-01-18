@@ -2,19 +2,19 @@ Package: PhyloSim
 Type: Package
 Title: Analysis of Phylogenetic and Biogeographic patterns, inferring species
     community assembly
-Version: 1.0
+Version: 0.3
 Date: 2015-02-12
-Authors: c(person("Paul", "Bauche", role = c("aut","cre"),
-                     email = "paul@mbauche.de"),
-              person("Florian", "Hartig", role = "aut"),
-              person("Christian", "Buschbeck", role = "ctb"),
-	      person("Stefan", "Paul", role = "ctb"))
-Author: Paul Bauche and Florian Hartig, with contributions from Christian Buschbeck and Stefan Paul 
-Maintainer: Paul Bauche <paul@mbauche.de>
+Authors: c(person("Paul", "Bauche", role = c("aut","cre")),
+    person("Florian", "Hartig", role = "aut"),
+    person("Christian", "Buschbeck", role = "ctb"),
+    person("Stefan", "Paul", role = "ctb"))
+Author: Paul Bauche and Florian Hartig, with contributions from Christian
+    Buschbeck and Stefan Paul
+Maintainer: Florian Hartig, <florian.hartig@biom.uni-freiburg.de>
 Description: This package is designed to simulate and analyse species community
     assembly processes. It allows the user to implement different mechanisms of
     community assembly such as environmental filtering, competitive exclusion or
-    dispersal limitation. These mechanisms can be combined or activated seprately,
+    dispersal limitation. These mechanisms can be combined or activated separately,
     which allows the user to identify biogeographic or phylogenetic patterns
     exclusively correlated with a certain mechanism or combination of mechanisms.
 License: GPL (>= 2)
@@ -33,4 +33,4 @@ Suggests:
     knitr
 VignetteBuilder: knitr
 LinkingTo: Rcpp
-RoxygenNote: 5.0.1
+RoxygenNote: 5.0.1.9000

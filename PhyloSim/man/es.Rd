@@ -15,9 +15,15 @@ es(specRate, dimensions)
 A float value for the expected species richness
 }
 \description{
-Calculate the expected species richness in the equilibrium state as calculated by Hubbel
+Calculate the expected species richness in the equilibrium state as calculated by Hubbel (2001).
+}
+\details{
+This function is only valid for neutral models!
 }
 \examples{
 es(2, 100)
+}
+\references{
+Hubbell, Stephen P. The unified neutral theory of biodiversity and biogeography (MPB-32). Vol. 32. Princeton University Press, 2001.
 }
 

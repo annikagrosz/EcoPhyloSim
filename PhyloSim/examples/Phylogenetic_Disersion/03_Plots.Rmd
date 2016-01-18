@@ -16,6 +16,9 @@ You'll find the following sections:
 
 To store all the plots we create two subdirectories called 'plot100' and 'plot256' respectively.
 ```{r}
+setwd("C:/Users/Stefan/Desktop/New_Simulations")
+library(PhyloSim)
+
 outfolder100 = "plots100"
 dir.create(paste("./",outfolder100, sep = ""))
 
@@ -28,6 +31,7 @@ dir.create(paste("./",outfolder256, sep = ""))
 First the Phylogenetic Dispersion is plotted for the last time step. As the setup is the same in both cases we only have to define the positions once.
 
 ```{r}
+setwd("C:/Users/Stefan/Desktop/New_Simulations")
 load("nullmeta100x100.RData")
 load("nullmeta256x256.RData")
 
@@ -59,6 +63,24 @@ Now we can plot the results and save the plots as a pdf file.
 
 ```
 
+Previous runs have shown that in single time steps artefacts might show in the plots we also show the mean values for the runs.
+```{r}
+ plotPhylogeneticDispersion(pvalues = nullMeta100, positions = positions,  title = "Null Meta", means=10)
+
+  name <- paste("./",outfolder100, "/PhylogeneticDisersion", 100, ".pdf", sep = "")
+  dev.copy(pdf,name, width=9, height=6)
+  dev.off()
+
+  
+ plotPhylogeneticDispersion(pvalues = nullMeta256, positions = positions,  title = "Null Meta", means=10)
+
+  name <- paste("./",outfolder256, "/PhylogeneticDisersion", 256, ".pdf", sep = "")
+  dev.copy(pdf,name, width=9, height=6)
+  dev.off()
+
+
+
+```
 
 Now all the mean values of all recorded time steps are shown in the plots. This can give information about the robustness of the results.
 
@@ -84,13 +106,13 @@ lengths = as.numeric(names(pval[[1]]))
 nlengths = length(lengths)
 
 for (i in 1:length(pval)){
-  z[,i,t] <- sapply(pval[[i]], mean, na.rm = T)
+  z[,i,t] <- sapply(pval[[i]], median, na.rm = T)
 }
 }
 
 for(i in 1:28){
   t<-1
-plot(1:9,z[,i,t], type="l", xlim=c(1,9), ylim=c(0, 0.8), col=cols[t], yaxt="n", xaxt="n")
+plot(1:9,z[,i,t], type="l", xlim=c(1,9), ylim=c(0, 1), col=cols[t], yaxt="n", xaxt="n")
   for(t in 2:length(pvalues)){
   lines(1:9,z[,i,t], col=cols[t])
   }
@@ -119,13 +141,13 @@ lengths = as.numeric(names(pval[[1]]))
 nlengths = length(lengths)
 
 for (i in 1:length(pval)){
-  z[,i,t] <- sapply(pval[[i]], mean, na.rm = T)
+  z[,i,t] <- sapply(pval[[i]], median, na.rm = T)
 }
 }
 
 for(i in 1:28){
   t<-1
-plot(1:9,z[,i,t], type="l", xlim=c(1,9), ylim=c(0, 0.8), col=cols[t], yaxt="n", xaxt="n")
+plot(1:9,z[,i,t], type="l", xlim=c(1,9), ylim=c(0, 1), col=cols[t], yaxt="n", xaxt="n")
   for(t in 2:length(pvalues)){
   lines(1:9,z[,i,t], col=cols[t])
   }
@@ -141,6 +163,7 @@ name <- paste("./",outfolder256, "/PhylogeneticDisersion_allRuns", 256, ".pdf", 
 9. Species Richness
 ------------------------------
 ```{r}
+setwd("C:/Users/Stefan/Desktop/New_Simulations")
 load("SpecRich100x100.RData")
 load("SpecRich256x256.RData")
 
@@ -189,6 +212,7 @@ par(.pardefault)
 10. Gamma Statistics
 ------------------------------------
 ```{r}
+setwd("C:/Users/Stefan/Desktop/New_Simulations")
 load("GammaStat100.RData")
 load("GammaStat256.RData")
 
@@ -222,6 +246,7 @@ par(.pardefault)
 11. Colless' Imbalance
 -------------------------------
 ```{r}
+setwd("C:/Users/Stefan/Desktop/New_Simulations")
 load("Colless100.RData")
 load("Colless256.RData")
 
@@ -256,18 +281,24 @@ for(i in 1:28){
 --------------------------------
 
 ```{r}
+setwd("C:/Users/Stefan/Desktop/New_Simulations")
+load("results100x100.RData")
+load("results256x256.RData")
+
 par(mfrow=c(1,2))
 
 for(i in 1:28){
-sac(simulationOut100[[i]], which.simulation = NULL, title="last Simulation")
-sac(simulationOut100[[i]], which.simulation = "all", title= "all Simulations")  
+  title <- paste("100x100", "Simulation", i)
+sac(simulationOut100[[i]], which.result = NULL, title= title)
+sac(simulationOut100[[i]], which.result = "all", title= title)  
   
   name <- paste("./",outfolder100, "/SAC100_Scenario_", i, ".pdf", sep = "")
   dev.copy(pdf,name, width=9, height=6)
   dev.off()
 
-sac(simulationOut256[[i]], which.simulation = NULL, title="last Simulation")
-sac(simulationOut256[[i]], which.simulation = "all", title= "all Simulations")  
+  title <- paste("256x256", "Simulation", i)  
+sac(simulationOut256[[i]], which.result = NULL, title=title)
+sac(simulationOut256[[i]], which.result = "all", title=  title)  
   
   name <- paste("./",outfolder256, "/SAC256_", i, ".pdf", sep = "")
   dev.copy(pdf,name, width=9, height=6)
@@ -281,18 +312,24 @@ sac(simulationOut256[[i]], which.simulation = "all", title= "all Simulations")
 ------------------------------------
 
 ```{r}
+setwd("C:/Users/Stefan/Desktop/New_Simulations")
+load("results100x100.RData")
+load("results256x256.RData")
+
 par(mfrow=c(1,2))
 
 for(i in 1:28){
-rac(simulationOut100[[i]], which.simulation = NULL, title="last Simulation")
-rac(simulationOut100[[i]], which.simulation = "all", title= "all Simulations")  
+    title <- paste("100x100", "Simulation", i)
+rac(simulationOut100[[i]], which.result = NULL, title=title)
+rac(simulationOut100[[i]], which.result = "all", title= title)  
   
   name <- paste("./",outfolder100, "/RAC100_Scenario_", i, ".pdf", sep = "")
   dev.copy(pdf,name, width=9, height=6)
   dev.off()
-
-rac(simulationOut256[[i]], which.simulation = NULL, title="last Simulation")
-rac(simulationOut256[[i]], which.simulation = "all", title= "all Simulations")  
+  
+  title <- paste("256x256", "Simulation", i)
+rac(simulationOut256[[i]], which.result = NULL, title=title)
+rac(simulationOut256[[i]], which.result = "all", title= title)  
   
   name <- paste("./",outfolder256, "/RAC256_", i, ".pdf", sep = "")
   dev.copy(pdf,name, width=9, height=6)
