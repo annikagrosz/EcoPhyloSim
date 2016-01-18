@@ -293,8 +293,23 @@ std::string Phylogeny::writePhylogenyR(unsigned long long start, std::multimap<u
 				//if(position[parent->m_ID]==3) throw std::runtime_error("Cannot build phylogeny");
 
 
+  // Just a test
+				if ( position[parent->m_ID] > 1 ) {
 
-         // Original Verrsion
+					if(phylogenyMap->find(parent->m_Children[position[parent->m_ID]+1]) == phylogenyMap->end()){
+						if(phylogenyMap->find(parent->m_Children[position[parent->m_ID]])->second->m_Date_of_Emergence == phylogenyMap->find(parent->m_Children[position[parent->m_ID]-1])->second->m_Date_of_Emergence){
+							std::cout << "Trouble" << std::endl;
+						}
+
+
+					}
+					//std::cout << "Iterator " << phylogenyMap->find(parent->m_Children[position[parent->m_ID]]) << std::endl;
+					//std::cout << phylogenyMap->find(parent->m_Children[position[parent->m_ID]])->second->m_Date_of_Emergence << std::endl;
+					//std::cout << phylogenyMap->find(parent->m_Children[position[parent->m_ID]-1])->second->m_Date_of_Emergence << std::endl;
+					//std::cout << "End " << phylogenyMap->end() << std::endl;
+					//std::cout << phylogenyMap->find(parent->m_Children[position[parent->m_ID]+1])->second->m_Date_of_Emergence << std::endl;
+				}
+
 
 				// Here the program can crash in case of high speciation rates.
 			if ( position[parent->m_ID] > 1 &&

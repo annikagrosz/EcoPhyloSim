@@ -10,8 +10,10 @@
 #' @param fitnessActsOn Character, determining how the fitness influences the individuals. Possible inputs are "mortality" (default), "reproduction" or "both"
 #' @param fitnessBaseMortalityRatio Integer, determines the fitness based mortality ratio
 #' @param densityCut Integer, defines the effective range of the competition (ignored if density = FALSE)
-#' @param fission, Logical, determining whether the fission speciation mechanism should be implemented.
-#' @param fissionType Integer, determining how fission should be implemeted. Possible choices are '1' (random) and '2' (spatial).
+#' @param fission Integer, determining which fission type should be used. Options are 0 (none = default), 1 (every second individual becomes part of new species) and 2 (population is geographically split in two parts).
+#' @param protracted Integer, determining the time span in generation new species stays 'incipient' befre turning into a 'good' species. Default is 0.
+#' @param redQueenStrength Float, determining the strength of the Red Queen effect. A value > 0 mean a new species gets a fitness boost due to its novelty.
+#' @param redQueen Float, determining the strength of the fitness decline of an aging species. 
 #' @param seed numerical, sets the random seed
 #' @param type Character, determining which model should be used. "base" is running the default model. Other possibilities are "Leipzig" and "Rneutral" which will run a neutral model purely in R.
 #' @param scenario String, further information you want to add to the parameter set in order to refer to a model run more conveniently. 
