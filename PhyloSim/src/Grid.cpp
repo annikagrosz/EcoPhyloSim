@@ -74,7 +74,8 @@
 Landscape::Landscape(int xsize, int ysize, int type, bool neutral, bool dd, bool env, 
 bool mort, bool repro, unsigned int runs, double specRate, int dispersalCutoff, 
 int DensityCutoff, unsigned int mortalityStrength, 
-double envStrength, double compStrength, int fission, double redQueen, double redQueenStrength, int protracted)
+double envStrength, double compStrength, int fission, double redQueen, double redQueenStrength, int protracted,
+std::vector<double> airmat, std::vector<double> soilmat)
 {
 
    m_Cutoff= dispersalCutoff;
@@ -134,6 +135,7 @@ double envStrength, double compStrength, int fission, double redQueen, double re
 
   // Set up Environment
 
+   if((airmat.size() == 1) && (soilmat.size() == 1)){
    m_AirTemperature =  0.0; // Celsius
    m_GradientStep = (1.0/(double)m_Xdimensions)*2.0;
    m_SoilMoistureRange = 101.0; // percent
@@ -149,6 +151,22 @@ double envStrength, double compStrength, int fission, double redQueen, double re
       }
       if(i < m_Xdimensions / 2.0) m_AirTemperature += m_GradientStep;
       else m_AirTemperature -= m_GradientStep;
+   }
+   }
+
+   if(airmat.size() > 1){
+	   for(int i = 0; i < m_Xdimensions; i++)
+	      {
+	         for(int j = 0; j < m_Ydimensions; j++)
+	         {
+	            std::pair<double, double> envi;
+	            envi.first = airmat[i*m_Xdimensions + j];
+	            if(soilmat.size() > 1){
+	            envi.second = soilmat[i*m_Xdimensions + j];
+	            } else envi.second = 1.0;
+	            m_Environment.push_back(envi);
+	         }
+	      }
    }
    
    // Grid Geometry calculations 
@@ -225,8 +243,8 @@ void Landscape::moistChange(int sign, double magnitude)
 }
 
 
-GlobalEnvironment::GlobalEnvironment(int xsize, int ysize, int type, bool neutral, bool dd, bool env, bool mort, bool repro, unsigned int runs, double specRate, int dispersalCutoff, int densityCutoff, unsigned int mortalityStrength,double envStrength, double compStrength, int fission, double redQueen, double redQueenStrength, int protracted) :
-	                              Landscape(xsize,  ysize,  type,  neutral,  dd,  env, mort, repro,  runs, specRate, dispersalCutoff, densityCutoff, mortalityStrength, envStrength, compStrength, fission,  redQueen, redQueenStrength, protracted)
+GlobalEnvironment::GlobalEnvironment(int xsize, int ysize, int type, bool neutral, bool dd, bool env, bool mort, bool repro, unsigned int runs, double specRate, int dispersalCutoff, int densityCutoff, unsigned int mortalityStrength,double envStrength, double compStrength, int fission, double redQueen, double redQueenStrength, int protracted, std::vector<double> airmat, std::vector<double> soilmat) :
+	                              Landscape(xsize,  ysize,  type,  neutral,  dd,  env, mort, repro,  runs, specRate, dispersalCutoff, densityCutoff, mortalityStrength, envStrength, compStrength, fission,  redQueen, redQueenStrength, protracted, airmat, soilmat)
 {
 
 }
@@ -567,8 +585,8 @@ void GlobalEnvironment::reproduce(unsigned int generation)
 }
 
 
-LocalEnvironment::LocalEnvironment(int xsize, int ysize, int type, bool neutral, bool dd, bool env,bool mort, bool repro, unsigned int runs, double specRate, int dispersalCutoff, int densityCutoff, unsigned int mortalityStrength,double envStrength, double compStrength, int fission, double redQueen, double redQueenStrength, int protracted) :
-	                              Landscape(xsize,  ysize,  type,  neutral,  dd,  env, mort, repro,  runs, specRate, dispersalCutoff, densityCutoff, mortalityStrength, envStrength, compStrength, fission, redQueen, redQueenStrength, protracted)
+LocalEnvironment::LocalEnvironment(int xsize, int ysize, int type, bool neutral, bool dd, bool env,bool mort, bool repro, unsigned int runs, double specRate, int dispersalCutoff, int densityCutoff, unsigned int mortalityStrength,double envStrength, double compStrength, int fission, double redQueen, double redQueenStrength, int protracted, std::vector<double> airmat, std::vector<double> soilmat) :
+	                              Landscape(xsize,  ysize,  type,  neutral,  dd,  env, mort, repro,  runs, specRate, dispersalCutoff, densityCutoff, mortalityStrength, envStrength, compStrength, fission, redQueen, redQueenStrength, protracted, airmat, soilmat)
 {
 
 }

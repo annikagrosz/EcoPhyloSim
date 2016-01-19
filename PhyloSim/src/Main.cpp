@@ -42,6 +42,9 @@ int main(){
   double redQueen = 0.0;
   double redQueenStrength = 0.0;
   int protracted = 0;
+  std::vector<double> airmat(xDim*yDim);
+  std::vector<double> soilmat(xDim*yDim);
+
 	// Just to test
 	//Parameters* pa = new Parameters();
 	//std::cout << "Value of numberOfRuns: " << pa->getParameterValue<int>(std::string("numberOfRuns")) << std::endl;
@@ -55,7 +58,7 @@ int main(){
 	//Running the model
   
 	PhylSimModel Model(xDim,yDim,dispersal, runs, specrate, dd, env, neutral, mort, 
-  mortalityStrength, repro, dispersalCut, densityCut, saveLoc, envStrength, compStrength, fission, redQueen, redQueenStrength, protracted);
+  mortalityStrength, repro, dispersalCut, densityCut, saveLoc, envStrength, compStrength, fission, redQueen, redQueenStrength, protracted, airmat, soilmat);
   Model.update(runs);
 
 

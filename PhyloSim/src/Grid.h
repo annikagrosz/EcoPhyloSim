@@ -59,6 +59,9 @@ class Landscape {
     double m_redQueen;
     double m_redQueenStrength;
     int m_protracted;
+    std::vector<double> airmat;
+    std::vector<double> soilmat;
+
 
 		// Change the temperature in the environment by the given magnitude.
 		void tempChange(int sign, double magnitude);
@@ -69,7 +72,7 @@ class Landscape {
 	Landscape(int xsize, int ysize, int type, bool neutral,
 	      bool dd, bool env, bool mort, bool repro, unsigned int simulationEnd, double specRate,
 	      int dispersalCutoff, int densityCutoff, unsigned int mortalityStrength, double envStrength,
-		  double compStrength, int fission, double redQueen, double redQueenStrength, int protracted);
+		  double compStrength, int fission, double redQueen, double redQueenStrength, int protracted,  std::vector<double> airmat, std::vector<double> soilmat);
 	virtual ~Landscape();
 
 	// TODO(Betim): Should it really be public?
@@ -100,7 +103,7 @@ class GlobalEnvironment : public Landscape
 		GlobalEnvironment();
 		GlobalEnvironment(int xsize, int ysize, int type, bool neutral, bool dd, bool env,bool mort, bool repro,
 		      unsigned int runs, double specRate, int dispersalCutoff, int densityCutoff, unsigned int mortalityStrength,
-			  double envStrength, double compStrength, int fission,  double redQueen, double redQueenStrength, int protracted);
+			  double envStrength, double compStrength, int fission,  double redQueen, double redQueenStrength, int protracted, std::vector<double> airmat, std::vector<double> soilmat);
 
 		virtual ~GlobalEnvironment();
 
@@ -113,7 +116,7 @@ class LocalEnvironment : public Landscape
 	LocalEnvironment();
 	LocalEnvironment(int xsize, int ysize, int type, bool neutral, bool dd, bool env,bool mort, bool repro,
 	      unsigned int runs, double specRate, int dispersalCutoff, int densityCutoff, unsigned int mortalityStrength,
-		  double envStrength, double compStrength, int fission,  double redQueen, double redQueenStrength, int protracted);
+		  double envStrength, double compStrength, int fission,  double redQueen, double redQueenStrength, int protracted, std::vector<double> airmat, std::vector<double> soilmat);
 	virtual ~LocalEnvironment();
 
 	void reproduce(unsigned int generation);

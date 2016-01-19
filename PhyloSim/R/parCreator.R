@@ -29,12 +29,23 @@
 #' 
 #' @export
 
-createCompletePar <- function(x = 50, y = 50, dispersal = "global", runs = 100, specRate = 1.0, density = 0, environment = 0, fitnessActsOn = "mortality" , fitnessBaseMortalityRatio = 10, densityCut = 1, seed=NULL,  type = "base", fission = 1, redQueen = 0, redQueenStrength = 0, protracted = 0, scenario = NULL){
+createCompletePar <- function(x = 50, y = 50, dispersal = "global", runs = 100, specRate = 1.0, density = 0, environment = 0, fitnessActsOn = "mortality" , fitnessBaseMortalityRatio = 10, densityCut = 1, seed=NULL,  type = "base", fission = 1, redQueen = 0, redQueenStrength = 0, protracted = 0, airmat = 1, soilmat = 1, scenario = NULL){
     
   
   if (length(runs)>1){
     if (any(runs[-length(runs)] > runs[-1])) stop( "wrong argument to runs")
   }
+  
+  if(length(airmat)!= 1){
+    if((nrow(airmat) != y) | (ncol(airmat)!= x)) stop("Environment and matrix size do not match")
+  }
+  
+  if(length(soilmat) != 1){
+    if((nrow(soilmat) != y) | (ncol(soilmat)!= x)) stop("Environment and matrix size do not match")
+  }
+  
+  airmat <- as.numeric(airmat)
+  soilmat <- as.numeric(soilmat)
   
   if (is.null(seed)) seed = sample(1:10000,1)
   
@@ -42,7 +53,8 @@ createCompletePar <- function(x = 50, y = 50, dispersal = "global", runs = 100, 
              density = density, environment = environment, fitnessActsOn=fitnessActsOn,
              fitnessBaseMortalityRatio=fitnessBaseMortalityRatio, densityCut = densityCut, 
              seed = seed, type = type, scenario = scenario, fission = fission, 
-             redQueen = redQueen, redQueenStrength = redQueenStrength, protracted = protracted)
+             redQueen = redQueen, redQueenStrength = redQueenStrength, protracted = protracted,
+             airmatR = airmat, soilmatR=soilmat)
   
 
 
