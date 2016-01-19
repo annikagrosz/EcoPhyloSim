@@ -14,6 +14,8 @@
 #' @param protracted Integer, determining the time span in generation new species stays 'incipient' befre turning into a 'good' species. Default is 0.
 #' @param redQueenStrength Float, determining the strength of the Red Queen effect. A value > 0 mean a new species gets a fitness boost due to its novelty.
 #' @param redQueen Float, determining the strength of the fitness decline of an aging species. 
+#' @param airmat Matrix, deteriming the environment of the simulation. airmat needs to be a matrix with the same dimensions as the grid.
+#' @param soilmat Matrix, NOT IMPLEMENTED YET deteriming the environment of the simulation. soilmat needs to be a matrix with the same dimensions as the grid.
 #' @param seed numerical, sets the random seed
 #' @param type Character, determining which model should be used. "base" is running the default model. Other possibilities are "Leipzig" and "Rneutral" which will run a neutral model purely in R.
 #' @param scenario String, further information you want to add to the parameter set in order to refer to a model run more conveniently. 
