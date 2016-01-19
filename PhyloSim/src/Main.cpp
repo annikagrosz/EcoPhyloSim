@@ -64,7 +64,7 @@ int main(){
 //	Model.gettraits();
 	if(dispersal ==1)
 	{
-		std::cout << "Made it to Phylogeny global" << std::endl;
+
 	Model.m_Global->m_Phylogeny.prunePhylogeny(runs);
 	Model.m_Global->m_Phylogeny.writePhylogeny(1,  Model.m_Global->m_Phylogeny.m_PrunedPhylo,'P');
 	Model.m_Global->m_Phylogeny.writePhylogeny(1,  Model.m_Global->m_Phylogeny.m_FullPhylogeny,'F');
@@ -72,7 +72,7 @@ int main(){
 	}
 	else
 	{
-		std::cout << "Made it to Phylogeny local" << std::endl;
+
 
 	 Model.m_Local->m_Phylogeny.prunePhylogeny(runs);
 	 Model.m_Local->m_Phylogeny.writePhylogeny(1, Model.m_Local->m_Phylogeny.m_PrunedPhylo,'P');
