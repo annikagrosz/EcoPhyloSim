@@ -4,7 +4,8 @@
 \alias{localPlots}
 \title{Create Subplots}
 \usage{
-localPlots(simu, which.result = NULL, size, n, community = F)
+localPlots(simu, which.result = NULL, size, n, community = FALSE,
+  plot = FALSE)
 }
 \arguments{
 \item{simu}{Simulation output of the class "Phylosim", usually consisting out of several lists. Needs to contain at least a species matrix ($specMat)}
@@ -15,7 +16,9 @@ localPlots(simu, which.result = NULL, size, n, community = F)
 
 \item{n}{The number of subplots to be generated}
 
-\item{community}{Logical, determining whther to generate a communiy table or not. default is FALSE}
+\item{community}{Logical, determining whether to generate a communiy table or not. default is FALSE}
+
+\item{plot}{Logical, determining whether the results should be shown graphically. Default is FALSE.}
 }
 \value{
 A list of subplots and (if coomunity = T) a community table with plots in rows and species in collumns

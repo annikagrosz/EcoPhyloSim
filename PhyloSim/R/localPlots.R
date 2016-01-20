@@ -4,10 +4,11 @@
 #' @param which.result Integer, determines which result should be used. This argument is only usefull if your 'runs' argument in \code{\link{createCompletePar}} contains more than one element. By default (NULL), the last result is used.
 #' @param size A single value or a vector determining the size(s) of the generated subplots
 #' @param n The number of subplots to be generated
-#' @param community Logical, determining whther to generate a communiy table or not. default is FALSE
+#' @param community Logical, determining whether to generate a communiy table or not. default is FALSE
+#' @param plot Logical, determining whether the results should be shown graphically. Default is FALSE.
 #' @return A list of subplots and (if coomunity = T) a community table with plots in rows and species in collumns
 #' @export
-localPlots <- function(simu,which.result=NULL,size, n, community=F){
+localPlots <- function(simu,which.result=NULL,size, n, community = FALSE, plot = FALSE){
   
   if(n ==1){
     n <- 2 
@@ -15,17 +16,14 @@ localPlots <- function(simu,which.result=NULL,size, n, community=F){
   }else{
     single=F
   }
-  
 
-  #if("PhyloSim" %in% class(simu)==T){
-    if (is.null(which.result)) which.result = length(simu$Output) 
-    simu <- simu$Output[[which.result]]
-  #}
+  if (is.null(which.result)) which.result = length(simu$Output) 
+  simu <- simu$Output[[which.result]]
 
   
   matrix <- simu$specMat
   env <- simu$envMat
-  
+  if(plot == T) plotmat <-simu$specMat
   
   edge <- round(sqrt(size))-1
   subPlots <- list()
@@ -40,15 +38,15 @@ localPlots <- function(simu,which.result=NULL,size, n, community=F){
     # Check for boundary issues and implemant warped bounaries if necessary
     if(x+edge > length(matrix[1,]) && y+edge <= length(matrix[,1])){
       rsel = c(seq(x,length(matrix[1,])), seq(1,(edge-length(seq(x,length(matrix[1,]))))))
-      csel = seq(y,y+edge)-1
+      csel = seq(y,y+edge)
     }
     else if(x+edge <= length(matrix[1,]) && y+edge > length(matrix[,1])){
-      rsel = seq(x,x+edge)-1
+      rsel = seq(x,x+edge)
       csel = c(seq(y,length(matrix[,1])),seq(1,(edge-length(seq(y,length(matrix[,1]))))))
     }
     else if(x+edge > length(matrix[1,]) && y+edge > length(matrix[,1])){
       rsel = c(seq(x,length(matrix[1,])), seq(1,(edge-length(seq(x,length(matrix[1,]))))))
-      csel = c(seq(y,length(matrix[,1])),seq(1,(edge-length(seq(y,length(matrix[,1]))))))
+      csel = c(seq(y,length(matrix[,1])), seq(1,(edge-length(seq(y,length(matrix[,1]))))))
     }
     else{
       rsel = seq(x,x+edge)
@@ -66,6 +64,11 @@ localPlots <- function(simu,which.result=NULL,size, n, community=F){
       communityTable <- merge(communityTable, dataTable , all=T)
       communityTable[is.na(communityTable)] <- 0
     } 
+    if(plot == T){
+      plotmat[rsel, csel] <- -100
+  
+    }
+    
    }
   
   speciesNames <- character()
@@ -84,6 +87,18 @@ localPlots <- function(simu,which.result=NULL,size, n, community=F){
   }
   
   if(single ==T){communityTable <- communityTable[-2,]}
-  return(list(subPlots=subPlots, communityTable=communityTable, envPlots=envPlots))
   
+  if(plot == T){
+    oldpar <- par()$mar
+    par(mar=c(1,1,1,1))
+    cols <- rainbow(length(unique(c(plotmat))),start=0)
+    cols[1] <- "#DCDCDC"
+    image(plotmat, col = cols, yaxt='n', xaxt='n', asp=1, bty="n")
+    par(mar=oldpar)
+  } 
+  
+  if(community == T){
+  return(list(subPlots=subPlots, communityTable=communityTable, envPlots=envPlots))
+  } else return(list(subPlots=subPlots, envPlots=envPlots))
+
   }
