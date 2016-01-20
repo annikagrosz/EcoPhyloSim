@@ -23,7 +23,7 @@ localPlots <- function(simu,which.result=NULL,size, n, community = FALSE, plot =
   
   matrix <- simu$specMat
   env <- simu$envMat
-  if(plot == T) plotmat <-simu$specMat
+  if(plot == T) plotmat <-matrix(0, ncol(matrix), nrow(matrix))
   
   edge <- round(sqrt(size))-1
   subPlots <- list()
@@ -65,7 +65,7 @@ localPlots <- function(simu,which.result=NULL,size, n, community = FALSE, plot =
       communityTable[is.na(communityTable)] <- 0
     } 
     if(plot == T){
-      plotmat[rsel, csel] <- -100
+      plotmat[rsel, csel] <- 1
   
     }
     
@@ -91,9 +91,8 @@ localPlots <- function(simu,which.result=NULL,size, n, community = FALSE, plot =
   if(plot == T){
     oldpar <- par()$mar
     par(mar=c(1,1,1,1))
-    cols <- rainbow(length(unique(c(plotmat))),start=0)
-    cols[1] <- "#DCDCDC"
-    image(plotmat, col = cols, yaxt='n', xaxt='n', asp=1, bty="n")
+    image(matrix,  yaxt='n', xaxt='n', asp=1, bty="n")
+    image(plotmat, col=c(rgb(0,0,0,0),rgb(0,0,1,0.7)), add=T)
     par(mar=oldpar)
   } 
   
