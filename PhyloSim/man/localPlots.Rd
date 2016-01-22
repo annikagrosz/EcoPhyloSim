@@ -5,25 +5,30 @@
 \title{Create Subplots}
 \usage{
 localPlots(simu, which.result = NULL, size, n, community = FALSE,
-  plot = FALSE)
+  plot = FALSE, nested = FALSE)
 }
 \arguments{
 \item{simu}{Simulation output of the class "Phylosim", usually consisting out of several lists. Needs to contain at least a species matrix ($specMat)}
 
 \item{which.result}{Integer, determines which result should be used. This argument is only usefull if your 'runs' argument in \code{\link{createCompletePar}} contains more than one element. By default (NULL), the last result is used.}
 
-\item{size}{A single value or a vector determining the size(s) of the generated subplots}
+\item{size}{A single value (or a vector) determining the edge length(s) of the generated subplots}
 
 \item{n}{The number of subplots to be generated}
 
 \item{community}{Logical, determining whether to generate a communiy table or not. default is FALSE}
 
 \item{plot}{Logical, determining whether the results should be shown graphically. Default is FALSE.}
+
+\item{nested}{Logical, determinig whether the subplots should be nested (see Details).}
 }
 \value{
 A list of subplots and (if coomunity = T) a community table with plots in rows and species in collumns
 }
 \description{
 Generates subplots from a metacommunity, simulating field conditions
+}
+\details{
+If nested == TRUE the subplots are poduced in a sequential order. That means if your 'size' argument has the length 5 and your 'n' argument has the size 2 you will get ten subplots. The first five will be one group of nested plots and the last five the second group of nested plots.
 }
 

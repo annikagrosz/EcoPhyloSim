@@ -2,16 +2,18 @@
 #' @description Generates subplots from a metacommunity, simulating field conditions
 #' @param simu Simulation output of the class "Phylosim", usually consisting out of several lists. Needs to contain at least a species matrix ($specMat)
 #' @param which.result Integer, determines which result should be used. This argument is only usefull if your 'runs' argument in \code{\link{createCompletePar}} contains more than one element. By default (NULL), the last result is used.
-#' @param size A single value or a vector determining the size(s) of the generated subplots
+#' @param size A single value (or a vector) determining the edge length(s) of the generated subplots
 #' @param n The number of subplots to be generated
 #' @param community Logical, determining whether to generate a communiy table or not. default is FALSE
 #' @param plot Logical, determining whether the results should be shown graphically. Default is FALSE.
+#' @param nested Logical, determinig whether the subplots should be nested (see Details).
 #' @return A list of subplots and (if coomunity = T) a community table with plots in rows and species in collumns
+#' @details If nested == TRUE the subplots are poduced in a sequential order. That means if your 'size' argument has the length 5 and your 'n' argument has the size 2 you will get ten subplots. The first five will be one group of nested plots and the last five the second group of nested plots.
 #' @export
-localPlots <- function(simu,which.result=NULL,size, n, community = FALSE, plot = FALSE){
+localPlots <- function(simu,which.result=NULL,size, n, community = FALSE, plot = FALSE, nested = FALSE){
   
   if(n ==1){
-    n <- 2 
+   # n <- 2 
     single = T
   }else{
     single=F
@@ -25,51 +27,65 @@ localPlots <- function(simu,which.result=NULL,size, n, community = FALSE, plot =
   env <- simu$envMat
   if(plot == T) plotmat <-matrix(0, ncol(matrix), nrow(matrix))
   
-  edge <- round(sqrt(size))-1
+ 
   subPlots <- list()
   envPlots <- list()
   communityTable <- data.frame("species"= numeric())
+  count <-0
   
   for(i in 1:n)
-  {                                                                          
+  {           
+    if(nested == TRUE){
+      x = sample(x=1:length(matrix[1,]),size=1)
+      y = sample(x=1:length(matrix[,1]),size=1)
+    }
+    
+    for(k in 1:length(size)){
+    count <- count + 1
+    edge <- size[k] 
+    
+    if(nested == FALSE){
     x = sample(x=1:length(matrix[1,]),size=1)
-    y = sample(x=1:length(matrix[,1]),size=1)
+    y = sample(x=1:length(matrix[,1]),size=1)      
+    }
     
     # Check for boundary issues and implemant warped bounaries if necessary
-    if(x+edge > length(matrix[1,]) && y+edge <= length(matrix[,1])){
+    if(x+(edge-1) > length(matrix[1,]) && y+(edge-1) <= length(matrix[,1])){
       rsel = c(seq(x,length(matrix[1,])), seq(1,(edge-length(seq(x,length(matrix[1,]))))))
-      csel = seq(y,y+edge)
+      csel = seq(y,y+(edge-1))
     }
-    else if(x+edge <= length(matrix[1,]) && y+edge > length(matrix[,1])){
-      rsel = seq(x,x+edge)
+    else if(x+(edge-1) <= length(matrix[1,]) && y+(edge-1) > length(matrix[,1])){
+      rsel = seq(x,x+(edge-1)) 
       csel = c(seq(y,length(matrix[,1])),seq(1,(edge-length(seq(y,length(matrix[,1]))))))
     }
-    else if(x+edge > length(matrix[1,]) && y+edge > length(matrix[,1])){
+    else if(x+(edge-1) > length(matrix[1,]) && y+(edge-1) > length(matrix[,1])){
       rsel = c(seq(x,length(matrix[1,])), seq(1,(edge-length(seq(x,length(matrix[1,]))))))
       csel = c(seq(y,length(matrix[,1])), seq(1,(edge-length(seq(y,length(matrix[,1]))))))
     }
     else{
-      rsel = seq(x,x+edge)
-      csel = seq(y,y+edge)
+      rsel = seq(x,x+(edge-1))
+      csel = seq(y,y+(edge-1))
     }
     
     
-    subPlots[[i]] <- matrix[rsel, csel]
-    envPlots[[i]] <- env[rsel, csel]    
+    subPlots[[count]] <- matrix[rsel, csel]
+    envPlots[[count]] <- env[rsel, csel]    
     
     if(community == T)
     {
-      dataTable <- as.data.frame(table(subPlot))
-      names(dataTable) <- c("species", paste("plot", i, collapse="", sep="")) 
-      communityTable <- merge(communityTable, dataTable , all=T)
-      communityTable[is.na(communityTable)] <- 0
+      dataTable <- as.data.frame(table(subPlots))
+      names(dataTable) <- c("species", paste("plot", count, collapse="", sep="")) 
+      communityTable <- merge(communityTable, dataTable , all=TRUE, by="species")
+      #communityTable[is.na(communityTable)] <- 0
     } 
+    
     if(plot == T){
       plotmat[rsel, csel] <- 1
   
     }
-    
+    }
    }
+  
   
   speciesNames <- character()
   for(b in 1:length(communityTable$species))
