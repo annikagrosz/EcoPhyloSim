@@ -19,13 +19,16 @@ A model of species community assembly under different assembly mechanisms.
 If your parameterset contains more than one runs argument, each interim step is saved in the Phylosim object. \cr\cr For larger simularions consider \link{runSimulationBatch} to make use of parallel computing. \cr\cr If you are using type="Rneutral" only one runs argument can be processed.
 }
 \examples{
- 
+ library(PhyloSim)
 # Define a parameter set
-par <- createCompletePar(x = 50, y = 50, dispersal = "global" , runs = c(500,1000),
-        density = 1, environment = 0.5, specRate = 1)
+par <- createCompletePar(x = 50, y = 50, dispersal = 1 , runs = 1000,
+        density = 0, environment = 0, specRate = 1, fission = 0, redQueen=0, redQueenStrength=0,
+        protracted=0)
 
 # Run the model
-simu <- runSimulation(par)
+simut <- runSimulation(par)
+
+plot(simu)
 
 # Look at the phylogeny (requires package 'ape')
 require(ape)

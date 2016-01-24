@@ -74,7 +74,7 @@ void Species::operator=(const Species & spec)
 	this ->m_Children = spec.m_Children;
 }
 
-Species::Species(unsigned long long id, unsigned long long father, unsigned long long date, std::pair<int, int> birthplace, unsigned int simulationEnd)
+/*Species::Species(unsigned long long id, unsigned long long father, unsigned long long date, std::pair<int, int> birthplace, unsigned int simulationEnd)
 {
 	this->m_ID = id;
 	this->m_Ancestor = father;
@@ -92,9 +92,33 @@ Species::Species(unsigned long long id, unsigned long long father, unsigned long
 	this->m_Date_of_Extinction = simulationEnd;
 	this -> m_CompetitionMean = 0.5;
 	this -> m_NeutralMean = 0.5;
-}
-Species::~Species(){
+}*/
 
+
+Species::Species(unsigned long long id, unsigned long long  father,
+	      unsigned long long date, std::pair<int, int> birthplace, unsigned int simulationEnd)
+{
+	this->m_ID = id;
+	this->m_Ancestor = father;
+	this->m_Count = 0;
+	this->m_Date_of_Emergence = date;
+	this->m_Origin = birthplace;
+	this->m_Variance = 0.04659906;
+	this->m_Mean = 1.0;
+	this->m_FirstMean = 1.0;
+	this->m_FirstComp = 0.5;
+	this->m_FirstNeutral = 0.5;
+	this->m_MeanSum = 0.0;
+	this->m_CompetitionSum = 0.0;
+	this->m_NeutralSum = 0.0;
+	this->m_Date_of_Extinction = simulationEnd;
+	this -> m_CompetitionMean = 0.5;
+	this -> m_NeutralMean = 0.5;
+
+}
+
+
+Species::~Species(){
 }
 
 //	void species::increase_count()

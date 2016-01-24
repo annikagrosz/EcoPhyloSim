@@ -55,6 +55,13 @@ class Landscape {
     
     double m_envStrength;
     double m_compStrength;
+    int m_fission;
+    double m_redQueen;
+    double m_redQueenStrength;
+    int m_protracted;
+    std::vector<double> airmat;
+    std::vector<double> soilmat;
+
 
 		// Change the temperature in the environment by the given magnitude.
 		void tempChange(int sign, double magnitude);
@@ -64,7 +71,8 @@ class Landscape {
 	Landscape();
 	Landscape(int xsize, int ysize, int type, bool neutral,
 	      bool dd, bool env, bool mort, bool repro, unsigned int simulationEnd, double specRate,
-	      int dispersalCutoff, int densityCutoff, unsigned int mortalityStrength, double envStrength, double compStrength);
+	      int dispersalCutoff, int densityCutoff, unsigned int mortalityStrength, double envStrength,
+		  double compStrength, int fission, double redQueen, double redQueenStrength, int protracted,  std::vector<double> airmat, std::vector<double> soilmat);
 	virtual ~Landscape();
 
 	// TODO(Betim): Should it really be public?
@@ -80,10 +88,12 @@ class Landscape {
 	// Start the reproduction of the species.
 	virtual void reproduce(unsigned int generation);
 	// Increase the age of each individual by 1.
-	void increaseAge();
+	void increaseAge(unsigned int generation);
 
 	void speciation(unsigned int generation);
   void densityUpdate(int x, int y);
+
+
 	std::pair<int, int> get_dimensions();
 };
 
@@ -92,7 +102,8 @@ class GlobalEnvironment : public Landscape
  public:
 		GlobalEnvironment();
 		GlobalEnvironment(int xsize, int ysize, int type, bool neutral, bool dd, bool env,bool mort, bool repro,
-		      unsigned int runs, double specRate, int dispersalCutoff, int densityCutoff, unsigned int mortalityStrength, double envStrength, double compStrength);
+		      unsigned int runs, double specRate, int dispersalCutoff, int densityCutoff, unsigned int mortalityStrength,
+			  double envStrength, double compStrength, int fission,  double redQueen, double redQueenStrength, int protracted, std::vector<double> airmat, std::vector<double> soilmat);
 
 		virtual ~GlobalEnvironment();
 
@@ -104,7 +115,8 @@ class LocalEnvironment : public Landscape
 	public:
 	LocalEnvironment();
 	LocalEnvironment(int xsize, int ysize, int type, bool neutral, bool dd, bool env,bool mort, bool repro,
-	      unsigned int runs, double specRate, int dispersalCutoff, int densityCutoff, unsigned int mortalityStrength, double envStrength, double compStrength);
+	      unsigned int runs, double specRate, int dispersalCutoff, int densityCutoff, unsigned int mortalityStrength,
+		  double envStrength, double compStrength, int fission,  double redQueen, double redQueenStrength, int protracted, std::vector<double> airmat, std::vector<double> soilmat);
 	virtual ~LocalEnvironment();
 
 	void reproduce(unsigned int generation);

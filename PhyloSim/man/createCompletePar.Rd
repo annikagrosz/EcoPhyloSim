@@ -7,7 +7,9 @@
 createCompletePar(x = 50, y = 50, dispersal = "global", runs = 100,
   specRate = 1, density = 0, environment = 0,
   fitnessActsOn = "mortality", fitnessBaseMortalityRatio = 10,
-  densityCut = 1, seed = NULL, type = "base", scenario = NULL)
+  densityCut = 1, seed = NULL, type = "base", fission = 1,
+  redQueen = 0, redQueenStrength = 0, protracted = 0, airmat = 1,
+  soilmat = 1, scenario = NULL)
 }
 \arguments{
 \item{x}{Integer, Dimension of the model landscape in x-direction}
@@ -33,6 +35,18 @@ createCompletePar(x = 50, y = 50, dispersal = "global", runs = 100,
 \item{seed}{numerical, sets the random seed}
 
 \item{type}{Character, determining which model should be used. "base" is running the default model. Other possibilities are "Leipzig" and "Rneutral" which will run a neutral model purely in R.}
+
+\item{fission}{Integer, determining which fission type should be used. Options are 0 (none = default), 1 (every second individual becomes part of new species) and 2 (population is geographically split in two parts).}
+
+\item{redQueen}{Float, determining the strength of the fitness decline of an aging species.}
+
+\item{redQueenStrength}{Float, determining the strength of the Red Queen effect. A value > 0 mean a new species gets a fitness boost due to its novelty.}
+
+\item{protracted}{Integer, determining the time span in generation new species stays 'incipient' befre turning into a 'good' species. Default is 0.}
+
+\item{airmat}{Matrix, deteriming the environment of the simulation. airmat needs to be a matrix with the same dimensions as the grid.}
+
+\item{soilmat}{Matrix, NOT IMPLEMENTED YET deteriming the environment of the simulation. soilmat needs to be a matrix with the same dimensions as the grid.}
 
 \item{scenario}{String, further information you want to add to the parameter set in order to refer to a model run more conveniently.}
 }

@@ -5,13 +5,16 @@
 #' @details If your parameterset contains more than one runs argument, each interim step is saved in the Phylosim object. \cr\cr For larger simularions consider \link{runSimulationBatch} to make use of parallel computing. \cr\cr If you are using type="Rneutral" only one runs argument can be processed.
 #' @importFrom adephylo distTips
 #' @examples 
-#'  
+#'  library(PhyloSim)
 #' # Define a parameter set
-#' par <- createCompletePar(x = 50, y = 50, dispersal = "global" , runs = c(500,1000),
-#'         density = 1, environment = 0.5, specRate = 1)
+#' par <- createCompletePar(x = 50, y = 50, dispersal = 1 , runs = 1000,
+#'         density = 0, environment = 0, specRate = 1, fission = 0, redQueen=0, redQueenStrength=0,
+#'         protracted=0)
 #'
 #' # Run the model
-#' simu <- runSimulation(par)
+#' simut <- runSimulation(par)
+#' 
+#' plot(simu)
 #' 
 #' # Look at the phylogeny (requires package 'ape')
 #' require(ape)
@@ -82,9 +85,14 @@ runSimulation <- function(par)
       neutral = F
     }    
     
+    
     ptm <- proc.time()
     
-    out <- callModel( par$x,  par$y,  dispersal,  round(par$runs),  par$specRate, par$density, par$environment, neutral, mortalityFitness, par$fitnessBaseMortalityRatio, reproductiveFitness, dispersalCut, par$densityCut, par$seed, par$envStrength, par$compStrength)  
+    out <- callModel( par$x,  par$y,  dispersal,  round(par$runs),  par$specRate, par$density, 
+                      par$environment, neutral, mortalityFitness, par$fitnessBaseMortalityRatio,
+                      reproductiveFitness, dispersalCut, par$densityCut, par$seed, par$envStrength,
+                      par$compStrength, par$fission, par$redQueen, par$redQueenStrength, par$protracted,
+                      par$airmat, par$soilmat)  
     
     runtime <- as.numeric((proc.time() - ptm)[3])
     
@@ -100,13 +108,22 @@ runSimulation <- function(par)
     output<-list()
     for (i in 1:length(par$runs)){
       
+       specMati = matrix(out[[i]]$Species,ncol=par$x, nrow=par$y)
+       if(length(unique(c(specMati)))==1){
+         phyloi <- 0
+         warning("Cannot build Phylogeny")
+       }else{
+         phyloi <- ape::read.tree(text= out[[i]]$Phylogeny)
+       }
+       
+       
       output$Output[[i]] = list(
         specMat = matrix(out[[i]]$Species,ncol=par$x, nrow=par$y), 
         traitMat= matrix(out[[i]]$EnvTrait,ncol=par$x, nrow=par$y), 
         envMat = matrix(out[[i]]$Environment,ncol=par$x, nrow=par$y), 
         compMat = matrix(out[[i]]$CompetitionTrait,ncol=par$x, nrow=par$y), 
         neutMat = matrix(out[[i]]$NeutralTrait,ncol=par$x, nrow=par$y), 
-        phylogeny = ape::read.tree(text = out[[i]]$Phylogeny), 
+        phylogeny =  phyloi, 
         phyloTXT = out[[i]]$Phylogeny)
     }
     cat("done! \n")

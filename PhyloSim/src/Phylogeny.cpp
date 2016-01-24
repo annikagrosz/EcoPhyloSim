@@ -46,7 +46,7 @@ void Phylogeny::writeSpeciesData()
 
 void Phylogeny::prunePhylogeny(int current)
 {
-  
+  std::cout << "Prune Phylogeny" << std::endl;
   m_PrunedPhylo->clear();
 
   // Create deep copy
@@ -55,13 +55,17 @@ void Phylogeny::prunePhylogeny(int current)
     Species * specp = new Species(*m_FullPhylogeny->find(i)->second);
     if (specp->m_Date_of_Extinction > current) specp->m_Date_of_Extinction = current;
     m_PrunedPhylo->insert( std::pair<unsigned long long, Species*>(specp->m_ID, specp));
+
   }
-  
+
+
   // TODO - I somehow don't understand 100% why this works .. we go through the phylogeny size, erase things inbetween, why don't we get into 
   // trouble for trying to access indices that have already been erase?
   
 	for(unsigned long long i=1; i <= m_PrunedPhylo->size(); i++)
 	{
+
+
 		Species * father = m_PrunedPhylo->find(i)->second;
 
 		for(int i = 0; i<10; i++){
@@ -82,13 +86,14 @@ void Phylogeny::prunePhylogeny(int current)
 				 }
 			}
 		}
-//		 std::cout << father->children.size() << '\n';
+		// std::cout << father->children.size() << '\n';
 	}
-//	std::cout <<"phylosize : " << prunedPhylo.size() << '\n';
+	// std::cout <<"phylosize : " << prunedPhylo.size() << '\n';
 }
 
 void Phylogeny::writePhylogeny(unsigned long long start, std::multimap<unsigned long long, Species*> *phylogenyMap, char suffix)
 {
+	 std::cout << "write Phylogeny" << std::endl;
 	Species * parent = phylogenyMap->find(start)->second;
 	Species * ancestorSpecies = new Species(0,0,0,std::make_pair(0,0),0);
 	phylogenyMap->insert(std::make_pair(ancestorSpecies->m_ID, ancestorSpecies));
@@ -220,6 +225,8 @@ void Phylogeny::writePhylogeny(unsigned long long start, std::multimap<unsigned 
 
 std::string Phylogeny::writePhylogenyR(unsigned long long start, std::multimap<unsigned long long, Species*> * phylogenyMap)
 {
+
+
 	Species * parent = phylogenyMap->find(start)->second;
 	Species * ancestorSpecies = new Species(0,0,0,std::make_pair(0,0),0);
 	phylogenyMap->insert(std::make_pair(ancestorSpecies->m_ID, ancestorSpecies));
@@ -228,9 +235,9 @@ std::string Phylogeny::writePhylogenyR(unsigned long long start, std::multimap<u
 	int branchLength = 0;
 
 	std::string tree = ";" ;
-
 	std::vector <size_t> position  (phylogenyMap->size(),0);
 	std::vector <size_t> paranthesis  (phylogenyMap->size(),0);
+	int counter = 1;
 
     bool go = true;
 	while(go )
@@ -244,6 +251,7 @@ std::string Phylogeny::writePhylogenyR(unsigned long long start, std::multimap<u
 			// If parent is leaf, write down leaf and length and go one up
 			if(parent->m_Children.empty())
 			{
+
 				if(position[parent->m_ID] != 0) throw std::runtime_error("unexpected value for position value in a leaf") ;
 				branchLength = parent->m_Date_of_Extinction - parent->m_Date_of_Emergence;
 				tree.insert(0, to_string(branchLength) );
@@ -253,11 +261,15 @@ std::string Phylogeny::writePhylogenyR(unsigned long long start, std::multimap<u
 				tree.insert(0, "," );
 				parent = phylogenyMap->find(parent->m_Ancestor)->second ;
 				position[parent->m_ID] += 1;
+
 			}
+
 
 			// if all children visited write down parent, close and go one up
 			else if(position[parent->m_ID] == parent->m_Children.size() )
 			{
+
+
 				branchLength = parent->m_Date_of_Extinction - phylogenyMap->find(parent->m_Children.back())->second->m_Date_of_Emergence;
 
 				tree.insert(0, to_string(branchLength));
@@ -267,8 +279,8 @@ std::string Phylogeny::writePhylogenyR(unsigned long long start, std::multimap<u
 				tree.insert(0, paranthesis[parent->m_ID],'(' );
 				tree.insert(0, "," );
 				parent = phylogenyMap->find(parent->m_Ancestor)->second;
-
 				position[parent->m_ID] +=1 ;
+
 
 			}
 
@@ -278,26 +290,39 @@ std::string Phylogeny::writePhylogenyR(unsigned long long start, std::multimap<u
 			{
 
 				// if two siblings are born in the same generation
+				//if(position[parent->m_ID]==3) throw std::runtime_error("Cannot build phylogeny");
 
-				if ( position[parent->m_ID] > 1 &&
+
+
+				// Here the program can crash in case of high speciation rates.
+			if ( position[parent->m_ID] > 1 &&
 					phylogenyMap->find(parent->m_Children[position[parent->m_ID]])->second->m_Date_of_Emergence == phylogenyMap->find(parent->m_Children[position[parent->m_ID]-1])->second->m_Date_of_Emergence &&
 					phylogenyMap->find(parent->m_Children[position[parent->m_ID]])->second->m_Date_of_Emergence == phylogenyMap->find(parent->m_Children[position[parent->m_ID]+1])->second->m_Date_of_Emergence){
+
+
 					if (!(phylogenyMap->find(parent->m_Children[position[parent->m_ID] - 1])->second->m_Children.empty()) && (phylogenyMap->find(parent->m_Children[position[parent->m_ID]])->second->m_Children.empty())){
 
 						;
 //						tree.insert(0, "," );
 					}
 				}
+
+
 				else{
+
 					// if first time going through this node branch lenght is distance to parent node
 					if(position[parent->m_ID] == 0)
 					{
 						branchLength = phylogenyMap->find(parent->m_Children[position[parent->m_ID]])->second->m_Date_of_Emergence - parent->m_Date_of_Emergence;
+
+
 					}
 					// else branch lenght is distance to previous sibling
 					else // ????? or position = children size
 					{
+
 						branchLength = phylogenyMap->find(parent->m_Children[position[parent->m_ID]])->second->m_Date_of_Emergence - phylogenyMap->find(parent->m_Children[position[parent->m_ID ]-1])->second->m_Date_of_Emergence;
+
 					}
 
 					tree.insert(0, to_string(branchLength));
@@ -310,14 +335,23 @@ std::string Phylogeny::writePhylogenyR(unsigned long long start, std::multimap<u
 
 				parent = phylogenyMap->find(parent->m_Children[position[parent->m_ID]])->second;
 			}
-			else throw std::runtime_error("Nope");
 
+			else break;
+			//else throw std::runtime_error("Nope");
+
+			counter +=1;
+			//std::cout << "Counter: " << counter << " Size: " << phylogenyMap->size() << std::endl;
+			//std::cout << "Position max: " << *std::max_element(position.begin(), position.end()) << std::endl;
+
+		if(counter > phylogenyMap->size()) break;
 
 		if (parent->m_ID == 0)
 		{
 			go = false ;
 		}
 	}
+	//std::cout << tree << std::endl;
+
 	tree.erase(tree.begin());
 	return tree;
 }

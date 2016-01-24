@@ -4,21 +4,23 @@
 \alias{sac}
 \title{Species Area Curve}
 \usage{
-sac(simu, which.result = NULL, area = NULL, rep = 50, plot = T,
-  title = "SAC")
+sac(simu, which.result = NULL, size = NULL, rep = 50, plot = T,
+  title = "SAC", nested = FALSE)
 }
 \arguments{
 \item{simu}{Simulation output of the class "Phylosim", usually consisting out of several lists. Needs at least the spatial distribution of the species stored in a matrix ($specMat)}
 
 \item{which.result}{Integer, determines which result should be used. This argument is only usefull if your 'runs' argument in \code{\link{createCompletePar}} contains more than one element. By default (NULL), the last result is used. If you choose "all" all results are shown in one plot (see 'Details).}
 
-\item{area}{a single value or a vector determining the size(s) of the subplots. If not provided, 10 logarithmic plotsizes will be used.}
+\item{size}{a single value or a vector determining the edge length of the subplots. If not provided, 10 logarithmic plotsizes will be used.}
 
 \item{rep}{The number of repetitions per size to calculate the mean}
 
 \item{plot}{Logical determining whether to plot the SAC or not}
 
 \item{title}{String, determining the title of the plot}
+
+\item{nested}{Logical, determining whether nested subplots should be used.}
 }
 \value{
 A list containing the mean species richness for each size and the respective standard deviation. If which.result = "all" only the plot will be returned.
@@ -58,7 +60,7 @@ sac(simu = simu.envcom.local)
  
 #Plot SAC curve with random plotsize 
 
-sac(simu=simu.envcom.local, area = sort(sample(c(10:1000), size = 10)))
+sac(simu=simu.envcom.local, size = sort(sample(c(10:1000), size = 10)))
 
  
  

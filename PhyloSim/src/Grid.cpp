@@ -13,6 +13,9 @@
 #include <stdexcept>
 #include <utility>
 #include <vector>
+#include <numeric>
+#include <math.h>
+#include<algorithm>
 
 #include "Grid.h"
 #include "Individual.h"
@@ -71,7 +74,8 @@
 Landscape::Landscape(int xsize, int ysize, int type, bool neutral, bool dd, bool env, 
 bool mort, bool repro, unsigned int runs, double specRate, int dispersalCutoff, 
 int DensityCutoff, unsigned int mortalityStrength, 
-double envStrength, double compStrength)
+double envStrength, double compStrength, int fission, double redQueen, double redQueenStrength, int protracted,
+std::vector<double> airmat, std::vector<double> soilmat)
 {
 
    m_Cutoff= dispersalCutoff;
@@ -91,6 +95,10 @@ double envStrength, double compStrength)
    m_mortalityStrength = mortalityStrength;
    m_envStrength = envStrength;
    m_compStrength = compStrength;
+   m_fission = fission;
+   m_redQueen = redQueen;
+   m_redQueenStrength = redQueenStrength;
+   m_protracted = protracted;
 
    //	func.seedrand(1500);
 
@@ -104,7 +112,7 @@ double envStrength, double compStrength)
    // Initialization
    
    // Create new species 
-   Species * spec = new Species(1, 1, 0, std::make_pair<int,int>(0,0), m_SimulationEnd);
+   Species * spec = new Species(1,1, 0, std::make_pair<int,int>(0,0), m_SimulationEnd);
 
    // Add individuas of this new species across the grid
    for(int cols = 0; cols < m_Xdimensions; cols++)
@@ -127,6 +135,7 @@ double envStrength, double compStrength)
 
   // Set up Environment
 
+   if((airmat.size() == 1) && (soilmat.size() == 1)){
    m_AirTemperature =  0.0; // Celsius
    m_GradientStep = (1.0/(double)m_Xdimensions)*2.0;
    m_SoilMoistureRange = 101.0; // percent
@@ -142,6 +151,22 @@ double envStrength, double compStrength)
       }
       if(i < m_Xdimensions / 2.0) m_AirTemperature += m_GradientStep;
       else m_AirTemperature -= m_GradientStep;
+   }
+   }
+
+   if(airmat.size() > 1){
+	   for(int i = 0; i < m_Xdimensions; i++)
+	      {
+	         for(int j = 0; j < m_Ydimensions; j++)
+	         {
+	            std::pair<double, double> envi;
+	            envi.first = airmat[i*m_Xdimensions + j];
+	            if(soilmat.size() > 1){
+	            envi.second = soilmat[i*m_Xdimensions + j];
+	            } else envi.second = 1.0;
+	            m_Environment.push_back(envi);
+	         }
+	      }
    }
    
    // Grid Geometry calculations 
@@ -182,13 +207,15 @@ std::pair<int, int> Landscape::get_dimensions()
 }
 
 
-void Landscape::increaseAge()
+void Landscape::increaseAge(unsigned int generation)
 {
    for (int rows = 0; rows < this->m_Xdimensions; rows++)
    {
       for (int cols =0; cols < this->m_Ydimensions; cols++)
       {
          this->m_Individuals[rows][cols].m_Age += 1;
+         this->m_Individuals[rows][cols].m_incip_Age += 1;
+
       }
    }
 }
@@ -216,8 +243,8 @@ void Landscape::moistChange(int sign, double magnitude)
 }
 
 
-GlobalEnvironment::GlobalEnvironment(int xsize, int ysize, int type, bool neutral, bool dd, bool env, bool mort, bool repro, unsigned int runs, double specRate, int dispersalCutoff, int densityCutoff, unsigned int mortalityStrength,double envStrength, double compStrength) :
-	                              Landscape(xsize,  ysize,  type,  neutral,  dd,  env, mort, repro,  runs, specRate, dispersalCutoff, densityCutoff, mortalityStrength, envStrength, compStrength)
+GlobalEnvironment::GlobalEnvironment(int xsize, int ysize, int type, bool neutral, bool dd, bool env, bool mort, bool repro, unsigned int runs, double specRate, int dispersalCutoff, int densityCutoff, unsigned int mortalityStrength,double envStrength, double compStrength, int fission, double redQueen, double redQueenStrength, int protracted, std::vector<double> airmat, std::vector<double> soilmat) :
+	                              Landscape(xsize,  ysize,  type,  neutral,  dd,  env, mort, repro,  runs, specRate, dispersalCutoff, densityCutoff, mortalityStrength, envStrength, compStrength, fission,  redQueen, redQueenStrength, protracted, airmat, soilmat)
 {
 
 }
@@ -232,7 +259,7 @@ void GlobalEnvironment::reproduce(unsigned int generation)
   /////////////////////////////////////////////////////
   // NEUTRAL CASE
   
-   if(m_Neutral)
+   if(m_Neutral && (m_redQueen==0) && (m_redQueenStrength==0))
    {
       #ifdef DEBUG
       std::cout<<"In global neutral \n";
@@ -266,7 +293,7 @@ void GlobalEnvironment::reproduce(unsigned int generation)
    
    else // Density dependence and / or Environmental dependence
    {
-     
+
       #ifdef DEBUG
       std::cout<<"In global non-neutral \n";
       #endif
@@ -311,7 +338,7 @@ void GlobalEnvironment::reproduce(unsigned int generation)
         {
            for(int kernel_y = 0 ; kernel_y <  m_Ydimensions ; kernel_y++)
            {
-              weights[array_length] = m_Individuals[kernel_x][kernel_y].getFitness(m_Environment[kernel_x * m_Ydimensions + kernel_y].first, m_Env, m_DD);
+              weights[array_length] = m_Individuals[kernel_x][kernel_y].getFitness(m_Environment[kernel_x * m_Ydimensions + kernel_y].first, m_Env, m_DD, generation, m_redQueenStrength, m_redQueen);
               seedSum += weights[array_length];
               array_length ++;
            }
@@ -347,7 +374,7 @@ void GlobalEnvironment::reproduce(unsigned int generation)
          int y_coordinate = m_RandomGenerator.randomInt(0,m_Ydimensions-1);
 
          if(event % m_mortalityStrength != 0 && m_mortality){
-            double weight = m_Individuals[x_coordinate][y_coordinate].getFitness(m_Environment[x_coordinate * m_Ydimensions + y_coordinate].first, m_Env, m_DD);         
+            double weight = m_Individuals[x_coordinate][y_coordinate].getFitness(m_Environment[x_coordinate * m_Ydimensions + y_coordinate].first, m_Env, m_DD,  generation, m_redQueenStrength, m_redQueen);
             // important!! the frequency in relation to the base mortality controls the intensity of the mechanisms
         	  double chanceOfDeath = m_RandomGenerator.randomDouble(0.0,1.0);
             //std::cout<<weight<<"\n"; // DEBUG
@@ -558,8 +585,8 @@ void GlobalEnvironment::reproduce(unsigned int generation)
 }
 
 
-LocalEnvironment::LocalEnvironment(int xsize, int ysize, int type, bool neutral, bool dd, bool env,bool mort, bool repro, unsigned int runs, double specRate, int dispersalCutoff, int densityCutoff, unsigned int mortalityStrength,double envStrength, double compStrength) :
-	                              Landscape(xsize,  ysize,  type,  neutral,  dd,  env, mort, repro,  runs, specRate, dispersalCutoff, densityCutoff, mortalityStrength, envStrength, compStrength)
+LocalEnvironment::LocalEnvironment(int xsize, int ysize, int type, bool neutral, bool dd, bool env,bool mort, bool repro, unsigned int runs, double specRate, int dispersalCutoff, int densityCutoff, unsigned int mortalityStrength,double envStrength, double compStrength, int fission, double redQueen, double redQueenStrength, int protracted, std::vector<double> airmat, std::vector<double> soilmat) :
+	                              Landscape(xsize,  ysize,  type,  neutral,  dd,  env, mort, repro,  runs, specRate, dispersalCutoff, densityCutoff, mortalityStrength, envStrength, compStrength, fission, redQueen, redQueenStrength, protracted, airmat, soilmat)
 {
 
 }
@@ -607,7 +634,7 @@ void LocalEnvironment::reproduce(unsigned int generation)
       // If fitness acts on mortality, break here with a chance ~ fitness
       
       if(m_mortality && event % m_mortalityStrength != 0){ // important!! the frequency in relation to the base mortality controls the intensity of the mechanisms
-    	  double weight = m_Individuals[x_coordinate][y_coordinate].getFitness(m_Environment[x_coordinate * m_Ydimensions + y_coordinate].first, m_Env, m_DD);
+    	  double weight = m_Individuals[x_coordinate][y_coordinate].getFitness(m_Environment[x_coordinate * m_Ydimensions + y_coordinate].first, m_Env, m_DD, generation, m_redQueenStrength, m_redQueen);
         double chanceOfDeath = m_RandomGenerator.randomDouble(0.0,1.0);
 		  if(weight > chanceOfDeath) continue;
 	    }
@@ -639,7 +666,7 @@ void LocalEnvironment::reproduce(unsigned int generation)
                parents[array_length].first = kernel_x;
                parents[array_length].second =  kernel_y;
                if(m_reproduction){
-                 weights[array_length] = m_Individuals[kernel_x][kernel_y].getSeedsTo(relativeX,relativeY, m_Dispersal_type, m_Environment[kernel_x * m_Ydimensions + kernel_y].first, m_Env, m_DD);
+                 weights[array_length] = m_Individuals[kernel_x][kernel_y].getSeedsTo(relativeX,relativeY, m_Dispersal_type, m_Environment[kernel_x * m_Ydimensions + kernel_y].first, m_Env, m_DD, generation, m_redQueenStrength, m_redQueen);
                }else if(m_mortality){
                  weights[array_length] = m_Individuals[kernel_x][kernel_y].dispersal(m_Dispersal_type, m_Individuals[kernel_x][kernel_y].euclidian_distance(relativeX, relativeY));
                }else throw 11;
@@ -723,33 +750,120 @@ void Landscape::densityUpdate(int x, int y){
 
 void Landscape::speciation (unsigned int generation)
 {
-   // std::cout << generation << '\n';
 
-   int specRate = m_RandomGenerator.randomPoisson(m_Speciation_Rate);
+	// In this function is the main part of the implementation of the speciation mechanisms.
 
-   for (int i = 0; i < specRate; i++)
-   {
-      int x = m_RandomGenerator.randomInt(0,m_Xdimensions-1); // rand() % xdimensions;
-      int y = m_RandomGenerator.randomInt(0,m_Ydimensions-1); // rand() % ydimensions;
-
-      m_Global_Species_Counter+=1;
-
-      m_Individuals[x][y].m_Species->m_Children.push_back(m_Global_Species_Counter);
-
-      m_Individuals[x][y].reportDeath(generation);
-
-      m_Individuals[x][y].m_Species = new Species(m_Global_Species_Counter, m_Individuals[x][y].m_Species->get_species_ID(), generation, std::make_pair(x, y), m_SimulationEnd);
-      
-      m_Individuals[x][y].evolveDuringSpeciation();
-
-      //			individuals[x][y].Species->date_of_extinction = runs;
-      m_Phylogeny.updatePhylogeny(m_Individuals[x][y].m_Species);
+	  int specRate = m_RandomGenerator.randomPoisson(m_Speciation_Rate);
 
 
-      // update relatedness values for density dependence / competition
-      if(m_DD) densityUpdate(x,y);
-   }
+	  for (int i = 0; i < specRate; i++)
+	  {
+
+		// std::cout << specRate << std::endl;
+	    int x = m_RandomGenerator.randomInt(0,m_Xdimensions-1); // rand() % xdimensions;
+	    int y = m_RandomGenerator.randomInt(0,m_Ydimensions-1); // rand() % ydimensions;
+
+
+
+  // In every case the counter for the incipient ages set to zero.
+ // This value is updated every time step. Which individuals are chosen is dependent on the
+ // other speciation mechanisms (fission or no fission).
+
+	    if(m_fission ==0){
+	       m_Individuals[x][y].m_incip_Age = 0;
+	    }
+
+	    if(m_fission != 0){
+	    	std::vector<int> xvec;
+	        std::vector<int> yvec;
+	      for(int k = 0; k < m_Xdimensions; k++){
+	        for(int j = 0; j < m_Ydimensions; j++){
+	          if(m_Individuals[k][j].m_Species == m_Individuals[x][y].m_Species)
+	        	xvec.push_back(k);
+	            yvec.push_back(j);
+	        }}
+
+
+	        	if(m_fission == 1){
+	        		for(unsigned int z =0; z< xvec.size(); z+=2){
+	        			m_Individuals[xvec[z]][yvec[z]].m_incip_Age = 0;
+	        		}
+	        	}
+
+	        	if(m_fission ==2){
+	    	        int sum = std::accumulate(xvec.begin(), xvec.end(), 0);
+	    	        int mean = sum / xvec.size();
+	    	        if(sum == 0) mean=-1;
+
+	    	        for(unsigned int z = 0; z < xvec.size(); z++){
+	    	          if(xvec[z] < mean){
+	    	           m_Individuals[xvec[z]][yvec[z]].m_incip_Age = 0;
+	        	}
+	          }
+	          }
+
+	}}
+
+
+
+	    // In the same timestep new species arise.
+	   // Which individuals become part of the new species is dependent on the incipient age of the
+	  // individual and the other speciation mechanism (fission or no fission).
+
+	if(m_fission == 0){
+		for(int k = 0; k < m_Xdimensions; k++){
+	           for(int j = 0; j < m_Ydimensions; j++){
+	        	if(m_Individuals[k][j].m_incip_Age == m_protracted){
+	        		m_Global_Species_Counter+=1;
+
+	        		  m_Individuals[k][j].m_Species->m_Children.push_back(m_Global_Species_Counter);
+	        		  m_Individuals[k][j].reportDeath(generation);
+                      m_Individuals[k][j].m_Species = new Species(m_Global_Species_Counter , m_Individuals[k][j].m_Species->get_species_ID(),
+                    		  generation, std::make_pair(k, j), m_SimulationEnd);
+                      m_Individuals[k][j].evolveDuringSpeciation();
+	        	      m_Phylogeny.updatePhylogeny(m_Individuals[k][j].m_Species);
+
+	        	      if(m_DD) densityUpdate(k,j);
+	        	}
+	          }
+	         }
+	       }
+
+	if(m_fission != 0){
+		  int oldspec;
+		for(int k = 0; k < m_Xdimensions; k++){
+	       for(int j = 0; j < m_Ydimensions; j++){
+			  if(m_Individuals[k][j].m_incip_Age == m_protracted){
+				      m_Global_Species_Counter+=1;
+					  m_Individuals[k][j].m_Species->m_Children.push_back(m_Global_Species_Counter);
+					  m_Individuals[k][j].reportDeath(generation);
+
+					  oldspec =  m_Individuals[k][j].m_Species->m_ID;
+					  m_Individuals[k][j].m_Species = new Species(m_Global_Species_Counter , m_Individuals[k][j].m_Species->get_species_ID(),
+					                    		  generation, std::make_pair(k, j), m_SimulationEnd);
+
+					  m_Individuals[k][j].evolveDuringSpeciation();
+				      m_Phylogeny.updatePhylogeny(m_Individuals[k][j].m_Species);
+					  if(m_DD) densityUpdate(k,j);
+					  m_Individuals[k][j].m_incip_Age = -99999999999999;
+
+					  for(int z = 0; z< m_Xdimensions; z++){
+						  for(int q=0; q< m_Ydimensions; q++){
+							  if((m_Individuals[z][q].m_incip_Age == m_protracted) && (m_Individuals[z][q].m_Species->m_ID ==  oldspec)){
+								  m_Individuals[z][q].reportDeath(generation);
+								  m_Individuals[z][q].m_Species = m_Individuals[k][j].m_Species;
+								  m_Individuals[z][q].evolveDuringSpeciation();
+								  if(m_DD) densityUpdate(z,q);
+								  m_Individuals[z][q].m_incip_Age = -99999999999999;
+							  }
+						  }
+					  }
+				  }
+		 	}}}
+
+
 }
+        
 
 
 

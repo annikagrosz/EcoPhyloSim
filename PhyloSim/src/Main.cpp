@@ -18,7 +18,7 @@
 
 
 int main(){
-  unsigned int runs = 10000; // number of Generations
+  unsigned int runs = 200; // number of Generations
 	bool neutral = false; // neutral model or not
 	bool dd = true; // Density dependent or independent model
 	bool env = false; // environmentally dependent or independent model
@@ -32,12 +32,19 @@ int main(){
 	int densityCut = 2;
 	int dispersalCut = 2;
 	int mortalityStrength = 10;
-	std:: string saveLoc = "C:/Users/Paul/Documents/GitHub/phylogeography/results/saveLocation";
+	std:: string saveLoc = "C:/Users/Stefan/Documents/";
 	RandomGen ran;
 	ran.seedrand(1000);
   
   double envStrength = 1.0;
   double compStrength = 1.0;
+  int fission = 1;
+  double redQueen = 0.0;
+  double redQueenStrength = 0.0;
+  int protracted = 0;
+  std::vector<double> airmat(xDim*yDim);
+  std::vector<double> soilmat(xDim*yDim);
+
 	// Just to test
 	//Parameters* pa = new Parameters();
 	//std::cout << "Value of numberOfRuns: " << pa->getParameterValue<int>(std::string("numberOfRuns")) << std::endl;
@@ -51,13 +58,16 @@ int main(){
 	//Running the model
   
 	PhylSimModel Model(xDim,yDim,dispersal, runs, specrate, dd, env, neutral, mort, 
-  mortalityStrength, repro, dispersalCut, densityCut, saveLoc, envStrength, compStrength);   
+  mortalityStrength, repro, dispersalCut, densityCut, saveLoc, envStrength, compStrength, fission, redQueen, redQueenStrength, protracted, airmat, soilmat);
   Model.update(runs);
+
+
 //	Model.get_data();
 //	Model.getclimate();
 //	Model.gettraits();
 	if(dispersal ==1)
 	{
+
 	Model.m_Global->m_Phylogeny.prunePhylogeny(runs);
 	Model.m_Global->m_Phylogeny.writePhylogeny(1,  Model.m_Global->m_Phylogeny.m_PrunedPhylo,'P');
 	Model.m_Global->m_Phylogeny.writePhylogeny(1,  Model.m_Global->m_Phylogeny.m_FullPhylogeny,'F');
@@ -65,10 +75,12 @@ int main(){
 	}
 	else
 	{
-	Model.m_Local->m_Phylogeny.prunePhylogeny(runs);
-	Model.m_Local->m_Phylogeny.writePhylogeny(1, Model.m_Local->m_Phylogeny.m_PrunedPhylo,'P');
-	Model.m_Local->m_Phylogeny.writePhylogeny(1, Model.m_Local->m_Phylogeny.m_FullPhylogeny,'F');
-	Model.m_Local->m_Phylogeny.writeSpeciesData();
+
+
+	 Model.m_Local->m_Phylogeny.prunePhylogeny(runs);
+	 Model.m_Local->m_Phylogeny.writePhylogeny(1, Model.m_Local->m_Phylogeny.m_PrunedPhylo,'P');
+	 Model.m_Local->m_Phylogeny.writePhylogeny(1, Model.m_Local->m_Phylogeny.m_FullPhylogeny,'F');
+	 Model.m_Local->m_Phylogeny.writeSpeciesData();
 	}
 
 	return 0;
