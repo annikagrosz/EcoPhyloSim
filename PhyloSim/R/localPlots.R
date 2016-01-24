@@ -21,8 +21,10 @@ localPlots <- function(simu,which.result=NULL,size, n, community = FALSE, plot =
 
   if (is.null(which.result)) which.result = length(simu$Output) 
   simu <- simu$Output[[which.result]]
-
   
+  locations <- data.frame(x = rep(NA, length(size) * n), y = rep(NA, length(size) * n))
+  
+
   matrix <- simu$specMat
   env <- simu$envMat
   if(plot == T) plotmat <-matrix(0, ncol(matrix), nrow(matrix))
@@ -34,55 +36,58 @@ localPlots <- function(simu,which.result=NULL,size, n, community = FALSE, plot =
   count <-0
   
   for(i in 1:n)
-  {           
+  {      
+    
     if(nested == TRUE){
       x = sample(x=1:length(matrix[1,]),size=1)
       y = sample(x=1:length(matrix[,1]),size=1)
     }
     
     for(k in 1:length(size)){
-    count <- count + 1
-    edge <- size[k] 
+      count <- count + 1
+      edge <- size[k] 
+      
+      if(nested == FALSE){
+      x = sample(x=1:length(matrix[1,]),size=1)
+      y = sample(x=1:length(matrix[,1]),size=1)      
+      }
+      
+      locations[count,] = c(x,y)
+      
+      # Check for boundary issues and implemant warped bounaries if necessary
+      if(x+(edge-1) > length(matrix[1,]) && y+(edge-1) <= length(matrix[,1])){
+        rsel = c(seq(x,length(matrix[1,])), seq(1,(edge-length(seq(x,length(matrix[1,]))))))
+        csel = seq(y,y+(edge-1))
+      }
+      else if(x+(edge-1) <= length(matrix[1,]) && y+(edge-1) > length(matrix[,1])){
+        rsel = seq(x,x+(edge-1)) 
+        csel = c(seq(y,length(matrix[,1])),seq(1,(edge-length(seq(y,length(matrix[,1]))))))
+      }
+      else if(x+(edge-1) > length(matrix[1,]) && y+(edge-1) > length(matrix[,1])){
+        rsel = c(seq(x,length(matrix[1,])), seq(1,(edge-length(seq(x,length(matrix[1,]))))))
+        csel = c(seq(y,length(matrix[,1])), seq(1,(edge-length(seq(y,length(matrix[,1]))))))
+      }
+      else{
+        rsel = seq(x,x+(edge-1))
+        csel = seq(y,y+(edge-1))
+      }
+      
+      
+      subPlots[[count]] <- matrix[rsel, csel]
+      envPlots[[count]] <- env[rsel, csel]    
+      
+      if(community == T)
+      {
+        dataTable <- as.data.frame(table(subPlots))
+        names(dataTable) <- c("species", paste("plot", count, collapse="", sep="")) 
+        communityTable <- merge(communityTable, dataTable , all=TRUE, by="species")
+        #communityTable[is.na(communityTable)] <- 0
+      } 
+      
+      if(plot == T){
+        plotmat[rsel, csel] <- 1
     
-    if(nested == FALSE){
-    x = sample(x=1:length(matrix[1,]),size=1)
-    y = sample(x=1:length(matrix[,1]),size=1)      
-    }
-    
-    # Check for boundary issues and implemant warped bounaries if necessary
-    if(x+(edge-1) > length(matrix[1,]) && y+(edge-1) <= length(matrix[,1])){
-      rsel = c(seq(x,length(matrix[1,])), seq(1,(edge-length(seq(x,length(matrix[1,]))))))
-      csel = seq(y,y+(edge-1))
-    }
-    else if(x+(edge-1) <= length(matrix[1,]) && y+(edge-1) > length(matrix[,1])){
-      rsel = seq(x,x+(edge-1)) 
-      csel = c(seq(y,length(matrix[,1])),seq(1,(edge-length(seq(y,length(matrix[,1]))))))
-    }
-    else if(x+(edge-1) > length(matrix[1,]) && y+(edge-1) > length(matrix[,1])){
-      rsel = c(seq(x,length(matrix[1,])), seq(1,(edge-length(seq(x,length(matrix[1,]))))))
-      csel = c(seq(y,length(matrix[,1])), seq(1,(edge-length(seq(y,length(matrix[,1]))))))
-    }
-    else{
-      rsel = seq(x,x+(edge-1))
-      csel = seq(y,y+(edge-1))
-    }
-    
-    
-    subPlots[[count]] <- matrix[rsel, csel]
-    envPlots[[count]] <- env[rsel, csel]    
-    
-    if(community == T)
-    {
-      dataTable <- as.data.frame(table(subPlots))
-      names(dataTable) <- c("species", paste("plot", count, collapse="", sep="")) 
-      communityTable <- merge(communityTable, dataTable , all=TRUE, by="species")
-      #communityTable[is.na(communityTable)] <- 0
-    } 
-    
-    if(plot == T){
-      plotmat[rsel, csel] <- 1
-  
-    }
+      }
     }
    }
   
@@ -113,7 +118,7 @@ localPlots <- function(simu,which.result=NULL,size, n, community = FALSE, plot =
   } 
   
   if(community == T){
-  return(list(subPlots=subPlots, communityTable=communityTable, envPlots=envPlots))
-  } else return(list(subPlots=subPlots, envPlots=envPlots))
+  return(list(subPlots=subPlots, communityTable=communityTable, envPlots=envPlots, locations = locations))
+  } else return(list(subPlots=subPlots, envPlots=envPlots, locations = locations))
 
   }
