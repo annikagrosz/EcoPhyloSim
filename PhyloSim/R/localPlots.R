@@ -74,9 +74,9 @@ localPlots <- function(simu,which.result=NULL,size, n, community = FALSE, plot =
     if(community == T)
     {
       dataTable <- as.data.frame(table(subPlots))
-      names(dataTable) <- c("species", paste("plot", count, collapse="", sep="")) 
-      communityTable <- merge(communityTable, dataTable , all=TRUE, by="species")
-      #communityTable[is.na(communityTable)] <- 0
+      names(dataTable) <- c("species", paste("plot", i, collapse="", sep="")) 
+      communityTable <- merge(communityTable, dataTable , all=T)
+      communityTable[is.na(communityTable)] <- 0
     } 
     
     if(plot == T){
