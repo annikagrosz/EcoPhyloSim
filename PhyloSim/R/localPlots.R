@@ -13,11 +13,13 @@
 localPlots <- function(simu,which.result=NULL,size, n, community = FALSE, plot = FALSE, nested = FALSE){
   
   if(n ==1){
-   # n <- 2 
+    n <- 2 
     single = T
   }else{
     single=F
   }
+  
+  communityTable <- data.frame("species"= numeric())
 
   if (is.null(which.result)) which.result = length(simu$Output) 
   simu <- simu$Output[[which.result]]
@@ -33,13 +35,47 @@ localPlots <- function(simu,which.result=NULL,size, n, community = FALSE, plot =
   communityTable <- data.frame("species"= numeric())
   count <-0
   
+  
+if(length(size) == 1){
+
+  for(i in 1:n)
+  {                        
+    edge=size
+    x = sample(x=1:length(matrix[1,]),size=1)
+    y = sample(x=1:length(matrix[,1]),size=1)
+    
+    # Check for boundary issues and implemant warped bounaries if necessary
+    if(x+edge > length(matrix[1,]) && y+edge <= length(matrix[,1]))
+      subPlot <- matrix[c(seq(x,length(matrix[1,])),
+                          seq(1,(edge-length(seq(x,length(matrix[1,])))))),seq(y,y+edge)-1]
+    
+    else if(x+edge <= length(matrix[1,]) && y+edge > length(matrix[,1]))
+      subPlot <- matrix[seq(x,x+edge)-1, c(seq(y,length(matrix[,1])),seq(1,(edge-length(seq(y,length(matrix[,1]))))))] 
+    
+    else if(x+edge > length(matrix[1,]) && y+edge > length(matrix[,1]))
+      subPlot <- matrix[c(seq(x,length(matrix[1,])), seq(1,(edge-length(seq(x,length(matrix[1,])))))), 
+                        c(seq(y,length(matrix[,1])),seq(1,(edge-length(seq(y,length(matrix[,1]))))))]    
+    else
+      subPlot <- matrix[seq(x,x+edge),seq(y,y+edge)]
+    
+    subPlots[[i]] <- subPlot
+    if(community == T)
+    {
+      dataTable <- as.data.frame(table(subPlot))
+      names(dataTable) <- c("species", paste("plot", i, collapse="", sep="")) 
+      communityTable <- merge(communityTable, dataTable , all=T)
+      communityTable[is.na(communityTable)] <- 0
+    } 
+  }
+}else{
+  
   for(i in 1:n)
   {           
     if(nested == TRUE){
       x = sample(x=1:length(matrix[1,]),size=1)
       y = sample(x=1:length(matrix[,1]),size=1)
     }
-    
+
     for(k in 1:length(size)){
     count <- count + 1
     edge <- size[k] 
@@ -70,6 +106,16 @@ localPlots <- function(simu,which.result=NULL,size, n, community = FALSE, plot =
     
     subPlots[[count]] <- matrix[rsel, csel]
     envPlots[[count]] <- env[rsel, csel]    
+  
+    
+    ####  
+  
+    
+    if(plot == T){
+      plotmat[rsel, csel] <- 1
+  
+    }
+    }
     
     if(community == T)
     {
@@ -79,14 +125,10 @@ localPlots <- function(simu,which.result=NULL,size, n, community = FALSE, plot =
       communityTable[is.na(communityTable)] <- 0
     } 
     
-    if(plot == T){
-      plotmat[rsel, csel] <- 1
-  
-    }
-    }
    }
+}
   
-  
+
   speciesNames <- character()
   for(b in 1:length(communityTable$species))
   {

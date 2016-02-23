@@ -69,7 +69,7 @@ calculatePhylogeneticDispersion <- function(simu, plotlengths = 10,  plots = 200
       pval = list()
       for (j in 1:length(plotlengths)){
         
-        plotsize = plotlengths[j]^2
+        plotsize = plotlengths[j]
         
         
         

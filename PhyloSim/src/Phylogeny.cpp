@@ -46,7 +46,7 @@ void Phylogeny::writeSpeciesData()
 
 void Phylogeny::prunePhylogeny(int current)
 {
-  std::cout << "Prune Phylogeny" << std::endl;
+//  std::cout << "Prune Phylogeny" << std::endl;
   m_PrunedPhylo->clear();
 
   // Create deep copy
@@ -93,7 +93,7 @@ void Phylogeny::prunePhylogeny(int current)
 
 void Phylogeny::writePhylogeny(unsigned long long start, std::multimap<unsigned long long, Species*> *phylogenyMap, char suffix)
 {
-	 std::cout << "write Phylogeny" << std::endl;
+//	 std::cout << "write Phylogeny" << std::endl;
 	Species * parent = phylogenyMap->find(start)->second;
 	Species * ancestorSpecies = new Species(0,0,0,std::make_pair(0,0),0);
 	phylogenyMap->insert(std::make_pair(ancestorSpecies->m_ID, ancestorSpecies));
