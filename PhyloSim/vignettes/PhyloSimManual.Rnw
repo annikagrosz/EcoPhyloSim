@@ -310,7 +310,7 @@ plot(rePhyl, main="reconstructed Phylogeny")
 plot(Phyl, main="real Phylogeny")
 @
 
-\paragraph{Highlight Local Communities} hihglightLocalPhylo highlights a phylogeny of a local community within a metacommunity. 
+\paragraph{Highlight Local Communities} The function hihglightLocalPhylo highlights a phylogeny of a local community within a metacommunity. 
 
 <<fig.cap="Highlights a relatively large local community",fig.height=5.4>>=
 highlightLocalPhylo(simu, size = 10,n = 1)

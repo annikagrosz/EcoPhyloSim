@@ -26,6 +26,7 @@ localPlots <- function(simu, which.result="last", size, n, community = FALSE, pl
   if (community == T) communityTable <- data.frame("species"= numeric())
   else communityTable <- NA
   
+  if(is.null(which.result)) which.result = "last"
   if (which.result == "last") which.result = length(simu$Output) 
   simu <- simu$Output[[which.result]]
 
