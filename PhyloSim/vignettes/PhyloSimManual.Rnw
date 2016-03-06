@@ -1,10 +1,9 @@
-
 \documentclass [a4paper]{tufte-book}
 \usepackage{color}
 \usepackage{xcolor}
 \usepackage{framed}
 \usepackage{listings}
-
+\usepackage{booktabs}
 \usepackage{graphicx}
 
 \usepackage{multicol}              
@@ -58,6 +57,7 @@ render_listings()
 \author{}
 
 \begin{document}
+%\SweaveOpts{concordance=TRUE}
 \let\cleardoublepage\clearpage % No empty pages between chapters
 %\includegraphics[width=10cm]{PlotSpatial}  
 \maketitle
@@ -156,11 +156,21 @@ r_i = \frac{\sum_{j=1}^{n}{\parallel(c_i-c_j)}\parallel}{n}
 
 \section{Speciation mechanisms}\label{sec: speciation}
 
-After all individuals have reproduced according to 1-3, speciation occurs. The default speciation mechanism are point speciation. Their frequency of these events is controlled by the speciation rate in the parameter settings. Each generation a number of new species is introduced in the system replacing randomly chosen individuals. The traits of these individuals are calculated from the parent's traits and a randomly generated value as follows:
+After all individuals have reproduced according to 1-3, speciation occurs. The default speciation mechanism is point speciation. Their frequency of these events is controlled by the speciation rate in the parameter settings. Each generation a number of new species is introduced in the system replacing randomly chosen individuals. The traits of these individuals are calculated from the parent's traits and a randomly generated value as follows:
+
 \begin{equation}
 newtrait = (w_p \cdot p) + (w_r \cdot r)
 \end{equation}
 
+There are several other speciation mechanisms implemented in the model:
+
+\begin{itemize}
+\item Point Mutation: A randomly chosen individual becomes a new species
+\item Fission Type 1:  A species is randomly chosen and every second indiviual of the species becomes part of a new species.
+\item Fission Type 2: A species is randomly chosen and geographically split in two parts. Whereas one part evolves tw a new species, the other part is not affected.
+\item Protracted Speciation: Based on \cite{rosindell2010} species undergoes an 'incipient' stage before becomming a new species.
+\item Red Queen: Based on \cite{odwyer2014} New species have advantages over old species due to their novelty alone. The effect vanishes over time.
+\end{itemize}
 
 \section{Running the model in R}
 
@@ -289,12 +299,13 @@ plot(Phyl, main="real Phylogeny")
 \paragraph{Highlight Local Communities} hihglightLocalPhylo highlights a phylogeny of a local community within a metacommunity. 
 
 <<fig.cap="Highlights a relatively large local community",fig.height=5.4>>=
-highlightLocalPhylo(simu, size = 50, n = 1)
+highlightLocalPhylo(simu, size = 10,n = 1)
 @
 <<fig.cap="Highlights a relatively small local community",fig.height=5.4>>=
 highlightLocalPhylo(simu, size = 5, n = 1)
 @
-Both figures show the phylogeny of the same metacommunity. But they highlight different local plots with different plotsizes (50 and 5). Obviously the larger plot is richer in species than the smaller one.  
+
+Both figures show the phylogeny of the same metacommunity. But they highlight different local plots with different plotsizes (10 and 5). Obviously the larger plot is richer in species than the smaller one.  
 
 
 \begin{figure}[h]
@@ -323,7 +334,7 @@ To compare patterns in the results of the simualtions with random expectations, 
 \paragraph{The nullModel function:} 
 
 <<>>=
-pValues <- nullModel(simu = simu, abundance = FALSE, localPlotSize = 100, numberOfPlots = 10, repetitions = 100, fun="mpd")
+pValues <- nullModel(simu = simu, abundance = FALSE, localPlotSize = 10, numberOfPlots = 20, repetitions = 100, fun="mpd")
 @
 
 \paragraph{The calculatePhylogeneticDispersion function:} The calculatePhylogeneticDispersion function and its associated plot functions are a convenience functions for a rather specialized application - the function calculates null models for all runs in a PhyloBatch object and for different plot sizes. Which null model is used is determined by the types argument with the following options.

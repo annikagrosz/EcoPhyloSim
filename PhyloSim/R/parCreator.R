@@ -15,7 +15,6 @@
 #' @param redQueenStrength Float, determining the strength of the Red Queen effect. A value > 0 mean a new species gets a fitness boost due to its novelty.
 #' @param redQueen Float, determining the strength of the fitness decline of an aging species. 
 #' @param airmat Matrix, deteriming the environment of the simulation. airmat needs to be a matrix with the same dimensions as the grid.
-#' @param soilmat Matrix, NOT IMPLEMENTED YET deteriming the environment of the simulation. soilmat needs to be a matrix with the same dimensions as the grid.
 #' @param seed numerical, sets the random seed
 #' @param type Character, determining which model should be used. "base" is running the default model. Other possibilities are "Leipzig" and "Rneutral" which will run a neutral model purely in R.
 #' @param scenario String, further information you want to add to the parameter set in order to refer to a model run more conveniently. 
@@ -31,9 +30,10 @@
 #' 
 #' @export
 
-createCompletePar <- function(x = 50, y = 50, dispersal = "global", runs = 100, specRate = 1.0, density = 0, environment = 0, fitnessActsOn = "mortality" , fitnessBaseMortalityRatio = 10, densityCut = 1, seed=NULL,  type = "base", fission = 1, redQueen = 0, redQueenStrength = 0, protracted = 0, airmat = 1, soilmat = 1, scenario = NULL){
+createCompletePar <- function(x = 50, y = 50, dispersal = "global", runs = 100, specRate = 1.0, density = 0, environment = 0, fitnessActsOn = "mortality" , fitnessBaseMortalityRatio = 10, densityCut = 1, seed=NULL,  type = "base", fission = 1, redQueen = 0, redQueenStrength = 0, protracted = 0, airmat = 1, scenario = NULL){
     
-  
+  soilmat <- 1 # Needs to be defined here as long as it is not
+               # implemented in the model
   if (length(runs)>1){
     if (any(runs[-length(runs)] > runs[-1])) stop( "wrong argument to runs")
   }
@@ -47,6 +47,9 @@ createCompletePar <- function(x = 50, y = 50, dispersal = "global", runs = 100, 
   }
   
   airmat <- as.numeric(airmat)
+  
+  # The soilmat is not implemented in the model so far.
+  soilmat = 1
   soilmat <- as.numeric(soilmat)
   
   if (is.null(seed)) seed = sample(1:10000,1)

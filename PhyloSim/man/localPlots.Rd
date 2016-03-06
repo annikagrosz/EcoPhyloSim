@@ -4,13 +4,13 @@
 \alias{localPlots}
 \title{Create Subplots}
 \usage{
-localPlots(simu, which.result = NULL, size, n, community = FALSE,
+localPlots(simu, which.result = "last", size, n, community = FALSE,
   plot = FALSE, nested = FALSE)
 }
 \arguments{
 \item{simu}{Simulation output of the class "Phylosim", usually consisting out of several lists. Needs to contain at least a species matrix ($specMat)}
 
-\item{which.result}{Integer, determines which result should be used. This argument is only usefull if your 'runs' argument in \code{\link{createCompletePar}} contains more than one element. By default (NULL), the last result is used.}
+\item{which.result}{Integer, determines which result should be used. This argument is only usefull if your 'runs' argument in \code{\link{createCompletePar}} contains more than one element. By default, the last result is used.}
 
 \item{size}{A single value (or a vector) determining the edge length(s) of the generated subplots}
 
