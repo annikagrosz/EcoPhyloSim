@@ -27,15 +27,29 @@
 \lstset{ % settings for listings needs to be be changed to R sytanx 
 language=R,
 breaklines = true,
+columns=fullflexible,
 breakautoindent = false,
+%basicstyle=\listingsfont, 
 basicstyle=\ttfamily \scriptsize,
 keywordstyle=\color{black},                          
 identifierstyle=\color{black},
 commentstyle=\color{gray},
 xleftmargin=3.4pt,
 xrightmargin=3.4pt,
-numbers=none
+numbers=none,
+literate={*}{{\char42}}1
+         {-}{{\char45}}1
+         {\ }{{\copyablespace}}1
 }
+% http://www.monperrus.net/martin/copy-pastable-listings-in-pdf-from-latex
+\usepackage[space=true]{accsupp}
+% requires the latest version of package accsupp
+\newcommand{\copyablespace}{
+    \BeginAccSupp{method=hex,unicode,ActualText=00A0}
+\ %
+    \EndAccSupp{}
+}
+
 
 %\VignetteIndexEntry{PhyloSim}
 %\VignetteEngine{knitr::knitr}
@@ -333,7 +347,7 @@ To compare patterns in the results of the simualtions with random expectations, 
 
 \paragraph{The nullModel function:} 
 
-<<>>=
+<<NullModel,eval = F>>=
 pValues <- nullModel(simu = simu, abundance = FALSE, localPlotSize = 10, numberOfPlots = 20, repetitions = 100, fun="mpd")
 @
 
@@ -346,14 +360,14 @@ pValues <- nullModel(simu = simu, abundance = FALSE, localPlotSize = 10, numberO
 \item "SamplePool" uses picante::ses.mpd with null.model = "sample.pool"
 \end{itemize}
 
-<<>>=
-pValuesBatch <- calculatePhylogeneticDispersion(simuBatch, plotlength=20, plots=20, replicates=20, type="PhylMeta")
+<<CalcPhylDis,eval = F>>=
+pValuesBatch <- calculatePhylogeneticDispersion(simuBatch, plotlength=3, plots=20, replicates=20, type="PhylMeta")
 @
 \newpage
 
 The result can be visualized with the plotPhylogeneticDispersion function:
 
-<<fig.cap = "Shows different combinations of dispersal limitation (y-axis), environmental trait(upper x-axis) and density dependnce (lower x-axis). The respective colour shows the phylogenetic pattern (over- or underdispersed).">>=
+<<PlotPhylDis, fig.cap = "Shows different combinations of dispersal limitation (y-axis), environmental trait(upper x-axis) and density dependnce (lower x-axis). The respective colour shows the phylogenetic pattern (over- or underdispersed).">>=
 data("pPD.pvalues")
 data("pPD.positions")
 
