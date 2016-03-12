@@ -4,7 +4,7 @@
 \alias{localPlots}
 \title{Create Subplots}
 \usage{
-localPlots(simu, which.result = "last", size, n, community = FALSE,
+localPlots(simu, which.result = NULL, size, n, community = FALSE,
   plot = FALSE, nested = FALSE)
 }
 \arguments{

@@ -1,5 +1,5 @@
 context("run Simulation")
-testthat("Model outputs are  as expected",{
+test_that("Model outputs are  as expected",{
   # Here are the model runs that created the .RData files
 #   
 #   sacVal1<-sacVal2<-sacVal3<-sacVal4<-sacVal5<-sacVal6<-matrix(0,10,100)

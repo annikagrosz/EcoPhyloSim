@@ -10,9 +10,8 @@
 #' @return A list of subplots and (if coomunity = T) a community table with plots in rows and species in collumns
 #' @details If nested == TRUE the subplots are poduced in a sequential order. That means if your 'size' argument has the length 5 and your 'n' argument has the size 2 you will get ten subplots. The first five will be one group of nested plots and the last five the second group of nested plots.
 #' @export
-localPlots <- function(simu, which.result="last", size, n, community = FALSE, plot = FALSE, nested = FALSE){
-
-  ## CHANGE THIS
+localPlots <- function(simu, which.result=NULL,size, n, community = FALSE, plot = FALSE, nested = FALSE){
+  
   
   if(n ==1){
     n <- 2 
@@ -21,36 +20,32 @@ localPlots <- function(simu, which.result="last", size, n, community = FALSE, pl
     single=F
   }
   
-  ##############
-
-  if (community == T) communityTable <- data.frame("species"= numeric())
-  else communityTable <- NA
+  if(community == T) communityTable <- data.frame("species"= numeric())
   
-  if(is.null(which.result)) which.result = "last"
-  if (which.result == "last") which.result = length(simu$Output) 
+  if (is.null(which.result)) which.result = length(simu$Output) 
   simu <- simu$Output[[which.result]]
-
+  
   
   matrix <- simu$specMat
   env <- simu$envMat
   if(plot == T) plotmat <-matrix(0, ncol(matrix), nrow(matrix))
   
-  locations <- data.frame(x = rep(NA, length(size) * n), y = rep(NA, length(size) * n))
   
   subPlots <- list()
   envPlots <- list()
-
+  communityTable <- data.frame("species"= numeric())
   count <-0
   
-  for(i in 1:n){
-    
+  if(community == T && length(size) != 1) stop("Community table only possible for same plot sizes")
+  
+  for(i in 1:n)
+  {           
     if(nested == TRUE){
       x = sample(x=1:length(matrix[1,]),size=1)
       y = sample(x=1:length(matrix[,1]),size=1)
     }
-
+    
     for(k in 1:length(size)){
-
       count <- count + 1
       edge <- size[k] 
       
@@ -58,8 +53,6 @@ localPlots <- function(simu, which.result="last", size, n, community = FALSE, pl
         x = sample(x=1:length(matrix[1,]),size=1)
         y = sample(x=1:length(matrix[,1]),size=1)      
       }
-      
-      locations[count,] = c(x,y)
       
       # Check for boundary issues and implemant warped bounaries if necessary
       if(x+(edge-1) > length(matrix[1,]) && y+(edge-1) <= length(matrix[,1])){
@@ -79,31 +72,36 @@ localPlots <- function(simu, which.result="last", size, n, community = FALSE, pl
         csel = seq(y,y+(edge-1))
       }
       
-      subPlots[[count]] <- matrix[rsel, csel]
-      envPlots[[count]] <- env[rsel, csel]  
+      
+      subPlots[[count]]  <- matrix[rsel, csel]
+      envPlots[[count]] <- env[rsel, csel]    
+      
       
       if(plot == T){
         plotmat[rsel, csel] <- 1
+        
       }
       
-      if(community == T){
-        dataTable <- as.data.frame(table(subPlots))
-        names(dataTable) <- c("species", paste("plot", count, collapse="", sep="")) 
-        communityTable <- merge(communityTable, dataTable , all=TRUE, by="species")
-        communityTable[is.na(communityTable)] <- 0 # I commented this out, but not sure any more why - is this a useful thing to do?
+      if(community == T)
+      {
+        
+        dataTable <- as.data.frame(table(subPlots[[count]]))
+        names(dataTable) <- c("species", paste("plot", i, collapse="", sep="")) 
+        communityTable <- merge(communityTable, dataTable , all=T, by="species")
+        communityTable[is.na(communityTable)] <- 0
       } 
-      
     }
+  }
+  
+  
+  speciesNames <- character()
+  for(b in 1:length(communityTable$species))
+  {
+    speciesNames[b] <-  paste("s" ,communityTable$species[b], collapse="", sep="")
   }
   
   if(community == T)
   {
-    speciesNames <- character()
-    for(b in 1:length(communityTable$species))
-    {
-      speciesNames[b] <-  paste("s" ,communityTable$species[b], collapse="", sep="")
-    }
-    
     communityTable$species <- speciesNames
     communityTable <- as.data.frame(t(communityTable), stringsAsFactors=F)
     communityTable <- communityTable[-1,]
@@ -111,12 +109,8 @@ localPlots <- function(simu, which.result="last", size, n, community = FALSE, pl
     communityTable <- as.data.frame(sapply(communityTable, as.numeric), row.names=row.names(communityTable))
   }
   
-  ## CHECK / REMOVE THIS !!!
-  
   if(single ==T){communityTable <- communityTable[-2,]}
   
-  ##
-
   if(plot == T){
     oldpar <- par()$mar
     par(mar=c(1,1,1,1))
@@ -125,6 +119,8 @@ localPlots <- function(simu, which.result="last", size, n, community = FALSE, pl
     par(mar=oldpar)
   } 
   
-  return(list(subPlots=subPlots, communityTable=communityTable, envPlots=envPlots, locations = locations))
-
+  if(community == T){
+    return(list(subPlots=subPlots, communityTable=communityTable, envPlots=envPlots))
+  } else return(list(subPlots=subPlots, envPlots=envPlots))
+  
 }
