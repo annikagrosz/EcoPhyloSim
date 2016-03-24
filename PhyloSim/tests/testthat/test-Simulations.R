@@ -24,12 +24,12 @@ test_that("Model outputs are  as expected",{
 #   
 #   simu<-runSimulationBatch(parList, parallel = 15)
 #   
-#   sacVal1[,i]<- sac(simu[[1]],area=c(4,8,16,32,64,128,256,512,1024,2048), plot=FALSE)$sr.Mean
-#   sacVal2[,i]<- sac(simu[[2]],area=c(4,8,16,32,64,128,256,512,1024,2048), plot=FALSE)$sr.Mean
-#   sacVal3[,i]<- sac(simu[[3]],area=c(4,8,16,32,64,128,256,512,1024,2048), plot=FALSE)$sr.Mean
-#   sacVal4[,i]<- sac(simu[[4]],area=c(4,8,16,32,64,128,256,512,1024,2048), plot=FALSE)$sr.Mean
-#   sacVal5[,i]<- sac(simu[[5]],area=c(4,8,16,32,64,128,256,512,1024,2048), plot=FALSE)$sr.Mean
-#   sacVal6[,i]<- sac(simu[[6]],area=c(4,8,16,32,64,128,256,512,1024,2048), plot=FALSE)$sr.Mean
+#   sacVal1[,i]<- sac(simu[[1]],size=c(2,3,4,6,8,11,16,23,32,45), plot=FALSE)$sr.Mean
+#   sacVal2[,i]<- sac(simu[[2]],size=c(2,3,4,6,8,11,16,23,32,45), plot=FALSE)$sr.Mean
+#   sacVal3[,i]<- sac(simu[[3]],size=c(2,3,4,6,8,11,16,23,32,45), plot=FALSE)$sr.Mean
+#   sacVal4[,i]<- sac(simu[[4]],size=c(2,3,4,6,8,11,16,23,32,45), plot=FALSE)$sr.Mean
+#   sacVal5[,i]<- sac(simu[[5]],size=c(2,3,4,6,8,11,16,23,32,45), plot=FALSE)$sr.Mean
+#   sacVal6[,i]<- sac(simu[[6]],size=c(2,3,4,6,8,11,16,23,32,45), plot=FALSE)$sr.Mean
 #   }
 #   
 #   
@@ -60,17 +60,20 @@ test_that("Model outputs are  as expected",{
     
     simu<-runSimulationBatch(parList, parallel = "auto")
     
-    sac1[,i]<- sac(simu[[1]],area=c(4,8,16,32,64,128,256,512,1024,2048), plot=FALSE)$sr.Mean
-    sac2[,i]<- sac(simu[[2]],area=c(4,8,16,32,64,128,256,512,1024,2048), plot=FALSE)$sr.Mean
-    sac3[,i]<- sac(simu[[3]],area=c(4,8,16,32,64,128,256,512,1024,2048), plot=FALSE)$sr.Mean
-    sac4[,i]<- sac(simu[[4]],area=c(4,8,16,32,64,128,256,512,1024,2048), plot=FALSE)$sr.Mean
-    sac5[,i]<- sac(simu[[5]],area=c(4,8,16,32,64,128,256,512,1024,2048), plot=FALSE)$sr.Mean
-    sac6[,i]<- sac(simu[[6]],area=c(4,8,16,32,64,128,256,512,1024,2048), plot=FALSE)$sr.Mean
+    
+    
+    ## Need to change to new format --> replace are with respective size.
+    sac1[,i]<- sac(simu[[1]],size=c(2,3,4,6,8,11,16,23,32,45), plot=FALSE)$sr.Mean
+    sac2[,i]<- sac(simu[[2]],size=c(2,3,4,6,8,11,16,23,32,45), plot=FALSE)$sr.Mean
+    sac3[,i]<- sac(simu[[3]],size=c(2,3,4,6,8,11,16,23,32,45), plot=FALSE)$sr.Mean
+    sac4[,i]<- sac(simu[[4]],size=c(2,3,4,6,8,11,16,23,32,45), plot=FALSE)$sr.Mean
+    sac5[,i]<- sac(simu[[5]],size=c(2,3,4,6,8,11,16,23,32,45), plot=FALSE)$sr.Mean
+    sac6[,i]<- sac(simu[[6]],size=c(2,3,4,6,8,11,16,23,32,45), plot=FALSE)$sr.Mean
   }
   
   sac_run1<-sac_run2<-sac_run3<-sac_run4<-sac_run5<-sac_run6<-numeric()
   
-  for(i in 1:nrow(sacVal1)){
+  for(i in 1:nrow(sac1)){
     sac_run1[i] <- mean(sac1[i,])
     sac_run2[i] <- mean(sac2[i,])
     sac_run3[i] <- mean(sac3[i,])
