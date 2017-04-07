@@ -59,4 +59,3 @@ nullModel(simubatch[[1]],localPlotSize = 100, numberOfPlots = 10, repetitions = 
 nullModel(simubatch[[2]],localPlotSize = 100, numberOfPlots = 10, repetitions = 10)
 
 }
-

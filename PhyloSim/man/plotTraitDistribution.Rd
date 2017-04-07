@@ -42,4 +42,3 @@ plotTraitDistribution(simu=simu.envcom.local, type = "all")
 
 
 }
-

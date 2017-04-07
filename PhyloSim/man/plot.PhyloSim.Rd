@@ -15,4 +15,3 @@ Plots the phylogeny tree ,the spatially abundance of the evolved species and the
 \details{
 The tiplabels of the phylogeny tree are colored in correspondency to the spatial abundance plot
 }
-

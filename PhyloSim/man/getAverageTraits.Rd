@@ -19,4 +19,3 @@ A matrix containing the means of env trait, comp trait, neutral trait, and the e
 \description{
 calculates the arithmetic mean of the trait values for each species.
 }
-

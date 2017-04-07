@@ -42,4 +42,3 @@ par(mfrow=c(1,2))
 sac(simu[[1]])
 sac(simu[[2]])
 }
-

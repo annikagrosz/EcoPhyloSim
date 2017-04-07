@@ -12,4 +12,3 @@
 \description{
 Prints parameter settings, runtime and species Richness.
 }
-

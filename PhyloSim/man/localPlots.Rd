@@ -31,4 +31,23 @@ Generates subplots from a metacommunity, simulating field conditions
 \details{
 If nested == TRUE the subplots are poduced in a sequential order. That means if your 'size' argument has the length 5 and your 'n' argument has the size 2 you will get ten subplots. The first five will be one group of nested plots and the last five the second group of nested plots.
 }
+\examples{
+library(PhyloSim)
+xSize <- 30
+ySize <- 30
+nGenerations <- 300
 
+#dispersal <- c(0, seq(1, 10.5, 0.5))
+#specRate <- seq(0, 20, 1)
+#environment <- seq(0, 10, 0.5)
+#densitiy <- seq(0, 10, 0.5)
+
+par <- createCompletePar(x = xSize,
+                         y = ySize,
+                         runs = nGenerations)
+
+sim <- runSimulation(par = par)
+
+localPlots(simu = sim, size = 2, n = 3, plot = T)
+
+}

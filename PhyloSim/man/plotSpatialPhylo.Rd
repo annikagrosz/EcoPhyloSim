@@ -74,4 +74,3 @@ plotSpatialPhylo(simu, which.result = 1)
 
 
 }
-

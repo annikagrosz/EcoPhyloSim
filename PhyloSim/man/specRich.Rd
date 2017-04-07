@@ -17,4 +17,3 @@ An integer value for the species richness
 \description{
 Calculate the total species richness of a community
 }
-

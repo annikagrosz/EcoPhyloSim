@@ -35,4 +35,3 @@ par(mfrow=c(1,2))
 plot(ape::drop.fossil(simu$Output[[1]]$phylogeny))
 plot(rePhyl)
 }
-

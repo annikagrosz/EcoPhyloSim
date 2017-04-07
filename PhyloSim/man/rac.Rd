@@ -55,4 +55,3 @@ rac(simu = simu.envcom.local, plot ="bar")
  
 
 }
-

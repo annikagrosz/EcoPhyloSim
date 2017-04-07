@@ -18,4 +18,3 @@ created with \code{\link{runSimulation}}
 \description{
 Simulation output of community assembly with local dispersion under the influence of environment and competition
 }
-

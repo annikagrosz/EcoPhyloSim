@@ -79,4 +79,3 @@ positions <- list(x= c(1:7),
 plotPhylogeneticDispersion(pvalues = nullMeta, positions = positions, title = "Null Meta")
 
 }
-

@@ -34,4 +34,3 @@ simuList <- createPhylosimList(list(simu1,simu2))
 ## The object can now be handed to functions designed for objects of type "PhylosimList".
  
 }
-
