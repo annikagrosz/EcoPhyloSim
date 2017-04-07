@@ -23,6 +23,6 @@ browseVignettes("PhyloSim")
 
 Clone or fork the repo, and the follow the hints here http://biometry.github.io/APES/R/R70-PackageDevelopment.html if you don't know how to compile a package
 
-See also https://github.com/biometry/phylosim/wiki
+See also https://github.com/TheoreticalEcology/phylosim/wiki/Developing-guides
 
 
