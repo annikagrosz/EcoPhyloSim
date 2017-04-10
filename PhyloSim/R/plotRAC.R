@@ -3,7 +3,7 @@
 #' @param simu Simulation output of the class "Phylosim", usually consisting out of several lists. Needs at least the spatial distribution of the species stored in a matrix ($specMat)
 #' @param which.result Integer, determines which result should be used. This argument is only usefull if your 'runs' argument in \code{\link{createCompletePar}} contains more than one element. By default (NULL), the last result is used. If you choose "all" all results are shown in one plot (see 'Details).
 #' @param plot determining whether to plot the RAC as "line"(default) or "bar".
-#' @param tile String, determining the title of the plot.
+#' @param title String, determining the title of the plot.
 #' @details Each species is given a rank according to their abundance (highest = rank 1). Then the the species' abundance is plotted in dependency of their rank. It can be used as an indicator for the ammount of equally abundant species a community can support. \cr\cr If which.result = "all" all intermediate results are shown in one plot. The colors of the lines are plotted as a gradient from blue (first results) to red (end result).
 #' @return A dataframe containing the ranked abundances, sorted by ascending rank. If which.result = "all" only the plot will be returned.
 #' @examples 

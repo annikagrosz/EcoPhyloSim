@@ -13,7 +13,7 @@ rac(simu, which.result = NULL, plot = "line", title = "RAC")
 
 \item{plot}{determining whether to plot the RAC as "line"(default) or "bar".}
 
-\item{tile}{String, determining the title of the plot.}
+\item{title}{String, determining the title of the plot.}
 }
 \value{
 A dataframe containing the ranked abundances, sorted by ascending rank. If which.result = "all" only the plot will be returned.

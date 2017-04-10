@@ -4,10 +4,12 @@
 \alias{runSimulation}
 \title{Species Community Simulation}
 \usage{
-runSimulation(par)
+runSimulation(par, convertToBinaryTree = T)
 }
 \arguments{
-\item{par, }{a list of parameters created with \link{createCompletePar}}
+\item{par, }{a list of model parameters created with \link{createCompletePar}}
+
+\item{convertToBinaryTree}{Should the phylogeny be converted into a binary tree}
 }
 \value{
 An object of class "Phylosim". This objet contains the species matrix, the trait matrix, the environmental matrix, the competition matrix and the neutral matrix, as well as the phlogeny and the parameter settings of the simulation.
@@ -16,7 +18,7 @@ An object of class "Phylosim". This objet contains the species matrix, the trait
 A model of species community assembly under different assembly mechanisms.
 }
 \details{
-If your parameterset contains more than one runs argument, each interim step is saved in the Phylosim object. \cr\cr For larger simularions consider \link{runSimulationBatch} to make use of parallel computing. \cr\cr If you are using type="Rneutral" only one runs argument can be processed.
+If your parameterset contains more than one runs argument, each interim step is saved in the Phylosim object. \cr\cr For larger simularions consider \link{runSimulationBatch} to make use of parallel computing. \cr\cr If you are using type="Rneutral" only one runs argument can be processed.\cr\cr It is possible that more than one new species arises per generation. This leads to a multifurcated phylogeny, yet many packages such as "ape" can only work with bifurcated tree. Setting converToBinaryTree to TRUE converts the generated phylogeny to a bifurcate one using multi2di() from the "ape" package.
 }
 \examples{
  library(PhyloSim)

@@ -4,18 +4,28 @@
 \alias{collessImbalance}
 \title{Colless' imbalance}
 \usage{
-collessImbalance(simu, which.result = NULL)
+collessImbalance(simu, which.result = NULL, useApTreeshape = TRUE,
+  norm = NULL, dropFossils = FALSE)
 }
 \arguments{
 \item{simu}{An object of type "PhyloSim"}
 
 \item{which.result}{Integer, determines which result should be used. This argument is only usefull if your 'runs' argument in \code{\link{createCompletePar}} contains more than one element. By default (NULL), the last result is used.}
+
+\item{useApTreeshape}{Boolean, if TRUE uses apTreeshape's colless function}
+
+\item{norm}{Normalization: Either NULL, "yule" or "pda"}
+
+\item{dropFossil}{Boolean, if TRUE applies ape's drop.fossil on the phylogeny}
 }
 \value{
 A numeric value for the Colless' Imbalance
 }
 \description{
 Calculates the Colless' imbalance for a Phylogeny.
+}
+\details{
+If useApTreeshape is set to TRUE the phylogeny of simu must be bifurcate.\cr\cr If dropFossils==TRUE only extant species are included in the phylogeny
 }
 \references{
 Colless, D. H. "Review of phylogenetics: the theory and practice of phylogenetic systematics." Syst. Zool 31 (1982): 100-104.

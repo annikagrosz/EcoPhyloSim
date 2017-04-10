@@ -1,8 +1,9 @@
 #' @title  Species Community Simulation
 #' @description A model of species community assembly under different assembly mechanisms.  
-#' @param par, a list of parameters created with \link{createCompletePar}
+#' @param par, a list of model parameters created with \link{createCompletePar}
+#' @param convertToBinaryTree Should the phylogeny be converted into a binary tree
 #' @return An object of class "Phylosim". This objet contains the species matrix, the trait matrix, the environmental matrix, the competition matrix and the neutral matrix, as well as the phlogeny and the parameter settings of the simulation. 
-#' @details If your parameterset contains more than one runs argument, each interim step is saved in the Phylosim object. \cr\cr For larger simularions consider \link{runSimulationBatch} to make use of parallel computing. \cr\cr If you are using type="Rneutral" only one runs argument can be processed.
+#' @details If your parameterset contains more than one runs argument, each interim step is saved in the Phylosim object. \cr\cr For larger simularions consider \link{runSimulationBatch} to make use of parallel computing. \cr\cr If you are using type="Rneutral" only one runs argument can be processed.\cr\cr It is possible that more than one new species arises per generation. This leads to a multifurcated phylogeny, yet many packages such as "ape" can only work with bifurcated tree. Setting converToBinaryTree to TRUE converts the generated phylogeny to a bifurcate one using multi2di() from the "ape" package. 
 #' @importFrom adephylo distTips
 #' @examples 
 #'  library(PhyloSim)
@@ -33,7 +34,7 @@
 #' @useDynLib PhyloSim
 #' @export
 
-runSimulation <- function(par)
+runSimulation <- function(par, convertToBinaryTree = T)
 {
   
   # GENERAL SETTINGS
@@ -105,25 +106,26 @@ runSimulation <- function(par)
     #                                                 Rcpp::Named("Environment") = envOut,
     #                                                 Rcpp::Named("Phylogeny") = phyloOut);
     
+    # The following code reshuffles the output to the structure 
+    # of a phylosim class
     output<-list()
     for (i in 1:length(par$runs)){
       
-       specMati = matrix(out[[i]]$Species,ncol=par$x, nrow=par$y)
-       if(length(unique(c(specMati)))==1){
-         phyloi <- 0
-         warning("Cannot build Phylogeny")
-       }else{
-         phyloi <- ape::read.tree(text= out[[i]]$Phylogeny)
-       }
-       
+      specMati = matrix(out[[i]]$Species,ncol=par$x, nrow=par$y)
+      if(length(unique(c(specMati)))==1){
+        phyloi <- 0
+        warning("Cannot build Phylogeny")
+      }else{
+        phyloi <- ape::read.tree(text= out[[i]]$Phylogeny)
+      }
        
       output$Output[[i]] = list(
         specMat = matrix(out[[i]]$Species,ncol=par$x, nrow=par$y), 
         traitMat= matrix(out[[i]]$EnvTrait,ncol=par$x, nrow=par$y), 
         envMat = matrix(out[[i]]$Environment,ncol=par$x, nrow=par$y), 
         compMat = matrix(out[[i]]$CompetitionTrait,ncol=par$x, nrow=par$y), 
-        neutMat = matrix(out[[i]]$NeutralTrait,ncol=par$x, nrow=par$y), 
-        phylogeny =  phyloi, 
+        neutMat = matrix(out[[i]]$NeutralTrait,ncol=par$x, nrow=par$y),
+        phylogeny = if (convertToBinaryTree && !is.double(phyloi)) ape::multi2di(phyloi) else phyloi, 
         phyloTXT = out[[i]]$Phylogeny)
     }
     cat("done! \n")
@@ -134,7 +136,12 @@ runSimulation <- function(par)
     class(output) <- "PhyloSim"
     return(output)
     
-    ##################################################################
+  ##################################################################
+  # The following two options are other models that are implemented in Phylosiom
+  # Leipzig class C code similar to Chave 2002 - probably currently not functional
+  # Rneutral calls R code for a neutralm model similar to Chave 2002 that was implemented for 
+  # Testing purposes 
+  
   }else if(par$type == "Leipzig"){
     
     # TODO ... NOT FUNCTIONAL YET !!!

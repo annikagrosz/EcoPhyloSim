@@ -2,16 +2,29 @@
 #' @description Calculates the Colless' imbalance for a Phylogeny.
 #' @param simu An object of type "PhyloSim"
 #' @param which.result Integer, determines which result should be used. This argument is only usefull if your 'runs' argument in \code{\link{createCompletePar}} contains more than one element. By default (NULL), the last result is used.
+#' @param useApTreeshape Boolean, if TRUE uses apTreeshape's colless function
+#' @param norm Normalization: Either NULL, "yule" or "pda"
+#' @param dropFossil Boolean, if TRUE applies ape's drop.fossil on the phylogeny
 #' @return A numeric value for the Colless' Imbalance 
+#' @details If useApTreeshape is set to TRUE the phylogeny of simu must be bifurcate.\cr\cr If dropFossils==TRUE only extant species are included in the phylogeny
 #' @references Colless, D. H. "Review of phylogenetics: the theory and practice of phylogenetic systematics." Syst. Zool 31 (1982): 100-104.
 #' @export
 
-collessImbalance <- function(simu, which.result = NULL){ 
+collessImbalance <- function(simu, which.result = NULL, useApTreeshape = TRUE, norm = NULL,dropFossils = FALSE){ 
   if (is.null(which.result)) which.result = length(simu$Output) 
   phylo <- simu$Output[[which.result]]$phylogeny
   
-  # Calculate Colless  
-  balance <- balancefun(phylo)
+  if (dropFossils == TRUE) {
+    phylo <- ape::drop.fossil(phylo)
+  }
+  
+  if (useApTreeshape == TRUE) {
+    # phylo must be converted to treeshape for apTreeshape
+    treeShapePhylo <- apTreeshape::as.treeshape.phylo(phylo)
+    return(apTreeshape::colless(treeShapePhylo, norm = norm))
+  } else {
+    # Calculate Colless  
+    balance <- balancefun(phylo)
     sum.diff <- 0
     for(i in 1:length(balance[,1])){
       diff <- abs(balance[i,1] - balance[i,2])
@@ -19,6 +32,7 @@ collessImbalance <- function(simu, which.result = NULL){
     }
     c.imbal <- 2*sum.diff/((sum(balance[1,])-1)*(sum(balance[1,])-2))
     return(as.numeric(c.imbal))
+  }
 }
 
 
