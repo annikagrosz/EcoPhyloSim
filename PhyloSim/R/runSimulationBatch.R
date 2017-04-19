@@ -25,8 +25,6 @@
 #' par(mfrow=c(1,2))
 #' sac(simu[[1]])
 #' sac(simu[[2]])
-
-#' @useDynLib PhyloSim
 #' @export
 runSimulationBatch <- function(pars, parallel = FALSE, backup = FALSE){
   #start timing

@@ -19,7 +19,7 @@ Description: This package is designed to simulate and analyse species community
     exclusively correlated with a certain mechanism or combination of mechanisms.
 License: GPL (>= 2)
 Imports:
-    Rcpp (>= 0.11.4),
+    Rcpp (>= 0.12.9),
     ape,
     kulife,
     doParallel,
@@ -30,6 +30,8 @@ Imports:
     foreach
 Suggests:
     knitr
+LinkingTo: Rcpp
+LazyData: true
 VignetteBuilder: knitr
 LinkingTo: Rcpp
 RoxygenNote: 6.0.1
