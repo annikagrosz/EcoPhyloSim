@@ -845,7 +845,7 @@ void Landscape::speciation (unsigned int generation)
 					  m_Individuals[k][j].evolveDuringSpeciation();
 				      m_Phylogeny.updatePhylogeny(m_Individuals[k][j].m_Species);
 					  if(m_DD) densityUpdate(k,j);
-					  m_Individuals[k][j].m_incip_Age = -99999999999999;
+					  m_Individuals[k][j].m_incip_Age = -99999999;
 
 					  for(int z = 0; z< m_Xdimensions; z++){
 						  for(int q=0; q< m_Ydimensions; q++){
@@ -854,7 +854,7 @@ void Landscape::speciation (unsigned int generation)
 								  m_Individuals[z][q].m_Species = m_Individuals[k][j].m_Species;
 								  m_Individuals[z][q].evolveDuringSpeciation();
 								  if(m_DD) densityUpdate(z,q);
-								  m_Individuals[z][q].m_incip_Age = -99999999999999;
+								  m_Individuals[z][q].m_incip_Age = -99999999;
 							  }
 						  }
 					  }
