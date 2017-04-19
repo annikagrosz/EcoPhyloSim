@@ -18,9 +18,10 @@
 
 using namespace Rcpp;
 
-
+//' Core phylosim model
+//' @export
 // [[Rcpp::export]]
-Rcpp::List callModel(int x, int y, int dispersal, IntegerVector runs, double specRate, bool dens, 
+List callModel(int x, int y, int dispersal, IntegerVector runs, double specRate, bool dens, 
                bool env, bool neutral, bool mort, int mortStrength, bool repro, int dispersalCutoff, 
                int densityCutoff, int seed, double envStrength, double compStrength, int fission,
 			   double redQueen, double redQueenStrength, int protracted, NumericVector airmatR, NumericVector soilmatR) {
