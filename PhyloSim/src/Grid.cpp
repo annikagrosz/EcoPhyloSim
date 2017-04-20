@@ -126,10 +126,7 @@ std::vector<double> airmat, std::vector<double> soilmat)
          this->m_Individuals[cols][rows].m_dispersalDistance = m_Cutoff / 2.0;       
          this->m_Individuals[cols][rows].m_envStrength = m_envStrength;
          this->m_Individuals[cols][rows].m_compStrength = m_compStrength;     
-         
-         // TODO: FH 20.4.17 - seems to me this had been missing, please check!
-         this->m_Individuals[cols][rows].reportBirth();
-  
+
          //this->individuals[cols][rows].Species->date_of_extinction = runs;
       }
    }
