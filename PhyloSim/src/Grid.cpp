@@ -188,6 +188,9 @@ Landscape::~Landscape()
 {
    for(int i = 0; i < m_Xdimensions; i++)
    {
+     for (int j = 0; j < m_Ydimensions; j++) {
+       //delete &m_Individuals[i][j]; // delete stored pointer
+     }
       delete [] m_Individuals[i];
    }
    delete[] m_Individuals;
