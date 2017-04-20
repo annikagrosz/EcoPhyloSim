@@ -78,6 +78,7 @@ List callModel(int x, int y, int dispersal, IntegerVector runs, double specRate,
         char * cstr = new char [phyloPass.length()+1];
         std::strcpy (cstr, phyloPass.c_str());
         phyloOut[0] = cstr;
+        delete[] cstr;
         
         } else {
         for (int i = 0; i < x; i++) {
@@ -98,6 +99,7 @@ List callModel(int x, int y, int dispersal, IntegerVector runs, double specRate,
         char * cstr = new char [phyloPass.length()+1];
         std::strcpy (cstr, phyloPass.c_str());
         phyloOut[0] = cstr;
+        delete[] cstr;
         }
         
         Rcpp::List listResults = Rcpp::List::create(Rcpp::Named("Species") = specOut,

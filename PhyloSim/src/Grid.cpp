@@ -111,7 +111,7 @@ std::vector<double> airmat, std::vector<double> soilmat)
 
    // Initialization
    
-   // Create new species 
+   // Create new initial species 
    Species * spec = new Species(1,1, 0, std::make_pair<int,int>(0,0), m_SimulationEnd);
 
    // Add individuas of this new species across the grid
@@ -125,13 +125,15 @@ std::vector<double> airmat, std::vector<double> soilmat)
          this->m_Individuals[cols][rows].reportBirth();
          this->m_Individuals[cols][rows].m_dispersalDistance = m_Cutoff / 2.0;       
          this->m_Individuals[cols][rows].m_envStrength = m_envStrength;
-         this->m_Individuals[cols][rows].m_compStrength = m_compStrength;      
-         
+         this->m_Individuals[cols][rows].m_compStrength = m_compStrength;     
+
          //this->individuals[cols][rows].Species->date_of_extinction = runs;
       }
    }
+   // TODO - should the species be updated?
+   
+   // Write the last individual in the phylogeny
    m_Phylogeny.updatePhylogeny(m_Individuals[xsize-1][ysize-1].m_Species);
-
 
   // Set up Environment
 
@@ -188,7 +190,11 @@ Landscape::~Landscape()
 {
    for(int i = 0; i < m_Xdimensions; i++)
    {
-      delete [] m_Individuals[i];
+     for (int j = 0; j < m_Ydimensions; j++) {
+       // TODO: FH 20.4.17 : I had suspected that the individuals need to be deleted here, but on reflection this seems fine?
+       //delete &m_Individuals[i][j]; // delete stored pointer
+     }
+      delete[] m_Individuals[i];
    }
    delete[] m_Individuals;
 }
@@ -250,7 +256,7 @@ GlobalEnvironment::GlobalEnvironment(int xsize, int ysize, int type, bool neutra
 }
 
 GlobalEnvironment::~GlobalEnvironment() {
-   // TODO: Implement destructor!
+
 }
 
 void GlobalEnvironment::reproduce(unsigned int generation)
@@ -281,9 +287,10 @@ void GlobalEnvironment::reproduce(unsigned int generation)
          
          m_Individuals[x_coordinate][y_coordinate].reportDeath(generation);
 
-         m_Individuals[x_coordinate][y_coordinate] = m_Individuals[x_parent][y_parent]; // overloaded operator, deep copy ! // report birth and evolve is automatic
+         m_Individuals[x_coordinate][y_coordinate] = m_Individuals[x_parent][y_parent]; // overloaded operator, copy ! 
          m_Individuals[x_coordinate][y_coordinate].m_X_coordinate = x_coordinate;
          m_Individuals[x_coordinate][y_coordinate].m_Y_coordinate = y_coordinate;
+         // report birth and evolve is NOT automatic
          m_Individuals[x_coordinate][y_coordinate].evolve();
       }
    }
@@ -592,7 +599,7 @@ LocalEnvironment::LocalEnvironment(int xsize, int ysize, int type, bool neutral,
 }
 
 LocalEnvironment::~LocalEnvironment() {
-   // TODO: Implement destructor!
+
 }
 
 void LocalEnvironment::reproduce(unsigned int generation)

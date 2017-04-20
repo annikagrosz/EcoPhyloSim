@@ -18,7 +18,7 @@
 
 Individual::Individual()
 {
-  this ->m_Species = new Species();
+  this ->m_Species = NULL;
 	this ->m_X_coordinate = -999;
 	this ->m_Y_coordinate = -999;
   

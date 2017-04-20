@@ -48,8 +48,8 @@ PhylSimModel::PhylSimModel(int X, int Y, int dispersal, int simulationEnd, doubl
 }
 
 PhylSimModel::~PhylSimModel(){
-
-
+  delete m_Global;
+  delete m_Local;
 }
 
 void PhylSimModel::update(unsigned int runs)
