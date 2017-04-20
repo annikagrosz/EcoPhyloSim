@@ -26,7 +26,7 @@
 #' sac(simu[[1]])
 #' sac(simu[[2]])
 #' @export
-runSimulationBatch <- function(pars, parallel = FALSE, backup = FALSE){
+runSimulationBatch <- function(pars, parallel = FALSE, backup = FALSE, strip = NULL){
   #start timing
   ptm <- proc.time() 
   library(foreach)
@@ -49,6 +49,12 @@ runSimulationBatch <- function(pars, parallel = FALSE, backup = FALSE){
         name <- paste(pars[[i]]$scenario, ".RData", sep="", collapse="")
         save(OUT, file = name)
       }
+      
+      if(! is.null(NULL)) {
+        if(strip == "summaries") OUT = OUT$summaries
+        else stop("Phylosim::runSimulationBatch unrecognized arguemtn to strip")
+      }
+  
       OUT
     }
    parallel::stopCluster(cl)
@@ -64,6 +70,12 @@ runSimulationBatch <- function(pars, parallel = FALSE, backup = FALSE){
         name <- paste(pars[[i]]$scenario, ".RData", sep="", collapse="")
         save(OUT, file = name)
       }
+      
+      if(! is.null(NULL)) {
+        if(strip == "summaries") OUT = OUT$summaries
+        else stop("Phylosim::runSimulationBatch unrecognized arguemtn to strip")
+      }
+      
       OUT
     }
   }

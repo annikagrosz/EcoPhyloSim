@@ -150,7 +150,11 @@ runSimulation <- function(par, convertToBinaryTree = T)
     par$runtime <- runtime
     
     output$Model <- par
+    
     class(output) <- "PhyloSim"
+    
+    if(par$calculateSummaries) output$summaries = calculateSummaryStatistics(output)
+    
     return(output)
     
   ##################################################################
