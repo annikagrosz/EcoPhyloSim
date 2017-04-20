@@ -9,7 +9,7 @@ createCompletePar(x = 50, y = 50, dispersal = "global", runs = 100,
   fitnessActsOn = "mortality", fitnessBaseMortalityRatio = 10,
   densityCut = 1, seed = NULL, type = "base", fission = 0,
   redQueen = 0, redQueenStrength = 0, protracted = 0, airmat = 1,
-  scenario = NULL)
+  scenario = NULL, calculateSummaries = FALSE)
 }
 \arguments{
 \item{x}{Integer, Dimension of the model landscape in x-direction}
@@ -47,6 +47,8 @@ createCompletePar(x = 50, y = 50, dispersal = "global", runs = 100,
 \item{airmat}{Matrix, deteriming the environment of the simulation. airmat needs to be a matrix with the same dimensions as the grid.}
 
 \item{scenario}{String, further information you want to add to the parameter set in order to refer to a model run more conveniently.}
+
+\item{calculateSummaries}{Logical, determining wheter summary statistics should be calculated}
 }
 \value{
 A List with parameters

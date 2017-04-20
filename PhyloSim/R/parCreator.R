@@ -18,6 +18,7 @@
 #' @param seed numerical, sets the random seed
 #' @param type Character, determining which model should be used. "base" is running the default model. Other possibilities are "Leipzig" and "Rneutral" which will run a neutral model purely in R.
 #' @param scenario String, further information you want to add to the parameter set in order to refer to a model run more conveniently. 
+#' @param calculateSummaries Logical, determining wheter summary statistics should be calculated
 #' @details If runs is a sequence of generations the intermediate and end results are saved in the output of \code{runSimulation}. \cr\cr If type = "Rneutral" the model will run entirely in R. This model is to be seen only for test and teaching purpose. To be used in practice it is far too slow. Also the output is reduced. Only the species landscape and the parameter settings will be displayed in the output.
 #' @return A List with parameters
 #' @examples 
@@ -30,7 +31,7 @@
 #' 
 #' @export
 
-createCompletePar <- function(x = 50, y = 50, dispersal = "global", runs = 100, specRate = 1.0, density = 0, environment = 0, fitnessActsOn = "mortality" , fitnessBaseMortalityRatio = 10, densityCut = 1, seed=NULL,  type = "base", fission = 0, redQueen = 0, redQueenStrength = 0, protracted = 0, airmat = 1, scenario = NULL){
+createCompletePar <- function(x = 50, y = 50, dispersal = "global", runs = 100, specRate = 1.0, density = 0, environment = 0, fitnessActsOn = "mortality" , fitnessBaseMortalityRatio = 10, densityCut = 1, seed=NULL,  type = "base", fission = 0, redQueen = 0, redQueenStrength = 0, protracted = 0, airmat = 1, scenario = NULL, calculateSummaries = FALSE){
     
   soilmat <- 1 # Needs to be defined here as long as it is not
                # implemented in the model
@@ -59,7 +60,7 @@ createCompletePar <- function(x = 50, y = 50, dispersal = "global", runs = 100, 
              fitnessBaseMortalityRatio=fitnessBaseMortalityRatio, densityCut = densityCut, 
              seed = seed, type = type, scenario = scenario, fission = fission, 
              redQueen = redQueen, redQueenStrength = redQueenStrength, protracted = protracted,
-             airmatR = airmat, soilmatR=soilmat)
+             airmatR = airmat, soilmatR=soilmat, calculateSummaries=calculateSummaries)
   
 
 

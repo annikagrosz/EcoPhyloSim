@@ -143,7 +143,8 @@ runSimulation <- function(par, convertToBinaryTree = T)
         compMat = matrix(out[[i]]$CompetitionTrait,ncol=par$x, nrow=par$y), 
         neutMat = matrix(out[[i]]$NeutralTrait,ncol=par$x, nrow=par$y),
         phylogeny = if (convertToBinaryTree && !is.double(phyloi)) ape::multi2di(phyloi) else phyloi, 
-        phyloTXT = out[[i]]$Phylogeny)
+        phyloTXT = out[[i]]$Phylogeny,
+        summaries = NA)
     }
     cat("done! \n")
     
@@ -153,7 +154,9 @@ runSimulation <- function(par, convertToBinaryTree = T)
     
     class(output) <- "PhyloSim"
     
-    if(par$calculateSummaries) output$summaries = calculateSummaryStatistics(output)
+    if(par$calculateSummaries) {
+      output$Output[[1]]$summaries = calculateSummaryStatistics(output)
+    }
     
     return(output)
     
