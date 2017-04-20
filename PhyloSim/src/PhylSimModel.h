@@ -20,6 +20,7 @@ class PhylSimModel {
    int m_X_coordinate;
    int m_Y_coordinate;
    int timeStep;
+   // TODO FH I don't see a compelling reason to implement this as pointers, move to normal class fields?
    GlobalEnvironment* m_Global;
    LocalEnvironment* m_Local;
 
