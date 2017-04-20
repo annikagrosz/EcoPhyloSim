@@ -23,6 +23,7 @@ calculateSummaryStatistics <- function(simulation) {
   
   # TODO: implement special case: only 1 species
   if (is.double(simulation$Output[[1]]$phylogeny)) {
+    return(summaryStatistics)
   }
   
   # RAC
