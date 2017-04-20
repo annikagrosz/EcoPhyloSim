@@ -21,10 +21,7 @@ using namespace Rcpp;
 //' Core phylosim model
 //' @export
 // [[Rcpp::export]]
-List callModel(int x, int y, int dispersal, IntegerVector runs, double specRate, bool dens, 
-               bool env, bool neutral, bool mort, int mortStrength, bool repro, int dispersalCutoff, 
-               int densityCutoff, int seed, double envStrength, double compStrength, int fission,
-			   double redQueen, double redQueenStrength, int protracted, NumericVector airmatR, NumericVector soilmatR) {
+List callModel(int x, int y, int dispersal, IntegerVector runs, double specRate, bool dens, bool env, bool neutral, bool mort, int mortStrength, bool repro, int dispersalCutoff, int densityCutoff, int seed, double envStrength, double compStrength, int fission, double redQueen, double redQueenStrength, int protracted, NumericVector airmatR, NumericVector soilmatR) {
                 
  
    
@@ -41,9 +38,7 @@ List callModel(int x, int y, int dispersal, IntegerVector runs, double specRate,
 
     Rcpp::List outList = Rcpp::List::create();
 
-   PhylSimModel phylSimModel(x, y, dispersal, runs[steps-1], specRate, dens, 
-               env, neutral, mort, mortStrength, repro, dispersalCutoff, 
-               densityCutoff, tempSaveLoc, envStrength, compStrength, fission, redQueen, redQueenStrength, protracted, airmat, soilmat);
+   PhylSimModel phylSimModel(x, y, dispersal, runs[steps-1], specRate, dens, env, neutral, mort, mortStrength, repro, dispersalCutoff, densityCutoff, tempSaveLoc, envStrength, compStrength, fission, redQueen, redQueenStrength, protracted, airmat, soilmat);
 
 
   for (int step = 0; step < steps; step++) {

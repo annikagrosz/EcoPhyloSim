@@ -89,11 +89,28 @@ runSimulation <- function(par, convertToBinaryTree = T)
     
     ptm <- proc.time()
     
-    out <- callModel( par$x,  par$y,  dispersal,  round(par$runs),  par$specRate, par$density, 
-                      par$environment, neutral, mortalityFitness, par$fitnessBaseMortalityRatio,
-                      reproductiveFitness, dispersalCut, par$densityCut, par$seed, par$envStrength,
-                      par$compStrength, par$fission, par$redQueen, par$redQueenStrength, par$protracted,
-                      par$airmat, par$soilmat)  
+    out <- callModel( x = par$x, 
+                      y = par$y, 
+                      dispersal = dispersal, 
+                      runs = round(par$runs), 
+                      specRate = par$specRate, 
+                      dens = par$density, 
+                      env = par$environment, 
+                      neutral = neutral, 
+                      mort = mortalityFitness, 
+                      mortStrength = par$fitnessBaseMortalityRatio, 
+                      repro = reproductiveFitness, 
+                      dispersalCutoff = dispersalCut, 
+                      densityCutoff = par$densityCut, 
+                      seed = par$seed, 
+                      envStrength = par$envStrength, 
+                      compStrength = par$compStrength, 
+                      fission = par$fission, 
+                      redQueen = par$redQueen, 
+                      redQueenStrength = par$redQueenStrength, 
+                      protracted = par$protracted, 
+                      airmatR = par$airmat, 
+                      soilmatR = par$soilmat)  
     
     runtime <- as.numeric((proc.time() - ptm)[3])
     
