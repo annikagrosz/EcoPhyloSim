@@ -20,8 +20,22 @@ Phylogeny::Phylogeny() {
    m_FullPhylogeny = new std::multimap<unsigned long long, Species*>();
 }
 
-Phylogeny::~Phylogeny(){}
-
+Phylogeny::~Phylogeny(){
+  
+  for (unsigned int i = 1; i < m_FullPhylogeny->size(); i++)
+  {
+    delete m_FullPhylogeny->find(i)->second;
+  }
+  m_FullPhylogeny->clear();
+  delete m_FullPhylogeny;
+  
+  for (unsigned int i = 1; i < m_PrunedPhylo->size(); i++)
+  {
+    delete m_PrunedPhylo->find(i)->second;
+  }
+  m_PrunedPhylo->clear();
+  delete m_PrunedPhylo;
+}
 
 void Phylogeny::updatePhylogeny(Species * spec)
 {
@@ -64,8 +78,6 @@ void Phylogeny::prunePhylogeny(int current)
   
 	for(unsigned long long i=1; i <= m_PrunedPhylo->size(); i++)
 	{
-
-
 		Species * father = m_PrunedPhylo->find(i)->second;
 
 		for(int i = 0; i<10; i++){
