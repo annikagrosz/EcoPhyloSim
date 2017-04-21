@@ -14,8 +14,8 @@
 #' 
 
 calculateSummaryStatistics <- function(simulation) {
-  summaryStatistics <- list(rac=NA,
-                            sac=NA,
+  summaryStatistics <- list(racAuc=NA,
+                            sacAuc=NA,
                             alphaDiversity = NA,
                             betaDiversity = NA,
                             imbalance = NA,
@@ -27,10 +27,14 @@ calculateSummaryStatistics <- function(simulation) {
   }
   
   # RAC
-  summaryStatistics$rac <- rac(simulation, plot = F)
+  rac <- rac(simulation, plot = F)
+  summaryStatistics$racAuc <- MESS::auc(x = rac$Rank,
+                                        y = rac$Abundance)
   
   # SAC
-  summaryStatistics$sac <- sac(simulation, size = seq(1,15), plot = F)
+  sac <- sac(simulation, size = seq(1,15), plot = F)
+  summaryStatistics$sacAuc <- MESS::auc(x = sac$size,
+                                        y = sac$sr.Mean)
   
   
   # alpha and beta diversity

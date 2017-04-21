@@ -9,7 +9,7 @@ createCompletePar(x = 50, y = 50, dispersal = "global", runs = 100,
   fitnessActsOn = "mortality", fitnessBaseMortalityRatio = 10,
   densityCut = 1, seed = NULL, type = "base", fission = 0,
   redQueen = 0, redQueenStrength = 0, protracted = 0, airmat = 1,
-  scenario = NULL, calculateSummaries = FALSE)
+  scenario = NULL, calculateSummaries = FALSE, convertToBinaryTree = TRUE)
 }
 \arguments{
 \item{x}{Integer, Dimension of the model landscape in x-direction}
@@ -49,6 +49,8 @@ createCompletePar(x = 50, y = 50, dispersal = "global", runs = 100,
 \item{scenario}{String, further information you want to add to the parameter set in order to refer to a model run more conveniently.}
 
 \item{calculateSummaries}{Logical, determining wheter summary statistics should be calculated}
+
+\item{convertToBinaryTree}{Logical, determining if the phylogeny should be converted into a binary tree}
 }
 \value{
 A List with parameters

@@ -4,12 +4,10 @@
 \alias{runSimulation}
 \title{Species Community Simulation}
 \usage{
-runSimulation(par, convertToBinaryTree = T)
+runSimulation(par)
 }
 \arguments{
 \item{par, }{a list of model parameters created with \link{createCompletePar}}
-
-\item{convertToBinaryTree}{Should the phylogeny be converted into a binary tree}
 }
 \value{
 An object of class "Phylosim". This objet contains the species matrix, the trait matrix, the environmental matrix, the competition matrix and the neutral matrix, as well as the phlogeny and the parameter settings of the simulation.

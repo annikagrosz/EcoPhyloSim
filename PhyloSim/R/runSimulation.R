@@ -1,7 +1,6 @@
 #' @title  Species Community Simulation
 #' @description A model of species community assembly under different assembly mechanisms.  
 #' @param par, a list of model parameters created with \link{createCompletePar}
-#' @param convertToBinaryTree Should the phylogeny be converted into a binary tree
 #' @return An object of class "Phylosim". This objet contains the species matrix, the trait matrix, the environmental matrix, the competition matrix and the neutral matrix, as well as the phlogeny and the parameter settings of the simulation. 
 #' @details If your parameterset contains more than one runs argument, each interim step is saved in the Phylosim object. \cr\cr For larger simularions consider \link{runSimulationBatch} to make use of parallel computing. \cr\cr If you are using type="Rneutral" only one runs argument can be processed.\cr\cr It is possible that more than one new species arises per generation. This leads to a multifurcated phylogeny, yet many packages such as "ape" can only work with bifurcated tree. Setting converToBinaryTree to TRUE converts the generated phylogeny to a bifurcate one using multi2di() from the "ape" package. 
 #' @importFrom adephylo distTips
@@ -34,7 +33,7 @@
 #'  
 #' #Look at the species area relation
 #' sac(simu, area = c(1,10,100,1000), rep = 100, plot= TRUE)
-runSimulation <- function(par, convertToBinaryTree = T)
+runSimulation <- function(par)
 {
   
   # GENERAL SETTINGS
@@ -142,7 +141,7 @@ runSimulation <- function(par, convertToBinaryTree = T)
         envMat = matrix(out[[i]]$Environment,ncol=par$x, nrow=par$y), 
         compMat = matrix(out[[i]]$CompetitionTrait,ncol=par$x, nrow=par$y), 
         neutMat = matrix(out[[i]]$NeutralTrait,ncol=par$x, nrow=par$y),
-        phylogeny = if (convertToBinaryTree && !is.double(phyloi)) ape::multi2di(phyloi) else phyloi, 
+        phylogeny = if (par$convertToBinaryTree && !is.double(phyloi)) ape::multi2di(phyloi) else phyloi, 
         phyloTXT = out[[i]]$Phylogeny,
         summaries = NA)
     }
