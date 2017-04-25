@@ -6,6 +6,8 @@
  *              Betim Musa <musab@informatik.uni-freiburg.de>
  */
 
+
+
 #include "Grid.h"
 #include "PhylSimModel.h"
 #include "./RandomGen.h"
@@ -18,15 +20,15 @@
 
 
 int main(){
-  unsigned int runs = 200; // number of Generations
-	bool neutral = false; // neutral model or not
-	bool dd = true; // Density dependent or independent model
+  unsigned int runs = 100; // number of Generations
+	bool neutral = true; // neutral model or not
+	bool dd = false; // Density dependent or independent model
 	bool env = false; // environmentally dependent or independent model
 	bool mort = true; // mortality fitness
 	bool repro = false; // reproductive fitness
-	int dispersal = 3; // 1 = global dispersal, 2 = nearest neighbor dispersal, 3= kernel dispersal
-	int xDim = 100; // Number of grid cells in x-direction
-	int yDim = 100; // number of grid cells in y-direction
+	int dispersal = 1; // 1 = global dispersal, 2 = nearest neighbor dispersal, 3= kernel dispersal
+	int xDim = 30; // Number of grid cells in x-direction
+	int yDim = 30; // number of grid cells in y-direction
 //	srand(1500);
 	double specrate = 1.0;
 	int densityCut = 2;

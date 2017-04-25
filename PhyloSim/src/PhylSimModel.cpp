@@ -6,7 +6,6 @@
  *              Betim Musa <musab@informatik.uni-freiburg.de>
  */
 
-
 #include <iostream>
 #include <fstream>
 #include <string>
@@ -26,9 +25,9 @@ PhylSimModel::PhylSimModel(int X, int Y, int dispersal, int simulationEnd, doubl
    
    #ifdef DEBUG
    std::cout<<"Running simulation with \n";
-   std::cout<<"Dispersal "<< dispersal << "cutoff" << dispersalCutoff <<  "\n";
-   std::cout<<"Competition"<< dens << "strength" << compStrength <<  "cutoff " << densityCutoff << "\n";
-   std::cout<<"Environment"<< env << "strength" << envStrength<<  "\n";   
+   std::cout<<"Dispersal "<< dispersal << "; cutoff " << dispersalCutoff <<  "\n";
+   std::cout<<"Competition "<< dens << "; strength " << compStrength <<  " cutoff " << densityCutoff << "\n";
+   std::cout<<"Environment "<< env << "; strength " << envStrength<<  "\n";
    std::cout<<"\n---- debug message for development purposes, remove debug switch in debug.h for turning this off \n\n";
    #endif
    
