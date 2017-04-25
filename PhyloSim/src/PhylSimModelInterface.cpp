@@ -26,7 +26,7 @@ List callModel(int x, int y, int dispersal, IntegerVector runs, double specRate,
  
    
    RandomGen ran;
-   ran.seedrand(seed);
+   ran.seedrand(seed); // seed is int while seedrand expects unsigned int
    
    std::string tempSaveLoc = "./"; 
 
