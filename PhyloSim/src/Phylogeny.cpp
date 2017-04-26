@@ -192,6 +192,7 @@ void Phylogeny::writePhylogeny(unsigned long long start, std::multimap<unsigned 
             } else {
                 // if first time going through this node branch lenght is distance to parent node
                 if (position[parent->m_ID] == 0) {
+                    // TODO: unsigned long long assigned to int!
                     branchLength = phylogenyMap->find(
                             parent->m_Children[position[parent->m_ID]])->second->m_Date_of_Emergence -
                                    parent->m_Date_of_Emergence;
@@ -199,6 +200,7 @@ void Phylogeny::writePhylogeny(unsigned long long start, std::multimap<unsigned 
                     // else branch lenght is distance to previous sibling
                 else // ????? or position = children size
                 {
+                    // TODO: unsigned long long assigned to int!
                     branchLength = phylogenyMap->find(
                             parent->m_Children[position[parent->m_ID]])->second->m_Date_of_Emergence -
                                    phylogenyMap->find(
@@ -250,7 +252,7 @@ Phylogeny::writePhylogenyR(unsigned long long start, std::multimap<unsigned long
 
     bool go = true;
     while (go) {
-        
+
         // todo long term: think about changing children from integer vector + map to pointer
 
 
@@ -258,6 +260,7 @@ Phylogeny::writePhylogenyR(unsigned long long start, std::multimap<unsigned long
         if (focusSpecies->m_Children.empty()) {
 
             if (position[focusSpecies->m_ID] != 0) throw std::runtime_error("unexpected value for position value in a leaf");
+            // TODO: unsigned long long assigned to int!
             branchLength = focusSpecies->m_Date_of_Extinction - focusSpecies->m_Date_of_Emergence;
             tree.insert(0, to_string(branchLength));
             tree.insert(0, ":");
@@ -272,7 +275,7 @@ Phylogeny::writePhylogenyR(unsigned long long start, std::multimap<unsigned long
         // if all children visited write down parent, close and go one up
         else if (position[focusSpecies->m_ID] == focusSpecies->m_Children.size()) {
 
-
+            // TODO: unsigned long long assigned to int!
             branchLength = focusSpecies->m_Date_of_Extinction -
                            phylogenyMap->find(focusSpecies->m_Children.back())->second->m_Date_of_Emergence;
 
@@ -303,8 +306,8 @@ Phylogeny::writePhylogenyR(unsigned long long start, std::multimap<unsigned long
                 phylogenyMap->find(focusSpecies->m_Children[position[focusSpecies->m_ID] - 1])->second->m_Date_of_Emergence
                 // TODO find out why this causes a crash and sort it out
                 //&&
-                //phylogenyMap->find(parent->m_Children[position[parent->m_ID]])->second->m_Date_of_Emergence ==
-                //phylogenyMap->find(parent->m_Children[position[parent->m_ID] + 1])->second->m_Date_of_Emergence
+                //phylogenyMap->find(focusSpecies->m_Children[position[focusSpecies->m_ID]])->second->m_Date_of_Emergence ==
+                //phylogenyMap->find(focusSpecies->m_Children[position[focusSpecies->m_ID] + 1])->second->m_Date_of_Emergence
                 )
             {
 
@@ -312,12 +315,12 @@ Phylogeny::writePhylogenyR(unsigned long long start, std::multimap<unsigned long
                     (phylogenyMap->find(focusSpecies->m_Children[position[focusSpecies->m_ID]])->second->m_Children.empty())) {
 
                     ;
-                    tree.insert(0, "," );
+                    //tree.insert(0, "," );
                 }
             } else {
                 // if first time going through this node branch lenght is distance to parent node
                 if (position[focusSpecies->m_ID] == 0) {
-
+                    // TODO: unsigned long long assigned to int!
                     branchLength = phylogenyMap->find(
                             focusSpecies->m_Children[position[focusSpecies->m_ID]])->second->m_Date_of_Emergence -
                                    focusSpecies->m_Date_of_Emergence;
@@ -327,7 +330,7 @@ Phylogeny::writePhylogenyR(unsigned long long start, std::multimap<unsigned long
                 else // ????? or position = children size
                 {
 
-
+                    // TODO: unsigned long long assigned to int!
                     branchLength = phylogenyMap->find(
                             focusSpecies->m_Children[position[focusSpecies->m_ID]])->second->m_Date_of_Emergence -
                                    phylogenyMap->find(
