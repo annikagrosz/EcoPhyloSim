@@ -54,7 +54,7 @@ int main() {
     int y = 30;
     int dispersal = 1;
     int runs = 100;
-    double specRate = 9.93097;
+    double specRate = 1;
     bool dens = false; // 0
     bool env = false; // 0
     bool neutral = true; // 1
@@ -89,11 +89,13 @@ int main() {
                        redQueen, redQueenStrength, protracted, airmat, soilmat);
     Model.update(runs);
 
+    Model.m_Global->m_Phylogeny.prunePhylogeny(runs);
+    Model.m_Global->m_Phylogeny.writePhylogenyR(1, Model.m_Global->m_Phylogeny.m_PrunedPhylo);
 
 //	Model.get_data();
 //	Model.getclimate();
 //	Model.gettraits();
-    if (dispersal == 1) {
+   /* if (dispersal == 1) {
 
         Model.m_Global->m_Phylogeny.prunePhylogeny(runs);
         Model.m_Global->m_Phylogeny.writePhylogeny(1, Model.m_Global->m_Phylogeny.m_PrunedPhylo, 'P');
@@ -105,7 +107,7 @@ int main() {
         Model.m_Local->m_Phylogeny.writePhylogeny(1, Model.m_Local->m_Phylogeny.m_PrunedPhylo, 'P');
         Model.m_Local->m_Phylogeny.writePhylogeny(1, Model.m_Local->m_Phylogeny.m_FullPhylogeny, 'F');
         Model.m_Local->m_Phylogeny.writeSpeciesData();
-    }
+    }*/
 
     return 0;
 }
