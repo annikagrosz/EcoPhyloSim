@@ -15,6 +15,11 @@
 #include "Grid.h"
 #include "PhylSimModel.h"
 #include "Species.h"
+#include "debug.h"
+
+// basic file operations for DEBUG, remove when done with debugging
+#include <iostream>
+#include <fstream>
 
 using namespace Rcpp;
 
@@ -25,7 +30,36 @@ List callModel(int x, int y, int dispersal, IntegerVector runs, double specRate,
                bool mort, int mortStrength, bool repro, int dispersalCutoff, int densityCutoff, int seed,
                double envStrength, double compStrength, int fission, double redQueen, double redQueenStrength,
                int protracted, NumericVector airmatR, NumericVector soilmatR) {
-
+    #ifdef DEBUG
+    std::ofstream debugFile;
+    debugFile.open("debug.txt");
+    std::cout << "Writing parameters to debug.txt..." << ";" << std::endl;
+    debugFile << "int x = " << x << ";" << std::endl;
+    debugFile << "int y = " << y << ";" << std::endl;
+    debugFile << "int dispersal = " << dispersal << ";" << std::endl;
+    debugFile << "IntegerVector runs = " << runs << ";" << std::endl;
+    debugFile << "double specRate = " << specRate << ";" << std::endl;
+    debugFile << "bool dens = " << dens << ";" << std::endl;
+    debugFile << "bool env = " << env << ";" << std::endl;
+    debugFile << "bool neutral = " << neutral << ";" << std::endl;
+    debugFile << "bool mort = " << mort << ";" << std::endl;
+    debugFile << "int mortStrength = " << mortStrength << ";" << std::endl;
+    debugFile << "bool repro = " << repro << ";" << std::endl;
+    debugFile << "int dispersalCutoff = " << dispersalCutoff << ";" << std::endl;
+    debugFile << "int densityCutoff = " << densityCutoff << ";" << std::endl;
+    debugFile << "int seed = " << seed << ";" << std::endl;
+    debugFile << "double envStrength = " << envStrength << ";" << std::endl;
+    debugFile << "double compStrength = " << compStrength << ";" << std::endl;
+    debugFile << "int fission = " << fission << ";" << std::endl;
+    debugFile << "double redQueen = " << redQueen << ";" << std::endl;
+    debugFile << "double redQueenStrength = " << redQueenStrength << ";" << std::endl;
+    debugFile << "int protracted = " << protracted << ";" << std::endl;
+    debugFile << "NumericVector airmatR = " << airmatR << ";" << std::endl;
+    debugFile << "airmatR = " << airmatR.begin() <<", " << airmatR.end() << ";" << std::endl;
+    debugFile << "NumericVector airmatR = " << soilmatR << ";" << std::endl;
+    debugFile << "soilmatR = " << soilmatR.begin() <<", " << soilmatR.end() << ";" << std::endl;
+    debugFile.close();
+    #endif
 
     RandomGen ran;
     ran.seedrand(seed); // seed is int while seedrand expects unsigned int

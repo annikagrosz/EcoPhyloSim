@@ -290,8 +290,7 @@ Phylogeny::writePhylogenyR(unsigned long long start, std::multimap<unsigned long
 
         }
 
-        // If Parent has children and not yet gone to each child
-        // then go to child
+        // If Parent has children and not yet gone to each child then go to child
         else if (position[focusSpecies->m_ID] < focusSpecies->m_Children.size()) {
 
             // if two siblings are born in the same generation
@@ -305,9 +304,9 @@ Phylogeny::writePhylogenyR(unsigned long long start, std::multimap<unsigned long
                 phylogenyMap->find(focusSpecies->m_Children[position[focusSpecies->m_ID]])->second->m_Date_of_Emergence ==
                 phylogenyMap->find(focusSpecies->m_Children[position[focusSpecies->m_ID] - 1])->second->m_Date_of_Emergence
                 // TODO find out why this causes a crash and sort it out
-                //&&
-                //phylogenyMap->find(focusSpecies->m_Children[position[focusSpecies->m_ID]])->second->m_Date_of_Emergence ==
-                //phylogenyMap->find(focusSpecies->m_Children[position[focusSpecies->m_ID] + 1])->second->m_Date_of_Emergence
+                /*&&
+                phylogenyMap->find(focusSpecies->m_Children[position[focusSpecies->m_ID]])->second->m_Date_of_Emergence ==
+                phylogenyMap->find(focusSpecies->m_Children[position[focusSpecies->m_ID] + 1])->second->m_Date_of_Emergence */
                 )
             {
 
