@@ -69,8 +69,8 @@ void Phylogeny::prunePhylogeny(int current) {
     }
 
 
-    // TODO - I somehow don't understand 100% why this works .. we go through the phylogeny size, erase things inbetween, why don't we get into
-    // trouble for trying to access indices that have already been erase?
+    /* TODO - I somehow don't understand 100% why this works .. we go through the phylogeny size, erase things inbetween,
+     * why don't we get into trouble for trying to access indices that have already been erase? */
 
     for (unsigned long long i = 1; i <= m_PrunedPhylo->size(); i++) {
         Species *father = m_PrunedPhylo->find(i)->second;
@@ -98,10 +98,10 @@ void Phylogeny::prunePhylogeny(int current) {
 void Phylogeny::writePhylogeny(unsigned long long start, std::multimap<unsigned long long, Species *> *phylogenyMap,
                                char suffix) {
 //	 std::cout << "write Phylogeny" << std::endl;
-    Species *parent = phylogenyMap->find(start)->second;
+    Species *focusSpecies = phylogenyMap->find(start)->second;
     Species *ancestorSpecies = new Species(0, 0, 0, std::make_pair(0, 0), 0);
     phylogenyMap->insert(std::make_pair(ancestorSpecies->m_ID, ancestorSpecies));
-    parent->m_Ancestor = 0;
+    focusSpecies->m_Ancestor = 0;
     //std::map<unsigned long long, int> position; // Initialisieren ??
 //	std::vector <unsigned long long> phylchildren;
 
@@ -137,89 +137,86 @@ void Phylogeny::writePhylogeny(unsigned long long start, std::multimap<unsigned 
 //		if(position[parent->ID]+1 <= parent->children.size() )
 //		{
 
-
-        // todo rename paerent to focusSpecies
         // todo long term: think about changing children from integer vector + map to pointer
 
 
         // If parent is leaf, write down leaf and length and go one up
-        if (parent->m_Children.empty()) {
-            if (position[parent->m_ID] != 0) throw std::runtime_error("unexpected value for position value in a leaf");
-            branchLength = parent->m_Date_of_Extinction - parent->m_Date_of_Emergence;
+        if (focusSpecies->m_Children.empty()) {
+            if (position[focusSpecies->m_ID] != 0) throw std::runtime_error("unexpected value for position value in a leaf");
+            branchLength = focusSpecies->m_Date_of_Extinction - focusSpecies->m_Date_of_Emergence;
             tree.insert(0, to_string(branchLength));
             tree.insert(0, ":");
-            tree.insert(0, to_string(parent->m_ID));
+            tree.insert(0, to_string(focusSpecies->m_ID));
             tree.insert(0, "s");
             tree.insert(0, ",");
-            parent = phylogenyMap->find(parent->m_Ancestor)->second;
-            position[parent->m_ID] += 1;
+            focusSpecies = phylogenyMap->find(focusSpecies->m_Ancestor)->second;
+            position[focusSpecies->m_ID] += 1;
         }
 
             // if all children visited write down parent, close and go one up
-        else if (position[parent->m_ID] == parent->m_Children.size()) {
-            branchLength = parent->m_Date_of_Extinction -
-                           phylogenyMap->find(parent->m_Children.back())->second->m_Date_of_Emergence;
+        else if (position[focusSpecies->m_ID] == focusSpecies->m_Children.size()) {
+            branchLength = focusSpecies->m_Date_of_Extinction -
+                           phylogenyMap->find(focusSpecies->m_Children.back())->second->m_Date_of_Emergence;
 
             tree.insert(0, to_string(branchLength));
             tree.insert(0, ":");
-            tree.insert(0, to_string(parent->m_ID));
+            tree.insert(0, to_string(focusSpecies->m_ID));
             tree.insert(0, "s");
-            tree.insert(0, paranthesis[parent->m_ID], '(');
+            tree.insert(0, paranthesis[focusSpecies->m_ID], '(');
             tree.insert(0, ",");
-            parent = phylogenyMap->find(parent->m_Ancestor)->second;
+            focusSpecies = phylogenyMap->find(focusSpecies->m_Ancestor)->second;
 
-            position[parent->m_ID] += 1;
+            position[focusSpecies->m_ID] += 1;
 
         }
 
             // If Parent has children and not yet gone to each child
             // then go to child
-        else if (position[parent->m_ID] < parent->m_Children.size()) {
+        else if (position[focusSpecies->m_ID] < focusSpecies->m_Children.size()) {
 
             // if two siblings are born in the same generation
-
-            if (position[parent->m_ID] > 1 &&
-                phylogenyMap->find(parent->m_Children[position[parent->m_ID]])->second->m_Date_of_Emergence ==
-                phylogenyMap->find(parent->m_Children[position[parent->m_ID] - 1])->second->m_Date_of_Emergence &&
-                phylogenyMap->find(parent->m_Children[position[parent->m_ID]])->second->m_Date_of_Emergence ==
-                phylogenyMap->find(parent->m_Children[position[parent->m_ID] + 1])->second->m_Date_of_Emergence) {
-                if (!(phylogenyMap->find(parent->m_Children[position[parent->m_ID] - 1])->second->m_Children.empty()) &&
-                    (phylogenyMap->find(parent->m_Children[position[parent->m_ID]])->second->m_Children.empty())) {
+            if (position[focusSpecies->m_ID] > 1 &&
+                phylogenyMap->find(focusSpecies->m_Children[position[focusSpecies->m_ID]])->second->m_Date_of_Emergence ==
+                phylogenyMap->find(focusSpecies->m_Children[position[focusSpecies->m_ID] - 1])->second->m_Date_of_Emergence &&
+                phylogenyMap->find(focusSpecies->m_Children[position[focusSpecies->m_ID]])->second->m_Date_of_Emergence ==
+                phylogenyMap->find(focusSpecies->m_Children[position[focusSpecies->m_ID] + 1])->second->m_Date_of_Emergence) {
+                if (!(phylogenyMap->find(focusSpecies->m_Children[position[focusSpecies->m_ID] - 1])->second->m_Children.empty()) &&
+                    (phylogenyMap->find(focusSpecies->m_Children[position[focusSpecies->m_ID]])->second->m_Children.empty())) {
 
                     ;
 //						tree.insert(0, "," );
                 }
             } else {
                 // if first time going through this node branch lenght is distance to parent node
-                if (position[parent->m_ID] == 0) {
+                if (position[focusSpecies->m_ID] == 0) {
                     // TODO: unsigned long long assigned to int!
                     branchLength = phylogenyMap->find(
-                            parent->m_Children[position[parent->m_ID]])->second->m_Date_of_Emergence -
-                                   parent->m_Date_of_Emergence;
+                            focusSpecies->m_Children[position[focusSpecies->m_ID]])->second->m_Date_of_Emergence -
+                                   focusSpecies->m_Date_of_Emergence;
                 }
                     // else branch lenght is distance to previous sibling
                 else // ????? or position = children size
                 {
                     // TODO: unsigned long long assigned to int!
                     branchLength = phylogenyMap->find(
-                            parent->m_Children[position[parent->m_ID]])->second->m_Date_of_Emergence -
+                            focusSpecies->m_Children[position[focusSpecies->m_ID]])->second->m_Date_of_Emergence -
                                    phylogenyMap->find(
-                                           parent->m_Children[position[parent->m_ID] - 1])->second->m_Date_of_Emergence;
+                                           focusSpecies->m_Children[position[focusSpecies->m_ID] - 1])->second->m_Date_of_Emergence;
                 }
 
                 tree.insert(0, to_string(branchLength));
                 tree.insert(0, ":");
-                tree.insert(0, to_string(parent->m_ID));
+                tree.insert(0, to_string(focusSpecies->m_ID));
                 tree.insert(0, "s");
                 tree.insert(0, ")");
-                paranthesis[parent->m_ID] += 1;
+                paranthesis[focusSpecies->m_ID] += 1;
             }
 
-            parent = phylogenyMap->find(parent->m_Children[position[parent->m_ID]])->second;
+            focusSpecies = phylogenyMap->find(focusSpecies->m_Children[position[focusSpecies->m_ID]])->second;
         } else throw std::runtime_error("Nope");
 
 
-        if (parent->m_ID == 0) {
+        if (focusSpecies->m_ID == 0) {
             go = false;
         }
     }
@@ -299,6 +296,8 @@ Phylogeny::writePhylogenyR(unsigned long long start, std::multimap<unsigned long
             // TODO check
             // Here the program can crash in case of high speciation rates.
 
+
+
             // If already one child visited, but why is this
             if (position[focusSpecies->m_ID] > 1 &&
                 phylogenyMap->find(focusSpecies->m_Children[position[focusSpecies->m_ID]])->second->m_Date_of_Emergence ==
@@ -306,7 +305,7 @@ Phylogeny::writePhylogenyR(unsigned long long start, std::multimap<unsigned long
                 // TODO find out why this causes a crash and sort it out
                 /*&&
                 phylogenyMap->find(focusSpecies->m_Children[position[focusSpecies->m_ID]])->second->m_Date_of_Emergence ==
-                phylogenyMap->find(focusSpecies->m_Children[position[focusSpecies->m_ID] + 1])->second->m_Date_of_Emergence */
+                phylogenyMap->find(focusSpecies->m_Children[position[focusSpecies->m_ID] + 1])->second->m_Date_of_Emergence*/
                 )
             {
 
