@@ -13,7 +13,7 @@ calculateSummaryStatistics(simulation)
 A list containing the summary statistics.
 }
 \description{
-Calculates the summary satistics for a simulation.
+Calculates the summary satistics for a simulation of class PhyloSim.
 }
 \details{
 TODO: implement

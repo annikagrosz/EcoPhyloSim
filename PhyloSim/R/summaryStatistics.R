@@ -1,6 +1,6 @@
 
 #' @title Summary Statistics
-#' @description Calculates the summary satistics for a simulation.
+#' @description Calculates the summary satistics for a simulation of class PhyloSim.
 #' @param simulation Simulation output of the class "Phylosim"
 #' @details TODO: implement
 #' @return A list containing the summary statistics.

@@ -5,6 +5,8 @@
 
 /* FIXME: 
 Check these declarations against the C/Fortran source code.
+ 
+See also comments here https://github.com/florianhartig/BayesianTools/issues/31
 */
 
 /* .Call calls */
