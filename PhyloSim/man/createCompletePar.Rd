@@ -9,7 +9,8 @@ createCompletePar(x = 50, y = 50, dispersal = "global", runs = 100,
   fitnessActsOn = "mortality", fitnessBaseMortalityRatio = 10,
   densityCut = 1, seed = NULL, type = "base", fission = 0,
   redQueen = 0, redQueenStrength = 0, protracted = 0, airmat = 1,
-  scenario = NULL, calculateSummaries = FALSE, convertToBinaryTree = TRUE)
+  scenario = NULL, calculateSummaries = FALSE, convertToBinaryTree = TRUE,
+  prunePhylogeny = TRUE)
 }
 \arguments{
 \item{x}{Integer, Dimension of the model landscape in x-direction}
@@ -51,6 +52,8 @@ createCompletePar(x = 50, y = 50, dispersal = "global", runs = 100,
 \item{calculateSummaries}{Logical, determining wheter summary statistics should be calculated}
 
 \item{convertToBinaryTree}{Logical, determining if the phylogeny should be converted into a binary tree}
+
+\item{prunePhylogeny}{Logical, determining whether the phylogeny should be prune by the internal pruning function}
 }
 \value{
 A List with parameters

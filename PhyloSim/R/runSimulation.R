@@ -109,7 +109,8 @@ runSimulation <- function(par)
                       redQueenStrength = par$redQueenStrength, 
                       protracted = par$protracted, 
                       airmatR = par$airmat, 
-                      soilmatR = par$soilmat)  
+                      soilmatR = par$soilmat,
+                      prunePhylogeny = par$prunePhylogeny)  
     
     runtime <- as.numeric((proc.time() - ptm)[3])
     
@@ -132,6 +133,8 @@ runSimulation <- function(par)
         phyloi <- 0
         warning("Cannot build Phylogeny")
       }else{
+        # TODO: ape can not read the tree if it is not pruned by prunePhylogenyR:
+        # Error in if (tp[3] != "") obj$node.label <- tp[3] : missing value where TRUE/FALSE needed 
         phyloi <- ape::read.tree(text= out[[i]]$Phylogeny)
       }
        

@@ -72,6 +72,7 @@ int main() {
     int protracted = 0;
     std::vector<double> airmat(1);
     std::vector<double> soilmat(1);
+    bool prunePhylogeny = 1;
 
     RandomGen ran;
     ran.seedrand(seed); // seed is int while seedrand expects unsigned int
@@ -89,8 +90,12 @@ int main() {
                        redQueen, redQueenStrength, protracted, airmat, soilmat);
     Model.update(runs);
 
-    Model.m_Global->m_Phylogeny.prunePhylogeny(runs);
-    Model.m_Global->m_Phylogeny.writePhylogenyR(1, Model.m_Global->m_Phylogeny.m_PrunedPhylo);
+    if(prunePhylogeny){
+        Model.m_Global->m_Phylogeny.prunePhylogeny(runs);
+        Model.m_Global->m_Phylogeny.writePhylogenyR(1, Model.m_Global->m_Phylogeny.m_PrunedPhylo);
+    }
+
+    Model.m_Global->m_Phylogeny.writePhylogenyR(1, Model.m_Global->m_Phylogeny.m_FullPhylogeny);
 
 //	Model.get_data();
 //	Model.getclimate();
