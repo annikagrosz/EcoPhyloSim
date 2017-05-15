@@ -120,11 +120,11 @@ calculateSummaryStatistics <- function(simulation) {
   # gamma statistics
   # uses ape's implementation of the gammaStatistics
   # attention: only works on ultrametric trees
-  summaryStatistics$gammaStatistics <- ape::gammaStat(simulation$Output[[1]]$phylogeny)
+  summaryStatistics$gammaStatistics <- ape::gammaStat(ape::drop.fossils(simulation$Output[[1]]$phylogeny))
   
   # mean node age
   #summaryStatistics$meanNodeAge <- ape::chronoMPL(simulation$Output[[1]]$phylogeny)
-  summaryStatistics$meanNodeAge <- mean(simulation$Output[[1]]$phylogeny$edge.length)
+  summaryStatistics$meanNodeAge <- mean(ape::drop.fossils(simulation$Output[[1]]$phylogeny)$edge.length)
   
   return(summaryStatistics)
 }
