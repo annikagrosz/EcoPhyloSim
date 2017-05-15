@@ -4,7 +4,7 @@
 #' @param which.result Integer, determines which result should be used. This argument is only usefull if your 'runs' argument in \code{\link{createCompletePar}} contains more than one element. By default, the last result is used.
 #' @param size A single value (or a vector) determining the edge length(s) of the generated subplots
 #' @param n The number of subplots to be generated
-#' @param community Logical, determining whether to generate a communiy table or not. default is FALSE
+#' @param community Logical, determining whether to generate a community table or not. default is FALSE
 #' @param plot Logical, determining whether the results should be shown graphically. Default is FALSE.
 #' @param nested Logical, determinig whether the subplots should be nested (see Details).
 #' @return A list of subplots and (if coomunity = T) a community table with plots in rows and species in collumns
@@ -29,11 +29,15 @@ localPlots <- function(simu, which.result=NULL,size, n, community = FALSE, plot 
   
   matrix <- simu$specMat
   env <- simu$envMat
+  comp <- simu$compMat
+  
   if(plot == T) plotmat <-matrix(0, ncol(matrix), nrow(matrix))
   
   
   subPlots <- list()
   envPlots <- list()
+  compPlots <- list()
+  
   communityTable <- data.frame("species"= numeric())
   count <-0
   
@@ -75,7 +79,8 @@ localPlots <- function(simu, which.result=NULL,size, n, community = FALSE, plot 
       
       
       subPlots[[count]]  <- matrix[rsel, csel]
-      envPlots[[count]] <- env[rsel, csel]    
+      envPlots[[count]] <- env[rsel, csel]
+      compPlots[[count]] <- comp[rsel, csel]
       
       
       if(plot == T){
@@ -121,7 +126,7 @@ localPlots <- function(simu, which.result=NULL,size, n, community = FALSE, plot 
   } 
   
   if(community == T){
-    return(list(subPlots=subPlots, communityTable=communityTable, envPlots=envPlots))
+    return(list(subPlots=subPlots, communityTable=communityTable, envPlots=envPlots, compPlots=compPlots))
   } else return(list(subPlots=subPlots, envPlots=envPlots))
   
 }
