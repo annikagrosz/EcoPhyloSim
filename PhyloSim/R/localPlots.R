@@ -83,8 +83,11 @@ localPlots <- function(simu, which.result=NULL,size, n, community = FALSE, plot 
       envPlots[[count]] <- env[rsel, csel]
       compPlots[[count]] <- comp[rsel, csel]
       
-      # TODO: implement this: sqrt(min(|x1 - x2|, w - |x1 - x2|)^2 + min(|y1 - y2|, h - |y1-y2|)^2)
-      #postions[[count]] <-
+      # TODO: Is this the correct way to calculate the center of a rectangle in a matrix?
+      position <- c(rsel[1] + size[k] / 2 - 0.5, csel[1] + size[k] / 2 - 0.5)
+      positions[[count]] <- c(wrap_coordinates(position[1], limit=length(matrix[1,])),
+                              wrap_coordinates(position[2], limit=length(matrix[,1])))
+      
       
       if(plot == T){
         plotmat[rsel, csel] <- 1
@@ -133,3 +136,5 @@ localPlots <- function(simu, which.result=NULL,size, n, community = FALSE, plot 
   } else return(list(subPlots=subPlots, envPlots=envPlots, compPlots=compPlots, positions=positions))
   
 }
+
+wrap_coordinates <- function(x, limit) if (x > limit) x - limit else if (x <= 0) limit + x else x
