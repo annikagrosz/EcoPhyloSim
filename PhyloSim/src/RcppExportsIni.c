@@ -16,7 +16,7 @@ extern SEXP _PhyloSim_callModel(SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP,
                                SEXP, SEXP, SEXP, SEXP, SEXP);
 
 static const R_CallMethodDef CallEntries[] = {
-  {"PhyloSim_callModel", (DL_FUNC) &_PhyloSim_callModel, 22},
+  {"_PhyloSim_callModel", (DL_FUNC) &_PhyloSim_callModel, 22},
   {NULL, NULL, 0}
 };
 
