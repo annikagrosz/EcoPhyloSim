@@ -6,7 +6,7 @@
 #' @param runs  Integer, Number of generations or sequence of generations the model runs over (see Details). 
 #' @param specRate Integer, Number of Individuals introduced to the community in each generation
 #' @param density Float, determining whether or how strong the density dependence influences the model. By default (density=0) there is no density dependence. The higher the value of the parameter, the stronger is the density dependence.
-#' @param environment Float, determining whether or how strong the environment influences the model.  By default (environment=0) there is no influence of the environment. The higher the value of the parameter, the stronger is the influence of the environment.
+#' @param environment Float, determining whether or how strong the environment influences the model.  By default (environment=0) there is no influence of the environment. The higher the value of the parameter, the stronger is the influence of the environment. Environment value must be between 0 and 1.
 #' @param fitnessActsOn Character, determining how the fitness influences the individuals. Possible inputs are "mortality" (default), "reproduction" or "both"
 #' @param fitnessBaseMortalityRatio Integer, determines the fitness based mortality ratio
 #' @param densityCut Integer, defines the effective range of the competition (ignored if density = FALSE)
@@ -14,7 +14,7 @@
 #' @param protracted Integer, determining the time span in generation new species stays 'incipient' befre turning into a 'good' species. Default is 0.
 #' @param redQueenStrength Float, determining the strength of the Red Queen effect. A value > 0 mean a new species gets a fitness boost due to its novelty.
 #' @param redQueen Float, determining the strength of the fitness decline of an aging species. 
-#' @param airmat Matrix, deteriming the environment of the simulation. airmat needs to be a matrix with the same dimensions as the grid.
+#' @param airmat Matrix, deteriming the environment of the simulation. airmat needs to be a matrix with the same dimensions as the grid. Must be scaled between 0 and 1.
 #' @param seed numerical, sets the random seed
 #' @param type Character, determining which model should be used. "base" is running the default model. Other possibilities are "Leipzig" and "Rneutral" which will run a neutral model purely in R.
 #' @param scenario String, further information you want to add to the parameter set in order to refer to a model run more conveniently. 
