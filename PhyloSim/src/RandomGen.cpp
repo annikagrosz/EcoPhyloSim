@@ -110,12 +110,11 @@ int RandomGen::multinomialDraw(double *chances, int size, double max) {
     double min = 0.0;
     double x = randomDouble(min, max);
 
-    bool go = true;
     int start = 0;
     int end = size;
     int mid = size / 2;
     double midValue = chances[mid];
-    while (go) {
+    while (true) {
         if (x < midValue) {
             end = mid;
             mid = (start + end) / 2;
@@ -137,7 +136,7 @@ int RandomGen::multinomialDraw(double *chances, int size, double max) {
 
 //		//if((midValue < x && chances[mid+1] > x) || (midValue > x && chances[mid-1] < x) || midValue == x || mid == size || mid == 0)
 //		{
-////			std::cout << "go" << ':' << size << ":" << winner << ":" << x << ":" << start<< ":" << mid << ":" << end << '\n';
+//			std::cout << "go" << ':' << size << ":" << winner << ":" << x << ":" << start<< ":" << mid << ":" << end << '\n';
 //			go = false;
 //		}
     }
