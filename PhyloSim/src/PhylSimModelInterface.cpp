@@ -30,7 +30,7 @@ List callModel(int x, int y, int dispersal, IntegerVector runs, double specRate,
                bool mort, int mortStrength, bool repro, int dispersalCutoff, int densityCutoff, int seed,
                double envStrength, double compStrength, int fission, double redQueen, double redQueenStrength,
                int protracted, NumericVector airmatR, NumericVector soilmatR, bool prunePhylogeny) {
-    #ifdef DEBUG
+#ifdef DEBUG
     std::ofstream debugFile;
     debugFile.open("debug.txt");
     std::cout << "Writing parameters to debug.txt..." << ";" << std::endl;
@@ -59,7 +59,7 @@ List callModel(int x, int y, int dispersal, IntegerVector runs, double specRate,
     debugFile << "NumericVector airmatR = " << soilmatR << ";" << std::endl;
     debugFile << "soilmatR = " << soilmatR.begin() <<", " << soilmatR.end() << ";" << std::endl;
     debugFile.close();
-    #endif
+#endif
 
     RandomGen ran;
     ran.seedrand(seed); // seed is int while seedrand expects unsigned int
@@ -111,21 +111,21 @@ List callModel(int x, int y, int dispersal, IntegerVector runs, double specRate,
             phylSimModel.m_Global->m_Phylogeny.prunePhylogeny(runcount);
             std::string phyloPass("\0");
 
-            #ifdef DEBUG
+#ifdef DEBUG
             std::cout << "before writePhylogenyR" << std::endl;
             std::cout << prunePhylogeny << std::endl;
             // consistency checks -> length, etc
-            #endif
-            if(prunePhylogeny){
+#endif
+            if (prunePhylogeny) {
                 phyloPass = phylSimModel.m_Global->m_Phylogeny.writePhylogenyR(1,
                                                                                phylSimModel.m_Global->m_Phylogeny.m_PrunedPhylo);
-            }else{
+            } else {
                 phyloPass = phylSimModel.m_Global->m_Phylogeny.writePhylogenyR(1,
                                                                                phylSimModel.m_Global->m_Phylogeny.m_FullPhylogeny);
             }
-            #ifdef DEBUG
+#ifdef DEBUG
             std::cout << "after writePhylogenyR" << std::endl;
-            #endif
+#endif
             char *cstr = new char[phyloPass.length() + 1];
             std::strcpy(cstr, phyloPass.c_str());
             phyloOut[0] = cstr;
@@ -146,12 +146,12 @@ List callModel(int x, int y, int dispersal, IntegerVector runs, double specRate,
 
             std::string phyloPass("\0");
 
-            if(prunePhylogeny){
+            if (prunePhylogeny) {
                 phyloPass = phylSimModel.m_Local->m_Phylogeny.writePhylogenyR(1,
-                                                                               phylSimModel.m_Local->m_Phylogeny.m_PrunedPhylo);
-            }else{
+                                                                              phylSimModel.m_Local->m_Phylogeny.m_PrunedPhylo);
+            } else {
                 phyloPass = phylSimModel.m_Local->m_Phylogeny.writePhylogenyR(1,
-                                                                               phylSimModel.m_Local->m_Phylogeny.m_FullPhylogeny);
+                                                                              phylSimModel.m_Local->m_Phylogeny.m_FullPhylogeny);
             }
 
             char *cstr = new char[phyloPass.length() + 1];

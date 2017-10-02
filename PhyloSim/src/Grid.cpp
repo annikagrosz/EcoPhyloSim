@@ -250,6 +250,8 @@ void GlobalEnvironment::reproduce(unsigned int generation) {
     // NEUTRAL CASE
 
     if (m_Neutral && (m_redQueen == 0) && (m_redQueenStrength == 0)) {
+
+
 #ifdef DEBUG
         std::cout << "In global neutral \n";
 #endif
@@ -298,7 +300,7 @@ void GlobalEnvironment::reproduce(unsigned int generation) {
 //      double averageCompetitionTrait = 0;
 //      double spread = 0;
 
-        std::vector<std::pair<int, int> > parents(m_LandscapeSize);
+        std::vector <std::pair<int, int>> parents(m_LandscapeSize);
 
         double weights[m_LandscapeSize];
         double cumWeights[m_LandscapeSize];
@@ -358,7 +360,8 @@ void GlobalEnvironment::reproduce(unsigned int generation) {
             int x_coordinate = m_RandomGenerator.randomInt(0, m_Xdimensions - 1);
             int y_coordinate = m_RandomGenerator.randomInt(0, m_Ydimensions - 1);
 
-            if (event % m_mortalityStrength != 0 && m_mortality) {
+            // check if the individual may not die after all 
+            if (m_mortality && event % m_mortalityStrength != 0) {
                 double weight = m_Individuals[x_coordinate][y_coordinate].getFitness(
                         m_Environment[x_coordinate * m_Ydimensions + y_coordinate].first, m_Env, m_DD, generation,
                         m_redQueenStrength, m_redQueen);
@@ -369,6 +372,8 @@ void GlobalEnvironment::reproduce(unsigned int generation) {
                     continue;
                 }
             }
+
+            // continue with a real death here
             numberDeath++;
 
             m_Individuals[x_coordinate][y_coordinate].reportDeath(generation);
@@ -382,7 +387,10 @@ void GlobalEnvironment::reproduce(unsigned int generation) {
             x_parent = parents[new_parent].first;
             y_parent = parents[new_parent].second;
 
-            m_Individuals[x_coordinate][y_coordinate] = m_Individuals[x_parent][y_parent];  // overloaded operator, deep copy ! // report birth and evolve is automatic
+            m_Individuals[x_coordinate][y_coordinate] = m_Individuals[x_parent][y_parent];  // overloaded operator, deep copy ! 
+
+
+            // TODO: old comment was: 'report birth and evolve is automatic' -> this is wrong, neither evolve nor report birth are automatic. Evolve is below, what about report birth
             m_Individuals[x_coordinate][y_coordinate].m_X_coordinate = x_coordinate;
             m_Individuals[x_coordinate][y_coordinate].m_Y_coordinate = y_coordinate;
 
@@ -642,7 +650,7 @@ void LocalEnvironment::reproduce(unsigned int generation) {
         ////////////////////////////////////////////
         // DISPERSAL
 
-        std::vector<std::pair<int, int> > parents(m_KernelSize);
+        std::vector <std::pair<int, int>> parents(m_KernelSize);
 
         double weights[m_KernelSize];
         array_length = 0;
@@ -754,10 +762,10 @@ void Landscape::speciation(unsigned int generation) {
         int x = m_RandomGenerator.randomInt(0, m_Xdimensions - 1); // rand() % xdimensions;
         int y = m_RandomGenerator.randomInt(0, m_Ydimensions - 1); // rand() % ydimensions;
 
-        #ifdef DEBUG
+#ifdef DEBUG
         std::cout << "new species at:" << std::endl;
         std::cout << "x: " << x << "; y: " << y << std::endl;
-        #endif
+#endif
 
         // In every case the counter for the incipient ages set to zero.
         // This value is updated every time step. Which individuals are chosen is dependent on the

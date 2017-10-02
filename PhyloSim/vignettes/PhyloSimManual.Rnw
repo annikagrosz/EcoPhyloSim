@@ -71,6 +71,7 @@ render_listings()
 \author{}
 
 \begin{document}
+\SweaveOpts{concordance=TRUE}
 %\SweaveOpts{concordance=TRUE}
 \let\cleardoublepage\clearpage % No empty pages between chapters
 %\includegraphics[width=10cm]{PlotSpatial}  

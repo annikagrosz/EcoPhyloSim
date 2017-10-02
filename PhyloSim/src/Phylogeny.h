@@ -17,22 +17,27 @@
 
 
 class Phylogeny {
- public:
-	Phylogeny();
-	~Phylogeny();
-	std::multimap<unsigned long long, Species*> *m_FullPhylogeny;
-	std::multimap<unsigned long long, Species*> *m_PrunedPhylo;
-	void updatePhylogeny(Species * spec);
+public:
+    Phylogeny();
 
-	void writePhylogeny(unsigned long long start, 
-  std::multimap<unsigned long long, Species*> *phylogenyMap, char suffix);
+    ~Phylogeny();
 
-	std::string writePhylogenyR(unsigned long long start, 
-	      std::multimap<unsigned long long, Species*> *phylogenyMap);
+    std::multimap<unsigned long long, Species *> *m_FullPhylogeny;
+    std::multimap<unsigned long long, Species *> *m_PrunedPhylo;
 
-	void writeSpeciesData();
-	void prunePhylogeny(int current);
-	std::vector<Species*> specVec;
+    void updatePhylogeny(Species *spec);
+
+    void writePhylogeny(unsigned long long start,
+                        std::multimap<unsigned long long, Species *> *phylogenyMap, char suffix);
+
+    std::string writePhylogenyR(unsigned long long start,
+                                std::multimap<unsigned long long, Species *> *phylogenyMap);
+
+    void writeSpeciesData();
+
+    void prunePhylogeny(int current);
+
+    std::vector<Species *> specVec;
 };
 
 #endif /* PHYLOGENY_H_ */

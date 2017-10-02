@@ -7,36 +7,35 @@
 
 #include "RandomGen.h"
 
-RandomGen::RandomGen(){
-
-}
-RandomGen::~RandomGen(){
+RandomGen::RandomGen() {
 
 }
 
-std::default_random_engine & RandomGen::my_engine( )
-{
- static std::default_random_engine e;
- return e;
+RandomGen::~RandomGen() {
+
+}
+
+std::default_random_engine &RandomGen::my_engine() {
+    static std::default_random_engine e;
+    return e;
 }
 
 void RandomGen::seedrand(unsigned int s) { my_engine().seed(s); }
 
-double RandomGen::randomDouble(double min, double max)
-{
-	 std::uniform_real_distribution<double> unif(min,max);
-	 return unif(my_engine());
+double RandomGen::randomDouble(double min, double max) {
+    std::uniform_real_distribution<double> unif(min, max);
+    return unif(my_engine());
 }
 
 
-int RandomGen::randomInt(int min, int max){
-	std::uniform_int_distribution<int>unif(min, max);
-	return unif(my_engine());
+int RandomGen::randomInt(int min, int max) {
+    std::uniform_int_distribution<int> unif(min, max);
+    return unif(my_engine());
 }
 
-int RandomGen::randomPoisson(double mean){
-std::poisson_distribution<int>pois(mean);
-return pois(my_engine());
+int RandomGen::randomPoisson(double mean) {
+    std::poisson_distribution<int> pois(mean);
+    return pois(my_engine());
 }
 // n is the size of pvals
 // return is of size N
@@ -106,35 +105,32 @@ return pois(my_engine());
 // Chances need to be a cummulative function, unnormalized
 // Would like to check this again in detail
 
-int RandomGen::multinomialDraw(double * chances, int size, double max)
-{
+int RandomGen::multinomialDraw(double *chances, int size, double max) {
 
-	double min = 0.0;
-	double x = randomDouble(min, max);
+    double min = 0.0;
+    double x = randomDouble(min, max);
 
-	bool go = true;
-	int start = 0;
-	int end = size;
-	int mid = size/2;
-	double midValue = chances[mid];
-	while(go)
-	{
-		if(x < midValue)
-		{
-			end = mid;
-			mid = (start+end)/2;
-			midValue = chances[mid];
-		}else{
-			start = mid;
-			mid = (start+end)/2;
-			midValue = chances[mid];
-		}
+    bool go = true;
+    int start = 0;
+    int end = size;
+    int mid = size / 2;
+    double midValue = chances[mid];
+    while (go) {
+        if (x < midValue) {
+            end = mid;
+            mid = (start + end) / 2;
+            midValue = chances[mid];
+        } else {
+            start = mid;
+            mid = (start + end) / 2;
+            midValue = chances[mid];
+        }
 
-		//if (mid == 0) return mid;
-		if (start == mid){
-			if (mid == 0 && x < midValue ) return 0;
-			else return mid + 1;
-		}
+        //if (mid == 0) return mid;
+        if (start == mid) {
+            if (mid == 0 && x < midValue) return 0;
+            else return mid + 1;
+        }
 
 
 
@@ -144,22 +140,20 @@ int RandomGen::multinomialDraw(double * chances, int size, double max)
 ////			std::cout << "go" << ':' << size << ":" << winner << ":" << x << ":" << start<< ":" << mid << ":" << end << '\n';
 //			go = false;
 //		}
-	}
-	return 1;
+    }
+    return 1;
 }
 
 
-int callRandomGenRandomPoisson(double* x, double* out )
-{
-	RandomGen r;
-	out[0] = r.randomPoisson(x[0]);
-	return out[0];
+int callRandomGenRandomPoisson(double *x, double *out) {
+    RandomGen r;
+    out[0] = r.randomPoisson(x[0]);
+    return out[0];
 }
 
 
-int callMultinomialDraw(double *chances, int size, double max, int* out)
-{
-	RandomGen r;
-	out[0] = r.multinomialDraw(chances, size, max);
-	return out[0];
+int callMultinomialDraw(double *chances, int size, double max, int *out) {
+    RandomGen r;
+    out[0] = r.multinomialDraw(chances, size, max);
+    return out[0];
 }

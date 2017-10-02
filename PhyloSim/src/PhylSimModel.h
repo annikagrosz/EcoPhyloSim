@@ -15,24 +15,30 @@
 #include "Grid.h"
 
 class PhylSimModel {
- public:
-   int m_Dispersal;
-   int m_X_coordinate;
-   int m_Y_coordinate;
-   int timeStep;
-   // TODO FH I don't see a compelling reason to implement this as pointers, move to normal class fields?
-   GlobalEnvironment* m_Global;
-   LocalEnvironment* m_Local;
+public:
+    int m_Dispersal;
+    int m_X_coordinate;
+    int m_Y_coordinate;
+    int timeStep;
+    // TODO FH I don't see a compelling reason to implement this as pointers, move to normal class fields?
+    GlobalEnvironment *m_Global;
+    LocalEnvironment *m_Local;
 
-   PhylSimModel(int x, int y, int dispersal, int simulationEnd, double specRate, bool dens, 
-               bool env, bool neutral, bool mort, int mortStrength, bool repro, int dispersalCutoff, 
-               int densityCutoff,std::string saveLocation, double envStrength, double compStrength,
-			   int fission, double redQueen, double redQueenStrength, int protracted, std::vector<double> airmat, std::vector<double> soilmat);
-   ~PhylSimModel();
-   void get_data();
-   void getclimate();
-   void update(unsigned int runs);
-   void gettraits();
+    PhylSimModel(int x, int y, int dispersal, int simulationEnd, double specRate, bool dens,
+                 bool env, bool neutral, bool mort, int mortStrength, bool repro, int dispersalCutoff,
+                 int densityCutoff, std::string saveLocation, double envStrength, double compStrength,
+                 int fission, double redQueen, double redQueenStrength, int protracted, std::vector<double> airmat,
+                 std::vector<double> soilmat);
+
+    ~PhylSimModel();
+
+    void get_data();
+
+    void getclimate();
+
+    void update(unsigned int runs);
+
+    void gettraits();
 
 
 private:
