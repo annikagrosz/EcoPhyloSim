@@ -29,7 +29,7 @@ using namespace Rcpp;
 List callModel(int x, int y, int dispersal, IntegerVector runs, double specRate, bool dens, bool env, bool neutral,
                bool mort, int mortStrength, bool repro, int dispersalCutoff, int densityCutoff, int seed,
                double envStrength, double compStrength, int fission, double redQueen, double redQueenStrength,
-               int protracted, NumericVector airmatR, NumericVector soilmatR) {
+               int protracted, NumericVector airmatR, NumericVector soilmatR, bool prunePhylogeny) {
     #ifdef DEBUG
     std::ofstream debugFile;
     debugFile.open("debug.txt");
@@ -113,10 +113,16 @@ List callModel(int x, int y, int dispersal, IntegerVector runs, double specRate,
 
             #ifdef DEBUG
             std::cout << "before writePhylogenyR" << std::endl;
+            std::cout << prunePhylogeny << std::endl;
             // consistency checks -> length, etc
             #endif
-            phyloPass = phylSimModel.m_Global->m_Phylogeny.writePhylogenyR(1,
-                                                                           phylSimModel.m_Global->m_Phylogeny.m_PrunedPhylo);
+            if(prunePhylogeny){
+                phyloPass = phylSimModel.m_Global->m_Phylogeny.writePhylogenyR(1,
+                                                                               phylSimModel.m_Global->m_Phylogeny.m_PrunedPhylo);
+            }else{
+                phyloPass = phylSimModel.m_Global->m_Phylogeny.writePhylogenyR(1,
+                                                                               phylSimModel.m_Global->m_Phylogeny.m_FullPhylogeny);
+            }
             #ifdef DEBUG
             std::cout << "after writePhylogenyR" << std::endl;
             #endif
@@ -138,9 +144,15 @@ List callModel(int x, int y, int dispersal, IntegerVector runs, double specRate,
             }
             phylSimModel.m_Local->m_Phylogeny.prunePhylogeny(runcount);
 
-            std::string phyloPass = phylSimModel.m_Local->m_Phylogeny.writePhylogenyR(1,
-                                                                                      phylSimModel.m_Local->m_Phylogeny.m_PrunedPhylo);
+            std::string phyloPass("\0");
 
+            if(prunePhylogeny){
+                phyloPass = phylSimModel.m_Local->m_Phylogeny.writePhylogenyR(1,
+                                                                               phylSimModel.m_Local->m_Phylogeny.m_PrunedPhylo);
+            }else{
+                phyloPass = phylSimModel.m_Local->m_Phylogeny.writePhylogenyR(1,
+                                                                               phylSimModel.m_Local->m_Phylogeny.m_FullPhylogeny);
+            }
 
             char *cstr = new char[phyloPass.length() + 1];
             std::strcpy(cstr, phyloPass.c_str());

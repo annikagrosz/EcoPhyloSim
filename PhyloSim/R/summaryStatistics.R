@@ -18,8 +18,13 @@ calculateSummaryStatistics <- function(simulation) {
                             sacAuc=NA,
                             alphaDiversity = NA,
                             betaDiversity = NA,
+                            gammaDiversity = NA,
                             imbalance = NA,
-                            dispersion = NA)
+                            dispersion = NA,
+                            gammaStatistics = NA,
+                            meanNodeAge = NA,
+                            varPart_1 = NA,
+                            varPart_2 = NA)
   
   # TODO: implement special case: only 1 species
   if (is.double(simulation$Output[[1]]$phylogeny)) {
@@ -62,6 +67,8 @@ calculateSummaryStatistics <- function(simulation) {
   summaryStatistics$betaDiversity <- mean(vegan::betadiver(plots$communityTable,
                                                            method=method))
   
+  # gamma diversity
+  summaryStatistics$gammaDiversity <- gammaDiversity(simulation)
   
   # phylogenetic imbalance
   # uses apTreeshape's colless function
@@ -103,13 +110,71 @@ calculateSummaryStatistics <- function(simulation) {
   # phylogenetic dispersion
   # uses PhyloMeasures' implementation of the NRI
   
-  # Causes error. Drop fossil seems to drop clades that are no real fossils?!
+  # Commented code below causes error. Drop fossil seems to drop clades that are no real fossils?!
   #summaryStatistics$dispersion <- mean(PhyloMeasures::mpd.query(ape::drop.fossil(simulation$Output[[1]]$phylogeny),
   #                                                              plots$communityTable,
   #                                                              standardize = TRUE))
+  
   summaryStatistics$dispersion <- mean(PhyloMeasures::mpd.query(simulation$Output[[1]]$phylogeny,
                                                                 plots$communityTable,
                                                                 standardize = TRUE))
   
+  # gamma statistics
+  # uses ape's implementation of the gammaStatistics
+  # attention: only works on ultrametric trees
+  summaryStatistics$gammaStatistics <- ape::gammaStat(ape::drop.fossil(simulation$Output[[1]]$phylogeny))
+  
+  # mean node age
+  #summaryStatistics$meanNodeAge <- ape::chronoMPL(simulation$Output[[1]]$phylogeny)
+  summaryStatistics$meanNodeAge <- mean(ape::drop.fossil(simulation$Output[[1]]$phylogeny)$edge.length)
+  
+  
+  # variation partitioning
+  #distance_matrix <- distances(plots$positions, limits=c(nrow(simulation$Output[[1]]$specMat), ncol(simulation$Output[[1]]$specMat)))
+  env <- data.frame(unlist(lapply(plots$envPlots, mean)))
+  comp <- data.frame(unlist(lapply(plots$compPlots, mean)))
+  
+  #mod <- vegan::varpart(plots$communityTable, as.dist(distance_matrix), env, comp)
+  mod <- vegan::varpart(plots$communityTable, env, comp)
+  
+  summaryStatistics$varPart_1 <- mod$part$fract$Adj.R.squared[1]
+  summaryStatistics$varPart_2 <- mod$part$fract$Adj.R.squared[1]
+  
   return(summaryStatistics)
+}
+
+gammaDiversity <- function(simulation, q=0){
+  spec_vector <- c(simulation$Output[[1]]$specMat)
+  specs <- unique(spec_vector)
+  n_specs <- length(specs)
+  
+  if (q == 0) return(n_specs)
+  
+  n_individuals <- length(spec_vector)
+  
+  prop_abundances <- rep(NA, length(specs))
+  
+  for(i in 1:length(specs)){
+    prop_abundances[i] <- sum(spec_vector == specs[i]) / n_individuals
+  }
+  
+  gamma <- prop_abundances * prop_abundances^(q-1)
+  gamma <- sum(gamma)^(1/(q-1))
+  gamma <- 1/gamma
+  return(gamma)
+}
+
+distances <- function(positions, limits){
+  distance <- function(a, b, limits){
+    # sqrt(min(|x1 - x2|, w - |x1 - x2|)^2 + min(|y1 - y2|, h - |y1-y2|)^2)
+    return(sqrt(min(abs(a[1]-b[1]), limits[1] - abs(a[1]-b[1]))^2 + min(abs(a[2]-b[2]), limits[2] - abs(a[2]-b[2]))^2))
+  }
+  dist_mat <- matrix(0, ncol=length(positions), nrow=length(positions))
+  # TODO: maybe there is a better way to implement this instead of a for loop
+  for(i in 1:nrow(dist_mat)){
+    for(j in 1:ncol(dist_mat)){
+      dist_mat[i,j] <- distance(positions[[i]], positions[[j]], limits=limits)
+    }
+  }
+  return(dist_mat)
 }

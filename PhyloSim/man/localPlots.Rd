@@ -16,11 +16,11 @@ localPlots(simu, which.result = NULL, size, n, community = FALSE,
 
 \item{n}{The number of subplots to be generated}
 
-\item{community}{Logical, determining whether to generate a communiy table or not. default is FALSE}
+\item{community}{Logical, determining whether to generate a community table or not. default is FALSE}
 
 \item{plot}{Logical, determining whether the results should be shown graphically. Default is FALSE.}
 
-\item{nested}{Logical, determinig whether the subplots should be nested (see Details).}
+\item{nested}{Logical, determining whether the subplots should be nested (see Details).}
 }
 \value{
 A list of subplots and (if coomunity = T) a community table with plots in rows and species in collumns

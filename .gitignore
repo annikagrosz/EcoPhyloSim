@@ -78,3 +78,7 @@ PhyloSim/inst/doc/PhyloSimManual.Rnw
 PhyloSim/inst/doc/PhyloSimManual.R
 
 PhyloSim/inst/doc/PhyloSimManual.pdf
+*.aux
+*.idea
+CMakeFiles
+cmake-build-debug

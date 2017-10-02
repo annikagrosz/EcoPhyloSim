@@ -10,13 +10,15 @@ See also comments here https://github.com/florianhartig/BayesianTools/issues/31
 */
 
 /* .Call calls */
+// every parameter passed to callModel must be represented as SEXP here
+// the number of parameters must be passed to CallEntries
 extern SEXP _PhyloSim_callModel(SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP,
                                SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP,
                                SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP,
-                               SEXP, SEXP, SEXP, SEXP, SEXP);
+                               SEXP, SEXP, SEXP, SEXP, SEXP, SEXP);
 
 static const R_CallMethodDef CallEntries[] = {
-  {"_PhyloSim_callModel", (DL_FUNC) &_PhyloSim_callModel, 22},
+  {"_PhyloSim_callModel", (DL_FUNC) &_PhyloSim_callModel, 23},
   {NULL, NULL, 0}
 };
 

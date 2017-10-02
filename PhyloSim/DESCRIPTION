@@ -27,7 +27,10 @@ Imports:
     adephylo,
     fields,
     shape,
-    foreach
+    foreach,
+    MESS,
+    apTreeshape,
+    PhyloMeasures
 Suggests:
     knitr
 LinkingTo: Rcpp
