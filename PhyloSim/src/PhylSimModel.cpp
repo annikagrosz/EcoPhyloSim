@@ -24,7 +24,6 @@ PhylSimModel::PhylSimModel(int X, int Y, int dispersal, int simulationEnd, doubl
                            double redQueen, double redQueenStrength, int protracted, std::vector<double> airmat,
                            std::vector<double> soilmat) {
 
-
 #ifdef DEBUG
     std::cout<<"Running simulation with \n";
     std::cout<<"Dispersal "<< dispersal << "; cutoff " << dispersalCutoff <<  "\n";
@@ -32,7 +31,6 @@ PhylSimModel::PhylSimModel(int X, int Y, int dispersal, int simulationEnd, doubl
     std::cout<<"Environment "<< env << "; strength " << envStrength<<  "\n";
     std::cout<<"\n---- debug message for development purposes, remove debug switch in debug.h for turning this off \n\n";
 #endif
-
 
     if (dispersal == 1) {
         m_Global = new GlobalEnvironment(X, Y, dispersal, neutral, dens, env, mort, repro, simulationEnd, specRate,
@@ -64,8 +62,7 @@ void PhylSimModel::update(unsigned int runs) {
 
 #ifdef DEBUG
         if(generation % 1000 == 0){
-           //  	std::cout << '\n';
-          // std::cout << "generation :" <<  generation << '/' << runs << '\n';
+          std::cout << "generation :" <<  generation << '/' << runs << '\n';
         }
 #endif
 
@@ -83,16 +80,6 @@ void PhylSimModel::update(unsigned int runs) {
     }
     timeStep += runs;
 }
-
-
-
-
-
-//! Public class method to increase age of all individuals by one
-/*!
-  \return void
- */
-
 
 //void model::get_data(){
 //
@@ -119,8 +106,6 @@ void PhylSimModel::getclimate() {
     }
 
 }
-
-
 
 //void model::gettraits(){
 //	std::ofstream trait_matrix("..\\trait_out.txt");

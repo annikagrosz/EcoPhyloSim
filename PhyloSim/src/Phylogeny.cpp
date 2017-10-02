@@ -17,12 +17,8 @@
 #include <utility>
 
 Phylogeny::Phylogeny() {
-    m_PrunedPhylo = new std::multimap < unsigned
-    long
-    long, Species * > ();
-    m_FullPhylogeny = new std::multimap < unsigned
-    long
-    long, Species * > ();
+    m_PrunedPhylo = new std::multimap<unsigned long long, Species*>();
+    m_FullPhylogeny = new std::multimap<unsigned long long, Species*>();
 }
 
 Phylogeny::~Phylogeny() {
@@ -68,10 +64,7 @@ void Phylogeny::prunePhylogeny(int current) {
     for (unsigned long long i = 1; i <= m_FullPhylogeny->size(); i++) {
         Species *specp = new Species(*m_FullPhylogeny->find(i)->second);
         if (specp->m_Date_of_Extinction > current) specp->m_Date_of_Extinction = current;
-        m_PrunedPhylo->insert(std::pair < unsigned
-        long
-        long, Species * > (specp->m_ID, specp));
-
+        m_PrunedPhylo->insert(std::pair <unsigned long long, Species*> (specp->m_ID, specp));
     }
 
 

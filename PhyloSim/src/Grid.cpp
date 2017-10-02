@@ -258,7 +258,7 @@ void GlobalEnvironment::reproduce(unsigned int generation) {
 
         int x_coordinate, y_coordinate, x_parent, y_parent;
 
-        //			srand(time(0));
+        //srand(time(0));
         for (unsigned int event = 0; event < m_LandscapeSize; event++) {
 
             x_coordinate = m_RandomGenerator.randomInt(0, m_Xdimensions - 1);
@@ -267,7 +267,7 @@ void GlobalEnvironment::reproduce(unsigned int generation) {
             x_parent = m_RandomGenerator.randomInt(0, m_Xdimensions - 1);
             y_parent = m_RandomGenerator.randomInt(0, m_Ydimensions - 1);
 
-            //				std::cout << x_coordinate << "::" << x_parent << "::" << y_coordinate << "::" << y_parent << '\n';
+            //std::cout << x_coordinate << "::" << x_parent << "::" << y_coordinate << "::" << y_parent << '\n';
 
             m_Individuals[x_coordinate][y_coordinate].reportDeath(generation);
 
@@ -297,8 +297,8 @@ void GlobalEnvironment::reproduce(unsigned int generation) {
         int new_parent = 0;
         unsigned int array_length;
 
-//      double averageCompetitionTrait = 0;
-//      double spread = 0;
+        //double averageCompetitionTrait = 0;
+        //double spread = 0;
 
         std::vector <std::pair<int, int>> parents(m_LandscapeSize);
 
@@ -398,8 +398,6 @@ void GlobalEnvironment::reproduce(unsigned int generation) {
 
             parents[x_coordinate * m_Ydimensions + y_coordinate].first = x_coordinate;
             parents[x_coordinate * m_Ydimensions + y_coordinate].second = y_coordinate;
-
-
 
             // start reproduction updates
             // this seems to be suboptimally programmed at the moment
@@ -632,8 +630,8 @@ void LocalEnvironment::reproduce(unsigned int generation) {
 
         // If fitness acts on mortality, break here with a chance ~ fitness
 
-        if (m_mortality && event % m_mortalityStrength !=
-                           0) { // important!! the frequency in relation to the base mortality controls the intensity of the mechanisms
+        // important!! the frequency in relation to the base mortality controls the intensity of the mechanisms
+        if (m_mortality && event % m_mortalityStrength != 0) {
             double weight = m_Individuals[x_coordinate][y_coordinate].getFitness(
                     m_Environment[x_coordinate * m_Ydimensions + y_coordinate].first, m_Env, m_DD, generation,
                     m_redQueenStrength, m_redQueen);
