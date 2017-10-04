@@ -113,7 +113,7 @@ Landscape::Landscape(int xsize, int ysize, int type, bool neutral, bool dd, bool
     // Create new initial species
     Species *spec = new Species(1, 1, 0, std::make_pair<int, int>(0, 0), m_SimulationEnd);
 
-    // Add individuas of this new species across the grid
+    // Add individuals of this new species across the grid
     for (int cols = 0; cols < m_Xdimensions; cols++) {
         for (int rows = 0; rows < m_Ydimensions; rows++) {
             this->m_Individuals[cols][rows].m_Species = spec;
@@ -248,7 +248,6 @@ void GlobalEnvironment::reproduce(unsigned int generation) {
 
     /////////////////////////////////////////////////////
     // NEUTRAL CASE
-
     if (m_Neutral && (m_redQueen == 0) && (m_redQueenStrength == 0)) {
 
 
@@ -279,10 +278,10 @@ void GlobalEnvironment::reproduce(unsigned int generation) {
         }
     }
 
-        /////////////////////////////////////////////////////
-        // NON-NEUTRAL CASE
-
-    else // Density dependence and / or Environmental dependence
+    /////////////////////////////////////////////////////
+    // NON-NEUTRAL CASE
+    // Density dependence and / or Environmental dependence
+    else
     {
 
 #ifdef DEBUG
@@ -300,12 +299,11 @@ void GlobalEnvironment::reproduce(unsigned int generation) {
         //double averageCompetitionTrait = 0;
         //double spread = 0;
 
-        std::vector <std::pair<int, int>> parents(m_LandscapeSize);
-
         double weights[m_LandscapeSize];
         double cumWeights[m_LandscapeSize];
 
-
+        // all possible parent permutations
+        std::vector <std::pair<int, int>> parents(m_LandscapeSize);
         int count = 0;
         for (int x = 0; x < m_Xdimensions; x++) {
             for (int y = 0; y < m_Ydimensions; y++) {
@@ -338,10 +336,9 @@ void GlobalEnvironment::reproduce(unsigned int generation) {
             cumWeights[0] = weights[0];
             for (unsigned int i = 1; i < m_LandscapeSize; i++) {
                 cumWeights[i] = weights[i] + cumWeights[i - 1];
-
             }
 
-        }
+        } // END  if (m_reproduction)
 
         //if(m_mortality) numberOfRuns = m_LandscapeSize*2;
         //else numberOfRuns = m_LandscapeSize;
@@ -360,7 +357,8 @@ void GlobalEnvironment::reproduce(unsigned int generation) {
             int x_coordinate = m_RandomGenerator.randomInt(0, m_Xdimensions - 1);
             int y_coordinate = m_RandomGenerator.randomInt(0, m_Ydimensions - 1);
 
-            // check if the individual may not die after all 
+            // check if individual's fitness is high enough to survive
+            // every m_mortalityStrength'th step the randomly chosen individual dies, no matter its fitness
             if (m_mortality && event % m_mortalityStrength != 0) {
                 double weight = m_Individuals[x_coordinate][y_coordinate].getFitness(
                         m_Environment[x_coordinate * m_Ydimensions + y_coordinate].first, m_Env, m_DD, generation,
@@ -446,10 +444,7 @@ void GlobalEnvironment::reproduce(unsigned int generation) {
 //        }
 //      }
 
-
             if (!m_reproduction && m_DD) densityUpdate(x_coordinate, y_coordinate);
-
-
 
             // only if env and dens affect reproduction
             if (m_reproduction) {
@@ -568,12 +563,9 @@ void GlobalEnvironment::reproduce(unsigned int generation) {
 //              //					std::cout << seedSum << " : " << cumWeights[array_length-1] << " : " << array_length-1  << " : " << start  << " : " << end <<  '\n';
 //           }
 //         
-            }
-            // end reproduction calculations
-
-            //				std::cout << seedSum << " : " << cumWeights[array_length-1] << " : " << array_length-1 <<  '\n';
-
-        }
+            } // END if (m_reproduction)
+            //std::cout << seedSum << " : " << cumWeights[array_length-1] << " : " << array_length-1 <<  '\n';
+        } // END while (numberDeath < numberOfRuns)
     }
 }
 
@@ -706,7 +698,7 @@ void LocalEnvironment::reproduce(unsigned int generation) {
         // UPDATE RELATEDNESS
 
         if (m_DD) densityUpdate(x_coordinate, y_coordinate);
-    }
+    } // END while (numberDeath < numberOfRuns)
 }
 
 // update the density around an individual with 
@@ -850,8 +842,7 @@ void Landscape::speciation(unsigned int generation) {
 
                     for (int z = 0; z < m_Xdimensions; z++) {
                         for (int q = 0; q < m_Ydimensions; q++) {
-                            if ((m_Individuals[z][q].m_incip_Age == m_protracted) &&
-                                (m_Individuals[z][q].m_Species->m_ID == oldspec)) {
+                            if ((m_Individuals[z][q].m_incip_Age == m_protracted) && (m_Individuals[z][q].m_Species->m_ID == oldspec)) {
                                 m_Individuals[z][q].reportDeath(generation);
                                 m_Individuals[z][q].m_Species = m_Individuals[k][j].m_Species;
                                 m_Individuals[z][q].evolveDuringSpeciation();
