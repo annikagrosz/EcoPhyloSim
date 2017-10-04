@@ -47,7 +47,7 @@ public:
 //	double m_FitnessWeight;
 //	int m_Weight;
 
-    double m_Variance;
+    double m_nicheWidth;
     double m_Mean;
     double m_CompetitionMarker;
     double m_NeutralMarker;

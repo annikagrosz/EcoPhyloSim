@@ -30,23 +30,22 @@ Individual::Individual() {
     //this ->m_Weight = 1.0;
     // END OBSOLETE
 
-    this->m_Variance = 0.03659906;
-    this->m_Mean = 0.5;
-    this->m_CompetitionMarker = 0.5;
-    this->m_NeutralMarker = 0.5;
+    this->m_nicheWidth = 0.03659906; // environmental niche width, see getFitness
+    this->m_Mean = 0.5; // environmental trait
+    this->m_CompetitionMarker = 0.5; // competition trait
+    this->m_NeutralMarker = 0.5; // neutral trait
 
     this->m_envStrength = 1;
     this->m_compStrength = 1;
 
     this->m_dispersalDistance = 0.0; // parameter for dispersal kernel
-
 }
 
 // COPY CONSTRUCTOR
 // better change the overload below to deep copy
 Individual::Individual(const Individual &ind) {
 
-    std::cout << "CHEKC IF THIS WORKS" << std::endl;
+    std::cout << "CHECK IF THIS WORKS" << std::endl;
 
     this->m_Species = ind.m_Species;
     this->m_X_coordinate = ind.m_X_coordinate;
@@ -57,7 +56,7 @@ Individual::Individual(const Individual &ind) {
 //	this -> m_FitnessWeight = ind.m_FitnessWeight;
 //	this -> m_DensityStrength = ind.m_DensityStrength;
 //	this -> m_Weight = ind.m_Weight;
-    this->m_Variance = ind.m_Variance;
+    this->m_nicheWidth = ind.m_nicheWidth;
     this->m_Mean = ind.m_Mean;
 
     this->m_CompetitionMarker = ind.m_CompetitionMarker;
@@ -88,7 +87,7 @@ void Individual::operator=(const Individual &ind) {
 //	this -> m_DensityStrength = ind.m_DensityStrength;
 //	this -> m_Weight = ind.m_Weight;
 
-    this->m_Variance = ind.m_Variance;
+    this->m_nicheWidth = ind.m_nicheWidth;
 
     this->m_Mean = ind.m_Mean;
     this->m_CompetitionMarker = ind.m_CompetitionMarker;
@@ -144,15 +143,11 @@ double Individual::getSeedsTo(int rel_x, int rel_y, int dispersal_type, double t
 * @param dd density acting
 * @return Fitness
 */
-double
-Individual::getFitness(double temp, bool env, bool dd, int generation, double redQueenStrength, double redQueen) {
-    double out = (DBL_MIN * 100.0);
-    if (env)
-        out += m_envStrength * exp(-0.5 * pow((temp - m_Mean) / m_Variance, 2.0)) + 1 -
-               m_envStrength; // environmental niche
+double Individual::getFitness(double temp, bool env, bool dd, int generation, double redQueenStrength, double redQueen) {
+    double out = (DBL_MIN * 100.0); // TODO: Why this?
+
+    if (env) out += m_envStrength * exp(-0.5 * pow((temp - m_Mean) / m_nicheWidth, 2.0)) + 1 - m_envStrength; // environmental niche
     if (dd) out += m_compStrength * m_LocalDensity + 1 - m_compStrength + (DBL_MIN * 100.0);
-
-
 
     // Implementation of the redQueen Mechanism
     if ((redQueenStrength != 0) || (redQueen != 0)) {
@@ -252,7 +247,7 @@ void Individual::evolveDuringSpeciation() {
     m_Species->m_FirstComp = m_CompetitionMarker;
     m_Species->m_FirstNeutral = m_NeutralMarker;
 
-    reportBirth();
+    reportBirth(); // ATTENTION: reportBirth is called here!
 
 }
 
