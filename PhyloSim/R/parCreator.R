@@ -8,7 +8,7 @@
 #' @param density Float, determining whether or how strong the density dependence influences the model. By default (density=0) there is no density dependence. The higher the value of the parameter, the stronger is the density dependence.
 #' @param environment Float, determining whether or how strong the environment influences the model.  By default (environment=0) there is no influence of the environment. The higher the value of the parameter, the stronger is the influence of the environment. Environment value must be between 0 and 1.
 #' @param fitnessActsOn Character, determining how the fitness influences the individuals. Possible inputs are "mortality" (default), "reproduction" or "both"
-#' @param fitnessBaseMortalityRatio Integer, determines the fitness based mortality ratio
+#' @param fitnessBaseMortalityRatio Integer, determines the fitness based mortality ratio. Must be greater than or equal to 1.
 #' @param densityCut Integer, defines the effective range of the competition (ignored if density = FALSE)
 #' @param fission Integer, determining which fission type should be used. Options are 0 (none = default), 1 (every second individual becomes part of new species) and 2 (population is geographically split in two parts).
 #' @param protracted Integer, determining the time span in generation new species stays 'incipient' befre turning into a 'good' species. Default is 0.
@@ -44,10 +44,15 @@ createCompletePar <- function(x = 50, y = 50, dispersal = "global", runs = 100, 
   if(length(airmat)!= 1){
     if((nrow(airmat) != y) | (ncol(airmat)!= x)) stop("Environment and matrix size do not match")
   }
+  if (max(airmat) > 1 || min(airmat) < 0) stop("Values of airmat must be between 0 and 1")
   
   if(length(soilmat) != 1){
     if((nrow(soilmat) != y) | (ncol(soilmat)!= x)) stop("Environment and matrix size do not match")
   }
+  
+  if (environment > 1 || environment < 0) stop("Parameter environment must be between 0 and 1")
+  
+  if (fitnessBaseMortalityRatio < 1) stop("Parameter fitnessBaseMortalityRation must be greater than or equal to 1")
   
   airmat <- as.numeric(airmat)
   

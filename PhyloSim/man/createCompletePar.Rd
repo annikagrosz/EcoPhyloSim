@@ -29,7 +29,7 @@ createCompletePar(x = 50, y = 50, dispersal = "global", runs = 100,
 
 \item{fitnessActsOn}{Character, determining how the fitness influences the individuals. Possible inputs are "mortality" (default), "reproduction" or "both"}
 
-\item{fitnessBaseMortalityRatio}{Integer, determines the fitness based mortality ratio}
+\item{fitnessBaseMortalityRatio}{Integer, determines the fitness based mortality ratio. Must be greater than or equal to 1.}
 
 \item{densityCut}{Integer, defines the effective range of the competition (ignored if density = FALSE)}
 
