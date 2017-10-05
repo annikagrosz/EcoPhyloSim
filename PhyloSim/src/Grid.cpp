@@ -133,7 +133,7 @@ Landscape::Landscape(int xsize, int ysize, int type, bool neutral, bool dd, bool
     m_Phylogeny.updatePhylogeny(m_Individuals[xsize - 1][ysize - 1].m_Species);
 
     // Set up Environment
-
+    // if no environment (airmat) is passed, generate one
     if ((airmat.size() == 1) && (soilmat.size() == 1)) {
         m_AirTemperature = 0.0; // Celsius
         m_GradientStep = (1.0 / (double) m_Xdimensions) * 2.0;
@@ -151,6 +151,7 @@ Landscape::Landscape(int xsize, int ysize, int type, bool neutral, bool dd, bool
         }
     }
 
+    // if environment (airmat) is passed use it
     if (airmat.size() > 1) {
         for (int i = 0; i < m_Xdimensions; i++) {
             for (int j = 0; j < m_Ydimensions; j++) {
@@ -163,9 +164,9 @@ Landscape::Landscape(int xsize, int ysize, int type, bool neutral, bool dd, bool
             }
         }
     }
+    // END Set up Environment
 
     // Grid Geometry calculations
-
     cellsWithinDensityCutoff = 0.0;
 
     for (int i = -m_DensityCutoff; i <= m_DensityCutoff; i++) {
@@ -174,6 +175,7 @@ Landscape::Landscape(int xsize, int ysize, int type, bool neutral, bool dd, bool
             cellsWithinDensityCutoff += 1.0;
         }
     }
+    // END Grid Geometry calculations
 
 }
 
@@ -260,9 +262,11 @@ void GlobalEnvironment::reproduce(unsigned int generation) {
         //srand(time(0));
         for (unsigned int event = 0; event < m_LandscapeSize; event++) {
 
+            // choose random individual to die
             x_coordinate = m_RandomGenerator.randomInt(0, m_Xdimensions - 1);
             y_coordinate = m_RandomGenerator.randomInt(0, m_Ydimensions - 1);
 
+            // choose random parent to "replace" individual
             x_parent = m_RandomGenerator.randomInt(0, m_Xdimensions - 1);
             y_parent = m_RandomGenerator.randomInt(0, m_Ydimensions - 1);
 

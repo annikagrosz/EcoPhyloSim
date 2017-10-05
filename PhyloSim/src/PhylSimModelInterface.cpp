@@ -66,20 +66,20 @@ List callModel(int x, int y, int dispersal, IntegerVector runs, double specRate,
 
     std::string tempSaveLoc = "./";
 
-    int steps = runs.length();
-    int runcount = 0;
+    int nRuns = runs.length(); // number of consecutive simulations that are executed sequentially
+    int prevNGen = 0;
 
     std::vector<double> airmat(airmatR.begin(), airmatR.end());
     std::vector<double> soilmat(soilmatR.begin(), soilmatR.end());
 
     Rcpp::List outList = Rcpp::List::create();
 
-    PhylSimModel phylSimModel(x, y, dispersal, runs[steps - 1], specRate, dens, env, neutral, mort, mortStrength, repro,
+    PhylSimModel phylSimModel(x, y, dispersal, runs[nRuns - 1], specRate, dens, env, neutral, mort, mortStrength, repro,
                               dispersalCutoff, densityCutoff, tempSaveLoc, envStrength, compStrength, fission, redQueen,
                               redQueenStrength, protracted, airmat, soilmat);
 
 
-    for (int step = 0; step < steps; step++) {
+    for (int step = 0; step < nRuns; step++) {
 
         Rcpp::IntegerVector specOut(x * y);
         Rcpp::NumericVector traitOut(x * y);
@@ -89,11 +89,14 @@ List callModel(int x, int y, int dispersal, IntegerVector runs, double specRate,
         Rcpp::CharacterVector phyloOut = "";
 
 
-        int runNow = runs[step] - runcount;
-        //std::cout << "Run model for" <<  runNow << "steps \n";
-        phylSimModel.update(runNow);
+        int curNGen = runs[step] - prevNGen;
 
-        runcount = runs[step];
+#ifdef DEBUG
+        std::cout << "Run model for" <<  curNGen << " generations\n";
+#endif
+        phylSimModel.update(curNGen);
+
+        prevNGen = runs[step];
 
         int indCounter = 0;
 
@@ -108,7 +111,7 @@ List callModel(int x, int y, int dispersal, IntegerVector runs, double specRate,
                     indCounter++;
                 }
             }
-            phylSimModel.m_Global->m_Phylogeny.prunePhylogeny(runcount);
+            phylSimModel.m_Global->m_Phylogeny.prunePhylogeny(prevNGen);
             std::string phyloPass("\0");
 
 #ifdef DEBUG
@@ -142,7 +145,7 @@ List callModel(int x, int y, int dispersal, IntegerVector runs, double specRate,
                     indCounter++;
                 }
             }
-            phylSimModel.m_Local->m_Phylogeny.prunePhylogeny(runcount);
+            phylSimModel.m_Local->m_Phylogeny.prunePhylogeny(prevNGen);
 
             std::string phyloPass("\0");
 

@@ -3,7 +3,7 @@
 #' @param x  Integer, Dimension of the model landscape in x-direction
 #' @param y  Integer, Dimension of the model landscape in y-direction
 #' @param dispersal Integer. Type 0 or "global" for global dispersion. For local dispersion all integers >=1 set the dispersal distance.
-#' @param runs  Integer, Number of generations or sequence of generations the model runs over (see Details). 
+#' @param runs  Integer or vector of Integers, Number of generations or sequence of generations the model runs over (see Details). 
 #' @param specRate Integer, Number of Individuals introduced to the community in each generation
 #' @param density Float, determining whether or how strong the density dependence influences the model. By default (density=0) there is no density dependence. The higher the value of the parameter, the stronger is the density dependence.
 #' @param environment Float, determining whether or how strong the environment influences the model.  By default (environment=0) there is no influence of the environment. The higher the value of the parameter, the stronger is the influence of the environment. Environment value must be between 0 and 1.
@@ -21,7 +21,7 @@
 #' @param calculateSummaries Logical, determining wheter summary statistics should be calculated
 #' @param convertToBinaryTree Logical, determining if the phylogeny should be converted into a binary tree
 #' @param prunePhylogeny Logical, determining whether the phylogeny should be prune by the internal pruning function
-#' @details If runs is a sequence of generations the intermediate and end results are saved in the output of \code{runSimulation}. \cr\cr If type = "Rneutral" the model will run entirely in R. This model is to be seen only for test and teaching purpose. To be used in practice it is far too slow. Also the output is reduced. Only the species landscape and the parameter settings will be displayed in the output.
+#' @details If runs is a sequence of generations, intermediate results are saved. E.g. when runs is c(500, 600, 700), the simulation runs 700 generations in total, and the intermediate results at generations 500 and 600 are saved additionally. The intermediate and end results are saved in the output of \code{runSimulation}. \cr\cr If type = "Rneutral" the model will run entirely in R. This model is to be seen only for test and teaching purpose. To be used in practice it is far too slow. Also the output is reduced. Only the species landscape and the parameter settings will be displayed in the output.
 #' @return A List with parameters
 #' @examples 
 #' ## Define a parameter set
@@ -38,7 +38,7 @@ createCompletePar <- function(x = 50, y = 50, dispersal = "global", runs = 100, 
   soilmat <- 1 # Needs to be defined here as long as it is not
                # implemented in the model
   if (length(runs)>1){
-    if (any(runs[-length(runs)] > runs[-1])) stop( "wrong argument to runs")
+    if (any(runs[-length(runs)] > runs[-1])) stop("When passing a vector for runs, the last element must be the largest.")
   }
   
   if(length(airmat)!= 1){
