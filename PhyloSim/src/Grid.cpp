@@ -774,9 +774,10 @@ void Landscape::speciation(unsigned int generation) {
             std::vector<int> yvec;
             for (int k = 0; k < m_Xdimensions; k++) {
                 for (int j = 0; j < m_Ydimensions; j++) {
-                    if (m_Individuals[k][j].m_Species == m_Individuals[x][y].m_Species)
+                    if (m_Individuals[k][j].m_Species == m_Individuals[x][y].m_Species) {
                         xvec.push_back(k);
-                    yvec.push_back(j);
+                        yvec.push_back(j);
+                    }
                 }
             }
 
@@ -799,7 +800,7 @@ void Landscape::speciation(unsigned int generation) {
                 }
             }
         }
-    }
+    } // END  for (int i = 0; i < specRate; i++)
 
     // In the same timestep new species arise.
     // Which individuals become part of the new species is dependent on the incipient age of the
