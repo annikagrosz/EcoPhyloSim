@@ -43,7 +43,7 @@ createCompletePar(x = 50, y = 50, dispersal = "global", runs = 100,
 
 \item{redQueenStrength}{Float, determining the strength of the Red Queen effect. A value > 0 mean a new species gets a fitness boost due to its novelty.}
 
-\item{protracted}{Integer, determining the time span in generation new species stays 'incipient' befre turning into a 'good' species. Default is 0.}
+\item{protracted}{Integer, determining the time span in generations a new species stays 'incipient' before turning into a 'good' species. Default is 0.}
 
 \item{airmat}{Matrix, deteriming the environment of the simulation. airmat needs to be a matrix with the same dimensions as the grid. Must be scaled between 0 and 1.}
 

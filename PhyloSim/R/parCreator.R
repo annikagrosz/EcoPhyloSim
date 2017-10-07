@@ -11,7 +11,7 @@
 #' @param fitnessBaseMortalityRatio Integer, determines the fitness based mortality ratio. Must be greater than or equal to 1.
 #' @param densityCut Integer, defines the effective range of the competition (ignored if density = FALSE)
 #' @param fission Integer, determining which fission type should be used. Options are 0 (none = default), 1 (every second individual becomes part of new species) and 2 (population is geographically split in two parts).
-#' @param protracted Integer, determining the time span in generation new species stays 'incipient' befre turning into a 'good' species. Default is 0.
+#' @param protracted Integer, determining the time span in generations a new species stays 'incipient' before turning into a 'good' species. Default is 0.
 #' @param redQueenStrength Float, determining the strength of the Red Queen effect. A value > 0 mean a new species gets a fitness boost due to its novelty.
 #' @param redQueen Float, determining the strength of the fitness decline of an aging species. 
 #' @param airmat Matrix, deteriming the environment of the simulation. airmat needs to be a matrix with the same dimensions as the grid. Must be scaled between 0 and 1.
