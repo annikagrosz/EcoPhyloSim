@@ -2,6 +2,7 @@
 #' @title Summary Statistics
 #' @description Calculates the summary satistics for a simulation of class PhyloSim.
 #' @param simulation Simulation output of the class "Phylosim"
+#' @param strict Logical. If true the output of the function will be NA if at least one summary statistic could not be calculated.
 #' @details TODO: implement
 #' @return A list containing the summary statistics.
 #' @examples 
@@ -13,7 +14,7 @@
 #' @export
 #' 
 
-calculateSummaryStatistics <- function(simulation) {
+calculateSummaryStatistics <- function(simulation, strict=TRUE) {
   summaryStatistics <- list(racAuc=NA,
                             sacAuc=NA,
                             alphaDiversity = NA,
@@ -139,6 +140,12 @@ calculateSummaryStatistics <- function(simulation) {
   
   summaryStatistics$varPart_1 <- mod$part$fract$Adj.R.squared[1]
   summaryStatistics$varPart_2 <- mod$part$fract$Adj.R.squared[1]
+  
+  if (strict == TRUE) {
+    if (sum(is.na(summaryStatistics)) > 0) {
+      summaryStatistics <- NA
+    }
+  }
   
   return(summaryStatistics)
 }

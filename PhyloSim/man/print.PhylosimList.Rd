@@ -4,7 +4,7 @@
 \alias{print.PhylosimList}
 \title{Prints summary for objects of class PhyloSim}
 \usage{
-\method{print}{PhylosimList}(simu)
+print.PhylosimList(simu)
 }
 \arguments{
 \item{simu}{Simulation output of \code{\link{runSimulation}}}

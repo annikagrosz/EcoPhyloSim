@@ -4,10 +4,12 @@
 \alias{calculateSummaryStatistics}
 \title{Summary Statistics}
 \usage{
-calculateSummaryStatistics(simulation)
+calculateSummaryStatistics(simulation, strict = TRUE)
 }
 \arguments{
 \item{simulation}{Simulation output of the class "Phylosim"}
+
+\item{strict}{Logical. If true the output of the function will be NA if at least one summary statistic could not be calculated.}
 }
 \value{
 A list containing the summary statistics.

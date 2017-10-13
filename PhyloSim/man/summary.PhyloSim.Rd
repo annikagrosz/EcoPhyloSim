@@ -4,7 +4,7 @@
 \alias{summary.PhyloSim}
 \title{Summary for objects of class PhyloSim}
 \usage{
-\method{summary}{PhyloSim}(simu)
+summary.PhyloSim(simu)
 }
 \arguments{
 \item{simu}{Simulation output of \code{\link{runSimulation}}}
