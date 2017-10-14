@@ -23,6 +23,7 @@
 #' 
 #' @author Tankred Ott
 #' @export
+# TODO: Rename this
 runPhylosimAnalysis <- function(variableParams, fixedParams, nRuns, outDir, summariesOnly=FALSE, nCores="auto", chunkSize="auto") {
   # Get available parameters
   arguments <- formals(PhyloSim::createCompletePar)
@@ -58,6 +59,237 @@ runPhylosimAnalysis <- function(variableParams, fixedParams, nRuns, outDir, summ
   
   # Runs the simulation in chunks and saves the results to outDir
   runSimulationChunkwise(fixedParamsList, variableParams, nRuns, chunkSize, outDir, summariesOnly, nCores)  
+}
+
+#' @title Cunkwise summary statistics calculation
+#' @description Calculates summary statistics for all "out_" files created with runPhylosimAnalysis and saves the results to "summary_" files in the same folder.
+#' @param dir Directory from which the "out_" files should be read and to which the "summary_" files will be saved.
+#' @param nCores "auto" or number of parallel cores.
+#' @author Tankred Ott
+#' @export
+chunkwiseCalculateSummaries <- function (dir=".", nCores="auto") {
+  simFiles <- getFileNames(path=dir)
+  if (length(simFiles) == 0) stop(paste("No PhyloSim output files found in", if (dir == ".") getwd() else dir))
+  
+  # this is inefficient for large files, as the whole file is loaded into memory just to get the chunkSize
+  # better might be to run the first summary calculation without parallelization and start the parallel runs with the 
+  # second file
+  chunkSize <- length(loadLocal(joinPath(c(dir, simFiles[1]))))
+  
+  nCores <- getValidatedNCores(nCores)
+  cl <- parallel::makeCluster(nCores)
+  doParallel::registerDoParallel(cl)
+  
+  library(foreach)
+  foreach(i=1:length(simFiles), .packages = c("PhyloSim")) %dopar% {
+    loadLocal <- function(path) return(local(get(load(path))))
+    joinPath <- function(x, sysName = "auto") {
+      if (sysName == "auto") sysName <- Sys.info()[["sysname"]]
+      if(sysName == "Windows") return(paste(x, collapse = "\\"))
+      else if(sysName == "Linux") return(paste(x, collapse = "/"))
+      else stop(paste(c("System", sysName, "is not supported."), collapse = " "))
+    }
+    
+    # Load simulation chunk
+    simChunk <- loadLocal(joinPath(c(dir, simFiles[i])))
+    
+    # Calculate summaries
+    summaryChunk <- lapply(simChunk, PhyloSim::calculateSummaryStatistics, strict=TRUE)
+    
+    # Determine file name
+    n <- length(simChunk)
+    from <- as.integer((i-1) * chunkSize + 1)
+    to <- as.integer(from + n - 1)
+    suffix <- paste(c("_", from,"-", to), collapse = "")
+    summaryFileName <-  paste(c("summary", suffix), collapse = "")
+    # save file
+    save(summaryChunk, file = joinPath(c(dir, summaryFileName)))
+  }
+  parallel::stopCluster(cl)
+}
+
+#' @title Clean up parameter and summary chunks
+#' @description Reads in summary files created with chunkwiseCalculateSummaries, and parameter files created with runPhylosimAnalysis and removes crashed simulations (those where summaries == NA). The resulting cleaned-up chunks are saved to the subfolder "cleaned_up".
+#' @author Tankred Ott
+#' @param dir Directory to which the results of chunkwiseCalculateSumaries and runPhylosimAnalysis were saved.
+#' @param nCores "auto" or number of parallel cores to use
+#' @export
+chunkwiseCleanup <- function (dir=".", nCores="auto") {
+  nCores <- getValidatedNCores(nCores)
+  cl <- parallel::makeCluster(nCores)
+  doParallel::registerDoParallel(cl)
+  
+  sumFiles <- getFileNames(path=dir, pattern="^summary_[0-9]+-[0-9]+$")
+  if (length(sumFiles) == 0) stop(paste("No PhyloSim summary files found in", if (dir == ".") getwd() else dir))
+  
+  parFiles <- getFileNames(path=dir, pattern="^param_[0-9]+-[0-9]+$")
+  if (length(parFiles) == 0) stop(paste("No PhyloSim parameter files found in", if (dir == ".") getwd() else dir))
+  
+  chunkSize <- length(loadLocal(joinPath(c(dir, sumFiles[1]))))
+  
+  # Create output directory
+  outDir <- joinPath(c(dir, "cleaned_up"))
+  if(!dir.exists(outDir)){
+    dir.create(outDir)
+  }
+  
+  library(foreach)
+  foreach(i=1:length(sumFiles), .packages = c("PhyloSim")) %dopar% {
+    # loadLocal <- function(path) return(local(get(load(path))))
+    # joinPath <- function(x, sysName = "auto") {
+    #   if (sysName == "auto") sysName <- Sys.info()[["sysname"]]
+    #   if(sysName == "Windows") return(paste(x, collapse = "\\"))
+    #   else if(sysName == "Linux") return(paste(x, collapse = "/"))
+    #   else stop(paste(c("System", sysName, "is not supported."), collapse = " "))
+    # }
+    
+    # Load simulation chunk and parameter chunk
+    sumChunk <- PhyloSim:::loadLocal(joinPath(c(dir, sumFiles[i])))
+    parChunk <- PhyloSim:::loadLocal(joinPath(c(dir, parFiles[i])))
+    
+    # Find indices where summaries are NA and remove them
+    naIndices <- which(is.na(sumChunk))
+    naIndices <- c(naIndices, which(sapply(sumChunk, function (x) sum(is.na(x)) > 0)))
+    
+    sumChunk[naIndices] <- NULL
+    parChunk[naIndices] <- NULL
+    
+    # replace NULL with "NULL". Necessary for data.table::rbindlist in later analysis
+    for(j in 1:length(parChunk)) {
+      for(k in 1:length(parChunk[[j]])) {
+        if (is.null(parChunk[[j]][[k]])) parChunk[[j]][[k]] <- "NULL"
+      }
+    }
+    
+    # Determine file name
+    n <- length(sumChunk)
+    from <- as.integer((i-1) * chunkSize + 1)
+    to <- as.integer(from + n - 1)
+    suffix <- paste(c("_", from,"-", to), collapse = "")
+    sumFileName <-  paste(c("summary_clean", suffix), collapse = "")
+    parFileName <-  paste(c("param_clean", suffix), collapse = "")
+    # save file
+    save(sumChunk, file = PhyloSim:::joinPath(c(outDir, sumFileName)))
+    save(parChunk, file = PhyloSim:::joinPath(c(outDir, parFileName)))
+  }
+  parallel::stopCluster(cl)
+}
+
+#' @title combine chunks
+#' @description Combines files with a common prefix to a combined files and saves the files as combined_PREFIX.
+#' @param dir Directory. Location of the files
+#' @param prefix Common file prefix. Possible to use RegEx like syntax here.
+#' @author Tankred Ott
+#' @export
+combineCunks <- function(dir=".", prefix) {
+  files <- getFileNames(path=dir, pattern=paste("^", prefix,".*", sep = ""))
+  if (length(files) == 0) stop(paste("No files with prefix", prefix, "found in", if (dir == ".") getwd() else dir))
+  out <- list()
+  for (i in 1:length(files)) {
+    chunk <- loadLocal(joinPath(c(dir, files[i])))
+    out <- c(out, chunk)
+  }
+  fileName <- paste("combined_", prefix, sep = "")
+  save(out, file = joinPath(c(dir, fileName)))
+}
+
+#' @title Extract params
+#' @description Extracts parameters from a list of PhyloSim parameter objects.
+#' @param parList List of phylosim parameter objects
+#' @param params Vector of parameter names to extract
+#' @param outFormat Type of output that should be returned. "df" for dataframe or "list" for list.
+#' @author Tankred Ott
+#' @export
+extractParams <- function(parList, params, outFormat="df") {
+  # check if params in parList
+  parNames <- names(parList[[1]])
+  invalidParams <- which(!is.element(params, parNames))
+  if (length(invalidParams != 0)) stop(paste(paste(params[invalidParams], collapse = ", "), "is/are invalid parameter/s"))
+
+  out <- NA
+  if (outFormat == "df") {
+    # out <- as.data.frame(do.call(what = rbind, args = parList))
+    out <- as.data.frame(data.table::rbindlist(parList))
+    out <- out[, params]
+  } else if (outFormat == "list") {
+    stop("no implemented")
+  } else stop("Wrong argument for outFormat")
+  return(out)
+}
+
+#' @author Tankred Ott
+# This function devides the runs in chunks of chunkSize, generates a phylosim parameter object for each run by
+# combining the fixed parameters and draws from the priors of the variable parameter, runs the phylosim model in
+# parallel mode and saves the results and the parameters in outDir
+runSimulationChunkwise <- function (fixedParamsList, variableParams, nRuns, chunkSize, outDir, summariesOnly, nCores) {
+  nChunks <- ceiling(nRuns / chunkSize)
+  remainder <- nRuns %% chunkSize
+  for (i in 1:nChunks) {
+    cat(paste(c("Running chunk",i ,"of", nChunks, "\n"), collapse = " "))
+    t0 <- proc.time()
+    
+    n <- chunkSize # number of simulations per chunk
+    # if nRuns not divisible by chunkSize, we need to add an additional
+    # smaller chunk at the end
+    if (i == nChunks && (remainder != 0)) {
+      n <- remainder
+    }
+    
+    # create phyloSim parameter object
+    params <- rep(list(NA), n)
+    for (j in 1:n) {
+      # create list of variable parameters drawn from prior
+      varParamsList <- lapply(variableParams, FUN = do.call, list())
+      params[[j]] <- do.call(PhyloSim::createCompletePar, args = c(fixedParamsList, varParamsList))
+    }
+    
+    if (summariesOnly && (params[[i]]$calculateSummaries == FALSE)) stop("summariesOnly is set to TRUE, but calculateSummaries set to FALSE")
+    
+    # generate "unique" suffix for data files
+    from <- as.integer((i-1) * chunkSize + 1)
+    to <- as.integer(from + n - 1)
+    suffix <- paste(c("_", from,"-", to), collapse = "")
+    paramFileName <- paste(c("param", suffix), collapse = "")
+    outFileName <- paste(c("out", suffix), collapse = "")
+    
+    save(params, file = joinPath(c(outDir, paramFileName)))
+    
+    # run simulations in parallel
+    out <- runSimulationBatch(params, nCores)
+    
+    save(out, file = joinPath(c(outDir, outFileName)))
+    cat(paste(c("Finished chunk", i ,"of", paste0(nChunks, "."), "time elapsed:", proc.time()[3]-t0[3], "\n"), collapse = " "))
+  }
+  cat(paste(c("Output and parameters are saved to directory", c("'", outDir, "'")), collapse = " "))
+}
+
+#' @title Prepare for Analysis
+#' @description Reads the files generated by combineChunks and creates dataframe for later analysis.
+#' @param dir root directory of the analysis (as specified in runPhylosimAnalysis)
+#' @return Create a subfolder "analysis_ready" and write the files "parameters" (variable parameters), "summaries" and "summaries_scaled" containing data.frames with the corresponding data.
+#' @export
+#' @author Tankred Ott
+prepareForAnalysis <- function(dir=".") {
+  # load Data
+  cleanedDir <- PhyloSim:::joinPath(c(dir,"cleaned_up"))
+  summaries <- PhyloSim:::loadLocal(PhyloSim:::joinPath(c(cleanedDir, "combined_summary_clean")))
+  pars <- PhyloSim:::loadLocal(PhyloSim:::joinPath(c(cleanedDir, "combined_param_clean")))
+  
+  # extract variable parameters' values
+  pars_df <- PhyloSim::extractParams(pars, names(variableParams))
+  
+  # scale summaries
+  summaries_df <- as.data.frame(data.table::rbindlist(summaries))
+  summaries_sd <- apply(X = summaries_df, MARGIN = 2, FUN=sd)
+  summaries_df_scaled <- as.data.frame(scale(summaries_df, scale = summaries_sd, center = F))
+  
+  analysisDir <- PhyloSim:::joinPath(c(dir,"analysis_ready"))
+  if(!dir.exists(analysisDir)){
+    dir.create(analysisDir)
+  }
+  save(pars_df, file = PhyloSim:::joinPath(c(analysisDir, "parameters")))
+  save(summaries_df, file = PhyloSim:::joinPath(c(analysisDir, "summaries")))
+  save(summaries_df_scaled, file = PhyloSim:::joinPath(c(analysisDir, "summaries_scaled"))) 
 }
 
 #' @author Tankred Ott
@@ -171,109 +403,6 @@ getValidatedNCores <- function (nCores) {
   }
   return(nCores)
 }
-
-#' @author Tankred Ott
-# This function devides the runs in chunks of chunkSize, generates a phylosim parameter object for each run by
-# combining the fixed parameters and draws from the priors of the variable parameter, runs the phylosim model in
-# parallel mode and saves the results and the parameters in outDir
-runSimulationChunkwise <- function (fixedParamsList, variableParams, nRuns, chunkSize, outDir, summariesOnly, nCores) {
-  nChunks <- ceiling(nRuns / chunkSize)
-  remainder <- nRuns %% chunkSize
-  for (i in 1:nChunks) {
-    cat(paste(c("Running chunk",i ,"of", nChunks, "\n"), collapse = " "))
-    t0 <- proc.time()
-    
-    n <- chunkSize # number of simulations per chunk
-    # if nRuns not divisible by chunkSize, we need to add an additional
-    # smaller chunk at the end
-    if (i == nChunks && (remainder != 0)) {
-      n <- remainder
-    }
-    
-    # create phyloSim parameter object
-    params <- rep(list(NA), n)
-    for (j in 1:n) {
-      # create list of variable parameters drawn from prior
-      varParamsList <- lapply(variableParams, FUN = do.call, list())
-      params[[j]] <- do.call(PhyloSim::createCompletePar, args = c(fixedParamsList, varParamsList))
-    }
-    
-    if (summariesOnly && (params[[i]]$calculateSummaries == FALSE)) stop("summariesOnly is set to TRUE, but calculateSummaries set to FALSE")
-    
-    # generate "unique" suffix for data files
-    from <- as.integer((i-1) * chunkSize + 1)
-    to <- as.integer(from + n - 1)
-    suffix <- paste(c("_", from,"-", to), collapse = "")
-    paramFileName <- paste(c("param", suffix), collapse = "")
-    outFileName <- paste(c("out", suffix), collapse = "")
-    
-    save(params, file = joinPath(c(outDir, paramFileName)))
-    
-    # run simulations in parallel
-    out <- runSimulationBatch(params, nCores)
-    
-    save(out, file = joinPath(c(outDir, outFileName)))
-    cat(paste(c("Finished chunk", i ,"of", paste0(nChunks, "."), "time elapsed:", proc.time()[3]-t0[3], "\n"), collapse = " "))
-  }
-  cat(paste(c("Output and parameters are saved to directory", c("'", outDir, "'")), collapse = " "))
-}
-
-#' @title Cunkwise summary statistics calculation
-#' @description Calculates summary statistics for all "out_" files created with runPhylosimAnalysis and saves the results to "summary_" files in the same folder.
-#' @param dir Directory from which the "out_" files should be read and to which the "summary_" files will be saved.
-#' @param nCores "auto" or number of parallel cores.
-#' @author Tankred Ott
-#' @export
-chunkwiseCalculateSummaries <- function (dir=".", nCores="auto") {
-  simFiles <- getFileNames(path=dir)
-  if (length(simFiles) == 0) stop(paste("No PhyloSim output files found in", if (dir == ".") getwd() else dir))
-  
-  # this is inefficient for large files, as the whole file is loaded into memory just to get the chunkSize
-  # better might be to run the first summary calculation without parallelization and start the parallel runs with the 
-  # second file
-  chunkSize <- length(loadLocal(joinPath(c(dir, simFiles[1]))))
-  
-  nCores <- getValidatedNCores(nCores)
-  cl <- parallel::makeCluster(nCores)
-  doParallel::registerDoParallel(cl)
-  
-  library(foreach)
-  foreach(i=1:length(simFiles), .packages = c("PhyloSim")) %dopar% {
-    loadLocal <- function(path) return(local(get(load(path))))
-    joinPath <- function(x, sysName = "auto") {
-      if (sysName == "auto") sysName <- Sys.info()[["sysname"]]
-      if(sysName == "Windows") return(paste(x, collapse = "\\"))
-      else if(sysName == "Linux") return(paste(x, collapse = "/"))
-      else stop(paste(c("System", sysName, "is not supported."), collapse = " "))
-    }
-    
-    # Load simulation chunk
-    simChunk <- loadLocal(joinPath(c(dir, simFiles[i])))
-    
-    # Calculate summaries
-    summaryChunk <- lapply(simChunk, PhyloSim::calculateSummaryStatistics, strict=TRUE)
-    
-    # Determine file name
-    n <- length(simChunk)
-    from <- as.integer((i-1) * chunkSize + 1)
-    to <- as.integer(from + n - 1)
-    suffix <- paste(c("_", from,"-", to), collapse = "")
-    summaryFileName <-  paste(c("summary", suffix), collapse = "")
-    # save file
-    save(summaryChunk, file = joinPath(c(dir, summaryFileName)))
-  }
-  parallel::stopCluster(cl)
-}
-
-#' @title Clean up parameter and summary chunks
-#' @description Reads in summary files created with chunkwiseCalculateSummaries, and parameter files created with runPhylosimAnalysis and removes crashed simulations (those where summaries == NA). The resulting cleaned-up chunks are saved to the subfolder "cleaned_up".
-#' @author Tankred Ott
-#' @param dir Directory to which the results of chunkwiseCalculateSumaries and runPhylosimAnalysis were saved.
-#' @export
-cleanUpChunks <- function (dir=".") {
-  
-}
-
 
 #' @author Tankred Ott
 loadLocal <- function(path) return(local(get(load(path))))
