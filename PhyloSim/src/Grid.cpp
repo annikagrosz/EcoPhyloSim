@@ -307,7 +307,7 @@ void GlobalEnvironment::reproduce(unsigned int generation) {
         double cumWeights[m_LandscapeSize];
 
         // all possible parent permutations
-        std::vector <std::pair<int, int>> parents(m_LandscapeSize);
+        std::vector <std::pair<int, int> > parents(m_LandscapeSize);
         int count = 0;
         for (int x = 0; x < m_Xdimensions; x++) {
             for (int y = 0; y < m_Ydimensions; y++) {
@@ -644,7 +644,7 @@ void LocalEnvironment::reproduce(unsigned int generation) {
         ////////////////////////////////////////////
         // DISPERSAL
 
-        std::vector <std::pair<int, int>> parents(m_KernelSize);
+        std::vector <std::pair<int, int> > parents(m_KernelSize);
 
         double weights[m_KernelSize];
         array_length = 0;

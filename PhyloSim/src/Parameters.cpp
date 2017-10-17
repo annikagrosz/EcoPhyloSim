@@ -183,9 +183,9 @@ void Parameters::readParameterFromXMLFile() {
 //
 //
 void Parameters::createParameters() {
-    vector <pair<string, int>> intParameters;
-    vector <pair<string, double>> doubleParameters;
-    vector <pair<string, bool>> boolParameters;
+    vector <pair<string, int> > intParameters;
+    vector <pair<string, double> > doubleParameters;
+    vector <pair<string, bool> > boolParameters;
 //
     // Parameters for Landscape
     intParameters.push_back(pair<string, int>(string("LandscapeSizeX"), 100));
