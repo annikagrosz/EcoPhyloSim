@@ -94,7 +94,10 @@ chunkwiseCalculateSummaries <- function (dir=".", nCores="auto") {
     simChunk <- loadLocal(joinPath(c(dir, simFiles[i])))
     
     # Calculate summaries
-    summaryChunk <- lapply(simChunk, PhyloSim::calculateSummaryStatistics, strict=TRUE)
+    tryCalcSummaries <- function(x,...)return(tryCatch(PhyloSim::calculateSummaryStatistics(x,...),
+                                                   error=function(x)return(NA)))
+    # summaryChunk <- lapply(simChunk, PhyloSim::calculateSummaryStatistics, strict=TRUE)
+    summaryChunk <- lapply(simChunk, tryCalcSummaries, strict=TRUE)
     
     # Determine file name
     n <- length(simChunk)
