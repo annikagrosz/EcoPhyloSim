@@ -38,7 +38,7 @@ str(simu$Model)
 ## ----results='hide'------------------------------------------------------
 par1 <- createCompletePar(x = 50, y = 50, dispersal = "global", runs = 1000, density = 1, environment = 0.5, specRate = 1, type="base")
 
-par2 <- createCompletePar(x = 50, y = 50, dispersal = "global", runs = 1000, density = 1, environment = 2, specRate = 1, type="base")
+par2 <- createCompletePar(x = 50, y = 50, dispersal = "global", runs = 1000, density = 1, environment = 1, specRate = 1, type="base")
 
 parmBatch <- list(par1, par2)
 
