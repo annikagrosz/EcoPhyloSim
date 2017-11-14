@@ -25,7 +25,9 @@ calculateSummaryStatistics <- function(simulation, strict=TRUE) {
                             gammaStatistics = NA,
                             meanNodeAge = NA,
                             varPart_1 = NA,
-                            varPart_2 = NA)
+                            varPart_2 = NA,
+                            ce = NA,
+                            nb8 = NA)
   
   # TODO: implement special case: only 1 species
   if (is.double(simulation$Output[[1]]$phylogeny)) {
@@ -141,6 +143,15 @@ calculateSummaryStatistics <- function(simulation, strict=TRUE) {
   summaryStatistics$varPart_1 <- mod$part$fract$Adj.R.squared[1]
   summaryStatistics$varPart_2 <- mod$part$fract$Adj.R.squared[1]
   
+  
+  # Clark Evans
+  summaryStatistics$ce <- clarkEvans(simulation$Output[[1]]$specMat, correction="Donnelly")
+  
+  # nb8
+  summaryStatistics$nb8 <- nb8Idx(simulation$Output[[1]]$specMat)
+  
+  
+  
   if (strict == TRUE) {
     if (sum(is.na(summaryStatistics)) > 0) {
       summaryStatistics <- NA
@@ -184,4 +195,96 @@ distances <- function(positions, limits){
     }
   }
   return(dist_mat)
+}
+
+clarkEvans <- function (mat, ...) {
+  nCol <- ncol(mat)
+  nRow <- nrow(mat)
+  
+  ids <- unique(as.vector(mat))
+  ceSum <- 0
+  n <- 0
+  
+  for (i in 1:length(ids)) {
+    pos <- which(mat == ids[i])
+    col <- ceiling(pos / nRow)
+    row <- pos %% nCol
+    pp <- ppp(x=col, y=row, window=owin(xrange = c(0, nCol), yrange = c(0, nRow)))
+    ce <- spatstat::clarkevans(pp, ...)
+    if (!is.infinite(ce) && !is.na(ce) && !is.nan(ce)) {
+      ceSum <- ceSum + ce
+      n <- n + 1
+    }
+  }
+  return(ceSum/n)
+}
+
+getNeighbours8 <- function(x, y, mat, nCol=NULL, nRow=NULL, isTorus=TRUE) {
+  if (is.null(nCol)) nCol <- ncol(mat)
+  if (is.null(nRow)) nRow <- nrow(mat)
+  
+  neighbours <- vector("numeric")
+  
+  for (yOffset in c(-1, 0, 1)) {
+    for (xOffset in c(-1, 0, 1)) {
+      if (!(yOffset == 0 && xOffset == 0)) {
+        xPos <- x + xOffset
+        yPos <- y + yOffset
+        
+        if (xPos > nCol || xPos < 1 || yPos > nRow || yPos < 1) {
+          if (isTorus != TRUE) next
+        }
+        
+        if (xPos > nCol) {
+          xPos <- xPos - nCol
+        } else if (xPos < 1) {
+          xPos <- nCol - xPos
+        }
+        
+        if (yPos > nRow) {
+          yPos <- yPos - nRow
+        } else if (yPos < 1) {
+          yPos <- nRow - yPos
+        }
+        
+        neighbours <- append(neighbours, mat[yPos, xPos])
+      }
+    }
+  }
+  return(neighbours)
+}
+
+nb8Idx <- function (mat) {
+  nCol <- ncol(mat)
+  nRow <- nrow(mat)
+  n <- nRow * nCol
+  
+  ids <- unique(as.vector(mat))
+  
+  id_freqs <- vector(mode = "numeric", length = length(ids))
+  for (i in 1:length(ids)) {
+    id_freqs[i] <- sum(mat == ids[i])
+  }
+  
+  # print(nRow)
+  # print(nCol)
+  
+  nbRates <- vector("numeric", length(ids))
+  names(nbRates) <- ids
+  
+  for (row in 1:nRow) {
+    for (col in 1:nCol) {
+      id <- mat[row, col]
+      nbrs <- getNeighbours8(col, row, mat, nRow = nRow, nCol = nCol)
+      
+      r <- sum(id == nbrs) / length(nbrs)
+      # r <- r * (id_freqs[which(ids == id)] / n)
+      # r <- r * (n / id_freqs[which(ids == id)])
+      r <- r / id_freqs[which(ids == id)]
+      nbRates[as.character(id)] <- nbRates[as.character(id)] + r
+    }
+  }
+  
+  # return(sum(nbRates) / length(nbRates))
+  return(sum(nbRates))
 }

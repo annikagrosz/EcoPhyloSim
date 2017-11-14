@@ -30,7 +30,8 @@ Imports:
     foreach,
     MESS,
     apTreeshape,
-    PhyloMeasures
+    PhyloMeasures,
+    spatstat
 Suggests:
     knitr
 LinkingTo: Rcpp
