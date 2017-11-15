@@ -209,7 +209,7 @@ clarkEvans <- function (mat, ...) {
     pos <- which(mat == ids[i])
     col <- ceiling(pos / nRow)
     row <- pos %% nCol
-    pp <- ppp(x=col, y=row, window=owin(xrange = c(0, nCol), yrange = c(0, nRow)))
+    pp <- spatstat::ppp(x=col, y=row, window=spatstat::owin(xrange = c(0, nCol), yrange = c(0, nRow)))
     ce <- spatstat::clarkevans(pp, ...)
     if (!is.infinite(ce) && !is.na(ce) && !is.nan(ce)) {
       ceSum <- ceSum + ce
