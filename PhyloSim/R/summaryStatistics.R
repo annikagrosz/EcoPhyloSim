@@ -27,7 +27,10 @@ calculateSummaryStatistics <- function(simulation, strict=TRUE) {
                             varPart_1 = NA,
                             varPart_2 = NA,
                             ce = NA,
-                            nb8 = NA)
+                            nb8 = NA,
+                            envIntercept = NA,
+                            env = NA,
+                            envSqr = NA)
   
   # TODO: implement special case: only 1 species
   if (is.double(simulation$Output[[1]]$phylogeny)) {
@@ -150,7 +153,11 @@ calculateSummaryStatistics <- function(simulation, strict=TRUE) {
   # nb8
   summaryStatistics$nb8 <- nb8Idx(simulation$Output[[1]]$specMat)
   
-  
+  # env influence index
+  envIndices <- envIdx(simulation)
+  summaryStatistics$envIntercept <- envIndices[1]
+  summaryStatistics$env <- envIndices[2]
+  summaryStatistics$envSqr <- envIndices[3]
   
   if (strict == TRUE) {
     if (sum(is.na(summaryStatistics)) > 0) {
@@ -288,3 +295,47 @@ nb8Idx <- function (mat) {
   # return(sum(nbRates) / length(nbRates))
   return(sum(nbRates))
 }
+
+envIdx <- function (s) {
+  envMat <- s$Output[[1]]$envMat
+  specMat <- s$Output[[1]]$specMat
+  
+  specIDs <- unique(as.vector(specMat))
+  nSpec <- length(specIDs)
+  envs <- apply(envMat, 2, function (x) return(x[1]))
+  envsSqr <- envs ^ 2
+  
+  mat <- matrix(NA, ncol = nSpec + 2, nrow = ncol(specMat))
+  colnames(mat) <- c(specIDs, 'env', 'envSqr')
+  
+  mat[,ncol(mat) - 1] <- envs
+  mat[,ncol(mat)] <- envsSqr
+  
+  fits <- rep(list(NA), nSpec)
+  
+  for (i in 1:ncol(specMat)) {
+    specCounts <- rep(0, nSpec)
+    for (j in 1:nrow(specMat)) {
+      idx <- which(specMat[j, i] == specIDs)
+      specCounts[idx] <- specCounts[idx] + 1
+    }
+    mat[i, 1:nSpec] <- specCounts
+  }
+  
+  x <- rep(0, 3)
+  n <- 0
+  for (i in 1:nSpec) {
+    fits[[i]] <- tryCatch(glm(cbind(mat[,i], nrow(specMat) - mat[,i]) ~ mat[,ncol(mat)-1] + mat[,ncol(mat)],
+                              family = binomial), 
+                          warning = function (x) return(NA))
+    
+    if (!is.na(fits[[i]][1])) {
+      x <- x + fits[[i]]$coefficients
+      n <- n + 1
+    }
+  }
+  names(x) <- c('intercep', 'env', 'envSqr')
+  return (x / n)
+}
+
+

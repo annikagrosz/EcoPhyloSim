@@ -461,7 +461,7 @@ rejectionSamplePhylosimAnalysis <- function (p, s, nDraws, eQuantile=0.025, nCor
       predPar <- summaryRedsaABC(p = pars, s = sums, ...)
       rsResult$saABC <- rejectionSample(pars, predPar, nDraws, eQuantile, nCores, sumFun)
     } else if (type == "rf") {
-      predPar <- summaryRedRF(p = pars, s = sums, ...)
+      predPar <- summaryRedRF(p = pars, s = sums, nCores = nCores, ...)
       rsResult$rf <- rejectionSample(predPar$pTrue, predPar$pPred, nDraws, eQuantile, nCores, sumFun)
     } else {
       warning(paste("Could no recognize argument", type,"for 'which'"))
