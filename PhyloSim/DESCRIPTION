@@ -31,10 +31,11 @@ Imports:
     MESS,
     apTreeshape,
     PhyloMeasures,
-    sf
+    sf,
+    spatstat
 Suggests:
     knitr
-LinkingTo: 
+LinkingTo:
   Rcpp
 LazyData: true
 VignetteBuilder: knitr
