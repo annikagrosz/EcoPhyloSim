@@ -30,11 +30,12 @@ Imports:
     foreach,
     MESS,
     apTreeshape,
-    PhyloMeasures
+    PhyloMeasures,
+    sf
 Suggests:
     knitr
-LinkingTo: Rcpp
+LinkingTo: 
+  Rcpp
 LazyData: true
 VignetteBuilder: knitr
-LinkingTo: Rcpp
 RoxygenNote: 6.0.1
