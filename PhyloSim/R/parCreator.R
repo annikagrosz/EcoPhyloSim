@@ -23,14 +23,7 @@
 #' @param prunePhylogeny Logical, determining whether the phylogeny should be prune by the internal pruning function
 #' @details If runs is a sequence of generations, intermediate results are saved. E.g. when runs is c(500, 600, 700), the simulation runs 700 generations in total, and the intermediate results at generations 500 and 600 are saved additionally. The intermediate and end results are saved in the output of \code{runSimulation}. \cr\cr If type = "Rneutral" the model will run entirely in R. This model is to be seen only for test and teaching purpose. To be used in practice it is far too slow. Also the output is reduced. Only the species landscape and the parameter settings will be displayed in the output.
 #' @return A List with parameters
-#' @examples 
-#' ## Define a parameter set
-#' par <- createCompletePar(x = 50, y = 50, dispersal = FALSE , runs = c(500,1000),
-#'         density = 1, environment = 0.5, specRate = 1)
-#'
-#' ## Run the model
-#' simu <- runSimulation(par)
-#' 
+#' @example inst/examples/runSimulationHelp.R
 #' @export
 
 createCompletePar <- function(x = 50, y = 50, dispersal = "global", runs = 100, specRate = 1.0, density = 0, environment = 0, fitnessActsOn = "mortality" , fitnessBaseMortalityRatio = 10, densityCut = 1, seed=NULL,  type = "base", fission = 0, redQueen = 0, redQueenStrength = 0, protracted = 0, airmat = 1, scenario = NULL, calculateSummaries = FALSE, convertToBinaryTree = TRUE, prunePhylogeny = TRUE){

@@ -9,8 +9,8 @@ createCompletePar(x = 50, y = 50, dispersal = "global", runs = 100,
   fitnessActsOn = "mortality", fitnessBaseMortalityRatio = 10,
   densityCut = 1, seed = NULL, type = "base", fission = 0,
   redQueen = 0, redQueenStrength = 0, protracted = 0, airmat = 1,
-  scenario = NULL, calculateSummaries = FALSE, convertToBinaryTree = TRUE,
-  prunePhylogeny = TRUE)
+  scenario = NULL, calculateSummaries = FALSE,
+  convertToBinaryTree = TRUE, prunePhylogeny = TRUE)
 }
 \arguments{
 \item{x}{Integer, Dimension of the model landscape in x-direction}
@@ -65,11 +65,48 @@ Function to create a list of parameters for biogeographical simulations with \co
 If runs is a sequence of generations, intermediate results are saved. E.g. when runs is c(500, 600, 700), the simulation runs 700 generations in total, and the intermediate results at generations 500 and 600 are saved additionally. The intermediate and end results are saved in the output of \code{runSimulation}. \cr\cr If type = "Rneutral" the model will run entirely in R. This model is to be seen only for test and teaching purpose. To be used in practice it is far too slow. Also the output is reduced. Only the species landscape and the parameter settings will be displayed in the output.
 }
 \examples{
-## Define a parameter set
-par <- createCompletePar(x = 50, y = 50, dispersal = FALSE , runs = c(500,1000),
-        density = 1, environment = 0.5, specRate = 1)
+# Define a parameter set
+par <- createCompletePar(x = 50, y = 50, dispersal = 1 , runs = 1000,
+                         density = 0, environment = 0, specRate = 1, 
+                         fission = 0, redQueen=0, redQueenStrength=0,
+                         protracted=0)
 
-## Run the model
+# Run the model
 simu <- runSimulation(par)
+
+plot(simu)
+
+# Look at the phylogeny (requires package 'ape')
+require(ape)
+
+# Get the phylogeny of the last run. In this example this is after 1000 runs.
+phylogeny <- simu$Output[[2]]$phylogeny
+  
+# Only extant taxa
+extantPhylogeny <- drop.fossil(phylogeny)
+  
+# Display the results  
+plot(extantPhylogeny)
+  
+# Look at the species area relation
+sac(simu, area = c(1,10,100,1000), rep = 100, plot= TRUE)
+
+## Define two parameter sets
+par1 <- createCompletePar(x = 50, y = 50, dispersal = 0 , runs = c(500,1000),   
+                          density = 0, environment = 0.5, specRate = 1) 
+par2 <- createCompletePar(x = 50, y = 50, dispersal = 0 , runs = c(500,1000),
+                          density = 1, environment = 0.5, specRate = 1)
+ 
+## Merge the parameter sets. It is important to note, that the function
+## needs a list of parameter sets.
+par <- list(par1,par2)
+ 
+## Run the model
+simu <- runSimulationBatch(par, parallel = 2) 
+
+## Compare the results, here the SAC is shown exemplarily.
+par(mfrow=c(1,2))
+sac(simu[[1]])
+sac(simu[[2]])
 
 }

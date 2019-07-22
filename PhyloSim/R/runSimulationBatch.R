@@ -7,25 +7,7 @@
 #' @param strip NULL or "summaries", determining whether the whole simulation or only the summary statistics should be returned.
 #' @return An object of class "PhylosimList".
 #' @details The "PhylosimList" object is a list of "Phylosim" objects. They can be accessed by indexing (see Example).\cr\cr This function uses the \code{\link{foreach}} and \code{\link{doParallel}} package to compute the model scenarios parallel on several cores. \cr\cr The phylogeny is passed to R in the newick format and parsed to an object of class "phylo" with the function \code{\link[ape]{read.tree}} from the \code{\link{ape}} package. 
-#' @examples 
-#' ## Define two parameter sets
-#' par1 <- createCompletePar(x = 50, y = 50, dispersal = 0 , runs = c(500,1000),
-#'         density = 0, environment = 0.5, specRate = 1) 
-#' par2 <- createCompletePar(x = 50, y = 50, dispersal = 0 , runs = c(500,1000),
-#'         density = 1, environment = 0.5, specRate = 1)
-#' 
-#' ## Merge the parameter sets. It is important to note, that the function
-#' ## needs a list of parameter sets.
-#' par <- list(par1,par2)
-#' 
-#' ## Run the model
-#' simu <- runSimulationBatch(par, parallel = 2) 
-#'
-#'
-#' ## Compare the results, here the SAC is shown exemplarily.
-#' par(mfrow=c(1,2))
-#' sac(simu[[1]])
-#' sac(simu[[2]])
+#' @example inst/examples/runSimulationHelp.R
 #' @export
 runSimulationBatch <- function(pars, parallel = FALSE, backup = FALSE, strip = NULL){
   #start timing

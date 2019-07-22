@@ -13,7 +13,8 @@ You can install directly from gh, using the 'devtools' package:
 
 library(Rcpp)
 library(devtools)
-install_url("https://dl.dropboxusercontent.com/s/zkdof0b5b523qxt/PhyloSim_0.3.tar.gz")
+install_url("https://dl.dropboxusercontent.com/s/wub79etldv8fry2/phylosim_0.3.1.tar.gz")
+
 
 ?PhyloSim
 browseVignettes("PhyloSim")

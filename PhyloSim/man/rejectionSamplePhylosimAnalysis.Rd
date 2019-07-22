@@ -5,7 +5,8 @@
 \title{Rejection sampling for Phylosim}
 \usage{
 rejectionSamplePhylosimAnalysis(p, s, nDraws, eQuantile = 0.025,
-  nCores = "auto", which = c("none", "saABC", "rf"), sumFun = median, ...)
+  nCores = "auto", which = c("none", "saABC", "rf"), sumFun = median,
+  ...)
 }
 \arguments{
 \item{p}{Path to a file containing the parameters in form of a data.frame/matrix, or a matrix/data.frame containing the parameters.}

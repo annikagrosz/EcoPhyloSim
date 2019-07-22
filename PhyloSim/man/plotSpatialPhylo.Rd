@@ -4,7 +4,8 @@
 \alias{plotSpatialPhylo}
 \title{Phylogeny And Spatial Abundance Plot}
 \usage{
-plotSpatialPhylo(simu, plot = "both", plotTraits = T, which.result = NULL)
+plotSpatialPhylo(simu, plot = "both", plotTraits = T,
+  which.result = NULL)
 }
 \arguments{
 \item{simu}{Simulation output of the class "Phylosim", usually consisting out of several lists. Needs to contain at least the spatial species matrix ($specMat) and the phylogeny ($phylogeny)}
