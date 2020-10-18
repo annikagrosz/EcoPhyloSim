@@ -4,9 +4,16 @@
 \alias{calculatePhylogeneticDispersion}
 \title{Null Model Batch Extension}
 \usage{
-calculatePhylogeneticDispersion(simu, plotlengths = 10, plots = 200,
-  replicates = 500, type = "PhylMeta", which.result = NULL,
-  reduce = FALSE, fun = "mpd")
+calculatePhylogeneticDispersion(
+  simu,
+  plotlengths = 10,
+  plots = 200,
+  replicates = 500,
+  type = "PhylMeta",
+  which.result = NULL,
+  reduce = FALSE,
+  fun = "mpd"
+)
 }
 \arguments{
 \item{simu}{A list of Phylosim objects}

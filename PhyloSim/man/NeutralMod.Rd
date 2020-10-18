@@ -4,8 +4,7 @@
 \alias{NeutralMod}
 \title{Model of neutral community assembly}
 \usage{
-NeutralMod(xdim = 100, ydim = 100, specRate = 2, seed = NULL,
-  runs = 500)
+NeutralMod(xdim = 100, ydim = 100, specRate = 2, seed = NULL, runs = 500)
 }
 \arguments{
 \item{xdim}{Integer, Dimension of the model landscape in x-direction}

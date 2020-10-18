@@ -4,13 +4,29 @@
 \alias{createCompletePar}
 \title{Parameter Generator}
 \usage{
-createCompletePar(x = 50, y = 50, dispersal = "global", runs = 100,
-  specRate = 1, density = 0, environment = 0,
-  fitnessActsOn = "mortality", fitnessBaseMortalityRatio = 10,
-  densityCut = 1, seed = NULL, type = "base", fission = 0,
-  redQueen = 0, redQueenStrength = 0, protracted = 0, airmat = 1,
-  scenario = NULL, calculateSummaries = FALSE,
-  convertToBinaryTree = TRUE, prunePhylogeny = TRUE)
+createCompletePar(
+  x = 50,
+  y = 50,
+  dispersal = "global",
+  runs = 100,
+  specRate = 1,
+  density = 0,
+  environment = 0,
+  fitnessActsOn = "mortality",
+  fitnessBaseMortalityRatio = 10,
+  densityCut = 1,
+  seed = NULL,
+  type = "base",
+  fission = 0,
+  redQueen = 0,
+  redQueenStrength = 0,
+  protracted = 0,
+  airmat = 1,
+  scenario = NULL,
+  calculateSummaries = FALSE,
+  convertToBinaryTree = TRUE,
+  prunePhylogeny = TRUE
+)
 }
 \arguments{
 \item{x}{Integer, Dimension of the model landscape in x-direction}

@@ -4,8 +4,14 @@
 \alias{rejectionSample}
 \title{Rejection Sampling}
 \usage{
-rejectionSample(params, summaries, nDraws = 10, eQuantile = 0.025,
-  nCores = "auto", sumFun = median)
+rejectionSample(
+  params,
+  summaries,
+  nDraws = 10,
+  eQuantile = 0.025,
+  nCores = "auto",
+  sumFun = median
+)
 }
 \arguments{
 \item{summaries}{A data.frame of the summary statistics (different summaries in colums)}

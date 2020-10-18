@@ -4,8 +4,7 @@
 \alias{runSimulationBatch}
 \title{Batch runner}
 \usage{
-runSimulationBatch(pars, parallel = FALSE, backup = FALSE,
-  strip = NULL)
+runSimulationBatch(pars, parallel = FALSE, backup = FALSE, strip = NULL)
 }
 \arguments{
 \item{pars}{A list of parameter sets as created by \code{\link{createCompletePar}}}

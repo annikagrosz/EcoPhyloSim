@@ -4,8 +4,15 @@
 \alias{nullModel}
 \title{Null Model}
 \usage{
-nullModel(simu, which.result = NULL, abundance = FALSE, localPlotSize,
-  numberOfPlots, repetitions, fun = "mpd")
+nullModel(
+  simu,
+  which.result = NULL,
+  abundance = FALSE,
+  localPlotSize,
+  numberOfPlots,
+  repetitions,
+  fun = "mpd"
+)
 }
 \arguments{
 \item{simu}{an object of class "phylosim" as created by \code{\link{runSimulation}} or \code{\link{runSimulationBatch}}}
