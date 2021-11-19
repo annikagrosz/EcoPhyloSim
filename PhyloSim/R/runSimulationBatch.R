@@ -17,7 +17,7 @@ runSimulationBatch <- function(pars, parallel = FALSE, backup = FALSE, strip = N
   # TODO getParametersXML(XMLfile)
   
   if (parallel != F){
-    cat("running ",length(pars), " batch simualations with parallelization", "\n")
+    cat("running ",length(pars), " batch simulations with parallelization", "\n")
     
     if (parallel == T | parallel == "auto") cores <- parallel::detectCores() - 1
     if (is.numeric(parallel)) cores <- parallel
