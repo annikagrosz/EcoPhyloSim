@@ -31,3 +31,4 @@ plotSpatialPhylo(new.simulation)
 \author{
 Paul Bauche, Florian Hartig
 }
+\keyword{internal}

@@ -7,24 +7,9 @@
 #' @param types String, determines which null model should be created. Possible inputs are "PhylMeta" (default), "PhylSample", "PhylPool", "SamplePool" (see details). 
 #' @param which.result Integer, determines which result should be used. This argument is only usefull if your 'runs' argument in \code{\link{createCompletePar}} contains more than one element. By default (NULL), the last result is used. You can choose a particular result, a vector of results, or use all result with which.result = "all".
 #' @param fun String, determines which function should be used to calculate the phylogenetic diversity in the sample plot. Possible inputs are "mpd" or "pd" (see details).
-#' @details In the types argument "PhylMeta" is equivalent to \code{\link{nullModel}} with abundance = FALSE, "PhylSample" is equivalent to the same function with abundance = TRUE, wheras the two other option use \code{\link[picante]{ses.mpd}}. "PhylPool" uses the argument null.model = "phylogeny.pool", "SamplePool" is setting null.model to "sample.pool". \cr\cr The fun argument is only used if types="PhylSample". For more information see \code{\link{nullModel}}. \cr \cr If yu choose which.result = NULL (default), the length of the output corresponds to the length of the 'runs' argument in your parameter definition. Otherwise the length of the list corresponds to the length of your which.result argument. \cr\cr The structure of the output is organitzed as follows with output[[n]] you will get the results for the scenario 'n'. With output[[n]][[t]] you will get the results for 'n' at timestep 't'. output[[n]][[t]] is a list that contains one vector with p values for each element in the plotlengths argument.
+#' @details In the types argument "PhylMeta" is equivalent to \code{\link{nullModel}} with abundance = FALSE, "PhylSample" is equivalent to the same function with abundance = TRUE, wheras the two other option use \code{\link[picante]{ses.mpd}}. "PhylPool" uses the argument null.model = "phylogeny.pool", "SamplePool" is setting null.model to "sample.pool". \cr\cr The fun argument is only used if types="PhylSample". For more information see \code{\link{nullModel}}. \cr \cr If yu choose which.result = NULL (default), the length of the output corresponds to the length of the 'runs' argument in your parameter definition. Otherwise the length of the list corresponds to the length of your which.result argument. \cr\cr The structure of the output is organitzed as follows with output[[n]] you will get the results for the scenario 'n'. With `output[[n]][[t]]` you will get the results for `n` at timestep `t`. `output[[n]][[t]]` is a list that contains one vector with p values for each element in the plotlengths argument.
 #' @return A list with pValues for each plot in the observed metacommunity. If you have calculated multiple scenarios, the results can be visualized by \code{\link{plotPhylogeneticDisperion}}.
-#' @examples 
-#' ## Create a set of parameters
-#' par1 <- createCompletePar(x = 50, y = 50, dispersal = 0 , runs = c(500,1000),
-#'         density = 0, environment = 0.5, specRate = 1) 
-#' par2 <- createCompletePar(x = 50, y = 50, dispersal = 0 , runs = c(500,1000),
-#'         density = 1, environment = 0.5, specRate = 1)
-#' 
-#' ## Merge the parameter sets. 
-#' par <- list(par1,par2)
-#' 
-#' ## Run the model
-#' simu <- runSimulationBatch(par, parallel = 2) 
-#' 
-#' ## Calculate null model and compare the observed results against
-#' pValues <- calculatePhylogeneticDispersion(simu, plotlength=20, plots=20, replicates=20, type="PhylMeta")
-#' 
+#' @example /inst/examples/phylogeneticDispersion-help.R
 #' 
 #' @export
 

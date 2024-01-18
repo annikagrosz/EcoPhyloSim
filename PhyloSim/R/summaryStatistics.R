@@ -4,12 +4,7 @@
 #' @param simulation Simulation output of the class "Phylosim"
 #' @details TODO: implement
 #' @return A list containing the summary statistics.
-#' @examples 
-#' 
-#' simu <- runSimulation(createCompletePar(x=50, y=50, runs=1000, specRate=2))
-#' summStat <- calculateSummaryStatistics(simu)
-#' 
-#' 
+#' @example /inst/examples/summaryStatistics-help.R
 #' @export
 #' 
 

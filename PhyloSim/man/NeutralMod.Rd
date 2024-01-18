@@ -39,7 +39,6 @@ simuNeut <- runSimulation(parNeut)
 
 # Visualize the grid
 image(simuNeut$Output[[1]]$specMat)
-
 }
 \references{
 Hubbell, Stephen P. The unified neutral theory of biodiversity and biogeography (MPB-32). Vol. 32. Princeton University Press, 2001.
