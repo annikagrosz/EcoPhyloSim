@@ -4,16 +4,9 @@
 \alias{calculatePhylogeneticDispersion}
 \title{Null Model Batch Extension}
 \usage{
-calculatePhylogeneticDispersion(
-  simu,
-  plotlengths = 10,
-  plots = 200,
-  replicates = 500,
-  type = "PhylMeta",
-  which.result = NULL,
-  reduce = FALSE,
-  fun = "mpd"
-)
+calculatePhylogeneticDispersion(simu, plotlengths = 10, plots = 200,
+  replicates = 500, type = "PhylMeta", which.result = NULL,
+  reduce = FALSE, fun = "mpd")
 }
 \arguments{
 \item{simu}{A list of Phylosim objects}
@@ -37,7 +30,7 @@ A list with pValues for each plot in the observed metacommunity. If you have cal
 Generates a null models for a list of Phylosim objects as created by \code{\link{runSimulationBatch}} and compares the observed results against.
 }
 \details{
-In the types argument "PhylMeta" is equivalent to \code{\link{nullModel}} with abundance = FALSE, "PhylSample" is equivalent to the same function with abundance = TRUE, wheras the two other option use \code{\link[picante]{ses.mpd}}. "PhylPool" uses the argument null.model = "phylogeny.pool", "SamplePool" is setting null.model to "sample.pool". \cr\cr The fun argument is only used if types="PhylSample". For more information see \code{\link{nullModel}}. \cr \cr If yu choose which.result = NULL (default), the length of the output corresponds to the length of the 'runs' argument in your parameter definition. Otherwise the length of the list corresponds to the length of your which.result argument. \cr\cr The structure of the output is organitzed as follows with output[[n]] you will get the results for the scenario 'n'. With output[[n]][[t]] you will get the results for 'n' at timestep 't'. output[[n]][[t]] is a list that contains one vector with p values for each element in the plotlengths argument.
+In the types argument "PhylMeta" is equivalent to \code{\link{nullModel}} with abundance = FALSE, "PhylSample" is equivalent to the same function with abundance = TRUE, wheras the two other option use \code{\link[picante]{ses.mpd}}. "PhylPool" uses the argument null.model = "phylogeny.pool", "SamplePool" is setting null.model to "sample.pool". \cr\cr The fun argument is only used if types="PhylSample". For more information see \code{\link{nullModel}}. \cr \cr If yu choose which.result = NULL (default), the length of the output corresponds to the length of the 'runs' argument in your parameter definition. Otherwise the length of the list corresponds to the length of your which.result argument. \cr\cr The structure of the output is organitzed as follows with output[\link{n}] you will get the results for the scenario 'n'. With output[\link{n}][\link{t}] you will get the results for 'n' at timestep 't'. output[\link{n}][\link{t}] is a list that contains one vector with p values for each element in the plotlengths argument.
 }
 \examples{
 ## Create a set of parameters

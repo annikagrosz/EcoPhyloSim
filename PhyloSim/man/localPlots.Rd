@@ -4,15 +4,8 @@
 \alias{localPlots}
 \title{Create Subplots}
 \usage{
-localPlots(
-  simu,
-  which.result = NULL,
-  size,
-  n,
-  community = FALSE,
-  plot = FALSE,
-  nested = FALSE
-)
+localPlots(simu, which.result = NULL, size, n, community = FALSE,
+  plot = FALSE, nested = FALSE)
 }
 \arguments{
 \item{simu}{Simulation output of the class "Phylosim", usually consisting out of several lists. Needs to contain at least a species matrix ($specMat)}

@@ -34,7 +34,8 @@ Imports:
 Suggests:
     knitr
 LinkingTo: Rcpp
-RoxygenNote: 6.0.1
+RoxygenNote: 7.2.3
+Roxygen: list(old_usage = TRUE, markdown = TRUE)
 LazyData: true
 VignetteBuilder: knitr
 Encoding: UTF-8
