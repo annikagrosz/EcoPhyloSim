@@ -21,7 +21,7 @@
 #'
 #' @author Paul Bauche, Florian Hartig
 #' 
-#' @example /inst/examples/forMainHelp.R
+#' @example /inst/examples/phylosim-help.R
 #'  
 "_PACKAGE"
 ## usethis namespace: start
