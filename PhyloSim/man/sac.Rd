@@ -4,8 +4,15 @@
 \alias{sac}
 \title{Species Area Curve}
 \usage{
-sac(simu, which.result = NULL, size = NULL, rep = 50, plot = T,
-  title = "SAC", nested = FALSE)
+sac(
+  simu,
+  which.result = NULL,
+  size = NULL,
+  rep = 50,
+  plot = T,
+  title = "SAC",
+  nested = FALSE
+)
 }
 \arguments{
 \item{simu}{Simulation output of the class "Phylosim", usually consisting out of several lists. Needs at least the spatial distribution of the species stored in a matrix ($specMat)}

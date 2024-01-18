@@ -4,8 +4,13 @@
 \alias{collessImbalance}
 \title{Colless' imbalance}
 \usage{
-collessImbalance(simu, which.result = NULL, useApTreeshape = TRUE,
-  norm = NULL, dropFossils = FALSE)
+collessImbalance(
+  simu,
+  which.result = NULL,
+  useApTreeshape = TRUE,
+  norm = NULL,
+  dropFossils = FALSE
+)
 }
 \arguments{
 \item{simu}{An object of type "PhyloSim"}
