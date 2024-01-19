@@ -54,7 +54,7 @@ jobs:
 
       - name: Query dependencies
         run: |
-          setwd("phylosim")
+          setwd("PhyloSim")
           install.packages('remotes')
           saveRDS(remotes::dev_package_deps(dependencies = TRUE), "../.github/depends.Rds", version = 2)
           writeLines(sprintf("R-%i.%i", getRversion()$major, getRversion()$minor), "../.github/R-version")
@@ -71,7 +71,7 @@ jobs:
       - name: Install system dependencies
         if: runner.os == 'Linux'
         run: |
-          cd phylosim
+          cd PhyloSim
           while read -r cmd
           do
             eval sudo $cmd
@@ -79,7 +79,7 @@ jobs:
 
       - name: Install dependencies
         run: |
-          setwd("phylosim")
+          setwd("PhyloSim")
           remotes::install_deps(dependencies = TRUE)
           remotes::install_cran("rcmdcheck")
         shell: Rscript {0}
