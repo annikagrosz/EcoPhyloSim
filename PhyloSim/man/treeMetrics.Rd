@@ -4,16 +4,20 @@
 \alias{treeMetrics}
 \title{Calculate summary statistics from a phylogenetic tree}
 \usage{
-treeMetrics(phy)
+treeMetrics(phy, selection = 1:10, dropFossils = FALSE)
 }
 \arguments{
+\item{selection}{selection of metrics. 1:10 is fast, > 11 is slow. Max range is 1:13}
+
+\item{dropFossils}{whether to apply ape::drop.fossil. Safer, but can be slow for large trees.}
+
 \item{object}{an object of class phylo}
 }
 \description{
 Calculate summary statistics from a phylogenetic tree
 }
 \details{
-See also 
+See also
 
 https://www.lirmm.fr/MEP05/talk/14_Mooers.pdf
 

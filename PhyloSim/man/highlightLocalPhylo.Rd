@@ -4,14 +4,8 @@
 \alias{highlightLocalPhylo}
 \title{Phylogenetic clades}
 \usage{
-highlightLocalPhylo(
-  simu,
-  which.result = NULL,
-  size,
-  n,
-  subplot = NULL,
-  phylogeny = NULL
-)
+highlightLocalPhylo(simu, which.result = NULL, size, n, subplot = NULL,
+  phylogeny = NULL)
 }
 \arguments{
 \item{simu}{Simulation output of the class "Phylosim", usually consisting out of several lists. Needs to contain at least the phylogeny ($phylogeny) and species matrix ($specMat). The species matrix is used as metacommunity}

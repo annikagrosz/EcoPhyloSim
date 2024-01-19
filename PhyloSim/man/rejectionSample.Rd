@@ -4,21 +4,15 @@
 \alias{rejectionSample}
 \title{Rejection Sampling}
 \usage{
-rejectionSample(
-  params,
-  summaries,
-  nDraws = 10,
-  eQuantile = 0.025,
-  nCores = "auto",
-  sumFun = median
-)
+rejectionSample(params, summaries, nDraws = 10, eQuantile = 0.025,
+  nCores = "auto", sumFun = median)
 }
 \arguments{
 \item{summaries}{A data.frame of the summary statistics (different summaries in colums)}
 
 \item{nDraws}{Number of ABC rejection sampling draws}
 
-\item{eQuantile}{Epsilon expressed as quantile. E.g. 0.025 are only the nearest 2.5\%.}
+\item{eQuantile}{Epsilon expressed as quantile. E.g. 0.025 are only the nearest 2.5\\%.}
 
 \item{nCores}{Number of parallel cores, or "auto".}
 

@@ -4,31 +4,10 @@
 \alias{callModel}
 \title{Core phylosim model}
 \usage{
-callModel(
-  x,
-  y,
-  dispersal,
-  runs,
-  specRate,
-  dens,
-  env,
-  neutral,
-  mort,
-  mortStrength,
-  repro,
-  dispersalCutoff,
-  densityCutoff,
-  seed,
-  envStrength,
-  compStrength,
-  fission,
-  redQueen,
-  redQueenStrength,
-  protracted,
-  airmatR,
-  soilmatR,
-  prunePhylogeny
-)
+callModel(x, y, dispersal, runs, specRate, dens, env, neutral, mort,
+  mortStrength, repro, dispersalCutoff, densityCutoff, seed, envStrength,
+  compStrength, fission, redQueen, redQueenStrength, protracted, airmatR,
+  soilmatR, prunePhylogeny)
 }
 \description{
 Core phylosim model

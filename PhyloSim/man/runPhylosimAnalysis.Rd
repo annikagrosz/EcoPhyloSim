@@ -4,15 +4,8 @@
 \alias{runPhylosimAnalysis}
 \title{Run PhyloSim Analysis}
 \usage{
-runPhylosimAnalysis(
-  variableParams,
-  fixedParams,
-  nRuns,
-  outDir,
-  summariesOnly = FALSE,
-  nCores = "auto",
-  chunkSize = "auto"
-)
+runPhylosimAnalysis(variableParams, fixedParams, nRuns, outDir,
+  summariesOnly = FALSE, nCores = "auto", chunkSize = "auto")
 }
 \arguments{
 \item{variableParams}{A named list, where the names are parameter names and the values are priors (functions). A call to the function must return a single value. See details.}
