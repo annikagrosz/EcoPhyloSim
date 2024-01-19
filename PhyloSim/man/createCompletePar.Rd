@@ -71,5 +71,4 @@ par <- createCompletePar(x = 50, y = 50, dispersal = FALSE , runs = c(500,1000),
 
 ## Run the model
 simu <- runSimulation(par)
-
 }
