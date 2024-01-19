@@ -9,8 +9,8 @@ createCompletePar(x = 50, y = 50, dispersal = "global", runs = 100,
   fitnessActsOn = "mortality", fitnessBaseMortalityRatio = 10,
   densityCut = 1, seed = NULL, type = "base", fission = 0,
   redQueen = 0, redQueenStrength = 0, protracted = 0, airmat = 1,
-  scenario = NULL, calculateSummaries = FALSE, convertToBinaryTree = TRUE,
-  prunePhylogeny = TRUE)
+  scenario = NULL, calculateSummaries = FALSE,
+  convertToBinaryTree = TRUE, prunePhylogeny = TRUE)
 }
 \arguments{
 \item{x}{Integer, Dimension of the model landscape in x-direction}
@@ -71,5 +71,4 @@ par <- createCompletePar(x = 50, y = 50, dispersal = FALSE , runs = c(500,1000),
 
 ## Run the model
 simu <- runSimulation(par)
-
 }

@@ -6,36 +6,7 @@
 #' @param title String, determining the title of the plot.
 #' @details Each species is given a rank according to their abundance (highest = rank 1). Then the the species' abundance is plotted in dependency of their rank. It can be used as an indicator for the ammount of equally abundant species a community can support. \cr\cr If which.result = "all" all intermediate results are shown in one plot. The colors of the lines are plotted as a gradient from blue (first results) to red (end result).
 #' @return A dataframe containing the ranked abundances, sorted by ascending rank. If which.result = "all" only the plot will be returned.
-#' @examples 
-#' 
-#' #Load data
-#' data(simu.neutral.global)
-#' data(simu.neutral.local)
-#' data(simu.envcom.local)
-#' 
-#'  
-#' 
-#' #Plot RAC curve for neutral model and global dispersion
-#' 
-#' rac(simu = simu.neutral.global)
-#' rac(simu = simu.neutral.global, plot ="bar")
-#' 
-#'  
-#' 
-#' #Plot RAC curve for neutral model and local dispersion
-#' 
-#' rac(simu = simu.neutral.local)
-#' rac(simu = simu.neutral.local, plot ="bar")
-#' 
-#'  
-#' 
-#' #Plot RAC curve for environment and competition model and local dispersion
-#' 
-#' rac(simu = simu.envcom.local)
-#' rac(simu = simu.envcom.local, plot ="bar")
-#' 
-#'  
-#' 
+#' @example inst/examples/plotRAC-help.R
 #' @export
 
 rac <- function(simu,which.result=NULL, plot="line", title="RAC"){
