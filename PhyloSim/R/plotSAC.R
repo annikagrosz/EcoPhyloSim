@@ -10,46 +10,8 @@
 #' @param title String, determining the title of the plot
 #' @details Displays the accumulated species richness as a function of plot size or the amount of equally sized plots. It serves as an indicator for the clustering of a species community. A positively bent curve usually indicates clustering since an increase in plot size or number leads to an increase in species richness while a negatively bent curve indicates a more neutral distribution of species within the community. \cr\cr If which.result = "all" all intermediate results are shown in one plot. The colors of the lines are plotted as a gradient from blue (first results) to red (end result).
 #' @return A list containing the mean species richness for each size and the respective standard deviation. If which.result = "all" only the plot will be returned.
-#' @examples 
-#' 
-#' #Load data
-#' data(simu.neutral.global)
-#' data(simu.neutral.local)
-#' data(simu.envcom.local)
-#' 
-#'
-#'   
-#' #Plot SAC curve for neutral model and global dispersion
-#' 
-#' sac(simu = simu.neutral.global)
-#' 
-#'  
-#'  
-#' #Plot SAC curve for neutral model and local dispersion
-#' 
-#' sac(simu = simu.neutral.local)
-#' 
-#'  
-#'  
-#' #Plot SAC curve for environment and competition model and local dispersion
-#'
-#' sac(simu = simu.envcom.local)
-#' 
-#'  
-#'  
-#' #Plot SAC curve with random plotsize 
-#' 
-#' sac(simu=simu.envcom.local, size = sort(sample(c(10:1000), size = 10)))
-#' 
-#'  
-#'  
-#' #Plot SAC curve with different repititions
-#' simu <- simu.envcom.local
-#' par(mfrow=c(3,1))
-#' sac(simu=simu.envcom.local, rep = 3)
-#' sac(simu=simu.envcom.local, rep = 30)
-#' sac(simu=simu.envcom.local, rep = 30)
-#' 
+#' @example /inst/examples/plotSAC-help.R
+
 #' @export
 #' 
 ## Modification of the SAC function to plot all recorded time steps

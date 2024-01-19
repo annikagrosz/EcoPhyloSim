@@ -3,7 +3,7 @@ Type: Package
 Title: Analysis of Phylogenetic and Biogeographic patterns, inferring species
     community assembly
 Version: 0.3.1
-Date: 2019-07-18
+Date: 2024-1-25
 Authors: c(person("Paul", "Bauche", role = c("aut","cre")),
     person("Florian", "Hartig", role = "aut"),
     person("Christian", "Buschbeck", role = "ctb"),
@@ -35,8 +35,10 @@ Imports:
     spatstat
 Suggests:
     knitr
-LinkingTo:
-  Rcpp
+LinkingTo: Rcpp
+RoxygenNote: 7.3.0
+Roxygen: list(old_usage = TRUE, markdown = TRUE)
 LazyData: true
 VignetteBuilder: knitr
-RoxygenNote: 7.1.1
+Encoding: UTF-8
+

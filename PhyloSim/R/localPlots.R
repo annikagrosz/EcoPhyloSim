@@ -9,7 +9,7 @@
 #' @param nested Logical, determining whether the subplots should be nested (see Details).
 #' @return A list of subplots and (if coomunity = T) a community table with plots in rows and species in collumns
 #' @details If nested == TRUE the subplots are poduced in a sequential order. That means if your 'size' argument has the length 5 and your 'n' argument has the size 2 you will get ten subplots. The first five will be one group of nested plots and the last five the second group of nested plots.
-#' @example inst/examples/localPlots.R
+#' @example inst/examples/localPlots-help.R
 #' @export
 localPlots <- function(simu, which.result=NULL,size, n, community = FALSE, plot = FALSE, nested = FALSE){
   
