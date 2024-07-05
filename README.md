@@ -19,10 +19,4 @@ install_url("https://dl.dropboxusercontent.com/s/zkdof0b5b523qxt/PhyloSim_0.3.ta
 browseVignettes("PhyloSim")
 ```
 
-#### For developers
-
-Clone or fork the repo, and the follow the hints here http://biometry.github.io/APES/R/R70-PackageDevelopment.html if you don't know how to compile a package
-
-See also https://github.com/TheoreticalEcology/phylosim/wiki/Developing-guides
-
 
