@@ -1,10 +1,8 @@
 # PhyloSim
-R package for simulation of biogeographical and phylogenetic data 
+
+A model, provided as an R package, for the simulation of spatially explicit biogeographical and phylogenetic data. 
 
 ### Installation 
-
-
-#### For users
 
 You can install directly from gh, using the 'devtools' package:
 
