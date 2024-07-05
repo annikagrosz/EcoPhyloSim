@@ -4,7 +4,8 @@
 \alias{NeutralMod}
 \title{Model of neutral community assembly}
 \usage{
-NeutralMod(xdim = 100, ydim = 100, specRate = 2, seed = NULL, runs = 500)
+NeutralMod(xdim = 100, ydim = 100, specRate = 2, seed = NULL,
+  runs = 500)
 }
 \arguments{
 \item{xdim}{Integer, Dimension of the model landscape in x-direction}
@@ -38,7 +39,6 @@ simuNeut <- runSimulation(parNeut)
 
 # Visualize the grid
 image(simuNeut$Output[[1]]$specMat)
-
 }
 \references{
 Hubbell, Stephen P. The unified neutral theory of biodiversity and biogeography (MPB-32). Vol. 32. Princeton University Press, 2001.

@@ -4,14 +4,8 @@
 \alias{highlightLocalPhylo}
 \title{Phylogenetic clades}
 \usage{
-highlightLocalPhylo(
-  simu,
-  which.result = NULL,
-  size,
-  n,
-  subplot = NULL,
-  phylogeny = NULL
-)
+highlightLocalPhylo(simu, which.result = NULL, size, n, subplot = NULL,
+  phylogeny = NULL)
 }
 \arguments{
 \item{simu}{Simulation output of the class "Phylosim", usually consisting out of several lists. Needs to contain at least the phylogeny ($phylogeny) and species matrix ($specMat). The species matrix is used as metacommunity}
@@ -33,32 +27,31 @@ Visualises the phylogenetic clades of a local community within a metacommunity.
 This function works with a single simu object (class "phylosim"). If no simu object is given, it is also possible to calculate the clades from a given phylogeny and localc plots. Here the phylogeny represents the metacommunity wihtin which the local plots create the clades
 }
 \examples{
- 
 
 #Load data
 data(simu.neutral.global)
 data(simu.neutral.local)
 data(simu.envcom.local)
 
- 
+
 
 #Plot clades for neutral model with global dispersal with three subplots
 par(mfrow=c(1,3))
-highlightLocalPhylo(simu.neutral.global, size = 50, n = 3) 
+highlightLocalPhylo(simu.neutral.global, size = 50, n = 3)
 
- 
+
 
 #Plot clades for neutral model with local dispersal with three subplots
 par(mfrow=c(1,3))
-highlightLocalPhylo(simu.neutral.local, size = 50, n = 3) 
+highlightLocalPhylo(simu.neutral.local, size = 50, n = 3)
 
- 
+
 
 #Plot clades for environment and competition model with global dispersal with three subplots
 par(mfrow=c(1,3))
-highlightLocalPhylo(simu.envcom.local, size = 50, n = 3) 
+highlightLocalPhylo(simu.envcom.local, size = 50, n = 3)
 
- 
+
 
 #increasing plot size
 par(mfrow=c(2,2))

@@ -16,17 +16,17 @@ An object of class "Phylosim". This objet contains the species matrix, the trait
 A model of species community assembly under different assembly mechanisms.
 }
 \details{
-If your parameterset contains more than one runs argument, each interim step is saved in the Phylosim object. \cr\cr For larger simularions consider \link{runSimulationBatch} to make use of parallel computing. \cr\cr If you are using type="Rneutral" only one runs argument can be processed.\cr\cr It is possible that more than one new species arises per generation. This leads to a multifurcated phylogeny, yet many packages such as "ape" can only work with bifurcated tree. Setting converToBinaryTree to TRUE converts the generated phylogeny to a bifurcate one using multi2di() from the "ape" package.
+If your parameterset contains more than one runs argument, each interim step is saved in the Phylosim object. \cr\cr For larger simularions consider \link{runSimulationBatch} to make use of parallel computing. \cr\cr If you are using \code{type="Rneutral"} only one runs argument can be processed.\cr\cr It is possible that more than one new species arises per generation. This leads to a multifurcated phylogeny, yet many packages such as "ape" can only work with bifurcated tree. Setting \code{converToBinaryTree = TRUE} converts the generated phylogeny to a bifurcate one using \code{multi2di()} from the "ape" package.
 }
 \examples{
+ library(PhyloSim)
 # Define a parameter set
 par <- createCompletePar(x = 50, y = 50, dispersal = 1 , runs = 1000,
-                         density = 0, environment = 0, specRate = 1, 
-                         fission = 0, redQueen=0, redQueenStrength=0,
-                         protracted=0)
+        density = 0, environment = 0, specRate = 1, fission = 0, redQueen=0, redQueenStrength=0,
+        protracted=0)
 
 # Run the model
-simu <- runSimulation(par)
+simut <- runSimulation(par)
 
 plot(simu)
 
@@ -35,32 +35,13 @@ require(ape)
 
 # Get the phylogeny of the last run. In this example this is after 1000 runs.
 phylogeny <- simu$Output[[2]]$phylogeny
-  
+
 # Only extant taxa
 extantPhylogeny <- drop.fossil(phylogeny)
-  
-# Display the results  
+
+# Display the results
 plot(extantPhylogeny)
-  
-# Look at the species area relation
+
+#Look at the species area relation
 sac(simu, area = c(1,10,100,1000), rep = 100, plot= TRUE)
-
-## Define two parameter sets
-par1 <- createCompletePar(x = 50, y = 50, dispersal = 0 , runs = c(500,1000),   
-                          density = 0, environment = 0.5, specRate = 1) 
-par2 <- createCompletePar(x = 50, y = 50, dispersal = 0 , runs = c(500,1000),
-                          density = 1, environment = 0.5, specRate = 1)
- 
-## Merge the parameter sets. It is important to note, that the function
-## needs a list of parameter sets.
-par <- list(par1,par2)
- 
-## Run the model
-simu <- runSimulationBatch(par, parallel = 2) 
-
-## Compare the results, here the SAC is shown exemplarily.
-par(mfrow=c(1,2))
-sac(simu[[1]])
-sac(simu[[2]])
-
 }

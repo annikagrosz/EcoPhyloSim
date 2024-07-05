@@ -4,15 +4,8 @@
 \alias{nullModel}
 \title{Null Model}
 \usage{
-nullModel(
-  simu,
-  which.result = NULL,
-  abundance = FALSE,
-  localPlotSize,
-  numberOfPlots,
-  repetitions,
-  fun = "mpd"
-)
+nullModel(simu, which.result = NULL, abundance = FALSE, localPlotSize,
+  numberOfPlots, repetitions, fun = "mpd")
 }
 \arguments{
 \item{simu}{an object of class "phylosim" as created by \code{\link{runSimulation}} or \code{\link{runSimulationBatch}}}
@@ -50,7 +43,7 @@ nullModel(simu, abundance= FALSE, localPlotSize = 100, numberOfPlots = 10, repet
 ## Usage with runSimulationBatch
 ## Define two (or multiple) parameter sets
 par1 <- createCompletePar(x = 50, y = 50, dispersal = 0 , runs = c(500,1000),
-        density = 1, environment = 0.5, specRate = 1) 
+        density = 1, environment = 0.5, specRate = 1)
 par2 <- createCompletePar(x = 50, y = 50, dispersal = 0 , runs = c(500,1000),
         density = 2, environment = 0.5, specRate = 1)
 
@@ -59,10 +52,9 @@ par2 <- createCompletePar(x = 50, y = 50, dispersal = 0 , runs = c(500,1000),
 par <- list(par1,par2)
 
 ## Run the model
-simubatch <- runSimulationBatch(par, parallel=2) 
+simubatch <- runSimulationBatch(par, parallel=2)
 
 ## Compare results to null model
 nullModel(simubatch[[1]],localPlotSize = 100, numberOfPlots = 10, repetitions = 10)
 nullModel(simubatch[[2]],localPlotSize = 100, numberOfPlots = 10, repetitions = 10)
-
 }

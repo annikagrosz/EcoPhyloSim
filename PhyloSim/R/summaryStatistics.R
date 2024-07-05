@@ -5,12 +5,7 @@
 #' @param strict Logical. If true the output of the function will be NA if at least one summary statistic could not be calculated.
 #' @details TODO: implement
 #' @return A list containing the summary statistics.
-#' @examples 
-#' 
-#' simu <- runSimulation(createCompletePar(x=50, y=50, runs=1000, specRate=2))
-#' summStat <- calculateSummaryStatistics(simu)
-#' 
-#' 
+#' @example /inst/examples/summaryStatistics-help.R
 #' @export
 #' 
 
