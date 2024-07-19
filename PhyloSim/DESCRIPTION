@@ -21,7 +21,6 @@ License: GPL (>= 2)
 Imports:
     Rcpp (>= 0.12.9),
     ape,
-    kulife,
     doParallel,
     picante,
     adephylo,
@@ -36,9 +35,8 @@ Imports:
 Suggests:
     knitr
 LinkingTo: Rcpp
-RoxygenNote: 7.3.0
+RoxygenNote: 7.3.1
 Roxygen: list(old_usage = TRUE, markdown = TRUE)
 LazyData: true
 VignetteBuilder: knitr
 Encoding: UTF-8
-
