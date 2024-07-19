@@ -19,17 +19,17 @@ createCompletePar(x = 50, y = 50, dispersal = "global", runs = 100,
 
 \item{dispersal}{Integer. Type 0 or "global" for global dispersion. For local dispersion all integers >=1 set the dispersal distance.}
 
-\item{runs}{Integer, Number of generations or sequence of generations the model runs over (see Details).}
+\item{runs}{Integer or vector of Integers, Number of generations or sequence of generations the model runs over (see Details).}
 
 \item{specRate}{Integer, Number of Individuals introduced to the community in each generation}
 
 \item{density}{Float, determining whether or how strong the density dependence influences the model. By default (density=0) there is no density dependence. The higher the value of the parameter, the stronger is the density dependence.}
 
-\item{environment}{Float, determining whether or how strong the environment influences the model.  By default (environment=0) there is no influence of the environment. The higher the value of the parameter, the stronger is the influence of the environment.}
+\item{environment}{Float, determining whether or how strong the environment influences the model.  By default (environment=0) there is no influence of the environment. The higher the value of the parameter, the stronger is the influence of the environment. Environment value must be between 0 and 1.}
 
 \item{fitnessActsOn}{Character, determining how the fitness influences the individuals. Possible inputs are "mortality" (default), "reproduction" or "both"}
 
-\item{fitnessBaseMortalityRatio}{Integer, determines the fitness based mortality ratio}
+\item{fitnessBaseMortalityRatio}{Integer, determines the fitness based mortality ratio. Must be greater than or equal to 1.}
 
 \item{densityCut}{Integer, defines the effective range of the competition (ignored if density = FALSE)}
 
@@ -43,9 +43,9 @@ createCompletePar(x = 50, y = 50, dispersal = "global", runs = 100,
 
 \item{redQueenStrength}{Float, determining the strength of the Red Queen effect. A value > 0 mean a new species gets a fitness boost due to its novelty.}
 
-\item{protracted}{Integer, determining the time span in generation new species stays 'incipient' befre turning into a 'good' species. Default is 0.}
+\item{protracted}{Integer, determining the time span in generations a new species stays 'incipient' before turning into a 'good' species. Default is 0.}
 
-\item{airmat}{Matrix, deteriming the environment of the simulation. airmat needs to be a matrix with the same dimensions as the grid.}
+\item{airmat}{Matrix, deteriming the environment of the simulation. airmat needs to be a matrix with the same dimensions as the grid. Must be scaled between 0 and 1.}
 
 \item{scenario}{String, further information you want to add to the parameter set in order to refer to a model run more conveniently.}
 
@@ -62,7 +62,7 @@ A List with parameters
 Function to create a list of parameters for biogeographical simulations with \code{\link{runSimulation}} or \code{\link{runSimulationBatch}}
 }
 \details{
-If runs is a sequence of generations the intermediate and end results are saved in the output of \code{runSimulation}. \cr\cr If type = "Rneutral" the model will run entirely in R. This model is to be seen only for test and teaching purpose. To be used in practice it is far too slow. Also the output is reduced. Only the species landscape and the parameter settings will be displayed in the output.
+If runs is a sequence of generations, intermediate results are saved. E.g. when runs is c(500, 600, 700), the simulation runs 700 generations in total, and the intermediate results at generations 500 and 600 are saved additionally. The intermediate and end results are saved in the output of \code{runSimulation}. \cr\cr If type = "Rneutral" the model will run entirely in R. This model is to be seen only for test and teaching purpose. To be used in practice it is far too slow. Also the output is reduced. Only the species landscape and the parameter settings will be displayed in the output.
 }
 \examples{
 ## Define a parameter set

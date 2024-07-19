@@ -17,8 +17,8 @@
 #include <utility>
 
 Phylogeny::Phylogeny() {
-    m_PrunedPhylo = new std::multimap<unsigned long long, Species *>();
-    m_FullPhylogeny = new std::multimap<unsigned long long, Species *>();
+    m_PrunedPhylo = new std::multimap<unsigned long long, Species*>();
+    m_FullPhylogeny = new std::multimap<unsigned long long, Species*>();
 }
 
 Phylogeny::~Phylogeny() {
@@ -64,8 +64,7 @@ void Phylogeny::prunePhylogeny(int current) {
     for (unsigned long long i = 1; i <= m_FullPhylogeny->size(); i++) {
         Species *specp = new Species(*m_FullPhylogeny->find(i)->second);
         if (specp->m_Date_of_Extinction > current) specp->m_Date_of_Extinction = current;
-        m_PrunedPhylo->insert(std::pair<unsigned long long, Species *>(specp->m_ID, specp));
-
+        m_PrunedPhylo->insert(std::pair <unsigned long long, Species*> (specp->m_ID, specp));
     }
 
 
@@ -127,8 +126,8 @@ void Phylogeny::writePhylogeny(unsigned long long start, std::multimap<unsigned 
     std::string tree = ";";
 
 
-    std::vector<size_t> position(phylogenyMap->size(), 0);
-    std::vector<size_t> paranthesis(phylogenyMap->size(), 0);
+    std::vector <size_t> position(phylogenyMap->size(), 0);
+    std::vector <size_t> paranthesis(phylogenyMap->size(), 0);
 
 
     bool go = true;
@@ -142,7 +141,8 @@ void Phylogeny::writePhylogeny(unsigned long long start, std::multimap<unsigned 
 
         // If parent is leaf, write down leaf and length and go one up
         if (focusSpecies->m_Children.empty()) {
-            if (position[focusSpecies->m_ID] != 0) throw std::runtime_error("unexpected value for position value in a leaf");
+            if (position[focusSpecies->m_ID] != 0)
+                throw std::runtime_error("unexpected value for position value in a leaf");
             branchLength = focusSpecies->m_Date_of_Extinction - focusSpecies->m_Date_of_Emergence;
             tree.insert(0, to_string(branchLength));
             tree.insert(0, ":");
@@ -176,12 +176,18 @@ void Phylogeny::writePhylogeny(unsigned long long start, std::multimap<unsigned 
 
             // if two siblings are born in the same generation
             if (position[focusSpecies->m_ID] > 1 &&
-                phylogenyMap->find(focusSpecies->m_Children[position[focusSpecies->m_ID]])->second->m_Date_of_Emergence ==
-                phylogenyMap->find(focusSpecies->m_Children[position[focusSpecies->m_ID] - 1])->second->m_Date_of_Emergence &&
-                phylogenyMap->find(focusSpecies->m_Children[position[focusSpecies->m_ID]])->second->m_Date_of_Emergence ==
-                phylogenyMap->find(focusSpecies->m_Children[position[focusSpecies->m_ID] + 1])->second->m_Date_of_Emergence) {
-                if (!(phylogenyMap->find(focusSpecies->m_Children[position[focusSpecies->m_ID] - 1])->second->m_Children.empty()) &&
-                    (phylogenyMap->find(focusSpecies->m_Children[position[focusSpecies->m_ID]])->second->m_Children.empty())) {
+                phylogenyMap->find(
+                        focusSpecies->m_Children[position[focusSpecies->m_ID]])->second->m_Date_of_Emergence ==
+                phylogenyMap->find(
+                        focusSpecies->m_Children[position[focusSpecies->m_ID] - 1])->second->m_Date_of_Emergence &&
+                phylogenyMap->find(
+                        focusSpecies->m_Children[position[focusSpecies->m_ID]])->second->m_Date_of_Emergence ==
+                phylogenyMap->find(
+                        focusSpecies->m_Children[position[focusSpecies->m_ID] + 1])->second->m_Date_of_Emergence) {
+                if (!(phylogenyMap->find(
+                        focusSpecies->m_Children[position[focusSpecies->m_ID] - 1])->second->m_Children.empty()) &&
+                    (phylogenyMap->find(
+                            focusSpecies->m_Children[position[focusSpecies->m_ID]])->second->m_Children.empty())) {
 
                     ;
 //						tree.insert(0, "," );
@@ -201,7 +207,8 @@ void Phylogeny::writePhylogeny(unsigned long long start, std::multimap<unsigned 
                     branchLength = phylogenyMap->find(
                             focusSpecies->m_Children[position[focusSpecies->m_ID]])->second->m_Date_of_Emergence -
                                    phylogenyMap->find(
-                                           focusSpecies->m_Children[position[focusSpecies->m_ID] - 1])->second->m_Date_of_Emergence;
+                                           focusSpecies->m_Children[position[focusSpecies->m_ID] -
+                                                                    1])->second->m_Date_of_Emergence;
                 }
 
                 tree.insert(0, to_string(branchLength));
@@ -243,8 +250,8 @@ Phylogeny::writePhylogenyR(unsigned long long start, std::multimap<unsigned long
     int branchLength = 0;
 
     std::string tree = ";";
-    std::vector<size_t> position(phylogenyMap->size(), 0);
-    std::vector<size_t> paranthesis(phylogenyMap->size(), 0);
+    std::vector <size_t> position(phylogenyMap->size(), 0);
+    std::vector <size_t> paranthesis(phylogenyMap->size(), 0);
     int counter = 1;
 
     bool go = true;
@@ -256,7 +263,8 @@ Phylogeny::writePhylogenyR(unsigned long long start, std::multimap<unsigned long
         // If parent is leaf, write down leaf and length and go one up
         if (focusSpecies->m_Children.empty()) {
 
-            if (position[focusSpecies->m_ID] != 0) throw std::runtime_error("unexpected value for position value in a leaf");
+            if (position[focusSpecies->m_ID] != 0)
+                throw std::runtime_error("unexpected value for position value in a leaf");
             // TODO: unsigned long long assigned to int!
             branchLength = focusSpecies->m_Date_of_Extinction - focusSpecies->m_Date_of_Emergence;
             tree.insert(0, to_string(branchLength));
@@ -269,7 +277,7 @@ Phylogeny::writePhylogenyR(unsigned long long start, std::multimap<unsigned long
 
         }
 
-        // if all children visited write down parent, close and go one up
+            // if all children visited write down parent, close and go one up
         else if (position[focusSpecies->m_ID] == focusSpecies->m_Children.size()) {
 
             // TODO: unsigned long long assigned to int!
@@ -287,7 +295,7 @@ Phylogeny::writePhylogenyR(unsigned long long start, std::multimap<unsigned long
 
         }
 
-        // If Parent has children and not yet gone to each child then go to child
+            // If Parent has children and not yet gone to each child then go to child
         else if (position[focusSpecies->m_ID] < focusSpecies->m_Children.size()) {
 
             // if two siblings are born in the same generation
@@ -300,17 +308,20 @@ Phylogeny::writePhylogenyR(unsigned long long start, std::multimap<unsigned long
 
             // If already one child visited, but why is this
             if (position[focusSpecies->m_ID] > 1 &&
-                phylogenyMap->find(focusSpecies->m_Children[position[focusSpecies->m_ID]])->second->m_Date_of_Emergence ==
-                phylogenyMap->find(focusSpecies->m_Children[position[focusSpecies->m_ID] - 1])->second->m_Date_of_Emergence
+                phylogenyMap->find(
+                        focusSpecies->m_Children[position[focusSpecies->m_ID]])->second->m_Date_of_Emergence ==
+                phylogenyMap->find(
+                        focusSpecies->m_Children[position[focusSpecies->m_ID] - 1])->second->m_Date_of_Emergence
                 // TODO find out why this causes a crash and sort it out
                 /*&&
                 phylogenyMap->find(focusSpecies->m_Children[position[focusSpecies->m_ID]])->second->m_Date_of_Emergence ==
                 phylogenyMap->find(focusSpecies->m_Children[position[focusSpecies->m_ID] + 1])->second->m_Date_of_Emergence*/
-                )
-            {
+                    ) {
 
-                if (!(phylogenyMap->find(focusSpecies->m_Children[position[focusSpecies->m_ID] - 1])->second->m_Children.empty()) &&
-                    (phylogenyMap->find(focusSpecies->m_Children[position[focusSpecies->m_ID]])->second->m_Children.empty())) {
+                if (!(phylogenyMap->find(
+                        focusSpecies->m_Children[position[focusSpecies->m_ID] - 1])->second->m_Children.empty()) &&
+                    (phylogenyMap->find(
+                            focusSpecies->m_Children[position[focusSpecies->m_ID]])->second->m_Children.empty())) {
 
                     ;
                     //tree.insert(0, "," );
@@ -332,7 +343,8 @@ Phylogeny::writePhylogenyR(unsigned long long start, std::multimap<unsigned long
                     branchLength = phylogenyMap->find(
                             focusSpecies->m_Children[position[focusSpecies->m_ID]])->second->m_Date_of_Emergence -
                                    phylogenyMap->find(
-                                           focusSpecies->m_Children[position[focusSpecies->m_ID] - 1])->second->m_Date_of_Emergence;
+                                           focusSpecies->m_Children[position[focusSpecies->m_ID] -
+                                                                    1])->second->m_Date_of_Emergence;
 
                 }
                 tree.insert(0, to_string(branchLength));
@@ -361,8 +373,8 @@ Phylogeny::writePhylogenyR(unsigned long long start, std::multimap<unsigned long
     //std::cout << tree << std::endl;
 
     tree.erase(tree.begin());
-    #ifdef DEBUG
+#ifdef DEBUG
     std::cout << "writePhylogenyR end" << std::endl;
-    #endif
+#endif
     return tree;
 }

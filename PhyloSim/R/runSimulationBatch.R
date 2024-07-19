@@ -8,7 +8,6 @@
 #' @return An object of class "PhylosimList".
 #' @details The "PhylosimList" object is a list of "Phylosim" objects. They can be accessed by indexing (see Example).\cr\cr This function uses the \code{\link{foreach}} and \code{\link{doParallel}} package to compute the model scenarios parallel on several cores. \cr\cr The phylogeny is passed to R in the newick format and parsed to an object of class "phylo" with the function \code{\link[ape]{read.tree}} from the \code{\link{ape}} package. 
 #' @example /inst/examples/runSimulationBatch-help.R
-
 #' @export
 runSimulationBatch <- function(pars, parallel = FALSE, backup = FALSE, strip = NULL){
   #start timing
@@ -18,7 +17,7 @@ runSimulationBatch <- function(pars, parallel = FALSE, backup = FALSE, strip = N
   # TODO getParametersXML(XMLfile)
   
   if (parallel != F){
-    cat("running ",length(pars), " batch simualations with parallelization", "\n")
+    cat("running ",length(pars), " batch simulations with parallelization", "\n")
     
     if (parallel == T | parallel == "auto") cores <- parallel::detectCores() - 1
     if (is.numeric(parallel)) cores <- parallel

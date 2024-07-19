@@ -37,20 +37,25 @@ runSimulation <- function(par)
     }else stop("wrong fitness parameters")
     
     
-    if (is.numeric(par$density)) if(par$density == 0){
-      par$density = F
-      par$compStrength = 1
-    }else{
-      par$compStrength = par$density
-      par$density = T
+    if (is.numeric(par$density)) {
+      if (par$density == 0) {
+        par$density = F
+        par$compStrength = 1
+      } else{
+        par$compStrength = par$density
+        par$density = T
+      }
     }
     
-    if (is.numeric(par$environment)) if(par$environment == 0){
-      par$environment = F
-      par$envStrength = 1
-    }else{
-      par$envStrength = par$environment
-      par$environment = T
+    if (is.numeric(par$environment)) {
+      if (par$environment > 1 || par$environment < 0) stop("Parameter environment must be between 0 and 1")
+      if (par$environment == 0) {
+        par$environment = F
+        par$envStrength = 1
+      } else {
+        par$envStrength = par$environment
+        par$environment = T
+      }
     }
     
     
@@ -61,6 +66,9 @@ runSimulation <- function(par)
       neutral = F
     }    
     
+    if (par$fitnessBaseMortalityRatio < 1) stop("Parameter fitnessBaseMortalityRation must be greater than or equal to 1")
+    
+    if (max(par$airmat) > 1 || min(par$airmat) < 0) stop("Values of airmat must be between 0 and 1")
     
     ptm <- proc.time()
     
