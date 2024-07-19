@@ -7,7 +7,7 @@ A model, provided as an R package, for the simulation of spatially explicit biog
 You can install directly from gh, using the 'devtools' package:
 
 ```{r}
-devtools::install_github(repo = "TheoreticalEcology/phylosim", subdir = "phylosim", 
+devtools::install_github(repo = "TheoreticalEcology/EcoPhyloSim", subdir = "phylosim", 
 dependencies = T, build_vignettes = T)
 
 ?PhyloSim
