@@ -1,14 +1,4 @@
----
-title: "EcoPhyloSim"
-author: "Florian Hartig"
-date: "2024-07-19"
-output: 
-  html_document: 
-    keep_md: yes
----
-
-
-
+# EcoPhyloSim
 
 A model, provided as an R package, for the simulation of spatially explicit biogeographical and phylogenetic data. 
 
