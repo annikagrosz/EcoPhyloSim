@@ -14,6 +14,6 @@ LaTeX: pdfLaTeX
 
 BuildType: Package
 PackageUseDevtools: Yes
-PackagePath: /Users/florian/Dropbox/Home/Projekte/Papers_in_Progress/17-PhylogeneticRpackage/phylosim/PhyloSim
+PackagePath: ./PhyloSim
 PackageInstallArgs: --no-multiarch --with-keep.source
 PackageRoxygenize: rd,collate,namespace
