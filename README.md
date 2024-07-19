@@ -1,29 +1,3 @@
-# PhyloSim
-R package for simulation of biogeographical and phylogenetic data 
 
-### Installation 
-
-
-#### For users
-
-You can install directly from gh, using the 'devtools' package:
-
-```{r}
-# install.packages(c("devtools","Rcpp")) # I case you don't have them installed
-
-library(Rcpp)
-library(devtools)
-install_url("https://dl.dropboxusercontent.com/s/wub79etldv8fry2/phylosim_0.3.1.tar.gz")
-
-
-?PhyloSim
-browseVignettes("PhyloSim")
-```
-
-#### For developers
-
-Clone or fork the repo, and the follow the hints here http://biometry.github.io/APES/R/R70-PackageDevelopment.html if you don't know how to compile a package
-
-See also https://github.com/TheoreticalEcology/phylosim/wiki/Developing-guides
 
 

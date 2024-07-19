@@ -1,0 +1,64 @@
+---
+title: "EcoPhyloSim"
+author: "Florian Hartig"
+date: "2024-07-19"
+output: 
+  html_document: 
+    keep_md: yes
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+A model, provided as an R package, for the simulation of spatially explicit biogeographical and phylogenetic data. 
+
+### Installation 
+
+You can install directly from gh, using the 'devtools' package:
+
+```{r, eval = F}
+devtools::install_github(repo = "TheoreticalEcology/EcoPhyloSim/", 
+                         subdir = "phylosim",  
+                         dependencies = T, 
+                         build_vignettes = T)
+
+?PhyloSim
+browseVignettes("PhyloSim")
+```
+
+### 
+
+
+```{r}
+library(PhyloSim)
+
+# Define a parameter set
+par <- createCompletePar(x = 50, y = 50, dispersal = 1 , runs = 1000,
+        density = 0)
+
+# Run the model
+simu <- runSimulation(par)
+
+plot(simu)
+
+# Look at the phylogeny (requires package 'ape')
+require(ape)
+
+# Get the phylogeny of the last run. In this example this is after 1000 runs.
+phylogeny <- simu$Output[[2]]$phylogeny
+
+# Only extant taxa
+extantPhylogeny <- drop.fossil(phylogeny)
+
+# Display the results
+plot(extantPhylogeny)
+
+#Look at the species area relation
+sac(simu, area = c(1,10,100,1000), rep = 100, plot= TRUE)
+
+
+
+```
+
