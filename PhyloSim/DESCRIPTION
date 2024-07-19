@@ -4,20 +4,17 @@ Title: Analysis of Phylogenetic and Biogeographic patterns, inferring species
     community assembly
 Version: 0.3.1
 Date: 2024-1-25
-Authors: c(person("Paul", "Bauche", role = c("aut","cre")),
-    person("Florian", "Hartig", role = "aut"),
+Authors@R: c(person("Paul", "Bauche", role = "aut"),
+    person("Florian", "Hartig", email = "florian.hartig@biologie.uni-regensburg.de", role = c("aut", "cre"), comment=c(ORCID="0000-0002-6255-9059")),
     person("Christian", "Buschbeck", role = "ctb"),
     person("Stefan", "Paul", role = "ctb"))
-Author: Paul Bauche and Florian Hartig, with contributions from Christian
-    Buschbeck and Stefan Paul
-Maintainer: Florian Hartig, <florian.hartig@ur.de>
 Description: This package is designed to simulate and analyse species community
     assembly processes. It allows the user to implement different mechanisms of
     community assembly such as environmental filtering, competitive exclusion or
     dispersal limitation. These mechanisms can be combined or activated separately,
     which allows the user to identify biogeographic or phylogenetic patterns
     exclusively correlated with a certain mechanism or combination of mechanisms.
-License: GPL (>= 2)
+License: GPL (>= 3)
 Imports:
     Rcpp (>= 0.12.9),
     ape,
