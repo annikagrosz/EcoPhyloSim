@@ -64,7 +64,7 @@ createCompletePar <- function(x = 50, y = 50, dispersal = "global", runs = 100, 
              convertToBinaryTree = convertToBinaryTree, prunePhylogeny = prunePhylogeny)
   
   
-  if (par$fitnessActsOn == "both" && par$environment >= 0) {
+  if (par$fitnessActsOn %in% c("both", "reproduction") && par$environment >= 0) {
     stop(paste0("Incompatible settings: fitnessActsOn = 'both' and environment = ", par$environment,
                 ". This will result in R crashing. Either set environment = 0 or set fitnessActsOn back to default."))
   }
